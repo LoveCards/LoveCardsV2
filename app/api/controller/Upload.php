@@ -10,9 +10,12 @@ class Upload
     //上传图片-POST
     public function image()
     {
+        if (empty(request()->file('file'))) {
+            return Common::create([], '请提交文件', 400);
+        }
         // 获取表单上传文件
         $file = request()->file('file');
-
+        
         //验证
         try {
             validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的
