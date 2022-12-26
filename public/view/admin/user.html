@@ -1,0 +1,99 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$title}</h1>
+        </div>
+        <div class="mdui-col-xs-6">
+            <a href="/admin/user/add">
+                <button
+                    class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">添加账号</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-table-fluid mdui-m-b-2">
+        <table class="mdui-table mdui-typo">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>权限</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name='list' id='data'}
+                <tr>
+                    <td>{$data.id}</td>
+                    <td>{$data.userName}</td>
+                    <td>
+                        <div class="mdui-chip">
+                            <span class="mdui-chip-title">
+                                {switch $data.power}
+                                {case 0}站长{/case}
+                                {case 1}管理员{/case}
+                                {default /}未知
+                                {/switch}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="mdui-btn mdui-btn-icon"
+                            onclick="location.assign('/Admin/User/edit/id/{$data.id}')">
+                            <i class="mdui-icon material-icons">edit</i>
+                        </button>
+                        <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                            <i class="mdui-icon material-icons">delete</i>
+                        </button>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 分页按钮组件 -->
+    <div class="mdui-row mdui-text-center">
+        <div style="display: none;">{$list|raw}</div>
+        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons ">first_page</i>
+        </button>
+        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons">last_page</i>
+        </button>
+    </div>
+
+</div>
+{include file="public/footer"}
+
+<script>
+    $(function (param) {
+        pager();
+
+        $('.js-Btn-Delete').click(function () {
+            data = {
+                'uuid': $.cookie('uuid'),
+                'id': $(this).parent().siblings('td:first').html()
+            };
+            //提交数据
+            result = apiAjax0(data, apiUserDelete, 'POST');
+            if (result) {
+                //附加功能
+                $(this).parent().html("已删除")
+                mdui.snackbar({
+                    message: '成功删除ID' + data['id'],
+                    position: 'left-top'
+                })
+            }
+        })
+    })
+
+</script>
+</body>
+
+</html>

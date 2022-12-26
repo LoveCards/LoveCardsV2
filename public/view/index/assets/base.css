@@ -1,0 +1,144 @@
+/* 顶部导航栏样式 */
+.css-tab {
+    /* border-bottom-right-radius: 30%;
+    border-bottom-left-radius: 30%; */
+}
+
+/* 写卡页面样式 */
+.css-cardsAdd-img {
+    Background-color: #0000000a;
+    height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-radius: 3%
+}
+
+.mdui-cardAdd-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+}
+
+/* 卡片样式 */
+.css-card {
+    border-radius: 3%
+}
+
+.css-cards-img {
+    height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-radius: 3%
+}
+
+.css-caard-header-title {
+    display: block;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    opacity: .87;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 700;
+}
+
+.css-caard-header-subtite {
+    display: block;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    opacity: .54;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 700;
+}
+
+.css-cards-primary-subtitle {
+    display: block;
+    font-size: 14px;
+    line-height: 24px;
+    /* opacity: .54; */
+    font-weight: 700;
+}
+
+.css-cards-primary-content {
+    position: relative;
+    font-size: 14px;
+    line-height: 24px;
+    /* font-weight: 700;    */
+}
+
+.css-card-actions-good-0 {
+    opacity: .54;
+    font-weight: 700;
+    color: #ff4081;
+}
+
+.css-card-actions-good-1 {
+    /* opacity: .54; */
+    font-weight: 700;
+    color: #ff4081;
+}
+
+.css-card-actions-btn {
+    /* opacity: .54; */
+    font-weight: 700;
+}
+
+/* 评论列表样式 */
+.css-list-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 0 16px;
+    text-decoration: none;
+    /* cursor: pointer; */
+    -webkit-transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
+    transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* 主题配色 */
+/* .mdui-theme-primary-yuebai .mdui-text-color-theme {
+    color: #d4e5ef!important
+}
+
+.mdui-theme-accent-xiaohong .mdui-color-theme-accent {
+    background-color: #e67762!important;
+    color: #fff!important
+} */
+
+/* 图标 */
+@font-face {
+    font-family: "iconfont";
+    /* Project id 3815034 */
+    src: url('//at.alicdn.com/t/c/font_3815034_6i11zcphf6h.woff2?t=1670429946946') format('woff2'),
+        url('//at.alicdn.com/t/c/font_3815034_6i11zcphf6h.woff?t=1670429946946') format('woff'),
+        url('//at.alicdn.com/t/c/font_3815034_6i11zcphf6h.ttf?t=1670429946946') format('truetype');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 24px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-heart-pulse:before {
+    content: "\e79c";
+}
+
+.css-icon {
+    font-size: 48px;
+}

@@ -1,0 +1,157 @@
+{include file="public/header"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsTabClass="1" class="mdui-container">
+
+    <div class="mdui-row mdui-p-t-2">
+        <!-- 顶部信息组件 -->
+        <div class="mdui-col-xs-6">
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
+            <div class="mdui-typo-subheading-opacity">{$cardData['time']}</div>
+        </div>
+        <div class="mdui-col-xs-6">
+            <i class="mdui-icon material-icons mdui-text-color-theme mdui-float-right">face</i>
+        </div>
+
+        <!-- 卡片组件 -->
+        <div class="mdui-col-xs-12 mdui-p-t-2">
+            <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
+                <div class="mdui-typo-headline-opacity mdui-text-left">{$cardData['woName']}</div>
+                <div class="mdui-text-center">
+                    <i class="css-icon iconfont icon-heart-pulse"></i>
+                </div>
+                <div class="mdui-typo-headline-opacity mdui-text-right">{$cardData['taName']}</div>
+            </div>
+        </div>
+
+        <!-- 内容组件 -->
+        <div class="mdui-col-xs-12 mdui-col-sm-7 mdui-p-t-3">
+
+            <div class="mdui-card">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-typo-title-opacity">内容</div>
+                </div>
+
+                <div class="mdui-typo">
+                    <blockquote>
+                        <p>
+                            {$cardData['content']}
+                        </p>
+                    </blockquote>
+                </div>
+
+                <div class="mdui-card-actions">
+                    <button class="css-card-actions-good-0 mdui-btn mdui-float-right">
+                        <i class="mdui-icon material-icons">favorite</i>点赞{$cardData['good']}
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- <div class="mdui-card mdui-m-t-1">
+                <div class="mdui-p-x-3 mdui-p-y-2">
+                    <img class="mdui-img-fluid" src="//test.fatda.cn/uploads/20221122019047855.jpeg" />
+                </div>
+            </div> -->
+
+            {if $imgData}
+            <div class="mdui-panel mdui-panel-gapless mdui-m-t-1" mdui-panel>
+                <div class="mdui-panel-item mdui-panel-item-open">
+                    <div class="mdui-panel-item-header">图片</div>
+                    <div class="mdui-panel-item-body">
+                        <img class="mdui-img-fluid" src="//test.fatda.cn/uploads/20221122019047855.jpeg" />
+                    </div>
+                </div>
+
+                <div class="mdui-panel-item">
+                    <div class="mdui-panel-item-header">更多图片</div>
+                    <div class="mdui-panel-item-body">
+                        {volist name="imgData" id="data"}
+                        <img class="mdui-img-fluid" src="{$data.url}" />
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+
+        <!-- 评论组件 -->
+        <div class="mdui-col-xs-12 mdui-col-sm-5 mdui-p-t-3">
+            <div class="mdui-card">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-typo-title-opacity">评论</div>
+
+                    <div class="mdui-textfield">
+                        <input class="mdui-textfield-input" type="text" placeholder="姓名" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <input class="mdui-textfield-input" type="text" placeholder="内容" />
+                    </div>
+                </div>
+
+                <div class="mdui-card-actions">
+                    <button class="mdui-btn mdui-color-theme-accent mdui-float-right">
+                        提交
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="mdui-card mdui-m-t-1">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-typo-title-opacity">评论</div>
+                </div>
+                <ul class="mdui-list mdui-list-dense">
+                    <li class="css-list-item">
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">Brunch this weekend?</div>
+                            <div class="mdui-list-item-text">
+                                <span class="mdui-text-color-theme-text">All Connors</span> - I'll be in your
+                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
+                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
+                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
+                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
+                                neighborhood doing errands this weekend. Do you want ...
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="mdui-divider"></li>
+                    <li class="css-list-item">
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">Summer BBQ</div>
+                            <div class="mdui-list-item-text">
+                                <span class="mdui-text-color-theme-text">to Alex, Scott, Jennifer</span> - Wish I
+                                could come, but I'm out of town this weekend.
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="mdui-divider"></li>
+                    <li class="css-list-item">
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">Oui oui</div>
+                            <div class="mdui-list-item-text">
+                                <span class="mdui-text-color-theme-text">Sandra Adams</span> - Do you have Paris
+                                recommendations? Have you ever been?
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{include file="public/footer"}
+
+</body>
+
+</html>

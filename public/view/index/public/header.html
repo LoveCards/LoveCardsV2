@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{$viewTitle}</title>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
+    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__I-assets__}/base.css" />
+</head>
+
+<body class="mdui-appbar-with-toolbar mdui-appbar-with-tab mdui-theme-primary-indigo mdui-theme-accent-pink">
+
+    <!-- 顶栏 -->
+    <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a href="#" class="mdui-typo-headline">{$systemVer['lcName']}</a>
+            <div class="mdui-toolbar-spacer"></div>
+
+        </div>
+        <div class="css-tab mdui-tab mdui-tab-centered mdui-color-theme" mdui-tab>
+            <a href="#" onclick="jumpUrl('/',0)" class="mdui-ripple">推荐</a>
+            <a id="jsTab1Class" href="#" onclick="jumpUrl('/index/Cards/list',0)" class="mdui-ripple">表白卡</a>
+            <!-- <a id="jsTab2Class" href="#" onclick="jumpUrl('/index/Cards/list',0)" class="mdui-ripple">交流卡</a> -->
+            <a id="jsTab3Class" href="#" onclick="jumpUrl('/index/Cards/search',0)" class="mdui-ripple"><i
+                    class="mdui-icon material-icons">search</i></a>
+        </div>
+    </div>

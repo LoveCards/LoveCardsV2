@@ -1,0 +1,29 @@
+<div style="margin-top: 140px">
+</div>
+<script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
+<script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
+<script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+<script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+<script src="{__A-assets__}/base.js"></script>
+<script>
+    $(function () {
+        $('#submitLogout').click(function () {
+            data = {
+                'uuid': $.cookie('uuid')
+            };
+            result = apiAjax0(data, apiUrlAuthlogout, 'POST');//提交数据
+            if (result) {
+                //成功
+                mdui.snackbar({
+                    message: '注销成功',
+                    position: 'left-top'
+                });
+                //附加功能
+                $.removeCookie('uuid', { path: '/' });
+                //跳转
+                jumpUrl('/admin/login');
+                return;
+            }
+        })
+    });
+</script>

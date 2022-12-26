@@ -1,0 +1,201 @@
+{include file="public/header"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsTabClass="1" class="mdui-container">
+
+    <div class="mdui-row mdui-p-t-2">
+
+        <div class="mdui-col-md-6 mdui-col-offset-md-3">
+
+            <div class="mdui-p-b-2">
+                <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
+                    onclick="javascript :history.back(-1);">返 回</button>
+            </div>
+
+            <div class="mdui-card">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+
+                    <!-- <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">卡片类型</label>
+                        <select id="model" class="mdui-select">
+                            <option value="1" selected>表白卡</option>
+                            <option value="2">交流卡</option>
+                        </select>
+                    </div> -->
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">姓名</label>
+                        <input class="mdui-textfield-input" id="woName" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">联系方式</label>
+                        <input class="mdui-textfield-input" id="woContact" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">TA的姓名</label>
+                        <input class="mdui-textfield-input" id="taName" type="text" placeholder="必填" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">TA的联系方式</label>
+                        <input class="mdui-textfield-input" id="woContact" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">表白内容</label>
+                        <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
+                    </div>
+                    <div class="mdui-textfield">
+                        <div id="listImageUrl" class="mdui-row-xs-2 mdui-row-sm-3 mdui-grid-list">
+                            <!-- <div class="mdui-col">
+                                <div class="mdui-grid-tile">
+                                    <div class="css-cardsAdd-img">
+                                        <img src="https://test.fatda.cn/uploads/202106171108098154.jpg">
+                                        <div class="mdui-cardAdd-menu">
+                                            <button class="mdui-btn mdui-btn-icon">
+                                                <i class="mdui-icon material-icons" style="padding:unset;">clear</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <button class="mdui-btn mdui-btn-block mdui-text-color-theme-accent mdui-ripple"
+                            mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
+                        <div class="mdui-dialog" id="dialogUploadImage">
+                            <div class="mdui-dialog-content">
+                                <div class="mdui-dialog-title">上传图片</div>
+                                <div class="mdui-row">
+                                    <div class="mdui-col-xs-12 mdui-col-sm-10">
+                                        <div class="mdui-textfield">
+                                            <input class="mdui-textfield-input" id="urlUpdataImage" type="text"
+                                                placeholder="http://">
+                                        </div>
+                                    </div>
+                                    <div class="mdui-col-xs-12 mdui-col-sm-2 mdui-text-center mdui-float-right">
+                                        <label id="btnUpdataImage"
+                                            class="mdui-m-y-2 mdui-btn mdui-color-theme-accent mdui-btn-block">
+                                            <span>上 传</span>
+                                            <input id="dataUpdataImage" type="file" style="display: none;" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mdui-dialog-actions">
+                                <button class="mdui-btn mdui-ripple" id="btnUrlUpdataImage" mdui-dialog-close>添
+                                    加</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdui-card-actions">
+                    <button id="submitAdd" class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">
+                        提交
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{include file="public/footer"}
+
+<script>
+    $(function () {
+        //提交
+        $('#submitAdd').click(function () {
+            //获取上传图片url
+            jsonImageUrl = [];
+            $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
+                jsonImageUrl.push($(this).attr('src'));
+            });
+            img = JSON.stringify(jsonImageUrl);
+
+            data = {
+                'content': $('#content').val(),
+                'woName': $('#woName').val(),
+                'taName': $('#taName').val(),
+                'woContact': $('#woContact').val(),
+                'taContact': $('#taContact').val(),
+                'model': $('#model').val(),
+                'tag': $('#tag').val(),
+                'img': img,
+            };
+            //提交数据
+            result = apiAjax0(data, apiUrlCardsAdd, 'POST');
+            if (result) {
+                //成功
+                mdui.snackbar({
+                    message: '添加成功',
+                    position: 'left-top'
+                });
+                mdui.snackbar({
+                    message: '正在跳转...',
+                    position: 'left-top'
+                });
+                //跳转
+                //jumpUrl('/');
+                return;
+            }
+        })
+
+        $('#btnUpdataImage').change(function () {
+            var formData = new FormData();
+            formData.append('file', dataUpdataImage.files[0]);
+            $('#btnUpdataImage').find('span').text('正在上传');
+            //提交数据
+            result = apiAjax1(formData, apiUrlUploadImage, 'POST');
+            if (result) {
+                //成功
+                mdui.snackbar({
+                    message: '上传成功',
+                    position: 'left-top'
+                });
+                $('#urlUpdataImage').val('/storage/' + result.data);
+                $('#btnUpdataImage').find('span').text('继续上传');
+                return;
+            } else {
+                $('#urlUpdataImage').attr('placeholder', '上传失败，请重试');
+                $('#btnUpdataImage').find('span').text('上 传');
+                return;
+            }
+        })
+
+        $('#btnUrlUpdataImage').click(function () {
+            urlUpdataImage = $('#urlUpdataImage').val();
+
+            if (checkUrl(urlUpdataImage)) {
+                //添加图片到位置
+                $('#listImageUrl').append(`
+                    <div class="mdui-col">
+                        <div class="mdui-grid-tile">
+                            <div class="css-cardsAdd-img">
+                                <img class="js-url-UpdataImage" src="${urlUpdataImage}">
+                                <div class="mdui-cardAdd-menu">
+                                    <button class="mdui-btn mdui-btn-icon js-btn-delete-UrlUpdataImage">
+                                        <i class="mdui-icon material-icons" style="padding:unset;">clear</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            } else {
+                mdui.snackbar({
+                    message: 'URL不合法，请重试',
+                    position: 'left-top'
+                });
+            }
+            //删除按钮初始化
+            $('.js-btn-delete-UrlUpdataImage').click(function () {
+                $(this).parent().parent().parent().parent().remove();
+            });
+        })
+    });
+</script>
+
+</body>
+
+</html>
