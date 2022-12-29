@@ -56,44 +56,39 @@ class Cards
             $cardsvalidateerror = $e->getError();
             return Common::create($cardsvalidateerror, '添加失败', 400);
         }
+
         //获取Cards数据库对象
         $result = Db::table('cards');
+
         //判断卡模式
         $data = array(); //清空数组
+        //构建数据格式
+        $data = [
+            'content' => $content,
+
+            'woName' => $woName,
+            'woContact' => $woContact,
+
+            'model' => $model,
+            'state' => $state,
+
+            'time' => $time,
+            'ip' => $ip,
+        ];
         if ($model == 0) {
             //表白卡模式
-            $data = [
-                'content' => $content,
-
-                'woName' => $woName,
-                'woContact' => $woContact,
-                'taName' => $taName,
-                'taContact' => $taContact,
-
-                'model' => $model,
-                'state' => $state,
-
-                'time' => $time,
-                'ip' => $ip,
-            ];
-        } else {
-            //留言卡模式
-            $data = [
-                'content' => $content,
-
-                'woName' => $woName,
-                'woContact' => $woContact,
-
-                'model' => $model,
-                'state' => $state,
-
-                'time' => $time,
-                'ip' => $ip,
-            ];
+            $data['taName'] = $taName;
+            $data['taContact'] = $taContact;
         }
+
         //Cards写入库
         $resultCardId = $result->insertGetId($data);
+        //Cards写入失败返回
+        if (!$resultCardId) {
+            return Common::create(['cards' => '写入失败'], '添加失败', 400);
+        }
 
+        //判断是否上传图片
         if (!empty($img)) {
             //获取img数据库对象
             $result = Db::table('img');
@@ -105,10 +100,20 @@ class Cards
                 $data[$key]['url'] = $value;
                 $data[$key]['time'] = $time;
             }
-            //写入img数据库
-            $result->insertAll($data);
+            //img写入数据库若失败返回
+            if (!$result->insertAll($data)) {
+                return Common::create(['img' => '写入失败'], '添加失败', 400);
+            }
+
+            //获取card数据库对象
+            $result = Db::table('cards');
+            //cards更新数据库若失败返回
+            if (!$result->where('id', $resultCardId)->update(['img' => $img[0]])) {
+                return Common::create(['cards.img' => '更新失败'], '添加失败', 400);
+            }
         }
 
+        //判断是否选择标签
         if (!empty($tag)) {
             //获取tag_map数据库对象
             $result = Db::table('cards_tag_map');
@@ -119,8 +124,10 @@ class Cards
                 $data[$key]['tid'] = $value;
                 $data[$key]['time'] = $time;
             }
-            //写入tag_map数据库
-            $result->insertAll($data);
+            //tag写入数据库若失败返回
+            if (!$result->insertAll($data)) {
+                return Common::create(['img' => '写入失败'], '添加失败', 400);
+            }
         }
         //返回数据
         return Common::create(['id' => $resultCardId], '添加成功', 200);
@@ -181,36 +188,23 @@ class Cards
 
         //判断卡模式
         $data = array(); //清空数组
+        //构建数据格式
+        $data = [
+            'content' => $content,
+
+            'woName' => $woName,
+            'woContact' => $woContact,
+
+            'model' => $model,
+            'state' => $state,
+
+            'time' => $time,
+            'ip' => $ip,
+        ];
         if ($model == 0) {
             //表白卡模式
-            $data = [
-                'content' => $content,
-
-                'woName' => $woName,
-                'woContact' => $woContact,
-                'taName' => $taName,
-                'taContact' => $taContact,
-
-                'model' => $model,
-                'state' => $state,
-
-                'time' => $time,
-                'ip' => $ip,
-            ];
-        } else {
-            //留言卡模式
-            $data = [
-                'content' => $content,
-
-                'woName' => $woName,
-                'woContact' => $woContact,
-
-                'model' => $model,
-                'state' => $state,
-
-                'time' => $time,
-                'ip' => $ip,
-            ];
+            $data['taName'] = $taName;
+            $data['taContact'] = $taContact;
         }
         //Cards写入库
         $result->update($data);
@@ -218,9 +212,9 @@ class Cards
         //获取img数据库对象
         $result = Db::table('img');
         //清理原始数据
-        $resultId = $result->where('pid', $id);
-        if ($resultId->find()) {
-            $resultId->delete();
+        $resultCardId = $result->where('pid', $id);
+        if ($resultCardId->find()) {
+            $resultCardId->delete();
         }
         //判断是否写入新数据
         if (!empty($img)) {
@@ -233,16 +227,26 @@ class Cards
                 $data[$key]['url'] = $value;
                 $data[$key]['time'] = $time;
             }
-            //写入数据库
-            $result->insertAll($data);
+            
+            //img写入数据库若失败返回
+            if (!$result->insertAll($data)) {
+                return Common::create(['img' => '写入失败'], '编辑失败', 400);
+            }
+
+            //获取card数据库对象
+            $result = Db::table('cards');
+            //cards更新数据库若失败返回
+            if (!$result->where('id', $id)->update(['img' => $img[0]])) {
+                return Common::create(['cards.img' => '更新失败'], '添加失败', 400);
+            }
         }
 
         //获取tag数据库对象
         $result = Db::table('cards_tag_map');
         //清理原始数据
-        $resultId = $result->where('cid', $id);
-        if ($resultId->find()) {
-            $resultId->delete();
+        $resultCardId = $result->where('cid', $id);
+        if ($resultCardId->find()) {
+            $resultCardId->delete();
         }
         //判断是否写入新数据
         if (!empty($tag)) {
@@ -254,8 +258,10 @@ class Cards
                 $data[$key]['tid'] = $value;
                 $data[$key]['time'] = $time;
             }
-            //写入tag_map数据库
-            $result->insertAll($data);
+            //tag_map写入数据库若失败返回
+            if (!$result->insertAll($data)) {
+                return Common::create(['img' => '写入失败'], '添加失败', 400);
+            }
         }
 
         //返回数据

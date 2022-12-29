@@ -131,12 +131,8 @@
                     message: '添加成功',
                     position: 'left-top'
                 });
-                mdui.snackbar({
-                    message: '正在跳转...',
-                    position: 'left-top'
-                });
                 //跳转
-                //jumpUrl('/');
+                jumpUrl('/index/cards/card/id/'+result.data.id);
                 return;
             }
         })

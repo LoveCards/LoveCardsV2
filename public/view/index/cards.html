@@ -6,17 +6,30 @@
     <div class="mdui-row mdui-p-t-2">
         <!-- 顶部信息组件 -->
         <div class="mdui-col-xs-6">
+            {if $cardData['woName']}
             <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
+            {else}
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
+            {/if}
             <div class="mdui-typo-subheading-opacity">{$cardData['time']}</div>
         </div>
         <div class="mdui-col-xs-6">
-            <i class="mdui-icon material-icons mdui-text-color-theme mdui-float-right">face</i>
+            <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme mdui-ripple mdui-float-right"
+                onclick="javascript :history.back(-1);">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </button>
         </div>
 
         <!-- 卡片组件 -->
         <div class="mdui-col-xs-12 mdui-p-t-2">
             <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
-                <div class="mdui-typo-headline-opacity mdui-text-left">{$cardData['woName']}</div>
+                <div class="mdui-typo-headline-opacity mdui-text-left">
+                    {if $cardData['woName']}
+                    {$cardData['woName']}
+                    {else}
+                    匿名
+                    {/if}
+                </div>
                 <div class="mdui-text-center">
                     <i class="css-icon iconfont icon-heart-pulse"></i>
                 </div>
@@ -146,11 +159,17 @@
             </div>
 
         </div>
-
     </div>
+
 </div>
 
 {include file="public/footer"}
+
+<script>
+    $(function () {
+
+    })
+</script>
 
 </body>
 

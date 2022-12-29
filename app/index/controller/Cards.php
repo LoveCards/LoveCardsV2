@@ -35,17 +35,17 @@ class Cards
         //组合数据
         $cardsListRaw = $result->render();
         $listData = $result->items();
-        for ($i = 0; $i < sizeof($listData); $i++) {
-            //查找对应封面
-            $result = Db::table('img')
-                ->where('pid', $listData[$i]['id'])
-                ->findOrEmpty();
-            if (empty($result)) {
-                $listData[$i]['imgUrl'] = false;
-            }else{
-                $listData[$i]['imgUrl'] = $result['url'];
-            }
-        }
+        // for ($i = 0; $i < sizeof($listData); $i++) {
+        //     //查找对应封面
+        //     $result = Db::table('img')
+        //         ->where('pid', $listData[$i]['id'])
+        //         ->findOrEmpty();
+        //     if (empty($result)) {
+        //         $listData[$i]['imgUrl'] = false;
+        //     }else{
+        //         $listData[$i]['imgUrl'] = $result['url'];
+        //     }
+        // }
 
         //dd($listData);
         View::assign([

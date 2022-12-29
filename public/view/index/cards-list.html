@@ -19,31 +19,41 @@
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
                     <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
                         <div class="css-caard-header-title mdui-text-color-theme">
                             {$data.woName}的表白卡
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
                         <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的表白卡
+                        </div>
+                        <div class="css-caard-header-subtite">表白 {$data.taName}</div>
+                        {/if}
                     </div>
-                    {if $data.imgUrl}
+                    {if $data.img}
                     <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">
-                            <img src="{$data.imgUrl}" />
+                            <img src="{$data.img}" />
                         </div>
                     </div>
                     {/if}
 
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
+                        {if $data.tag}
                         <div class="css-cards-primary-subtitle">
                             Tag:<a href="https://qixun.site/index.php/category/gzjl/">工作记录</a>,<a
                                 href="https://qixun.site/index.php/category/gzjl/">工作记录</a>
                         </div>
+                        {/if}
                         <div class="mdui-p-t-1 css-cards-primary-content"
                             onclick="location.assign('/index/Cards/card/id/{$data.id}')">
                             {$data.content}
                         </div>
                     </div>
+                    
 
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
