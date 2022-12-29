@@ -19,7 +19,14 @@ use think\facade\Cookie;
 class Common extends Facade
 {
 
-    //版本信息
+    /**
+     * @description: 版本信息
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:48:48
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     */
     protected static function systemVer()
     {
         return [
@@ -36,7 +43,16 @@ class Common extends Facade
         return [];
     }
 
-    //前端跳转
+    /**
+     * @description: 前端跳转
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:55:49
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $url
+     * @param {*} $msg
+     */
     protected static function jumpUrl($url, $msg = 'undefined')
     {
         // 写人Msg信息
@@ -45,6 +61,15 @@ class Common extends Facade
         return "<script>window.location.replace('" . $url . "')</script>";
     }
 
+    /**
+     * @description: 获取IP
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:56:28
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $type
+     */
     protected static function getIp($type = 0)
     {
         $type       =  $type ? 1 : 0;
@@ -66,8 +91,14 @@ class Common extends Facade
         return $ip[$type];
     }
 
-
-    //前端Coockie验证uuid
+    /**
+     * @description: 前端Coockie验证uuid
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:56:45
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     */
     protected static function validateViewAuth()
     {
         //整理数据
@@ -88,7 +119,14 @@ class Common extends Facade
         }
     }
 
-    //API验证uuid并获取当前用户数据
+    /**
+     * @description: API验证uuid并获取当前用户数据
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:57:00
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     */
     protected static function validateAuth()
     {
         //整理数据
@@ -109,7 +147,18 @@ class Common extends Facade
         }
     }
 
-    //API格式输出方法
+    /**
+     * @description: API格式输出方法
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:57:16
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $data
+     * @param {string} $msg
+     * @param {int} $code
+     * @param {string} $type
+     */
     protected static function create($data, string $msg = '', int $code = 200, string $type = 'json'): Response
     {
         $result = [
@@ -125,7 +174,14 @@ class Common extends Facade
         return Response::create($result, $type);
     }
 
-    //生成UUID
+    /**
+     * @description: 生成UUID
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:57:34
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     */
     protected static function get_uuid()
     {
         $charid = md5(uniqid(mt_rand(), true));
