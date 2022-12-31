@@ -35,7 +35,7 @@
                     {if $data.img}
                     <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">
-                            <img src="{$data.img}" />
+                            <img src="{$data.img}" onclick="location.assign('/index/Cards/card/id/{$data.id}')"/>
                         </div>
                     </div>
                     {/if}

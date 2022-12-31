@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{$title} - {$lcName}</title>
+    <title>{$viewTitle} - {$lcData['Name']}</title>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -19,7 +19,7 @@
     <!-- 顶栏 -->
     <header class="mdui-appbar mdui-appbar-fixed">
         <div class="mdui-toolbar mdui-color-theme">
-            <a href="#" class="mdui-typo-headline">{$lcName}</a>
+            <a href="#" class="mdui-typo-headline">{$lcData['Name']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
         </div>
@@ -30,7 +30,7 @@
 
     <!-- 页体 -->
     <div class="mdui-container">
-        <h1 class="mdui-text-color-theme mdui-p-t-2">{$title}</h1>
+        <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
 
         <!-- 框架层 -->
         <div class="mdui-col-offset-md-3">
@@ -72,7 +72,7 @@
                 <!-- 组件层 -->
                 <div class="mdui-typo-caption mdui-text-color-black-disabled mdui-p-t-1 mdui-typo">
                     <!--废话 <kbd>Ver-{$lcVerS}-{$lcVer}</kbd> -->
-                    <p>本站由<a href="{$lcUrl}" target="_blank" class="mdui-text-color-pink">{$lcName}</a>强力驱动</p>
+                    <p>本站由<a href="{$lcUrl}" target="_blank" class="mdui-text-color-pink">{$lcData['Name']}</a>强力驱动</p>
                 </div>
             </div>
         </div>

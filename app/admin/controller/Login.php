@@ -22,12 +22,10 @@ class Login
         }
 
         //获取LC配置
-        View::assign(Common::systemVer());
-        //获取系统配置
-        View::assign(Common::systemData());
+        View::assign('lcSys', Common::systemVer());
         // 批量赋值
         View::assign([
-            'title'  => '登入后台'
+            'viewTitle'  => '登入后台'
         ]);
         //输出模板
         return View::fetch('/login');

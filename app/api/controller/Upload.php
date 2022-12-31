@@ -1,5 +1,4 @@
 <?php
-
 namespace app\api\controller;
 
 //公共类
@@ -7,6 +6,9 @@ use app\Common\Common;
 
 class Upload
 {
+    //最大上传图片大小 单位:M
+    const DefSetCardsImgSize = 2;
+
     //上传图片-POST
     public function image()
     {
@@ -19,7 +21,7 @@ class Upload
         //验证
         try {
             validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的
-                'fileSize' => 1024 * 1000 * 2, //允许文件大小
+                'fileSize' => 1024 * 1000 * self::DefSetCardsImgSize, //允许文件大小
                 'fileExt'  => array('jpg', 'png'),  //文件后缀
                 //'fileMime' => array('jpg', 'png'),  //文件类型
             ]])->check(['file' => $file]); //对上传的$file进行验证

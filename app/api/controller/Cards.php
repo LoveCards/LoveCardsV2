@@ -17,6 +17,13 @@ use app\Common\Common;
 
 class Cards
 {
+    //默认卡片状态ON/OFF:0/1
+    const DefSetCardsState = 0;
+    //默认添加卡片上传图片个数
+    const DefSetCardsImgNum = 9;
+    //默认添加卡片标签个数
+    const DefSetCardsTagNum = 3;
+
     //添加-POST
     public function add()
     {
@@ -32,7 +39,8 @@ class Cards
         $tag = json_decode(Request::param('tag'), true);
 
         $model = 0;
-        $state = 0;
+        $state = self::DefSetCardsState;
+
         //免验证
         $time = date('Y-m-d H:i:s');
         $ip = Common::getIp();
@@ -90,6 +98,10 @@ class Cards
 
         //判断是否上传图片
         if (!empty($img)) {
+            //判断图片数量
+            if (sizeof($img) > self::DefSetCardsImgNum) {
+                return Common::create(['img' => 'img超过数量限制'], '添加失败', 400);
+            }
             //获取img数据库对象
             $result = Db::table('img');
             //构建数据数组
@@ -102,19 +114,23 @@ class Cards
             }
             //img写入数据库若失败返回
             if (!$result->insertAll($data)) {
-                return Common::create(['img' => '写入失败'], '添加失败', 400);
+                return Common::create(['img' => 'img写入失败'], '添加失败', 400);
             }
 
             //获取card数据库对象
             $result = Db::table('cards');
             //cards更新数据库若失败返回
             if (!$result->where('id', $resultCardId)->update(['img' => $img[0]])) {
-                return Common::create(['cards.img' => '更新失败'], '添加失败', 400);
+                return Common::create(['cards.img' => 'cards.img更新失败'], '添加失败', 400);
             }
         }
 
         //判断是否选择标签
         if (!empty($tag)) {
+            //判断图片数量
+            if (sizeof($tag) > self::DefSetCardsTagNum) {
+                return Common::create(['tag' => 'tag超过数量限制'], '添加失败', 400);
+            }
             //获取tag_map数据库对象
             $result = Db::table('cards_tag_map');
             //构建数据数组
@@ -126,7 +142,7 @@ class Cards
             }
             //tag写入数据库若失败返回
             if (!$result->insertAll($data)) {
-                return Common::create(['img' => '写入失败'], '添加失败', 400);
+                return Common::create(['tag' => 'tag写入失败'], '添加失败', 400);
             }
         }
         //返回数据
@@ -153,7 +169,15 @@ class Cards
         $taContact = Request::param('taContact');
 
         $img = json_decode(Request::param('img'), true);
+        //判断图片数量
+        if (sizeof($img) > self::DefSetCardsImgNum) {
+            return Common::create(['img' => 'img超过数量限制'], '编辑失败', 400);
+        }
         $tag = json_decode(Request::param('tag'), true);
+        //判断Tag数量
+        if (sizeof($tag) > self::DefSetCardsTagNum) {
+            return Common::create(['tag' => 'tag超过数量限制'], '编辑失败', 400);
+        }
 
         $model = Request::param('model');
         $state = Request::param('state');
@@ -227,7 +251,7 @@ class Cards
                 $data[$key]['url'] = $value;
                 $data[$key]['time'] = $time;
             }
-            
+
             //img写入数据库若失败返回
             if (!$result->insertAll($data)) {
                 return Common::create(['img' => '写入失败'], '编辑失败', 400);

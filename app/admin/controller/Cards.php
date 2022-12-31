@@ -22,13 +22,15 @@ class User
             return Common::jumpUrl('/admin/login/index', '请先登入');
         }
 
-        //获取管理员用户信息
-        View::assign('adminData', $userData[1]);
+        //获取用户信息
+        View::assign($userData[1]);
         //获取LC配置
-        View::assign('lcSys', Common::systemVer());
+        View::assign(Common::systemVer());
+        //获取系统配置
+        View::assign(Common::systemData());
         // 批量赋值
         View::assign([
-            'viewTitle'  => '账号管理'
+            'title'  => '标签管理'
         ]);
 
         //获取列表
@@ -54,13 +56,15 @@ class User
             return Common::jumpUrl('/admin/login/index', '请先登入');
         }
 
-        //获取管理员用户信息
-        View::assign('adminData', $userData[1]);
+        //获取用户信息
+        View::assign($userData[1]);
         //获取LC配置
-        View::assign('lcSys', Common::systemVer());
+        View::assign(Common::systemVer());
+        //获取系统配置
+        View::assign(Common::systemData());
         // 批量赋值
         View::assign([
-            'viewTitle'  => '添加账号'
+            'title'  => '添加账号'
         ]);
 
         //输出模板
@@ -98,13 +102,15 @@ class User
             'idPower'  => $idData['power']
         ]);
 
-        //获取管理员用户信息
-        View::assign('adminData', $userData[1]);
+        //获取用户信息
+        View::assign($userData[1]);
         //获取LC配置
-        View::assign('lcSys', Common::systemVer());
+        View::assign(Common::systemVer());
+        //获取系统配置
+        View::assign(Common::systemData());
         // 批量赋值
         View::assign([
-            'viewTitle'  => '编辑账号',
+            'title'  => '编辑账号',
             'id'  => $id
         ]);
 

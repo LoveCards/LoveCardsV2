@@ -1,5 +1,4 @@
 <?php
-
 namespace app\api\controller;
 
 //公共类
@@ -7,6 +6,12 @@ use app\Common\Common;
 
 class CardsComments
 {
+
+    //默认评论状态ON/OFF:0/1
+    const DefSetCardsCommentsState = 0;    
+    //默认添加评论上传图片个数
+    const DefCardsSetCommentsImgNum = 3;
+
     //添加-POST
     public function add()
     {

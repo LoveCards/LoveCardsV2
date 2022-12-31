@@ -2,6 +2,11 @@
 var apiUrlCardsAdd = '/api/cards/add'//添加卡
 var apiUrlUploadImage = '/api/upload/image'//添加卡
 
+//默认添加卡片上传图片个数
+const DefSetCardsImgNum = 9;
+//默认添加卡片标签个数
+const DefSetCardsTagNum = 3;
+
 /*
 *API请求函数
 */

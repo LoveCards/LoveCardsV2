@@ -30,10 +30,10 @@ class Common extends Facade
     protected static function systemVer()
     {
         return [
-            'lcName' => 'LoveCards',
-            'lcUrl' => '//lovecards.cn',
-            'lcVerS' => '2.0.0',
-            'lcVer' => '1.0'
+            'Name' => 'LoveCards',
+            'Url' => '//lovecards.cn',
+            'VerS' => '2.0.0',
+            'Ver' => '1.0'
         ];
     }
 

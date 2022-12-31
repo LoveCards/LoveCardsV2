@@ -5,7 +5,7 @@
 
     <div class="mdui-row mdui-p-t-2">
         <!-- 顶部信息组件 -->
-        <div class="mdui-col-xs-6">
+        <div class="mdui-col-xs-10">
             {if $cardData['woName']}
             <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
             {else}
@@ -13,8 +13,8 @@
             {/if}
             <div class="mdui-typo-subheading-opacity">{$cardData['time']}</div>
         </div>
-        <div class="mdui-col-xs-6">
-            <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme mdui-ripple mdui-float-right"
+        <div class="mdui-col-xs-2">
+            <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
                 onclick="javascript :history.back(-1);">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </button>

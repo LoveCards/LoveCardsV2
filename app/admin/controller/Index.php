@@ -1,5 +1,4 @@
 <?php
-
 namespace app\admin\controller;
 
 //视图功能
@@ -18,18 +17,16 @@ class Index
         $userData = Common::validateViewAuth();
         if ($userData[0] == false) {
             //跳转返回消息
-            return Common::jumpUrl('/admin/login/index','请先登入');
+            return Common::jumpUrl('/admin/login/index', '请先登入');
         }
 
-        //获取用户信息
-        View::assign($userData[1]);
+        //获取管理员用户信息
+        View::assign('adminData', $userData[1]);
         //获取LC配置
-        View::assign(Common::systemVer());
-        //获取系统配置
-        View::assign(Common::systemData());
+        View::assign('lcSys', Common::systemVer());
         // 批量赋值
         View::assign([
-            'title'  => '总览'
+            'viewTitle'  => '总览'
         ]);
         //输出模板
         return View::fetch('/index');

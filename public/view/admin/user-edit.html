@@ -5,13 +5,11 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$title}-ID{$id}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}-ID{$id}</h1>
         </div>
         <div class="mdui-col-xs-6">
-            <a href="/admin/user">
-                <button
-                    class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">返回管理</button>
-            </a>
+            <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
+                onclick="javascript :history.back(-1);">返回管理</button>
         </div>
     </div>
 
@@ -23,14 +21,16 @@
                 <!--"账号"输入框-->
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">用户名</label>
-                    <input class="mdui-textfield-input" type="text" id="idUserName" value="{$idUserName}" maxlength="12">
+                    <input class="mdui-textfield-input" type="text" id="idUserName" value="{$idUserName}"
+                        maxlength="12">
                 </div>
             </div>
             <div class="mdui-col-xs-12 mdui-col-md-5">
                 <!--"密码"输入框-->
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">密码</label>
-                    <input class="mdui-textfield-input" type="password" id="idPassword" placeholder="不填默认不修改" maxlength="12">
+                    <input class="mdui-textfield-input" type="password" id="idPassword" placeholder="不填默认不修改"
+                        maxlength="12">
                 </div>
             </div>
 
@@ -38,8 +38,8 @@
                 <!--"权限"输入框-->
                 <label class="mdui-textfield-label mdui-m-t-2">权限</label>
                 <select class="mdui-select" id="idPower">
-                    <option value="0" {if $idPower == 0}selected{/if}>站长</option>
-                    <option value="1" {if $idPower == 1}selected{/if}>管理员</option>
+                    <option value="0" {if $idPower==0}selected{/if}>站长</option>
+                    <option value="1" {if $idPower==1}selected{/if}>管理员</option>
                 </select>
             </div>
 
@@ -64,7 +64,7 @@
         $('#submitAdd').click(function () {
             data = {
                 'uuid': $.cookie('uuid'),
-                'id': {$id},
+                'id': { $id },
                 'userName': $('#idUserName').val(),
                 'password': $('#idPassword').val(),
                 'power': $('#idPower').val(),
