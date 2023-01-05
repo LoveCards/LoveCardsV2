@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{$viewTitle} - {$lcData['Name']}</title>
+    <title>{$viewTitle} - {$lcSys['Name']}</title>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -19,7 +19,7 @@
     <!-- 顶栏 -->
     <header class="mdui-appbar mdui-appbar-fixed">
         <div class="mdui-toolbar mdui-color-theme">
-            <a href="#" class="mdui-typo-headline">{$lcData['Name']}</a>
+            <a href="#" class="mdui-typo-headline">{$lcSys['Name']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
         </div>
@@ -71,8 +71,8 @@
 
                 <!-- 组件层 -->
                 <div class="mdui-typo-caption mdui-text-color-black-disabled mdui-p-t-1 mdui-typo">
-                    <!--废话 <kbd>Ver-{$lcVerS}-{$lcVer}</kbd> -->
-                    <p>本站由<a href="{$lcUrl}" target="_blank" class="mdui-text-color-pink">{$lcData['Name']}</a>强力驱动</p>
+                    <!--废话 <kbd>Ver-{$lcSys['VerS']}-{$lcSys['Ver']}</kbd> -->
+                    <p>本站由<a href="{$lcSys['Url']}" target="_blank" class="mdui-text-color-pink">{$lcSys['Name']}</a>强力驱动</p>
                 </div>
             </div>
         </div>

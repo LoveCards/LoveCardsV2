@@ -98,6 +98,10 @@ class Cards
         View::assign('systemVer', Common::systemVer());
         //获取系统配置
         View::assign('systemData', Common::systemData());
+        //获取标签数据
+        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $cardsTagData = $result;
+        View::assign('cardsTagData', $cardsTagData);
         // 批量赋值
         View::assign([
             'viewTitle'  => '写卡'

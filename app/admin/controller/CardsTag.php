@@ -10,7 +10,7 @@ use think\facade\Db;
 //公共类
 use app\common\Common;
 
-class Cards
+class CardsTag
 {
     //默认
     public function index()
@@ -28,12 +28,12 @@ class Cards
         View::assign('lcSys', Common::systemVer());
         // 批量赋值
         View::assign([
-            'viewTitle'  => '卡片管理'
+            'viewTitle'  => '标签管理'
         ]);
 
         //获取列表
         $listNum = 12; //每页个数
-        $list = Db::table('cards')
+        $list = Db::table('cards_tag')
             ->paginate($listNum, true);
         View::assign([
             'list'  => $list,
@@ -41,13 +41,18 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch('/cards');
+        return View::fetch('/cards-tag');
+    }
+
+    //添加
+    public function add()
+    {
+
     }
 
     //编辑
     public function edit()
     {
-
+ 
     }
-
 }

@@ -1,0 +1,182 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+        </div>
+        <div class="mdui-col-xs-6">
+            <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
+                onclick="jumpUrl('/index/cards/add',0)">添加卡片</button>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-table-fluid mdui-m-b-2">
+        <table class="mdui-table mdui-typo">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>状态*</th>
+                    <th>置顶</th>
+                    <th>模型*</th>
+                    <th>名字</th>
+                    <th>联系方式</th>
+                    <th>TA的名字*</th>
+                    <th>TA的联系方式</th>
+                    <th>内容*</th>
+                    <th>点赞数</th>
+                    <th>评论数</th>
+                    <th>图片</th>
+                    <th>时间</th>
+                    <th>IP</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name='list' id='data'}
+                <tr>
+                    <td>{$data.id}</td>
+                    <td value="{$data.state}">
+                        {if $data.state == 0}正常{/if}
+                        {if $data.state == 1}封禁{/if}
+                    </td>
+                    <td value="{$data.top}">
+                        {if $data.top == 1}Yes{else}No{/if}
+                    </td>
+                    <td>{$data.model}</td>
+                    <td>{if $data.woName != ''}{$data.woName}{else}[匿]{/if}</td>
+                    <td>{if $data.woContact != ''}{$data.woContact}{else}[无]{/if}</td>
+                    <td>{$data.taName}</td>
+                    <td>{if $data.taContact != ''}{$data.taContact}{else}[无]{/if}</td>
+                    <td>
+                        <input class="mdui-textfield-input" style="width:unset"
+                            mdui-tooltip="{content: '{$data.content}'}" type="text" value="{$data.content}"
+                            readonly="true" />
+                    </td>
+                    <td>{$data.good}</td>
+                    <td>{$data.comments}</td>
+                    <td>{if $data.img != ''}Yes{else}No{/if}</td>
+                    <td>{$data.time}</td>
+                    <td>{$data.ip}</td>
+                    <td>
+                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                            <i class="mdui-icon material-icons">edit</i>
+                        </button>
+                        <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                            <i class="mdui-icon material-icons">delete</i>
+                        </button>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mdui-dialog" id="dialogedit">
+        <div class="mdui-dialog-title">编辑卡片</div>
+        <div class="mdui-row mdui-p-x-4">
+            <label class="mdui-textfield-label mdui-m-t-2">状态</label>
+            <select class="mdui-select" id="editTagDataState">
+                <option value="0">启用</option>
+                <option value="1">关闭</option>
+            </select>
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label">标签名</label>
+                <input class="mdui-textfield-input" id="editTagDataName" type="text" />
+            </div>
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label">提示</label>
+                <textarea class="mdui-textfield-input" id="editTagDataTip" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" id="btnEditTag" mdui-dialog-close>确定</button>
+        </div>
+    </div>
+
+    <!-- 分页按钮组件 -->
+    <div class="mdui-row mdui-text-center">
+        <div style="display: none;">{$list|raw}</div>
+        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons ">first_page</i>
+        </button>
+        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons">last_page</i>
+        </button>
+    </div>
+
+</div>
+{include file="public/footer"}
+
+<script>
+    $(function (param) {
+        pager();
+
+        $('.js-Btn-Delete').click(function () {
+            var data = {
+                'uuid': $.cookie('uuid'),
+                'id': $(this).parent().siblings('td:first').html()
+            };
+            //提交数据
+            var result = apiAjax0(data, apiCardsTagDelete, 'POST');
+            if (result) {
+                //附加功能
+                $(this).parent().html("已删除")
+                mdui.snackbar({
+                    message: '成功删除ID' + data['id'],
+                    position: 'left-top'
+                })
+            }
+        });
+
+        $('.js-Btn-Edit').click(function () {
+            var thisObj = $(this).parent().siblings('td');
+            $('#editTagDataName').val(thisObj.eq(1).html());
+            $('#editTagDataTip').val(thisObj.eq(2).html());
+            $('#editTagDataState').val(thisObj.eq(3).attr('value'));
+            $('#btnEditTag').val(thisObj.eq(0).html())
+        });
+
+        $('#btnEditTag').click(function () {
+            var data = {
+                'uuid': $.cookie('uuid'),
+                'id': $('#btnEditTag').val(),
+                'name': $('#editTagDataName').val(),
+                'tip': $('#editTagDataTip').val(),
+                'state': $('#editTagDataState').val()
+            };
+            //提交数据
+            var result = apiAjax0(data, apiCardsTagEdit, 'POST');
+            if (result) {
+                //附加功能
+                $.cookie('msg', '编辑成功', { path: '/' });//写入提示
+                //刷新页面
+                jumpUrl('', 100);
+            }
+        });
+
+        $('#btnAddTag').click(function () {
+            var data = {
+                'uuid': $.cookie('uuid'),
+                'name': $('#addTagDataName').val(),
+                'tip': $('#addTagDataTip').val()
+            };
+            //提交数据
+            var result = apiAjax0(data, apiCardsTagAdd, 'POST');
+            if (result) {
+                //附加功能
+                $.cookie('msg', '添加成功', { path: '/' });//写入提示
+                //刷新页面
+                jumpUrl('', 100);
+            }
+        });
+    })
+
+</script>
+</body>
+
+</html>

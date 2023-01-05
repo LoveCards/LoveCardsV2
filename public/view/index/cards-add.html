@@ -20,61 +20,28 @@
                         <label class="mdui-textfield-label">标签</label>
 
                         <!-- 添加标签 -->
-                        <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-dialog="{target: '#dialogChooseTag'}">
+                        <button id="btnChooseTagAdd" class="mdui-btn mdui-btn-icon mdui-ripple"
+                            mdui-dialog="{target: '#dialogChooseTag'}">
                             <i class="mdui-icon material-icons">add</i>
                         </button>
                         <div class="mdui-dialog" id="dialogChooseTag">
                             <div class="mdui-dialog-title">选择标签</div>
                             <div class="mdui-row mdui-p-x-4">
                                 <div class="mdui-row-xs-2 mdui-row-sm-4">
+                                    {volist name="cardsTagData" id="data"}
                                     <div class="mdui-col">
                                         <label class="mdui-checkbox">
-                                            <input type="checkbox" />
+                                            <input type="checkbox" value="{$data.id}" name="inputChooseTag" />
                                             <i class="mdui-checkbox-icon"></i>
-                                            默认不选中
+                                            {$data.name}
                                         </label>
                                     </div>
-                                    <div class="mdui-col">
-                                        <label class="mdui-checkbox">
-                                            <input type="checkbox" />
-                                            <i class="mdui-checkbox-icon"></i>
-                                            默认不选中
-                                        </label>
-                                    </div>
-                                    <div class="mdui-col">
-                                        <label class="mdui-checkbox">
-                                            <input type="checkbox" />
-                                            <i class="mdui-checkbox-icon"></i>
-                                            默认不选中
-                                        </label>
-                                    </div>
-                                    <div class="mdui-col">
-                                        <label class="mdui-checkbox">
-                                            <input type="checkbox" />
-                                            <i class="mdui-checkbox-icon"></i>
-                                            默认不选中
-                                        </label>
-                                    </div>
-                                    <div class="mdui-col">
-                                        <label class="mdui-checkbox">
-                                            <input type="checkbox" />
-                                            <i class="mdui-checkbox-icon"></i>
-                                            默认不选中
-                                        </label>
-                                    </div>
-                                    <div class="mdui-col">
-                                        <label class="mdui-checkbox">
-                                            <input type="checkbox" />
-                                            <i class="mdui-checkbox-icon"></i>
-                                            默认不选中
-                                        </label>
-                                    </div>
+                                    {/volist}
                                 </div>
                             </div>
 
                             <div class="mdui-dialog-actions">
-                                <button class="mdui-btn mdui-ripple" id="btnUpdataImgUrl" mdui-dialog-close>添
-                                    加</button>
+                                <button class="mdui-btn mdui-ripple" id="btnChooseTag" mdui-dialog-close>确定</button>
                             </div>
                         </div>
                     </div>
@@ -93,20 +60,12 @@
                     </div>
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">TA的联系方式</label>
-                        <input class="mdui-textfield-input" id="woContact" type="text" />
+                        <input class="mdui-textfield-input" id="taContact" type="text" />
                     </div>
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">表白内容*</label>
                         <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
                     </div>
-
-                    <!-- <div class="mdui-p-t-2 mdui-p-b-1">
-                        <label class="mdui-textfield-label">标签</label>
-
-                        <button class="mdui-btn mdui-btn-icon mdui-ripple">
-                            <i class="mdui-icon material-icons">add</i>
-                        </button>
-                    </div>     -->
 
                     <div class="mdui-textfield">
                         <div id="listImageUrl" class="mdui-row-xs-2 mdui-row-sm-3">
@@ -147,8 +106,7 @@
                                 </div>
                             </div>
                             <div class="mdui-dialog-actions">
-                                <button class="mdui-btn mdui-ripple" id="btnUpdataImgUrl" mdui-dialog-close>添
-                                    加</button>
+                                <button class="mdui-btn mdui-ripple" id="btnUpdataImgUrl" mdui-dialog-close>添加</button>
                             </div>
                         </div>
                     </div>
@@ -156,9 +114,8 @@
                 </div>
 
                 <div class="mdui-card-actions">
-                    <button id="submitAdd" class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">
-                        提交
-                    </button>
+                    <button id="submitAdd"
+                        class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">提交</button>
                 </div>
 
             </div>
@@ -171,14 +128,16 @@
 
 <script>
     $(function () {
+
         //提交
         $('#submitAdd').click(function () {
             //获取上传图片url
-            jsonImageUrl = [];
+            var jsonImageUrl = [];
             $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
                 jsonImageUrl.push($(this).attr('src'));
             });
             img = JSON.stringify(jsonImageUrl);
+            tag = JSON.stringify(checkChooseTagId);
 
             data = {
                 'content': $('#content').val(),
@@ -187,7 +146,7 @@
                 'woContact': $('#woContact').val(),
                 'taContact': $('#taContact').val(),
                 'model': $('#model').val(),
-                'tag': $('#tag').val(),
+                'tag': tag,
                 'img': img,
             };
             //提交数据
@@ -204,6 +163,7 @@
             }
         })
 
+        //图片URL获取
         $('#btnUpdataImage').change(function () {
             var formData = new FormData();
             formData.append('file', dataUpdataImage.files[0]);
@@ -226,9 +186,10 @@
             }
         })
 
+        //加载图片组件
         $('#btnUpdataImgUrl').click(function () {
-            urlUpdataImage = $('#urlUpdataImage').val();
-
+            var urlUpdataImage = $('#urlUpdataImage').val();
+            console.log(checkChooseTagId)
             if (checkUrl(urlUpdataImage)) {
                 //限制图片个数
                 if ($('#listImageUrl').children().length >= DefSetCardsImgNum) {
@@ -260,11 +221,26 @@
                 });
             }
             //重置Url输入框
-            $('#urlUpdataImage').val('')
+            $('#urlUpdataImage').val('');
             //删除按钮初始化
             $('.js-btn-delete-UrlUpdataImage').click(function () {
                 $(this).parent().parent().parent().parent().remove();
             });
+        })
+
+        $('#btnChooseTag').click(function () {
+            //重置标签组件
+            $('#btnChooseTagAdd').siblings("div[class='mdui-chip']").empty();
+            //定义一个空数组 
+            checkChooseTagId = [];
+            $("input[name='inputChooseTag']:checked").each(function (i) {
+                checkChooseTagId[i] = $(this).val();
+                $('#btnChooseTagAdd').before(
+                    `<div class="mdui-chip">
+                        <span class="mdui-chip-title">${$(this).parent().text()}</span>
+                    </div>` )
+            });
+
         })
     });
 </script>

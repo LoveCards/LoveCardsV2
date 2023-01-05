@@ -6,8 +6,12 @@ var apiUserDelete = '/api/user/delete';//删除用户
 var apiUserAdd = '/api/user/add';//添加用户
 var apiUserEdit = '/api/user/edit';//添加用户
 
-var apiSystemSite = '/api/system/site';//
-var apiSystemEmail = '/api/system/email';//
+var apiSystemSite = '/api/system/site';//系统设置
+var apiSystemEmail = '/api/system/email';//系统邮箱设置
+
+var apiCardsTagAdd = '/api/cardstag/add';//添加标签
+var apiCardsTagEdit = '/api/cardstag/edit';//编辑标签
+var apiCardsTagDelete = '/api/cardstag/delete';//删除标签
 
 /*
 *API请求函数
@@ -116,7 +120,7 @@ $(function () {
     if (msg != 'undefined' && msg != undefined) {
         data = false;
         mdui.snackbar({
-            message: '注意:' + msg,
+            message: msg,
             position: 'left-top'
         });
         //重置
