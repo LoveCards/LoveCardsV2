@@ -90,9 +90,9 @@ class Cards
         }
 
         //Cards写入库
-        $resultCardId = $result->insertGetId($data);
+        $CardId = $result->insertGetId($data);
         //Cards写入失败返回
-        if (!$resultCardId) {
+        if (!$CardId) {
             return Common::create(['cards' => '写入失败'], '添加失败', 400);
         }
 
@@ -108,7 +108,7 @@ class Cards
             $data = array(); //清空数组
             foreach ($img as $key => $value) {
                 $data[$key]['aid'] = 1;
-                $data[$key]['pid'] = $resultCardId;
+                $data[$key]['pid'] = $CardId;
                 $data[$key]['url'] = $value;
                 $data[$key]['time'] = $time;
             }
@@ -120,7 +120,7 @@ class Cards
             //获取card数据库对象
             $result = Db::table('cards');
             //cards更新数据库若失败返回
-            if (!$result->where('id', $resultCardId)->update(['img' => $img[0]])) {
+            if (!$result->where('id', $CardId)->update(['img' => $img[0]])) {
                 return Common::create(['cards.img' => 'cards.img更新失败'], '添加失败', 400);
             }
         }
@@ -136,7 +136,7 @@ class Cards
             //构建数据数组
             $data = array(); //清空数组
             foreach ($tag as $key => $value) {
-                $data[$key]['cid'] = $resultCardId;
+                $data[$key]['cid'] = $CardId;
                 $data[$key]['tid'] = $value;
                 $data[$key]['time'] = $time;
             }
@@ -144,9 +144,16 @@ class Cards
             if (!$result->insertAll($data)) {
                 return Common::create(['tag' => 'tag写入失败'], '添加失败', 400);
             }
+
+            //获取card数据库对象
+            $result = Db::table('cards');
+            //cards更新数据库若失败返回
+            if (!$result->where('id', $CardId)->update(['tag' => Json_encode($tag)])) {
+                return Common::create(['cards.tag' => 'cards.tag更新失败'], '添加失败', 400);
+            }
         }
         //返回数据
-        return Common::create(['id' => $resultCardId], '添加成功', 200);
+        return Common::create(['id' => $CardId], '添加成功', 200);
     }
 
     //编辑-POST
@@ -206,7 +213,8 @@ class Cards
         }
         //获取Cards数据库对象
         $result = Db::table('cards')->where('id', $id);
-        if (!$result->find()) {
+        $resultCardData = $result->find();
+        if (!$resultCardData) {
             return Common::create([], 'id不存在', 400);
         }
 
@@ -256,12 +264,14 @@ class Cards
             if (!$result->insertAll($data)) {
                 return Common::create(['img' => '写入失败'], '编辑失败', 400);
             }
-
-            //获取card数据库对象
-            $result = Db::table('cards');
-            //cards更新数据库若失败返回
-            if (!$result->where('id', $id)->update(['img' => $img[0]])) {
-                return Common::create(['cards.img' => '更新失败'], '添加失败', 400);
+            //判断是否需要更新视图字段
+            if ($resultCardData['img'] != $img[0]) {
+                //获取card数据库对象
+                $result = Db::table('cards');
+                //cards更新数据库若失败返回
+                if (!$result->where('id', $id)->update(['img' => $img[0]])) {
+                    return Common::create(['cards.img' => '更新失败'], '添加失败', 400);
+                }
             }
         }
 
@@ -285,6 +295,15 @@ class Cards
             //tag_map写入数据库若失败返回
             if (!$result->insertAll($data)) {
                 return Common::create(['img' => '写入失败'], '添加失败', 400);
+            }
+            //判断是否需要更新视图字段
+            if ($resultCardData['tag'] != Json_encode($tag)) {
+                //获取card数据库对象
+                $result = Db::table('cards');
+                //cards更新数据库若失败返回
+                if (!$result->where('id', $id)->update(['tag' => Json_encode($tag)])) {
+                    return Common::create(['cards.tag' => 'cards.tag更新失败'], '添加失败', 400);
+                }
             }
         }
 

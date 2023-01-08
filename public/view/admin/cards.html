@@ -62,7 +62,7 @@
                     <td>{$data.time}</td>
                     <td>{$data.ip}</td>
                     <td>
-                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon" onclick="jumpUrl('/admin/cards/edit/id/{$data.id}',0)">
                             <i class="mdui-icon material-icons">edit</i>
                         </button>
                         <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
@@ -73,29 +73,6 @@
                 {/volist}
             </tbody>
         </table>
-    </div>
-
-    <div class="mdui-dialog" id="dialogedit">
-        <div class="mdui-dialog-title">编辑卡片</div>
-        <div class="mdui-row mdui-p-x-4">
-            <label class="mdui-textfield-label mdui-m-t-2">状态</label>
-            <select class="mdui-select" id="editTagDataState">
-                <option value="0">启用</option>
-                <option value="1">关闭</option>
-            </select>
-            <div class="mdui-textfield">
-                <label class="mdui-textfield-label">标签名</label>
-                <input class="mdui-textfield-input" id="editTagDataName" type="text" />
-            </div>
-            <div class="mdui-textfield">
-                <label class="mdui-textfield-label">提示</label>
-                <textarea class="mdui-textfield-input" id="editTagDataTip" rows="4"></textarea>
-            </div>
-        </div>
-
-        <div class="mdui-dialog-actions">
-            <button class="mdui-btn mdui-ripple" id="btnEditTag" mdui-dialog-close>确定</button>
-        </div>
     </div>
 
     <!-- 分页按钮组件 -->
@@ -122,7 +99,7 @@
                 'id': $(this).parent().siblings('td:first').html()
             };
             //提交数据
-            var result = apiAjax0(data, apiCardsTagDelete, 'POST');
+            var result = apiAjax0(data, apicardsDelete, 'POST');
             if (result) {
                 //附加功能
                 $(this).parent().html("已删除")
@@ -130,48 +107,6 @@
                     message: '成功删除ID' + data['id'],
                     position: 'left-top'
                 })
-            }
-        });
-
-        $('.js-Btn-Edit').click(function () {
-            var thisObj = $(this).parent().siblings('td');
-            $('#editTagDataName').val(thisObj.eq(1).html());
-            $('#editTagDataTip').val(thisObj.eq(2).html());
-            $('#editTagDataState').val(thisObj.eq(3).attr('value'));
-            $('#btnEditTag').val(thisObj.eq(0).html())
-        });
-
-        $('#btnEditTag').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $('#btnEditTag').val(),
-                'name': $('#editTagDataName').val(),
-                'tip': $('#editTagDataTip').val(),
-                'state': $('#editTagDataState').val()
-            };
-            //提交数据
-            var result = apiAjax0(data, apiCardsTagEdit, 'POST');
-            if (result) {
-                //附加功能
-                $.cookie('msg', '编辑成功', { path: '/' });//写入提示
-                //刷新页面
-                jumpUrl('', 100);
-            }
-        });
-
-        $('#btnAddTag').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'name': $('#addTagDataName').val(),
-                'tip': $('#addTagDataTip').val()
-            };
-            //提交数据
-            var result = apiAjax0(data, apiCardsTagAdd, 'POST');
-            if (result) {
-                //附加功能
-                $.cookie('msg', '添加成功', { path: '/' });//写入提示
-                //刷新页面
-                jumpUrl('', 100);
             }
         });
     })
