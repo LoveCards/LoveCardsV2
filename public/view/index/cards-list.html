@@ -3,13 +3,13 @@
 <!-- 页体 -->
 <div id="jsParameter" jsTabClass="1" class="mdui-container">
     <!-- 顶部按钮组件 -->
-    <div class="mdui-row mdui-p-t-2">
+    <div class="mdui-p-t-2">
         <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
             onclick="location.assign('/index/cards/add')">发布卡片</button>
     </div>
 
     <!-- 主体组件 -->
-    <div class="mdui-row mdui-p-t-2">
+    <div class="mdui-p-t-2">
 
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
             <!-- 卡片循环 -->
@@ -35,7 +35,7 @@
                     {if $data.img}
                     <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">
-                            <img src="{$data.img}" onclick="location.assign('/index/Cards/card/id/{$data.id}')"/>
+                            <img src="{$data.img}" onclick="location.assign('/index/Cards/card/id/{$data.id}')" />
                         </div>
                     </div>
                     {/if}
@@ -43,9 +43,8 @@
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
                         {if $data.tag}
-                        <div class="css-cards-primary-subtitle">
-                            Tag:<a href="https://qixun.site/index.php/category/gzjl/">工作记录</a>,<a
-                                href="https://qixun.site/index.php/category/gzjl/">工作记录</a>
+                        <div class="css-cards-primary-subtitle" value={$data.tag|raw}>
+                            <!-- Tag标签 -->
                         </div>
                         {/if}
                         <div class="mdui-p-t-1 css-cards-primary-content"
@@ -53,16 +52,24 @@
                             {$data.content}
                         </div>
                     </div>
-                    
+
 
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
                         <button class="css-card-actions-btn mdui-btn mdui-float-left">
-                            <i class="mdui-icon material-icons">insert_comment</i>评论{$data.good}
+                            <i class="mdui-icon material-icons">insert_comment</i>评论{$data.comments}
                         </button>
-                        <button class="css-card-actions-good-0 mdui-btn mdui-float-right">
-                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.comments}
+
+                        {if $data.ipGood == false}
+                        <button value="{$data.id}"
+                            class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
                         </button>
+                        {else}
+                        <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {/if}
                     </div>
                 </div>
             </div>
@@ -72,7 +79,7 @@
     </div>
 
     <!-- 分页按钮组件 -->
-    <div class="mdui-row mdui-p-t-2 mdui-text-center">
+    <div class="mdui-p-t-2 mdui-text-center">
         <div style="display: none;">{$cardsListRaw|raw}</div>
         <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
             <i class="mdui-icon material-icons ">first_page</i>
@@ -89,9 +96,14 @@
 
 <script>
     $(function (param) {
+        //初始化分页
         pager();
+        //获取Tag数据
+        ViewCardsTag({$cardsTagData|raw});
+
     })
 </script>
 
 </body>
+
 </html>

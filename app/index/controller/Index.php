@@ -25,6 +25,6 @@ class Index
             'viewTitle'  => '首页'
         ]);
         //输出模板
-        return View::fetch('/index');
+        return View::fetch('/index-env');
     }
 }

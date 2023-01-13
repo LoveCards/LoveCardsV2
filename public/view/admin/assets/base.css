@@ -4,6 +4,16 @@
     border-bottom-left-radius: 30%; */
 }
 
+/* 卡页面样式 */
+.css-cardsList-img {
+    Background-color: #0000000a;
+    height: 240px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-radius: 3%
+}
+
 /* 写卡页面样式 */
 .css-cardsAdd-img {
     Background-color: #0000000a;

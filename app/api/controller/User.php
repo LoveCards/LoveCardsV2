@@ -139,6 +139,9 @@ class User
             return Common::create([], '缺少id参数', 400);
         }
 
+        if($userData['id'] == $id){
+            return Common::create(['tip' => '您不能删除您自己的账户'], '删除失败', 400);
+        }
         //获取数据库对象
         $result = Db::table('user')->where('id', $id);
 

@@ -239,7 +239,9 @@ class Cards
             $data['taContact'] = $taContact;
         }
         //Cards写入库
-        $result->update($data);
+        if (!$result->update($data)) {
+            return Common::create(['cards' => '更新失败'], '编辑失败', 400);
+        }
 
         //获取img数据库对象
         $result = Db::table('img');
@@ -351,5 +353,40 @@ class Cards
 
         //返回数据
         return Common::create([], '删除成功', 200);
+    }
+
+    //点赞-POST
+    public function good()
+    {
+        //获取数据
+        $id = Request::param('id');
+        $ip = Common::getIp();
+        $time = date('Y-m-d H:i:s');
+
+        //获取Cards数据库对象
+        $resultCards = Db::table('cards')->where('id', $id);
+        $resultCardsData = $resultCards->find();
+        if (!$resultCardsData) {
+            return Common::create([], 'id不存在', 400);
+        }
+
+        //获取good数据库对象
+        $resultGood = Db::table('good');
+        if ($resultGood->where('pid', $id)->where('ip', $ip)->find()) {
+            return Common::create(['tip' => '请勿重复点赞'], '点赞失败', 400);
+        }
+
+        //更新视图字段
+        if (!$resultCards->inc('good')->update()) {
+            return Common::create(['cards.good' => 'cards.good更新失败'], '点赞失败', 400);
+        };
+
+        $data = ['aid' => '1', 'pid' => $id, 'ip' => $ip, 'time' => $time];
+        if (!$resultGood->insert($data)) {
+            return Common::create(['good' => 'good写入失败'], '点赞失败', 400);
+        };
+
+        //返回数据
+        return Common::create(['Num' => $resultCardsData['good']+1], '点赞成功', 200);
     }
 }

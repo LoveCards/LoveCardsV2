@@ -23,7 +23,7 @@ class CardsTag
 
         $name = Request::param('name');
         $tip = Request::param('tip');
-        if (strlen($name) > 8 || strlen($tip) > 64) {
+        if (mb_strlen($name, 'utf-8') > 8 || mb_strlen($tip, 'utf-8') > 64) {
             return Common::create(['name' => 'name长度<=8', 'tip' => 'tip长度<=64'], '添加失败', 400);
         }
         $time = date('Y-m-d H:i:s');

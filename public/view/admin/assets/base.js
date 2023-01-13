@@ -13,6 +13,9 @@ var apicardsAdd = '/api/cards/add';//添加卡片
 var apicardsEdit = '/api/cards/edit';//编辑卡片
 var apicardsDelete = '/api/cards/delete';//删除卡片
 
-var apiCardsTagAdd = '/api/cardstag/add';//添加标签
-var apiCardsTagEdit = '/api/cardstag/edit';//编辑标签
-var apiCardsTagDelete = '/api/cardstag/delete';//删除标签
+var apiCardsTagAdd = '/api/CardsTag/add';//添加标签
+var apiCardsTagEdit = '/api/CardsTag/edit';//编辑标签
+var apiCardsTagDelete = '/api/CardsTag/delete';//删除标签
+
+var apiCardsCommentsEdit = '/api/CardsComments/edit';//编辑评论
+var apiCardsCommentsDelete = '/api/CardsComments/delete';//删除评论

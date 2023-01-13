@@ -11,7 +11,7 @@
             {else}
             <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
             {/if}
-            <div class="mdui-typo-subheading-opacity">{$cardData['time']}</div>
+            <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
         </div>
         <div class="mdui-col-xs-2">
             <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
@@ -19,26 +19,28 @@
                 <i class="mdui-icon material-icons">arrow_back</i>
             </button>
         </div>
+    </div>
 
-        <!-- 卡片组件 -->
-        <div class="mdui-col-xs-12 mdui-p-t-2">
-            <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
-                <div class="mdui-typo-headline-opacity mdui-text-left">
-                    {if $cardData['woName']}
-                    {$cardData['woName']}
-                    {else}
-                    匿名
-                    {/if}
-                </div>
-                <div class="mdui-text-center">
-                    <i class="css-icon iconfont icon-heart-pulse"></i>
-                </div>
-                <div class="mdui-typo-headline-opacity mdui-text-right">{$cardData['taName']}</div>
+    <!-- 卡片组件 -->
+    <div class="mdui-p-t-2">
+        <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
+            <div class="mdui-typo-headline-opacity mdui-text-left">
+                {if $cardData['woName']}
+                {$cardData['woName']}
+                {else}
+                匿名
+                {/if}
             </div>
+            <div class="mdui-text-center">
+                <i class="css-icon iconfont icon-heart-pulse"></i>
+            </div>
+            <div class="mdui-typo-headline-opacity mdui-text-right">{$cardData['taName']}</div>
         </div>
+    </div>
 
-        <!-- 内容组件 -->
-        <div class="mdui-col-xs-12 mdui-col-sm-7 mdui-p-t-3">
+    <!-- 内容组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-sm-7 mdui-p-t-3">
 
             <div class="mdui-card">
                 <!-- 卡片的内容 -->
@@ -48,16 +50,23 @@
 
                 <div class="mdui-typo">
                     <blockquote>
-                        <p>
+                        <p style="font-size: 16px;">
                             {$cardData['content']}
                         </p>
                     </blockquote>
                 </div>
 
                 <div class="mdui-card-actions">
-                    <button class="css-card-actions-good-0 mdui-btn mdui-float-right">
+                    {if $cardData['ipGood'] == false}
+                    <button value="{$cardData['id']}"
+                        class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
                         <i class="mdui-icon material-icons">favorite</i>点赞{$cardData['good']}
                     </button>
+                    {else}
+                    <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                        <i class="mdui-icon material-icons">favorite</i>点赞{$cardData['good']}
+                    </button>
+                    {/if}
                 </div>
 
             </div>
@@ -67,27 +76,25 @@
                     <img class="mdui-img-fluid" src="//test.fatda.cn/uploads/20221122019047855.jpeg" />
                 </div>
             </div> -->
-
             {if $imgData}
-            <div class="mdui-panel mdui-panel-gapless mdui-m-t-1" mdui-panel>
-                <div class="mdui-panel-item mdui-panel-item-open">
-                    <div class="mdui-panel-item-header">图片</div>
-                    <div class="mdui-panel-item-body">
-                        <img class="mdui-img-fluid" src="//test.fatda.cn/uploads/20221122019047855.jpeg" />
-                    </div>
-                </div>
-
-                <div class="mdui-panel-item">
-                    <div class="mdui-panel-item-header">更多图片</div>
-                    <div class="mdui-panel-item-body">
+            <div class="mdui-card mdui-m-t-1">
+                <div class="mdui-m-x-1 mdui-m-t-1">
+                    <div class="mdui-row-xs-2 mdui-row-sm-3">
                         {volist name="imgData" id="data"}
-                        <img class="mdui-img-fluid" src="{$data.url}" />
+                        <div class="mdui-col mdui-p-b-1">
+                            <div class="mdui-grid-tile">
+                                <div class="css-cardsList-img">
+                                    <img class="js-url-UpdataImage" src="{$data.url}">
+                                </div>
+                            </div>
+                        </div>
                         {/volist}
                     </div>
                 </div>
             </div>
             {/if}
         </div>
+
 
         <!-- 评论组件 -->
         <div class="mdui-col-xs-12 mdui-col-sm-5 mdui-p-t-3">
@@ -97,69 +104,66 @@
                     <div class="mdui-typo-title-opacity">评论</div>
 
                     <div class="mdui-textfield">
-                        <input class="mdui-textfield-input" type="text" placeholder="姓名" />
+                        <input class="mdui-textfield-input" type="text" placeholder="姓名" id="addCommentsDataName"/>
                     </div>
                     <div class="mdui-textfield">
-                        <input class="mdui-textfield-input" type="text" placeholder="内容" />
+                        <input class="mdui-textfield-input" type="text" placeholder="内容" id="addCommentsDataContent"/>
                     </div>
                 </div>
 
                 <div class="mdui-card-actions">
-                    <button class="mdui-btn mdui-color-theme-accent mdui-float-right">
+                    <button id="btnAddComments" class="mdui-btn mdui-color-theme-accent mdui-float-right">
                         提交
                     </button>
                 </div>
-
             </div>
 
+            {if $cardsCommentsListData}
             <div class="mdui-card mdui-m-t-1">
                 <!-- 卡片的内容 -->
                 <div class="mdui-p-t-2 mdui-p-x-2">
-                    <div class="mdui-typo-title-opacity">评论</div>
+                    <div class="mdui-typo-subheading-opacity">共{$cardData['comments']}条</div>
                 </div>
-                <ul class="mdui-list mdui-list-dense">
-                    <li class="css-list-item">
-                        <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">Brunch this weekend?</div>
-                            <div class="mdui-list-item-text">
-                                <span class="mdui-text-color-theme-text">All Connors</span> - I'll be in your
-                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
-                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
-                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
-                                neighborhood doing errands this weekend. Do you want ... - I'll be in your
-                                neighborhood doing errands this weekend. Do you want ...
-                            </div>
-                        </div>
-                    </li>
-
+                <!-- 卡片的内容 -->
+                <ul class="mdui-list">
+                    {volist name="cardsCommentsListData" id="data"}
                     <li class="mdui-divider"></li>
                     <li class="css-list-item">
                         <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">Summer BBQ</div>
+                            <div class="mdui-list-item-title">{$data.name}</div>
                             <div class="mdui-list-item-text">
-                                <span class="mdui-text-color-theme-text">to Alex, Scott, Jennifer</span> - Wish I
-                                could come, but I'm out of town this weekend.
+                                {$data.content}
+                            </div>
+                            <div class="mdui-list-item-text">
+                                {$data.id}# {$data.time}
                             </div>
                         </div>
                     </li>
-
-                    <li class="mdui-divider"></li>
-                    <li class="css-list-item">
-                        <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">Oui oui</div>
-                            <div class="mdui-list-item-text">
-                                <span class="mdui-text-color-theme-text">Sandra Adams</span> - Do you have Paris
-                                recommendations? Have you ever been?
-                            </div>
-                        </div>
-                    </li>
-
+                    {/volist}
                 </ul>
-
             </div>
 
+            <!-- 分页按钮组件 -->
+            <div class="mdui-p-t-2 mdui-text-center">
+                <div style="display: none;">{$cardsCommentsListRaw|raw}</div>
+                <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
+                    <i class="mdui-icon material-icons ">first_page</i>
+                </button>
+                <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
+                    <i class="mdui-icon material-icons">last_page</i>
+                </button>
+            </div>
+            {else}
+            <div class="mdui-card mdui-m-t-1">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-y-2 mdui-p-x-2">
+                    <div class="mdui-typo-subheading-opacity">还没有评论哦~</div>
+                </div>
+            </div>
+            {/if}
         </div>
     </div>
+</div>
 
 </div>
 
@@ -167,7 +171,23 @@
 
 <script>
     $(function () {
+        pager();
 
+        $('#btnAddComments').click(function () {
+            var data = {
+                'cid': {$cardData['id']},
+                'name': $('#addCommentsDataName').val(),
+                'content': $('#addCommentsDataContent').val(),
+            };
+            //提交数据
+            var result = apiAjax0(data, apiUrlCardsCommentsAdd, 'POST');
+            if (result) {
+                //附加功能
+                $.cookie('msg', '编辑成功', { path: '/' });//写入提示
+                //刷新页面
+                jumpUrl('', 100);
+            }
+        });
     })
 </script>
 
