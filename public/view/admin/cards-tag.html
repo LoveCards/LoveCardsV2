@@ -10,6 +10,7 @@
         <div class="mdui-col-xs-6">
             <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
                 mdui-dialog="{target: '#dialogAdd'}">添加标签</button>
+            <!-- 弹窗组件 -->
             <div class="mdui-dialog" id="dialogAdd">
                 <div class="mdui-dialog-title">添加标签</div>
                 <div class="mdui-row mdui-p-x-4">
@@ -22,7 +23,6 @@
                         <textarea class="mdui-textfield-input" id="addTagDataTip" rows="4"></textarea>
                     </div>
                 </div>
-
                 <div class="mdui-dialog-actions">
                     <button class="mdui-btn mdui-ripple" id="btnAddTag" mdui-dialog-close>确定</button>
                 </div>
@@ -36,9 +36,9 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>状态</th>
                     <th>标签名</th>
                     <th>提示</th>
-                    <th>状态</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -46,12 +46,18 @@
                 {volist name='list' id='data'}
                 <tr>
                     <td>{$data.id}</td>
+                    <td value="{$data.state}">
+                        <div class="mdui-chip">
+                            {if $data.state == 0}
+                            <span class="mdui-chip-title">启用</span>
+                            {/if}
+                            {if $data.state == 1}
+                            <span class="mdui-chip-title">关闭</span>
+                            {/if}
+                        </div>
+                    </td>
                     <td>{$data.name}</td>
                     <td>{$data.tip}</td>
-                    <td value="{$data.state}">
-                        {if $data.state == 0}启用{/if}
-                        {if $data.state == 1}关闭{/if}
-                    </td>
                     <td>
                         <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
                             <i class="mdui-icon material-icons">edit</i>
@@ -66,17 +72,24 @@
         </table>
     </div>
 
+    <!-- 弹窗组件 -->
     <div class="mdui-dialog" id="dialogedit">
         <div class="mdui-dialog-title">编辑标签</div>
         <div class="mdui-row mdui-p-x-4">
-            <label class="mdui-textfield-label mdui-m-t-2">状态</label>
-            <select class="mdui-select" id="editTagDataState">
-                <option value="0">启用</option>
-                <option value="1">关闭</option>
-            </select>
-            <div class="mdui-textfield">
-                <label class="mdui-textfield-label">标签名</label>
-                <input class="mdui-textfield-input" id="editTagDataName" type="text" />
+            <div class="mdui-row">
+                <div class="mdui-col-xs-9 mdui-col-md-10">
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">标签名</label>
+                        <input class="mdui-textfield-input" id="editTagDataName" type="text" />
+                    </div>
+                </div>
+                <div class="mdui-col-xs-3 mdui-col-md-2">
+                    <label class="mdui-textfield-label mdui-m-t-2">状态</label>
+                    <select class="mdui-select" id="editTagDataState">
+                        <option value="0">启用</option>
+                        <option value="1">关闭</option>
+                    </select>
+                </div>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">提示</label>
@@ -104,34 +117,36 @@
 {include file="public/footer"}
 
 <script>
-    $(function (param) {
+    $(function () {
+        //初始化-分页组件
         pager();
 
+        //按钮-删除
         $('.js-Btn-Delete').click(function () {
             var data = {
                 'uuid': $.cookie('uuid'),
                 'id': $(this).parent().siblings('td:first').html()
             };
-            //提交数据
             var result = apiAjax0(data, apiCardsTagDelete, 'POST');
             if (result) {
-                //附加功能
-                $(this).parent().html("已删除")
+                $(this).parent().html("已删除");
                 mdui.snackbar({
                     message: '成功删除ID' + data['id'],
                     position: 'left-top'
-                })
+                });
             }
         });
 
+        //按钮-初始化-编辑
         $('.js-Btn-Edit').click(function () {
             var thisObj = $(this).parent().siblings('td');
-            $('#editTagDataName').val(thisObj.eq(1).html());
-            $('#editTagDataTip').val(thisObj.eq(2).html());
-            $('#editTagDataState').val(thisObj.eq(3).attr('value'));
-            $('#btnEditTag').val(thisObj.eq(0).html())
+            $('#editTagDataName').val(thisObj.eq(2).html());
+            $('#editTagDataTip').val(thisObj.eq(3).html());
+            $('#editTagDataState').val(thisObj.eq(1).attr('value'));
+            $('#btnEditTag').val(thisObj.eq(0).html());
         });
 
+        //按钮-请求-编辑
         $('#btnEditTag').click(function () {
             var data = {
                 'uuid': $.cookie('uuid'),
@@ -140,28 +155,23 @@
                 'tip': $('#editTagDataTip').val(),
                 'state': $('#editTagDataState').val()
             };
-            //提交数据
             var result = apiAjax0(data, apiCardsTagEdit, 'POST');
             if (result) {
-                //附加功能
-                $.cookie('msg', '编辑成功', { path: '/' });//写入提示
-                //刷新页面
+                $.cookie('msg', '编辑成功', { path: '/' });
                 jumpUrl('', 100);
             }
         });
 
+        //按钮-请求-添加
         $('#btnAddTag').click(function () {
             var data = {
                 'uuid': $.cookie('uuid'),
                 'name': $('#addTagDataName').val(),
                 'tip': $('#addTagDataTip').val()
             };
-            //提交数据
             var result = apiAjax0(data, apiCardsTagAdd, 'POST');
             if (result) {
-                //附加功能
-                $.cookie('msg', '添加成功', { path: '/' });//写入提示
-                //刷新页面
+                $.cookie('msg', '添加成功', { path: '/' });
                 jumpUrl('', 100);
             }
         });

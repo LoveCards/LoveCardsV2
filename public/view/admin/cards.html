@@ -19,14 +19,14 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>状态*</th>
+                    <th>状态</th>
                     <th>置顶</th>
-                    <th>模型*</th>
+                    <th>模型</th>
                     <th>名字</th>
                     <th>联系方式</th>
-                    <th>TA的名字*</th>
+                    <th>TA的名字</th>
                     <th>TA的联系方式</th>
-                    <th>内容*</th>
+                    <th>内容</th>
                     <th>点赞数</th>
                     <th>评论数</th>
                     <th>图片</th>
@@ -40,13 +40,32 @@
                 <tr>
                     <td>{$data.id}</td>
                     <td value="{$data.state}">
-                        {if $data.state == 0}正常{/if}
-                        {if $data.state == 1}封禁{/if}
+                        <div class="mdui-chip">
+                            {if $data.state == 0}
+                            <span class="mdui-chip-title">正常</span>
+                            {/if}
+                            {if $data.state == 1}
+                            <span class="mdui-chip-title">封禁</span>
+                            {/if}
+                        </div>
                     </td>
                     <td value="{$data.top}">
-                        {if $data.top == 1}Yes{else}No{/if}
+                        <div class="mdui-chip">
+                            {if $data.top == 1}
+                            <span class="mdui-chip-title">Yes</span>
+                            {/if}
+                            {if $data.top == 0}
+                            <span class="mdui-chip-title">No</span>
+                            {/if}
+                        </div>
                     </td>
-                    <td>{$data.model}</td>
+                    <td>
+                        <div class="mdui-chip">
+                            <span class="mdui-chip-title">
+                                {$data.model}
+                            </span>
+                        </div>
+                    </td>
                     <td>{if $data.woName != ''}{$data.woName}{else}[匿]{/if}</td>
                     <td>{if $data.woContact != ''}{$data.woContact}{else}[无]{/if}</td>
                     <td>{$data.taName}</td>
@@ -58,11 +77,18 @@
                     </td>
                     <td>{$data.good}</td>
                     <td>{$data.comments}</td>
-                    <td>{if $data.img != ''}Yes{else}No{/if}</td>
+                    <td>
+                        <div class="mdui-chip">
+                            <span class="mdui-chip-title">
+                                {if $data.img != ''}Yes{else}No{/if}
+                            </span>
+                        </div>
+                    </td>
                     <td>{$data.time}</td>
                     <td>{$data.ip}</td>
                     <td>
-                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon" onclick="jumpUrl('/admin/cards/edit/id/{$data.id}',0)">
+                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon"
+                            onclick="jumpUrl('/admin/cards/edit/id/{$data.id}',0)">
                             <i class="mdui-icon material-icons">edit</i>
                         </button>
                         <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
@@ -91,26 +117,25 @@
 
 <script>
     $(function (param) {
+        //初始化-分页组件
         pager();
 
+        //按钮-删除
         $('.js-Btn-Delete').click(function () {
             var data = {
                 'uuid': $.cookie('uuid'),
                 'id': $(this).parent().siblings('td:first').html()
             };
-            //提交数据
             var result = apiAjax0(data, apicardsDelete, 'POST');
             if (result) {
-                //附加功能
-                $(this).parent().html("已删除")
+                $(this).parent().html("已删除");
                 mdui.snackbar({
                     message: '成功删除ID' + data['id'],
                     position: 'left-top'
-                })
+                });
             }
         });
     })
-
 </script>
 </body>
 

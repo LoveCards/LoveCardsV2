@@ -5,61 +5,89 @@
 
     <div class="mdui-row mdui-p-t-2">
         <div class="mdui-col-md-6 mdui-col-offset-md-3">
-            <div class="mdui-col-xs-8 mdui-col-sm-10">
-                <div class="mdui-textfield">
-                    <input class="mdui-textfield-input" name="s" type="search" placeholder="search">
+            <div class="mdui-row">
+                <div class="mdui-col-xs-9 mdui-col-sm-10">
+                    <div class="mdui-textfield">
+                        <input id="SearchValue" class="mdui-textfield-input" type="search" placeholder="search">
+                    </div>
                 </div>
-            </div>
-            <div class="mdui-col-xs-4 mdui-col-sm-2 mdui-text-center mdui-float-right">
-                <button type="submit" class="mdui-m-y-2 mdui-btn mdui-btn-raised mdui-color-theme-accent">搜 索</button>
+                <div class="mdui-col-xs-3 mdui-col-sm-2 mdui-text-center mdui-float-right">
+                    <button id="requestSearch" type="button"
+                        class="mdui-m-y-2 mdui-btn mdui-btn-raised mdui-color-theme-accent">搜
+                        索</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="mdui-row mdui-m-t-2">
+    <!-- 主体组件 -->
+    <div id="jsMainComp" class="mdui-m-t-2">
+
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
             <!-- 卡片循环 -->
-
+            {volist name='cardsListData' id='data'}
             <div class="mdui-col mdui-m-b-1">
-                <div class="mdui-card">
 
+                <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
-                    <div class="mdui-p-a-2">
-                        <div class="css-caard-header-title">柯政程的表白卡</div>
-                        <div class="css-caard-header-subtite">柯政程 表白 蔡幸妘</div>
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            {$data.woName}的表白卡
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的表白卡
+                        </div>
+                        <div class="css-caard-header-subtite">表白 {$data.taName}</div>
+                        {/if}
                     </div>
-                    <div class="mdui-card-media">
+                    {if $data.img}
+                    <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">
-                            <img src="https://test.fatda.cn/uploads/20210704538378743.jpg" />
+                            <img src="{$data.img}" onclick="location.assign('/index/Cards/card/id/{$data.id}')" />
                         </div>
                     </div>
+                    {/if}
 
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
-                        <div class="css-cards-primary-subtitle">
-                            Tag:<a href="https://qixun.site/index.php/category/gzjl/">工作记录</a>,<a
-                                href="https://qixun.site/index.php/category/gzjl/">工作记录</a>
+                        {if $data.tag}
+                        <div class="css-cards-primary-subtitle" value={$data.tag|raw}>
+                            <!-- Tag标签 -->
                         </div>
-                        <div class="mdui-p-t-1 css-cards-primary-content">
-                            xxyqs作品集欢迎欣赏xxyqs...
+                        {/if}
+                        <div class="mdui-p-t-1 css-cards-primary-content"
+                            onclick="location.assign('/index/Cards/card/id/{$data.id}')">
+                            {$data.content}
                         </div>
                     </div>
+
 
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
-                        <div class="mdui-typo">
-                            <button class="css-card-actions-btn mdui-btn mdui-float-left">
-                                <i class="mdui-icon material-icons">insert_comment</i>评论0
-                            </button>
-                            <button class="css-card-actions-good-0 mdui-btn mdui-float-right">
-                                <i class="mdui-icon material-icons">favorite</i>点赞0
-                            </button>
-                        </div>
-                    </div>
+                        <button class="css-card-actions-btn mdui-btn mdui-float-left"
+                            onclick="location.assign('/index/Cards/card/id/{$data.id}')">
+                            <i class="mdui-icon material-icons">insert_comment</i>评论{$data.comments}
+                        </button>
 
+                        {if $data.ipGood == false}
+                        <button value="{$data.id}"
+                            class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {else}
+                        <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {/if}
+                    </div>
                 </div>
             </div>
-            
+            {/volist}
+
         </div>
     </div>
 
@@ -67,7 +95,26 @@
 
 {include file="public/footer"}
 
+<script>
+    $(function () {
+        //初始化-分页组件
+        pager();
+        //初始化-Tag组件
+        ViewCardsTag({$cardsTagData|raw});
+        //初始化-View-搜索
+        if (getUrlParam('search')) {
+            $('#SearchValue').val(getUrlParam('value'));
+            if (!$('.mdui-card').length) {
+                $('#jsMainComp').children().html('<div class="mdui-typo-title-opacity mdui-text-center" style="padding-top: 184px">没有唉~</div>')
+            }
+        }
+    });
 
+    //表单-按钮-搜索
+    $('#requestSearch').click(function () {
+        jumpUrl('/index/Cards/search?search=true&model=0&value=' + $('#SearchValue').val(), 0);
+    });
+</script>
 
 </body>
 

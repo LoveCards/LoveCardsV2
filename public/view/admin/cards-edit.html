@@ -17,11 +17,11 @@
     <div class="mdui-card mdui-p-a-2">
 
         <label class="mdui-textfield-label">标签</label>
-        <!-- 添加标签 -->
         <button id="btnChooseTagAdd" class="mdui-btn mdui-btn-icon mdui-ripple"
             mdui-dialog="{target: '#dialogChooseTag'}">
             <i class="mdui-icon material-icons">add</i>
         </button>
+        <!-- 弹窗组件 -->
         <div class="mdui-dialog" id="dialogChooseTag">
             <div class="mdui-dialog-title">选择标签</div>
             <div class="mdui-row mdui-p-x-4">
@@ -132,9 +132,9 @@
                 </div>
                 {/volist}
             </div>
-            <!-- 添加图片 -->
             <button class="mdui-btn mdui-btn-block mdui-text-color-theme-accent mdui-ripple"
                 mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
+            <!-- 弹窗组件 -->
             <div class="mdui-dialog" id="dialogUploadImage">
                 <div class="mdui-dialog-title">上传图片</div>
                 <div class="mdui-dialog-content">
@@ -171,52 +171,49 @@
 {include file="public/footer"}
 <script src="{__A-assets__}/cardsEdit.js"></script>
 <script>
-    //初始化Tag组件
+    //初始化-Tag组件
     {if $idCardData['tag']}
     InitialChooseTagAdd(JSON.parse('{$idCardData['tag']|raw}'));
     {/if}
 
-        $(function () {
-            //提交
-            $('#submitAdd').click(function () {
-                //构建图片url数组并获取
-                var jsonImageUrl = [];
-                $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
-                    jsonImageUrl.push($(this).attr('src'));
-                });
-                img = JSON.stringify(jsonImageUrl);
-                tag = JSON.stringify(checkChooseTagId);
-
-                data = {
-                    'uuid': $.cookie('uuid'),
-                    'id': {$idCardData['id']},
-                    'top': $('#top').val(),
-                    'state': $('#state').val(),
-                    'model': $('#model').val(),
-                    'good': $('#good').val(),
-                    'content': $('#content').val(),
-                    'woName': $('#woName').val(),
-                    'taName': $('#taName').val(),
-                    'woContact': $('#woContact').val(),
-                    'taContact': $('#taContact').val(),
-                    'model': $('#model').val(),
-                    'tag': tag,
-                    'img': img,
-                };
-                //提交数据
-                var result = apiAjax0(data, apicardsEdit, 'POST');
-                if (result) {
-                    //成功
-                    mdui.snackbar({
-                        message: '编辑成功',
-                        position: 'left-top'
-                    });
-                    //跳转
-                    //jumpUrl('/index/cards/card/id/' + result.data.id);
-                    return;
-                }
+    $(function () {
+        //按钮-请求-添加
+        $('#submitAdd').click(function () {
+            //构建图片url数组并获取
+            var jsonImageUrl = [];
+            $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
+                jsonImageUrl.push($(this).attr('src'));
             });
+            img = JSON.stringify(jsonImageUrl);
+            tag = JSON.stringify(checkChooseTagId);
+
+            data = {
+                'uuid': $.cookie('uuid'),
+                'id': {$idCardData['id']},
+                'top': $('#top').val(),
+                'state': $('#state').val(),
+                'model': $('#model').val(),
+                'good': $('#good').val(),
+                'content': $('#content').val(),
+                'woName': $('#woName').val(),
+                'taName': $('#taName').val(),
+                'woContact': $('#woContact').val(),
+                'taContact': $('#taContact').val(),
+                'model': $('#model').val(),
+                'tag': tag,
+                'img': img,
+            };
+            var result = apiAjax0(data, apicardsEdit, 'POST');
+            if (result) {
+                mdui.snackbar({
+                    message: '编辑成功',
+                    position: 'left-top'
+                });
+                //jumpUrl('/index/cards/card/id/' + result.data.id);
+                return;
+            }
         });
+    });
 </script>
 </body>
 

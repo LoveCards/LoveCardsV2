@@ -133,15 +133,12 @@
                 'tag': tag,
                 'img': img,
             };
-            //提交数据
             var result = apiAjax0(data, apiUrlCardsAdd, 'POST');
             if (result) {
-                //成功
                 mdui.snackbar({
                     message: '添加成功',
                     position: 'left-top'
                 });
-                //跳转
                 jumpUrl('/index/cards/card/id/' + result.data.id);
                 return;
             }

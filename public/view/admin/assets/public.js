@@ -193,6 +193,16 @@ function jumpUrl(url, time = 600) {
     }, time);
 }
 
+/*
+*当前URLGet参数获取decodeURI
+*/
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = decodeURI(window.location.search).substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+
+
 $(function () {
     /*
     *提示msg
@@ -203,7 +213,7 @@ $(function () {
     if (msg != 'undefined' && msg != undefined) {
         data = false;
         mdui.snackbar({
-            message: '注意:' + msg,
+            message: msg,
             position: 'left-top'
         });
         //重置
