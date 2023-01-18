@@ -2,17 +2,16 @@
 
 namespace app\admin\controller;
 
-//视图功能
+//TP类
 use think\facade\View;
-//TPDb类
 use think\facade\Db;
 
-//公共类
+//类
 use app\common\Common;
 
 class CardsTag
 {
-    //默认
+    //Index
     public function index()
     {
         //验证身份并返回数据
@@ -42,17 +41,5 @@ class CardsTag
 
         //输出模板
         return View::fetch('/cards-tag');
-    }
-
-    //添加
-    public function add()
-    {
-
-    }
-
-    //编辑
-    public function edit()
-    {
- 
     }
 }

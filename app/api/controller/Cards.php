@@ -2,15 +2,14 @@
 
 namespace app\api\controller;
 
-//TP请求类
+//TP类
 use think\facade\Request;
-//TP验证类
 use think\exception\ValidateException;
-//TPDb类
 use think\facade\Db;
 
-//Cards验证类
+//验证类
 use app\api\validate\Cards as CardsValidate;
+
 //公共类
 use app\Common\Common;
 
@@ -387,6 +386,6 @@ class Cards
         };
 
         //返回数据
-        return Common::create(['Num' => $resultCardsData['good']+1], '点赞成功', 200);
+        return Common::create(['Num' => $resultCardsData['good'] + 1], '点赞成功', 200);
     }
 }

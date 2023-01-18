@@ -2,12 +2,11 @@
 
 namespace app\api\controller;
 
-//TP请求类
+//TP类
 use think\facade\Request;
-//TPDb类
 use think\facade\Db;
 
-//公共类
+//类
 use app\Common\Common;
 
 class CardsTag

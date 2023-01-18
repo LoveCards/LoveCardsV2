@@ -2,20 +2,18 @@
 
 namespace app\index\controller;
 
-//视图功能
+//TP类
 use think\facade\View;
-//TPDb类
 use think\facade\Db;
-//
 use think\facade\Request;
 
-//公共类
+//类
 use app\common\Common;
 
 class Cards
 {
 
-    //卡片列表
+    //Index
     public function index()
     {
         //参数
@@ -57,7 +55,9 @@ class Cards
         View::assign([
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
-            'viewTitle'  => '卡片墙'
+            'viewTitle'  => '卡片墙',
+            'viewDescription' => false,
+            'viewKeywords' => false
         ]);
 
         //输出模板
@@ -116,11 +116,14 @@ class Cards
             'imgData' => $imgData
         ]);
 
+        if (!$cardData['woName']) $cardData['woName'] = '匿名';
         //基础变量
         View::assign([
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
-            'viewTitle'  => '卡片'
+            'viewTitle'  => $cardData['woName'] . '的卡片',
+            'viewDescription' => $cardData['woName'] . '表白' . $cardData['woName'] . '说' . $cardData['content'],
+            'viewKeywords' => $cardData['woName'] . ',' . $cardData['taName'] . ',LoveCards,表白卡'
         ]);
 
         //输出模板
@@ -139,7 +142,9 @@ class Cards
         View::assign([
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
-            'viewTitle'  => '写卡'
+            'viewTitle'  => '写卡',
+            'viewDescription' => false,
+            'viewKeywords' => false
         ]);
 
         //输出模板
@@ -153,11 +158,13 @@ class Cards
         //参数
         $ip = Common::getIp();
         $search = Request::param('search');
+        $viewTitle = '搜索';
 
         if ($search == true) {
             //参数
             $model = Request::param('model');
             $value = Request::param('value');
+            $viewTitle = $value . '的搜索结果';
 
             //验证Value
             if (!$value) {
@@ -206,7 +213,9 @@ class Cards
         View::assign([
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
-            'viewTitle'  => '搜索'
+            'viewTitle'  => $viewTitle,
+            'viewDescription' => false,
+            'viewKeywords' => false
         ]);
 
         //输出模板

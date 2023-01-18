@@ -2,18 +2,16 @@
 
 namespace app\api\controller;
 
-//TP请求类
+//TP类
 use think\facade\Request;
-//TP验证类
 use think\exception\ValidateException;
-//TPDb类
 use think\facade\Db;
 
 //User验证类
 use app\api\validate\User as UserValidate;
-//公共类
-use app\Common\Common;
 
+//类
+use app\Common\Common;
 
 class User
 {
@@ -139,7 +137,7 @@ class User
             return Common::create([], '缺少id参数', 400);
         }
 
-        if($userData['id'] == $id){
+        if ($userData['id'] == $id) {
             return Common::create(['tip' => '您不能删除您自己的账户'], '删除失败', 400);
         }
         //获取数据库对象

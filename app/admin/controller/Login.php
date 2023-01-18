@@ -2,16 +2,16 @@
 
 namespace app\admin\controller;
 
-//视图功能
+//TP类
 use think\facade\View;
 
-//公共类
+//类
 use app\common\Common;
 
 class Login
 {
 
-    //输出
+    //Index
     public function index()
     {
         //验证身份并返回数据

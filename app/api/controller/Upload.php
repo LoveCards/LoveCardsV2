@@ -1,7 +1,8 @@
 <?php
+
 namespace app\api\controller;
 
-//公共类
+//类
 use app\Common\Common;
 
 class Upload
@@ -17,7 +18,7 @@ class Upload
         }
         // 获取表单上传文件
         $file = request()->file('file');
-        
+
         //验证
         try {
             validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的

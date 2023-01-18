@@ -37,10 +37,18 @@ class Common extends Facade
         ];
     }
 
-    //前端数据准备
+    /**
+     * @description: 取system数据
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-01-18 18:10:57
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     */
     protected static function systemData()
     {
-        return [];
+        $result = Db::table('system')->select()->toArray();
+        return array_column($result,'value','name');
     }
 
     /**

@@ -2,16 +2,15 @@
 
 namespace app\api\controller;
 
-//TP请求类
+//TP类
 use think\facade\Request;
-//TP验证类
 use think\exception\ValidateException;
-//TPDb类
 use think\facade\Db;
 
-//User验证类
+//验证类
 use app\api\validate\User as UserValidate;
-//公共类
+
+//类
 use app\Common\Common;
 
 

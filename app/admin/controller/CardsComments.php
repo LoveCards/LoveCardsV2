@@ -2,17 +2,16 @@
 
 namespace app\admin\controller;
 
-//视图功能
+//TP类
 use think\facade\View;
-//TPDb类
 use think\facade\Db;
 
-//公共类
+//类
 use app\common\Common;
 
 class CardsComments
 {
-    //默认
+    //Index
     public function index()
     {
         //验证身份并返回数据
@@ -44,15 +43,13 @@ class CardsComments
         return View::fetch('/cards-comments');
     }
 
-    //添加
+    //Add
     public function add()
     {
-
     }
 
-    //编辑
+    //Edit
     public function edit()
     {
- 
     }
 }

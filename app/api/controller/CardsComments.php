@@ -2,17 +2,17 @@
 
 namespace app\api\controller;
 
-//TPDb类
+//TP类
 use think\facade\Db;
-//TP请求类
 use think\facade\Request;
-//TP验证类
 use think\exception\ValidateException;
 
-//公共类
-use app\Common\Common;
-//User验证类
+//验证类
 use app\api\validate\CardsComments as CommentsValidate;
+
+//类
+use app\Common\Common;
+
 
 class CardsComments
 {
