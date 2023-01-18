@@ -185,6 +185,7 @@ class Cards
             return Common::create(['tag' => 'tag超过数量限制'], '编辑失败', 400);
         }
 
+        $top = Request::param('top');
         $model = Request::param('model');
         $state = Request::param('state');
         //免验证
@@ -226,6 +227,7 @@ class Cards
             'woName' => $woName,
             'woContact' => $woContact,
 
+            'top' => $top,
             'model' => $model,
             'state' => $state,
 

@@ -1,13 +1,14 @@
 {include file="public/header"}
 
 <!-- 页体 -->
-<div class="mdui-container">
+<div id="jsParameter" jsTabClass="0" class="mdui-container">
 
-    <div class="mdui-row mdui-p-t-2">
+    <!-- 主体组件 -->
+    <div class="mdui-p-t-2">
+
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
-            <!-- 卡片循环 -->
 
-
+            <!-- ENV -->
             <div class="mdui-col mdui-m-b-1">
                 <div class="mdui-card">
 
@@ -27,72 +28,125 @@
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
                         <div class="mdui-p-t-1 css-cards-primary-content">
-                            <a href="">
-                                这是一条公告</a>
+                            LC2内部线上测试<br>
+                            线上测试不定期更新，有许多功能还未完善，线上测试的目的也是为了让大家测试已有的功能细节，以保证在更底层优化掉大部分问题，基础版本发布后期会很难从底层代码改！<br>
+                            这并非最终发布版本，如有ui或使用逻辑问题建议还请及时反馈！<br>
+                            后台地址 <a href="/admin">/admin</a>，u/p:testtest/testtest<br><br>
+                            基础版本开发便签：<br>
+                            -2022年9月1日<br>
+                            --懒得记录了<br>
+                            -2023年1月8日<br>
+                            --优化.前后端部分页面<br>
+                            --更新.后台标签管理模块<br>
+                            --更新.后台卡片管理模块<br>
+                            -2023年1月10日<br>
+                            --更新.点赞接口<br>
+                            -2023年1月11日<br>
+                            --优化.卡片页面<br>
+                            -2023年1月12日<br>
+                            --更新.评论增、删、改接口<br>
+                            --优化.卡片详情页评论组件<br>
+                            -2023年1月14日<br>
+                            --更新.后台评论管理模块<br>
+                            --更新.前台评论组件<br>
+                            -2023年1月16日<br>
+                            --更新.前台搜索模块<br>
+                            -2023年1月17日<br>
+                            --优化.前台前端代码<br>
+                            -2023年1月18日<br>
+                            --优化.前台前端组件代码<br>
+                            --更新.前台推荐模块<br>
                         </div>
                     </div>
 
                 </div>
             </div>
 
-
-        </div>
-    </div>
-
-    <div class="mdui-row mdui-p-t-2">
-        <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
-            <!-- 卡片循环 -->
-
+            <!-- TOP 卡片循环 -->
+            {volist name='cardsListData' id='data'}
             <div class="mdui-col mdui-m-b-1">
-                <div class="mdui-card">
 
+                <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
-                    <div class="mdui-p-a-2">
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
                         <div class="css-caard-header-title mdui-text-color-theme">
-                            柯政程的表白卡
+                            {$data.woName}的表白卡
+                            {if $data.top}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
-                        <div class="css-caard-header-subtite">柯政程 表白 蔡幸妘</div>
+                        <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的表白卡
+                            {if $data.top}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                        </div>
+                        <div class="css-caard-header-subtite">表白 {$data.taName}</div>
+                        {/if}
                     </div>
-                    <div class="mdui-card-media">
+                    {if $data.img}
+                    <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">
-                            <img src="https://test.fatda.cn/uploads/20210704538378743.jpg" />
+                            <img src="{$data.img}" onclick="location.assign('/index/Cards/card/id/{$data.id}')" />
                         </div>
                     </div>
+                    {/if}
 
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
-                        <div class="css-cards-primary-subtitle">
-                            Tag:<a href="https://qixun.site/index.php/category/gzjl/">工作记录</a>,<a
-                                href="https://qixun.site/index.php/category/gzjl/">工作记录</a>
+                        {if $data.tag}
+                        <div class="css-cards-primary-subtitle" value={$data.tag|raw}>
+                            <!-- Tag标签 -->
                         </div>
-                        <div class="mdui-p-t-1 css-cards-primary-content">
-                            xxyqs作品集欢迎欣赏xxyqs...
+                        {/if}
+                        <div class="mdui-p-t-1 css-cards-primary-content"
+                            onclick="location.assign('/index/Cards/card/id/{$data.id}')">
+                            {$data.content}
                         </div>
                     </div>
+
 
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
-
-                        <button class="css-card-actions-btn mdui-btn mdui-float-left">
-                            <i class="mdui-icon material-icons">insert_comment</i>评论0
-                        </button>
-                        <button class="css-card-actions-good-0 mdui-btn mdui-float-right">
-                            <i class="mdui-icon material-icons">favorite</i>点赞0
+                        <button class="css-card-actions-btn mdui-btn mdui-float-left"
+                            onclick="location.assign('/index/Cards/card/id/{$data.id}')">
+                            <i class="mdui-icon material-icons">insert_comment</i>评论{$data.comments}
                         </button>
 
+                        {if $data.ipGood == false}
+                        <button value="{$data.id}"
+                            class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {else}
+                        <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {/if}
                     </div>
-
                 </div>
             </div>
+            {/volist}
 
         </div>
     </div>
+
 </div>
+
 
 {include file="public/footer"}
 
-
+<script>
+    $(function () {
+        //获取Tag数据
+        ViewCardsTag({$cardsTagData|raw});
+    })
+    
+</script>
 
 </body>
 
