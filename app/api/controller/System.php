@@ -20,6 +20,10 @@ class System
         if (!empty($userData[0])) {
             return Common::create([], $userData[1], $userData[0]);
         }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
+        }
 
         $siteUrl = Request::param('siteUrl');
         if (empty($siteUrl)) {
@@ -52,6 +56,10 @@ class System
         $userData = Common::validateAuth();
         if (!empty($userData[0])) {
             return Common::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         $LCEAPI = Request::param('LCEAPI');

@@ -33,7 +33,9 @@ class Common extends Facade
             'Name' => 'LoveCards',
             'Url' => '//lovecards.cn',
             'VerS' => '2.0.0',
-            'Ver' => '1.0'
+            'Ver' => '1.0',
+            'GithubUrl' => '//github.com/zhiguai/CZ-LoveCards',
+            'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
         ];
     }
 

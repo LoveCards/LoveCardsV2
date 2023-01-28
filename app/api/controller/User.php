@@ -23,6 +23,11 @@ class User
         if (!empty($userData[0])) {
             return Common::create([], $userData[1], $userData[0]);
         }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
+        }
+
 
         $userName = Request::param('userName');
         $password = Request::param('password');
@@ -60,6 +65,10 @@ class User
         $userData = Common::validateAuth();
         if (!empty($userData[0])) {
             return Common::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         //传入必要参数
@@ -127,6 +136,10 @@ class User
         $userData = Common::validateAuth();
         if (!empty($userData[0])) {
             return Common::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         //传入必要参数

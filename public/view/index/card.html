@@ -194,7 +194,7 @@
         var result = apiAjax0(data, apiUrlCardsCommentsAdd, 'POST');
         if (result) {
             //附加功能
-            $.cookie('msg', '编辑成功', { path: '/' });//写入提示
+            $.cookie('msg', '评论成功', { path: '/' });//写入提示
             //刷新页面
             jumpUrl('', 100);
         }

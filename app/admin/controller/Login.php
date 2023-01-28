@@ -17,16 +17,15 @@ class Login
         //验证身份并返回数据
         $userData = Common::validateViewAuth();
         if ($userData[0] == true) {
-            //跳转返回消息
             return Common::jumpUrl('/admin/index','请不要重复登入');
         }
 
-        //获取LC配置
-        View::assign('lcSys', Common::systemVer());
-        // 批量赋值
+        //基础变量
         View::assign([
+            'systemVer' => Common::systemVer(),
             'viewTitle'  => '登入后台'
         ]);
+
         //输出模板
         return View::fetch('/login');
     }

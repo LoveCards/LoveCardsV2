@@ -17,26 +17,28 @@ class User
         //验证身份并返回数据
         $userData = Common::validateViewAuth();
         if ($userData[0] == false) {
-            //跳转返回消息
             return Common::jumpUrl('/admin/login/index', '请先登入');
         }
-
-        //获取管理员用户信息
-        View::assign('adminData', $userData[1]);
-        //获取LC配置
-        View::assign('lcSys', Common::systemVer());
-        // 批量赋值
-        View::assign([
-            'viewTitle'  => '账号管理'
-        ]);
+        //验证权限
+        if ($userData[1]['power'] != 0) {
+            return Common::jumpUrl('/admin/index', '权限不足');
+        }
 
         //获取列表
-        $listNum = 5; //每页个数
+        $listNum = 5;
         $list = Db::table('user')
             ->paginate($listNum, true);
         View::assign([
             'list'  => $list,
             'listNum'  => $listNum
+        ]);
+
+        //基础变量
+        View::assign([
+            'adminData'  => $userData[1],
+            'systemVer' => Common::systemVer(),
+            'systemData' => Common::systemData(),
+            'viewTitle'  => '账号管理'
         ]);
 
         //输出模板

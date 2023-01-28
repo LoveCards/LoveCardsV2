@@ -44,6 +44,18 @@
         </div>
 
         <div class="mdui-row">
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">时间</label>
+                    <input class="mdui-textfield-input" type="text" value="{$idCardData['time']}" disabled/>
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">IP</label>
+                    <input class="mdui-textfield-input" type="text" value="{$idCardData['ip']}" disabled/>
+                </div>
+            </div>
             <div class="mdui-col-xs-4 mdui-col-md-2">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">模型</label>
@@ -57,8 +69,8 @@
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">置顶</label>
                     <select class="mdui-select" id="top">
-                        <option value="0" {if $idCardData['top']==0}selected{/if}>正常</option>
-                        <option value="1" {if $idCardData['top']==1}selected{/if}>置顶</option>
+                        <option value="0" {if $idCardData['top']==0}selected{/if}>No</option>
+                        <option value="1" {if $idCardData['top']==1}selected{/if}>Yes</option>
                     </select>
                 </div>
             </div>

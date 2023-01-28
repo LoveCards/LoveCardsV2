@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{$viewTitle} - {$lcSys['Name']}</title>
+    <title>{$viewTitle} - {$systemVer['Name']}</title>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -40,7 +40,7 @@
         <div class="mdui-list" mdui-collapse="{accordion: true}" style="margin-bottom: 76px;">
             <div class="mdui-collapse-item ">
                 <a href="/admin/index">
-                    <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item mdui-ripple">
                         <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
                         <div class="mdui-list-item-content">总览</div>
                     </div>
@@ -63,6 +63,7 @@
                 </div>
             </div>
 
+            {if $adminData['power'] == 0}
             <div class="mdui-collapse-item">
                 <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
                     <i class="mdui-list-item-icon mdui-icon material-icons">settings</i>
@@ -76,23 +77,25 @@
                     <a href="/admin/User" class="mdui-list-item mdui-ripple">账号管理</a>
                 </div>
             </div>
+            {/if}
+
             <div class="mdui-divider"></div>
 
-            <div class="mdui-collapse-item ">
+            <div class="mdui-collapse-item">
                 <a href="/index">
-                    <div class="mdui-collapse-item-header mdui-list-item mdui-ripple mdui-color-theme-accent">
+                    <div class="mdui-list-item mdui-ripple mdui-color-theme-accent">
                         <i class="mdui-list-item-icon mdui-icon material-icons">home</i>
                         <div class="mdui-list-item-content">返回站点</div>
                     </div>
                 </a>
             </div>
-            <div class="mdui-collapse-item ">
-                <div id="submitLogout" class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+            
+            <div class="mdui-collapse-item">
+                <div id="submitLogout" class="mdui-list-item mdui-ripple">
                     <i class="mdui-list-item-icon mdui-icon material-icons">arrow_back</i>
                     <div class="mdui-list-item-content">退出登入</div>
                 </div>
             </div>
-
 
         </div>
     </div>

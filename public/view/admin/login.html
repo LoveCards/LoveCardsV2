@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{$viewTitle} - {$lcSys['Name']}</title>
+    <title>{$viewTitle} - {$systemVer['Name']}</title>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -19,7 +19,7 @@
     <!-- 顶栏 -->
     <header class="mdui-appbar mdui-appbar-fixed">
         <div class="mdui-toolbar mdui-color-theme">
-            <a href="#" class="mdui-typo-headline">{$lcSys['Name']}</a>
+            <a href="#" class="mdui-typo-headline">{$systemVer['Name']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
         </div>
@@ -47,14 +47,14 @@
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <i class="mdui-icon material-icons">&#xe853;</i>
                         <label class="mdui-textfield-label">用户名</label>
-                        <input class="mdui-textfield-input" type="text" id="userName" maxlength="12" />
+                        <input class="mdui-textfield-input" type="text" id="userName" />
                     </div>
                     <!--"密码"输入框-->
                     <div class="mdui-textfield mdui-textfield-floating-label">
 
                         <i class="mdui-icon material-icons">&#xe898;</i>
                         <label class="mdui-textfield-label">密码</label>
-                        <input class="mdui-textfield-input" type="password" id="password" maxlength="12" />
+                        <input class="mdui-textfield-input" type="password" id="password" />
                     </div>
                 </div>
 
@@ -71,9 +71,9 @@
 
                 <!-- 组件层 -->
                 <div class="mdui-typo-caption mdui-text-color-black-disabled mdui-p-t-1 mdui-typo">
-                    <!--废话 <kbd>Ver-{$lcSys['VerS']}-{$lcSys['Ver']}</kbd> -->
-                    <p>本站由<a href="{$lcSys['Url']}" target="_blank"
-                            class="mdui-text-color-pink">{$lcSys['Name']}</a>强力驱动</p>
+                    <!--废话 <kbd>Ver-{$systemVer['VerS']}-{$systemVer['Ver']}</kbd> -->
+                    <p>本站由<a href="{$systemVer['Url']}" target="_blank"
+                            class="mdui-text-color-pink">{$systemVer['Name']}</a>强力驱动</p>
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ use app\common\Common;
 
 class System
 {
-
+    
     //Index
     public function index()
     {
@@ -21,19 +21,21 @@ class System
             //跳转返回消息
             return Common::jumpUrl('/admin/login/index', '请先登入');
         }
+        //验证权限
+        if ($userData[1]['power'] != 0) {
+            return Common::jumpUrl('/admin/index', '权限不足');
+        }
 
-        //获取管理员用户信息
-        View::assign('adminData', $userData[1]);
-        //获取LC配置
-        View::assign('lcSys', Common::systemVer());
-        // 批量赋值
-        View::assign([
-            'viewTitle'  => '系统设置'
-        ]);
-
-        //获取列表
+        //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
         View::assign($systemData);
+
+        //基础变量
+        View::assign([
+            'adminData'  => $userData[1],
+            'systemVer' => Common::systemVer(),
+            'viewTitle'  => '系统设置'
+        ]);
 
         //输出模板
         return View::fetch('/system');
