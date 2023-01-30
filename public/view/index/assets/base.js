@@ -13,12 +13,18 @@ function ViewCardsTag(arr) {
         for (let j = 0; j < tagList.length; j++) {
             for (const key in CardsTagData) {
                 if (tagList[j] == CardsTagData[key]['id']) {
-                    $($(".css-cards-primary-subtitle")[i]).append('<a>' + CardsTagData[key]['name'] + '</a> ')
+                    $($(".css-cards-primary-subtitle")[i]).append('<a href="/index/Cards/tag?value='+CardsTagData[key]['id']+'">' + CardsTagData[key]['name'] + '</a> ')
                 }
             }
         }
     }
 }
+
+//跳转至卡片详情
+$('.js-jumpurl-cardId').attr('style','cursor:pointer;');
+$('.js-jumpurl-cardId').click(function () {
+    jumpUrl('/index/Cards/card/id/' + $(this).attr('value'), 0);
+});
 
 //点赞
 $('.js-Btn-Update-CardsGood').click(function () {

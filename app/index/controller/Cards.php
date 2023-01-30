@@ -74,7 +74,7 @@ class Cards
         //验证ID取Cards数据
         $result = Db::table('cards')->where('id', $id)->findOrEmpty();
         if (!$result) {
-            return Common::jumpUrl('/index/Cards/list', '卡片ID不存在');
+            return Common::jumpUrl('/index/Cards', '卡片ID不存在');
         }
         $cardData = $result;
 
@@ -89,7 +89,7 @@ class Cards
 
         //获取评论列表
         $listNum = 6; //每页个数
-        $result = Db::table('cards_comments')->where('cid', $id)->where('state', 0)->order('id','desc')
+        $result = Db::table('cards_comments')->where('cid', $id)->where('state', 0)->order('id', 'desc')
             ->paginate($listNum, true);
         $cardsCommentsListRaw = $result->render();
         $listData = $result->items();
@@ -220,5 +220,80 @@ class Cards
 
         //输出模板
         return View::fetch('/cards-search');
+    }
+
+    //TAG搜索
+    public function tag()
+    {
+
+        //参数
+        $ip = Common::getIp();
+        //传入Tid
+        $value = Request::param('value');
+
+        //验证Value
+        if (!$value) {
+            return Common::jumpUrl('/index/Cards/search', '请输入Tag');
+        }
+        $requestTag = Db::table('cards_tag')->where('id', $value)->findOrEmpty();
+        if(!$requestTag){
+            return Common::jumpUrl('/index/Cards/search', 'Tag已被删除或不存在');
+        }
+
+        $viewTitle = '关于' . $requestTag['name'] . '的卡片合集';
+
+        //取cards_tag_map列表
+        $listNum = 12; //每页个数
+        $result = Db::table('cards_tag_map')
+            ->where('tid', $value)
+            ->order('id', 'desc')
+            ->paginate($listNum, true);
+        $cardsListRaw = $result->render();
+        $TaglistData = $result->items();
+        $listData = [];
+
+        //组合Good状态到$listData列表
+        for ($i = 0; $i < sizeof($TaglistData); $i++) {
+            //取Cards数据
+            $requestCards = Db::table('cards')->where('state', 0)->where('id', $TaglistData[$i]['cid'])->findOrEmpty();
+            if ($requestCards) {
+                $resultGood = Db::table('good')->where('aid', 1)->where('ip', $ip);
+                //查找对应封面
+                if ($resultGood->where('pid', $requestCards['id'])->findOrEmpty() == []) {
+                    //未点赞
+                    $requestCards['ipGood'] = false;
+                } else {
+                    //已点赞
+                    $requestCards['ipGood'] = true;
+                }
+                //插入最终列表数据
+                array_push($listData, $requestCards);
+            }
+        }
+
+        //取Tag数据
+        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $cardsTagData = $result;
+        View::assign('cardsTagData', json_encode($cardsTagData));
+
+        //Cards分页变量
+        View::assign([
+            'cardsListRaw'  => $cardsListRaw,
+            'cardsListData'  => $listData,
+            'cardsListNum'  => $listNum
+        ]);
+
+        //基础变量
+        View::assign([
+            'systemVer' => Common::systemVer(),
+            'systemData' => Common::systemData(),
+            'viewTitle'  => $viewTitle,
+            'viewDescription' => false,
+            'viewKeywords' => false,
+            'searchValue'  => $requestTag['name']
+        ]);
+
+        //输出模板
+        return View::fetch('/cards-tag');
     }
 }
