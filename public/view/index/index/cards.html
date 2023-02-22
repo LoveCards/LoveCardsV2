@@ -1,26 +1,15 @@
-{include file="public/header"}
+{include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="3" class="mdui-container mdui-p-t-2">
-
-    <div class="mdui-row mdui-p-t-1">
-        <div class="mdui-col-md-6 mdui-col-offset-md-3">
-            <div class="mdui-row">
-                <div class="mdui-col-xs-9 mdui-col-sm-10">
-                    <div class="mdui-textfield">
-                        <input id="SearchValue" class="mdui-textfield-input" type="search" placeholder="ID、名字、内容">
-                    </div>
-                </div>
-                <div class="mdui-col-xs-3 mdui-col-sm-2 mdui-text-center mdui-float-right">
-                    <button id="requestSearch" type="button"
-                        class="mdui-m-y-2 mdui-btn mdui-btn-raised mdui-color-theme-accent">搜索</button>
-                </div>
-            </div>
-        </div>
+<div id="jsParameter" jsTabClass="1" class="mdui-container">
+    <!-- 顶部按钮组件 -->
+    <div class="mdui-p-t-2">
+        <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
+            onclick="location.assign('/index/cards/add')">发布卡片</button>
     </div>
 
     <!-- 主体组件 -->
-    <div id="jsMainComp" class="mdui-m-t-2">
+    <div class="mdui-p-t-2">
 
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
             <!-- 卡片循环 -->
@@ -89,29 +78,30 @@
         </div>
     </div>
 
+    <!-- 分页按钮组件 -->
+    <div class="mdui-p-t-2 mdui-text-center">
+        <div style="display: none;">{$cardsListRaw|raw}</div>
+        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons ">first_page</i>
+        </button>
+        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons">last_page</i>
+        </button>
+    </div>
+
 </div>
 
-{include file="public/footer"}
+
+{include file="index/public/footer"}
 
 <script>
     $(function () {
-        //初始化-分页组件
+        //初始化分页
         pager();
-        //初始化-Tag组件
+        //获取Tag数据
         ViewCardsTag({$cardsTagData|raw});
-        //初始化-View-搜索
-        if (getUrlParam('search')) {
-            $('#SearchValue').val(getUrlParam('value'));
-            if (!$('.mdui-card').length) {
-                $('#jsMainComp').children().html('<div class="mdui-typo-title-opacity mdui-text-center" style="padding-top: 184px">没有唉~</div>')
-            }
-        }
-    });
+    })
 
-    //表单-按钮-搜索
-    $('#requestSearch').click(function () {
-        jumpUrl('/index/Cards/search?search=true&model=0&value=' + $('#SearchValue').val(), 0);
-    });
 </script>
 
 </body>

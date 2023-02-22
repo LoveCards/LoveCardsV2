@@ -2,9 +2,10 @@
 
 namespace app\api\controller;
 
-//TP请求类
+//TP类
 use think\facade\Request;
 use think\facade\Db;
+use think\facade\Config;
 
 //类
 use app\Common\Common;
@@ -81,5 +82,33 @@ class System
 
         //返回数据
         return Common::create([], '更新成功', 200);
+    }
+
+    //模板配置-POST
+    public function template()
+    {
+        //验证身份并返回数据
+        $userData = Common::validateAuth();
+        if (!empty($userData[0])) {
+            return Common::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
+        }
+
+        $template_directory = Request::param('templateDirectory');
+
+        $arr = array(
+            'template_directory' => $template_directory
+        );
+        $result = Common::extraconfig($arr, 'lovecards', $userData['userName']);
+        if ($result == 'success') {
+            return Common::create([], '修改成功', 200);
+        } elseif ($result == 'error') {
+            return Common::create([], '修改失败，请重试', 400);
+        } elseif ($result == 'PermissionError') {
+            return Common::create([], '文件无权限', 400);
+        }
     }
 }

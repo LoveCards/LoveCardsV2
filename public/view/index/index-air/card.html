@@ -1,7 +1,7 @@
-{include file="public/header"}
+{include file="index-air/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="1" class="mdui-container">
+<div id="jsParameter" jsTabClass="1" class="mdui-container" style="margin-top: 60px;">
 
     <div class="mdui-row mdui-p-t-2">
         <!-- 顶部信息组件 -->
@@ -14,17 +14,18 @@
             <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
         </div>
         <div class="mdui-col-xs-2">
-            <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
-                onclick="javascript :history.back(-1);">
-                <i class="mdui-icon material-icons">arrow_back</i>
-            </button>
+            <!--<button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"-->
+            <!--    onclick="javascript :history.back(-1);">-->
+            <!--    <i class="mdui-icon material-icons" href="#" onclick="self.location=document.referrer;">arrow_back</i>-->
+            <!--</button>-->
         </div>
     </div>
 
     <!-- 卡片组件 -->
     <div class="mdui-p-t-2">
-        <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
-            <div class="mdui-typo-headline-opacity mdui-text-left">
+        <div class="mdui-card mdui-color-theme-accent mdui-p-a-2" style="background-color:#f47983!important;border-radius: 9px;padding-left: 0px!important">
+            <div class="mdui-typo-headline-opacity mdui-text-left" style="    margin-top: 20px;
+    margin-left: 30px;">
                 {if $cardData['woName']}
                 {$cardData['woName']}
                 {else}
@@ -34,7 +35,8 @@
             <div class="mdui-text-center">
                 <i class="css-icon iconfont icon-heart-pulse"></i>
             </div>
-            <div class="mdui-typo-headline-opacity mdui-text-right">{$cardData['taName']}</div>
+            <div class="mdui-typo-headline-opacity mdui-text-right" style="margin-right: 40px;
+    margin-block-end: 20px;">{$cardData['taName']}</div>
         </div>
     </div>
 
@@ -65,12 +67,12 @@
                 <div class="mdui-card-actions">
                     {if $cardData['ipGood'] == false}
                     <button value="{$cardData['id']}"
-                        class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
-                        <i class="mdui-icon material-icons">favorite</i>点赞{$cardData['good']}
+                        class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right" style="color:#f47983!important">
+                        <i class="mdui-icon material-icons" style="color:#f47983!important">favorite</i>  {$cardData['good']}
                     </button>
                     {else}
-                    <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
-                        <i class="mdui-icon material-icons">favorite</i>点赞{$cardData['good']}
+                    <button class="css-card-actions-good-1 mdui-btn mdui-float-right" style="color:#f47983!important">
+                        <i class="mdui-icon material-icons" style="color:#f47983!important">favorite</i>  {$cardData['good']}
                     </button>
                     {/if}
                 </div>
@@ -118,7 +120,7 @@
                 </div>
 
                 <div class="mdui-card-actions">
-                    <button id="btnAddComments" class="mdui-btn mdui-color-theme-accent mdui-float-right">
+                    <button id="btnAddComments" class="mdui-btn mdui-color-theme-accent mdui-float-right" style="background-color:#f47983!important">
                         提交
                     </button>
                 </div>
@@ -173,7 +175,7 @@
 
 </div>
 
-{include file="public/footer"}
+{include file="index-air/public/footer"}
 
 <script>
     $(function () {

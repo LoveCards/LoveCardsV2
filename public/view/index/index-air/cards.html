@@ -1,0 +1,124 @@
+{include file="index-air/public/header"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsTabClass="1" class="mdui-container" style="margin-top: 25px;">
+    <!-- 顶部按钮组件 -->
+    <div class="mdui-p-t-2">
+        <button style="background:#f47983!important" class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
+            onclick="location.assign('/index/cards/add')">发布卡片</button>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-p-t-2">
+
+        <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
+            <!-- 卡片循环 -->
+            {volist name='cardsListData' id='data'}
+            <div class="mdui-col mdui-m-b-2">
+{if $data.img}
+                <div class="mdui-card" style="border-radius:10px;background:url('{$data.img}');background-repeat: no-repeat!important;background-size: cover!important;background-position: top!important;">
+                    {else}
+                    <div class="mdui-card" style="border-radius:10px;background:#f47983">
+                        {/if}
+                    <!-- 卡片头部，包含头像、标题、副标题 -->
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        
+                        <div style="text-align: center;" class="">
+                        <h3 class="card-subtitle text-muted" style="color:#ffffff;font-size: 1.5rem;font-weight: bold;margin-top: 0px;margin-block-end: 12px;">TO : {$data.taName}</h3>
+                        </div>
+                        {if $data.woName}
+                        <div class="" style="text-align: center;">
+                        <h5 class="card-title" style="color:#ffffff;margin-top: 0px;margin-block-end: 0px;font-weight: 300;">FROM : {$data.woName}</h5>
+                        </div>
+
+                        <!--<div class="css-caard-header-title mdui-text-color-theme" style="color:#898989">-->
+                        <!--    <p><span style="color:#f47983">{$data.woName}</span>  的表白卡-->
+                        <!--    <i class="mdui-icon material-icons mdui-float-right" style="font-size:38px;color:#f47983">face</i></p>-->
+                        <!--</div>-->
+                        <!--<div class="css-caard-header-subtite"><p><span style="color:#f47983">{$data.woName}</span> 表白 <span style="color:#f47983">{$data.taName}</span></p></div>-->
+                        {else}
+                        <div class="" style="text-align: center;">
+                        <h5 class="card-title" style="color:#ffffff;margin-top: 0px;margin-block-end: 0px;font-weight: 300;">FROM : 匿名</h5>
+                        </div>
+                        <!--<div class="css-caard-header-title mdui-text-color-theme">-->
+                        <!--    匿名表白卡-->
+                        <!--</div>-->
+                        <!--<div class="css-caard-header-subtite">表白 {$data.taName}</div>-->
+                        {/if}
+                        <div class="js-jumpurl-cardId mdui-p-t-1 css-cards-primary-content" style="margin-top: 5px;text-align: center;color:#ffffff" value="{$data.id}">
+                            <i class="mdi mdi-format-quote-open" style="font-size:30px;"></i><br>
+                            {$data.content}<br>
+                            <i class="mdi mdi-format-quote-close" style="font-size:30px;"></i>
+                        </div>
+                    </div>
+                    <!--{if $data.img}-->
+                    <!--<div class="mdui-card-media mdui-p-t-2">-->
+                    <!--    <div class="css-cards-img mdui-m-x-1" style="display: contents;">-->
+                    <!--        <img src="{$data.img}" class="js-jumpurl-cardId" style="max-height: 300px;display: flex;object-fit: cover;" value="{$data.id}" />-->
+                    <!--    </div>-->
+                    <!--</div>-->
+                    <!--{/if}-->
+
+                    <!-- 卡片的内容 -->
+                    <div class="mdui-p-a-2 mdui-typo" style="margin-top: -10px;">
+                        {if $data.tag}
+                        <div class="css-cards-primary-subtitle" value={$data.tag|raw} style="color:#ffffff">
+                            <!-- Tag标签 -->
+                        </div>
+                        {/if}
+                    </div>
+
+
+                    <!-- 卡片的按钮 -->
+                    <div class="mdui-card-actions" style="padding:0px!important">
+                        <button class="js-jumpurl-cardId css-card-actions-btn mdui-btn mdui-float-left"
+                            value="{$data.id}" style="color:#ffffff">
+                            <i class="mdui-icon material-icons" style="color:#ffffff">insert_comment</i>{$data.comments}
+                        </button>
+
+                        {if $data.ipGood == false}
+                        <button value="{$data.id}" class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right" style="color:#ffffff;">
+                            <i class="mdui-icon material-icons" style="color:#ffffff">favorite</i>{$data.good}
+                        </button>
+                        {else}
+                        <button class="css-card-actions-good-1 mdui-btn mdui-float-right" style="color:#ffffff;">
+                            <i class="mdui-icon material-icons" style="color:#ffffff">favorite</i>{$data.good}
+                        </button>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            {/volist}
+
+        </div>
+    </div>
+
+    <!-- 分页按钮组件 -->
+    <div class="mdui-p-t-2 mdui-text-center">
+        <div style="display: none;">{$cardsListRaw|raw}</div>
+        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons ">first_page</i>
+        </button>
+        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
+            <i class="mdui-icon material-icons">last_page</i>
+        </button>
+    </div>
+
+</div>
+
+
+{include file="index-air/public/footer"}
+
+<script>
+    $(function () {
+        //初始化分页
+        pager();
+        //获取Tag数据
+        ViewCardsTag({$cardsTagData|raw});
+    })
+
+</script>
+
+</body>
+
+</html>

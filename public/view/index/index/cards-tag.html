@@ -1,15 +1,19 @@
-{include file="public/header"}
+{include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="1" class="mdui-container">
-    <!-- 顶部按钮组件 -->
+<div id="jsParameter" jsTabClass="3" class="mdui-container mdui-p-t-2">
+
     <div class="mdui-p-t-2">
-        <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
-            onclick="location.assign('/index/cards/add')">发布卡片</button>
+        <div class="mdui-typo-headline-opacity">
+            关于
+            <div class="mdui-chip">
+                <span class="mdui-chip-title">{$searchValue}</span>
+            </div> 的合集
+        </div>
     </div>
 
     <!-- 主体组件 -->
-    <div class="mdui-p-t-2">
+    <div id="jsMainComp" class="mdui-m-t-2">
 
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
             <!-- 卡片循环 -->
@@ -78,30 +82,26 @@
         </div>
     </div>
 
-    <!-- 分页按钮组件 -->
-    <div class="mdui-p-t-2 mdui-text-center">
-        <div style="display: none;">{$cardsListRaw|raw}</div>
-        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
-            <i class="mdui-icon material-icons ">first_page</i>
-        </button>
-        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
-            <i class="mdui-icon material-icons">last_page</i>
-        </button>
-    </div>
-
 </div>
 
-
-{include file="public/footer"}
+{include file="index/public/footer"}
 
 <script>
     $(function () {
-        //初始化分页
+        //初始化-分页组件
         pager();
-        //获取Tag数据
+        //初始化-Tag组件
         ViewCardsTag({$cardsTagData|raw});
-    })
+        //初始化-View-搜索
+        if (getUrlParam('value')) {
+            $('#SearchValue').html('')
+        }
+    });
 
+    //表单-按钮-搜索
+    $('#requestSearch').click(function () {
+        jumpUrl('/index/Cards/search?search=true&model=0&value=' + $('#SearchValue').val(), 0);
+    });
 </script>
 
 </body>

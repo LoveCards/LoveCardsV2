@@ -12,6 +12,15 @@ use app\common\Common;
 class Index
 {
 
+    //获取模板路径
+    var $TemplateDirectoryPath;
+    var $TemplateDirectory;
+    function __construct()
+    {
+        $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
+        $this->TemplateDirectory = Common::get_templateDirectory()[1];
+    }
+
     //输出
     public function index()
     {
@@ -30,7 +39,7 @@ class Index
         //取Cards推荐数据
         //$result = Db::table('cards')->where('state', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit($hotListNum)->select()->toArray();
-        $result = Db::query("select * from cards where top = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0,".$hotListNum);
+        $result = Db::query("select * from cards where top = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
         //合并到$listData数据
         $listData = array_merge($listData, $result);
 
@@ -61,6 +70,7 @@ class Index
 
         //基础变量
         View::assign([
+            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '推荐',
@@ -69,6 +79,6 @@ class Index
         ]);
 
         //输出模板
-        return View::fetch('/index');
+        return View::fetch($this->TemplateDirectoryPath . '/index');
     }
 }

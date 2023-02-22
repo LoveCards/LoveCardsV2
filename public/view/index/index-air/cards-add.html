@@ -1,7 +1,7 @@
-{include file="public/header"}
+{include file="index-air/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="1" class="mdui-container">
+<div id="jsParameter" jsTabClass="1" class="mdui-container" style="margin-top: 25px;">
 
     <div class="mdui-row mdui-p-t-2">
 
@@ -9,13 +9,15 @@
 
             <div class="mdui-p-b-2">
                 <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
-                    onclick="javascript :history.back(-1);">返 回</button>
+                    onclick="javascript :history.back(-1);" style="background-color:#f47983!important">返 回</button>
             </div>
 
             <div class="mdui-card">
                 <!-- 卡片的内容 -->
                 <div class="mdui-p-t-2 mdui-p-x-2">
                     <!-- 添加标签 -->
+                    <label class="mdui-textfield-label">Tips: 推荐上传图片作为表白卡背景，不上传默认纯色背景。不要使用纯白图片！</label>
+                    <!--<br>-->
                     <label class="mdui-textfield-label">标签</label>
                     <button id="btnChooseTagAdd" class="mdui-btn mdui-btn-icon mdui-ripple"
                         mdui-dialog="{target: '#dialogChooseTag'}">
@@ -69,7 +71,7 @@
                         </div>
                         <!-- 添加图片 -->
                         <button class="mdui-btn mdui-btn-block mdui-text-color-theme-accent mdui-ripple"
-                            mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
+                            mdui-dialog="{target: '#dialogUploadImage'}" style="color:#f47983!important">添加图片</button>
                         <div class="mdui-dialog" id="dialogUploadImage">
                             <div class="mdui-dialog-title">上传图片</div>
                             <div class="mdui-dialog-content">
@@ -100,7 +102,7 @@
 
                 <div class="mdui-card-actions">
                     <button id="submitAdd"
-                        class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">提交</button>
+                        class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right" style="background-color:#f47983!important">提交</button>
                 </div>
 
             </div>
@@ -109,7 +111,7 @@
     </div>
 </div>
 
-{include file="public/footer"}
+{include file="index-air/public/footer"}
 <script src="{__A-assets__}/cardsEdit.js"></script>
 <script>
     $(function () {

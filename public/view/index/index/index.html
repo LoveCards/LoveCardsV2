@@ -1,4 +1,4 @@
-{include file="public/header"}
+{include file="index/public/header"}
 
 <!-- 页体 -->
 <div id="jsParameter" jsTabClass="0" class="mdui-container">
@@ -76,6 +76,8 @@
                             -2023年1月30日<br>
                             --优化.前台前端美化<br>
                             --优化.数据库utf8mb4支持小黄脸<br>
+                            -2023年2月16-2月18日<br>
+                            --更新.模板系统<br>
                         </div>
                     </div>
 
@@ -92,12 +94,18 @@
                         {if $data.woName}
                         <div class="css-caard-header-title mdui-text-color-theme">
                             {$data.woName}的表白卡
+                            {if $data.top}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
                         <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}</div>
                         {else}
                         <div class="css-caard-header-title mdui-text-color-theme">
                             匿名的表白卡
+                            {if $data.top}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
                         </div>
                         <div class="css-caard-header-subtite">表白 {$data.taName}</div>
                         {/if}
@@ -151,14 +159,13 @@
 </div>
 
 
-{include file="public/footer"}
+{include file="index/public/footer"}
 
 <script>
     $(function () {
         //获取Tag数据
         ViewCardsTag({$cardsTagData|raw});
     })
-    
 </script>
 
 </body>

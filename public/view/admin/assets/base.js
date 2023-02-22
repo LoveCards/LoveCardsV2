@@ -8,6 +8,7 @@ var apiUserEdit = '/api/user/edit';//添加用户
 
 var apiSystemSite = '/api/system/site';//系统设置
 var apiSystemEmail = '/api/system/email';//系统邮箱设置
+var apiSystemTemplate = '/api/system/template';//模板设置
 
 var apicardsAdd = '/api/cards/add';//添加卡片
 var apicardsEdit = '/api/cards/edit';//编辑卡片

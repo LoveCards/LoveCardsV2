@@ -13,6 +13,15 @@ use app\common\Common;
 class Cards
 {
 
+    //获取模板路径
+    var $TemplateDirectoryPath;
+    var $TemplateDirectory;
+    function __construct()
+    {
+        $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
+        $this->TemplateDirectory = Common::get_templateDirectory()[1];
+    }
+
     //Index
     public function index()
     {
@@ -53,6 +62,7 @@ class Cards
 
         //基础变量
         View::assign([
+            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '卡片墙',
@@ -61,7 +71,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch('/cards');
+        return View::fetch($this->TemplateDirectoryPath .'/cards');
     }
 
     //卡片详情
@@ -119,6 +129,7 @@ class Cards
         if (!$cardData['woName']) $cardData['woName'] = '匿名';
         //基础变量
         View::assign([
+            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $cardData['woName'] . '的卡片',
@@ -127,7 +138,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch('/card');
+        return View::fetch($this->TemplateDirectoryPath .'/card');
     }
 
     //添加卡片
@@ -140,6 +151,7 @@ class Cards
 
         //基础变量
         View::assign([
+            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '写卡',
@@ -148,7 +160,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch('/cards-add');
+        return View::fetch($this->TemplateDirectoryPath .'/cards-add');
     }
 
     //卡片搜索
@@ -211,6 +223,7 @@ class Cards
 
         //基础变量
         View::assign([
+            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $viewTitle,
@@ -219,7 +232,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch('/cards-search');
+        return View::fetch($this->TemplateDirectoryPath .'/cards-search');
     }
 
     //TAG搜索
@@ -285,6 +298,7 @@ class Cards
 
         //基础变量
         View::assign([
+            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $viewTitle,
@@ -294,6 +308,6 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch('/cards-tag');
+        return View::fetch($this->TemplateDirectoryPath .'/cards-tag');
     }
 }
