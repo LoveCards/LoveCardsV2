@@ -207,13 +207,15 @@ class Common extends Facade
     protected static function get_templateDirectory()
     {
         $d = Config::get('lovecards.template_directory', 'index');
-        $r = File::empty_dir('./view/index/' . $d);
+        $r = Is_dir('./view/index/' . $d);
         //dd($r);
         if ($r) {
-            $r = '.';
+            //当目录存在时
+            $r = $d;   
         } else {
-            $r = '../index/' . $d;
+            $r = 'index';
         }
+        //dd($r, $d);
         return [$r, $d];
     }
 

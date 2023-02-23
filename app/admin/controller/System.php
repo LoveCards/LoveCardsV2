@@ -43,7 +43,7 @@ class System
         return View::fetch('/system');
     }
 
-    //Index
+    //View
     public function View()
     {
         //验证身份并返回数据
@@ -76,7 +76,10 @@ class System
         }
 
         $nowTemplateConfig = json_decode(File::read_file('./view/index/' . Config::get('lovecards.template_directory', 'index') . '/config.ini'), true);
-        
+        if(!$nowTemplateConfig){
+            $nowTemplateConfig = json_decode(File::read_file('./view/index/index/config.ini'), true);
+        }
+
         //基础变量
         View::assign([
             'adminData'  => $userData[1],
