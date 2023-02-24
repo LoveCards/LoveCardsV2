@@ -78,6 +78,8 @@
                             --优化.数据库utf8mb4支持小黄脸<br>
                             -2023年2月16-2月18日<br>
                             --更新.模板系统<br>
+                            -2023年2月24日<br>
+                            --更新.交流版块<br>
                         </div>
                     </div>
 
@@ -90,6 +92,7 @@
 
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
+                    {if $data.model == 0}
                     <div class="mdui-p-t-2 mdui-p-x-2">
                         {if $data.woName}
                         <div class="css-caard-header-title mdui-text-color-theme">
@@ -110,6 +113,29 @@
                         <div class="css-caard-header-subtite">表白 {$data.taName}</div>
                         {/if}
                     </div>
+                    {else}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            {$data.woName}的交流卡
+                            {if $data.top}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$data.woName} {if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的交流卡
+                            {if $data.top}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                        </div>
+                        <div class="css-caard-header-subtite">{if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {/if}
+                    </div>
+                    {/if}
+
                     {if $data.img}
                     <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">

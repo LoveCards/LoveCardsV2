@@ -37,7 +37,12 @@ class Cards
         $img = json_decode(Request::param('img'), true);
         $tag = json_decode(Request::param('tag'), true);
 
-        $model = 0;
+        $model = Request::param('model');
+        if($model == 0){
+            $model = 0;
+        }else{
+            $model = 1;
+        }
         $state = self::DefSetCardsState;
 
         //免验证
@@ -46,18 +51,25 @@ class Cards
 
         //验证参数是否合法
         try {
-            validate(CardsValidate::class)->batch(true)
-                ->check([
-                    'content' => $content,
+            $tryData = [
+                'content' => $content,
 
-                    'woName' => $woName,
-                    'woContact' => $woContact,
-                    'taName' => $taName,
-                    'taContact' => $taContact,
+                'woName' => $woName,
+                'woContact' => $woContact,
+                'taName' => $taName,
+                'taContact' => $taContact,
 
-                    'model' => $model,
-                    'state' => $state
-                ]);
+                'model' => $model,
+                'state' => $state
+            ];
+            if($model == 0){
+                validate(CardsValidate::class)->batch(true)
+                ->check($tryData);
+            }else{
+                validate(CardsValidate::class)->batch(true)
+                ->scene('add1')
+                ->check($tryData);
+            }
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $cardsvalidateerror = $e->getError();
@@ -194,18 +206,25 @@ class Cards
 
         //验证参数是否合法
         try {
-            validate(CardsValidate::class)->batch(true)
-                ->check([
-                    'content' => $content,
+            $tryData = [
+                'content' => $content,
 
-                    'woName' => $woName,
-                    'woContact' => $woContact,
-                    'taName' => $taName,
-                    'taContact' => $taContact,
+                'woName' => $woName,
+                'woContact' => $woContact,
+                'taName' => $taName,
+                'taContact' => $taContact,
 
-                    'model' => $model,
-                    'state' => $state
-                ]);
+                'model' => $model,
+                'state' => $state
+            ];
+            if($model == 0){
+                validate(CardsValidate::class)->batch(true)
+                ->check($tryData);
+            }else{
+                validate(CardsValidate::class)->batch(true)
+                ->scene('add1')
+                ->check($tryData);
+            }
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $cardsvalidateerror = $e->getError();

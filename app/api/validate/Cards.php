@@ -46,4 +46,11 @@ class Cards extends Validate
         'top.in' => 'top格式非法',
         'state.in' => 'state格式非法',
     ];
+
+    //场景
+    // 1
+    public function sceneAdd1()
+    {
+        return $this->remove('taName', 'require');
+    }   
 }

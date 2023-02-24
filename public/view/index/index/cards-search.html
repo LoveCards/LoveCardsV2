@@ -29,6 +29,7 @@
 
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
+                    {if $data.model == 0}
                     <div class="mdui-p-t-2 mdui-p-x-2">
                         {if $data.woName}
                         <div class="css-caard-header-title mdui-text-color-theme">
@@ -43,6 +44,22 @@
                         <div class="css-caard-header-subtite">表白 {$data.taName}</div>
                         {/if}
                     </div>
+                    {else}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            {$data.woName}的交流卡
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$data.woName} {if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的交流卡
+                        </div>
+                        <div class="css-caard-header-subtite">{if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {/if}
+                    </div>
+                    {/if}
                     {if $data.img}
                     <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">

@@ -1,17 +1,26 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="1" class="mdui-container">
+<div id="jsParameter" jsTabClass="{if $cardsModel == 0}1{else}2{/if}" class="mdui-container">
 
     <div class="mdui-row mdui-p-t-2">
         <!-- 顶部信息组件 -->
         <div class="mdui-col-xs-10">
-            {if $cardData['woName']}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
+            {if $cardsModel == 0}
+                {if $cardData['woName']}
+                <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
+                {else}
+                <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
+                {/if}
+                <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
             {else}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
+                {if $cardData['woName']}
+                <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的交流卡</div>
+                {else}
+                <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的交流卡</div>
+                {/if}
+                <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
             {/if}
-            <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
         </div>
         <div class="mdui-col-xs-2">
             <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
@@ -22,6 +31,7 @@
     </div>
 
     <!-- 卡片组件 -->
+    {if $cardsModel == 0}
     <div class="mdui-p-t-2">
         <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
             <div class="mdui-typo-headline-opacity mdui-text-left">
@@ -37,10 +47,11 @@
             <div class="mdui-typo-headline-opacity mdui-text-right">{$cardData['taName']}</div>
         </div>
     </div>
+    {/if}
 
     <!-- 内容组件 -->
     <div class="mdui-row">
-        <div class="mdui-col-sm-7 mdui-p-t-3">
+        <div class="mdui-col-sm-7 mdui-p-t-{if $cardsModel == 0}3{else}2{/if}">
 
             <div class="mdui-card">
                 <!-- 卡片的内容 -->
@@ -103,7 +114,7 @@
 
 
         <!-- 评论组件 -->
-        <div class="mdui-col-xs-12 mdui-col-sm-5 mdui-p-t-3">
+        <div class="mdui-col-xs-12 mdui-col-sm-5 mdui-p-t-{if $cardsModel == 0}3{else}2{/if}">
             <div class="mdui-card">
                 <!-- 卡片的内容 -->
                 <div class="mdui-p-t-2 mdui-p-x-2">

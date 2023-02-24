@@ -1,11 +1,16 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="1" class="mdui-container">
+<div id="jsParameter" jsTabClass="{if $cardsModel == 0}1{else}2{/if}" class="mdui-container">
     <!-- 顶部按钮组件 -->
     <div class="mdui-p-t-2">
+        {if $cardsModel == 0}
         <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
-            onclick="location.assign('/index/cards/add')">发布卡片</button>
+            onclick="location.assign('/index/cards/add/model/0')">发布表白卡</button>
+        {else}
+        <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
+            onclick="location.assign('/index/cards/add/model/1')">发布交流卡</button>
+        {/if}
     </div>
 
     <!-- 主体组件 -->
@@ -18,6 +23,7 @@
 
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
+                    {if $data.model == 0}
                     <div class="mdui-p-t-2 mdui-p-x-2">
                         {if $data.woName}
                         <div class="css-caard-header-title mdui-text-color-theme">
@@ -32,6 +38,22 @@
                         <div class="css-caard-header-subtite">表白 {$data.taName}</div>
                         {/if}
                     </div>
+                    {else}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            {$data.woName}的交流卡
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$data.woName} {if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的交流卡
+                        </div>
+                        <div class="css-caard-header-subtite">{if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {/if}
+                    </div>
+                    {/if}
                     {if $data.img}
                     <div class="mdui-card-media mdui-p-t-2">
                         <div class="css-cards-img mdui-m-x-1">

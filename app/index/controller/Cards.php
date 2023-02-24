@@ -27,11 +27,24 @@ class Cards
     {
         //参数
         $ip = Common::getIp();
+        $model = Request::param('model');
+        if($model == 0){
+            $model = 0;
+        }else{
+            $model = 1;
+        }
+        View::assign('cardsModel', $model);
 
         //取Cards列表数据
         $listNum = 12; //每页个数
-        $result = Db::table('cards')->where('state', 0)->order('id', 'desc')
+        if($model == 0){
+            $result = Db::table('cards')->where('state', 0)->where('model', 0)->order('id', 'desc')
             ->paginate($listNum, true);
+        }else{
+            $result = Db::table('cards')->where('state', 0)->where('model', 1)->order('id', 'desc')
+            ->paginate($listNum, true);    
+        }
+
         $cardsListRaw = $result->render();
         $listData = $result->items();
 
@@ -123,7 +136,8 @@ class Cards
         //卡片变量
         View::assign([
             'cardData' => $cardData,
-            'imgData' => $imgData
+            'imgData' => $imgData,
+            'cardsModel' => $cardData['model']
         ]);
 
         if (!$cardData['woName']) $cardData['woName'] = '匿名';
@@ -144,6 +158,14 @@ class Cards
     //添加卡片
     public function add()
     {
+        $model = Request::param('model');
+        if($model == 0){
+            $model = 0;
+        }else{
+            $model = 1;
+        }
+        View::assign('cardsModel', $model);
+
         //取Tag数据
         $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
         $cardsTagData = $result;
@@ -235,7 +257,7 @@ class Cards
         return View::fetch($this->TemplateDirectoryPath .'/cards-search');
     }
 
-    //TAG搜索
+    //TAG集合
     public function tag()
     {
 
