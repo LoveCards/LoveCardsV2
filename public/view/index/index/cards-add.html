@@ -1,7 +1,7 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="{if $cardsModel == 0}1{else}2{/if}" class="mdui-container">
+<div id="jsParameter" jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
 
     <div class="mdui-row mdui-p-t-2">
 
@@ -10,6 +10,13 @@
             <div class="mdui-p-b-2">
                 <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
                     onclick="javascript :history.back(-1);">返 回</button>
+            </div>
+
+            <div class="mdui-card mdui-m-b-1">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-y-2 mdui-p-x-2">
+                    (*)为必填项，姓名不填则为匿名，其他不填默认为空
+                </div>
             </div>
 
             <div class="mdui-card">
@@ -51,7 +58,7 @@
                         <input class="mdui-textfield-input" id="woContact" type="text" />
                     </div>
                     <div class="mdui-textfield">
-                        <label class="mdui-textfield-label">TA的姓名</label>
+                        <label class="mdui-textfield-label">TA的姓名(与谁交流)</label>
                         <input class="mdui-textfield-input" id="taName" type="text" />
                     </div>
                     {if $cardsModel == 0}

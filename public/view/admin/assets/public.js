@@ -203,6 +203,29 @@ function getUrlParam(name) {
 }
 
 
+/**
+ * 将文本内容复制到剪切板
+ * @param str 复制内容
+ */
+function copyText(str) {
+    try {
+        navigator.clipboard.writeText(str);
+        mdui.snackbar({
+            message: '复制成功',
+            position: 'left-top',
+        });
+        return true;
+        //console.log('Page URL copied to clipboard');
+    } catch (err) {
+        mdui.snackbar({
+            message: '好像出问题了，再试一次吧',
+            position: 'left-top',
+        });
+        return false;
+        //console.error('Failed to copy: ', err);
+    }
+}
+
 $(function () {
     /*
     *提示msg

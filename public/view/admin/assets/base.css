@@ -68,6 +68,10 @@
     font-weight: 700;
 }
 
+.css-caard-header-btn-round {
+    border-radius: 16%;
+}
+
 .css-cards-primary-subtitle {
     display: block;
     font-size: 14px;
@@ -129,12 +133,13 @@
 } */
 
 /* 图标 */
+/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
     font-family: 'iconfont';
     /* Project id 3815034 */
-    src: url('//at.alicdn.com/t/c/font_3815034_y60xy8z9c9p.woff2?t=1674898434321') format('woff2'),
-        url('//at.alicdn.com/t/c/font_3815034_y60xy8z9c9p.woff?t=1674898434321') format('woff'),
-        url('//at.alicdn.com/t/c/font_3815034_y60xy8z9c9p.ttf?t=1674898434321') format('truetype');
+    src: url('//at.alicdn.com/t/c/font_3815034_tfhp4etd8e.woff2?t=1679135480127') format('woff2'),
+        url('//at.alicdn.com/t/c/font_3815034_tfhp4etd8e.woff?t=1679135480127') format('woff'),
+        url('//at.alicdn.com/t/c/font_3815034_tfhp4etd8e.ttf?t=1679135480127') format('truetype');
 }
 
 .iconfont {
