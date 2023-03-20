@@ -26,6 +26,13 @@ class Cards
     //添加-POST
     public function add()
     {
+        //防手抖
+        $preventClicks = Common::preventClicks();
+        if($preventClicks[0] == false){
+            //返回数据
+            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+        }
+
         //获取数据
         $content = Request::param('content');
 

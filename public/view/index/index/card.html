@@ -109,7 +109,7 @@
             {if $imgData}
             <div class="mdui-card mdui-m-t-1">
                 <div class="mdui-m-x-1 mdui-m-t-1">
-                    <div class="mdui-row-xs-2 mdui-row-sm-3">
+                    <div class="mdui-row-xs-2 mdui-row-sm-3" id="viewer">
                         {volist name="imgData" id="data"}
                         <div class="mdui-col mdui-p-b-1">
                             <div class="mdui-grid-tile">
@@ -239,6 +239,10 @@
         pager();
         //初始化-Tag组件
         ViewCardsTag({$cardsTagData|raw});
+        //viewer图片放大插件初始化
+        $('#viewer').viewer({
+            url: 'src'
+        });
     });
 
     //请求-按钮-评论

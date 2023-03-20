@@ -11,6 +11,7 @@ use think\facade\Request;
 use think\facade\Db;
 use think\facade\Cookie;
 use think\facade\Config;
+use think\facade\Session;
 
 class Common extends Facade
 {
@@ -263,6 +264,20 @@ class Common extends Facade
         } else {
             return 'error';
         }
+    }
+
+    //防手抖
+    protected static function preventClicks(){ 
+        if(strtotime(date("Y-m-d H:i:s"))>strtotime(Session::get('LastPostCardTime'))){
+            //符合要求
+            $result = [true];
+        }else{
+            $result = [false,'是不是手抖了呢，稍后再试试试吧'];
+        }
+        //设置上次时间
+        Session::set('LastPostCardTime', date("Y-m-d H:i:s", strtotime('+6 second')));
+        //返回结果
+        return $result;
     }
 }
 

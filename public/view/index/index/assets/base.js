@@ -84,6 +84,7 @@ $('.js-copyurl-cardId').click(function () {
     //整理分享数据
     var content = GetShareContent()
     var state = copyText(content);
+    //console.log(state);
     if (!state) {
         //更新为无法复制弹窗/Content
         $(this).attr('style', 'display:none;')

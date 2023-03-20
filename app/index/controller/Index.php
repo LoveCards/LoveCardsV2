@@ -24,7 +24,6 @@ class Index
     //输出
     public function index()
     {
-
         //参数
         $ip = Common::getIp();
 

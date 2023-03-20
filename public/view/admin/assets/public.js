@@ -210,19 +210,21 @@ function getUrlParam(name) {
 function copyText(str) {
     try {
         navigator.clipboard.writeText(str);
+    } catch (err) {
+        var state = false;
+    }
+    if(state == false){
+        mdui.snackbar({
+            message: '好像出问题了，再试一次',
+            position: 'left-top',
+        });
+        return false;
+    }else{
         mdui.snackbar({
             message: '复制成功',
             position: 'left-top',
         });
         return true;
-        //console.log('Page URL copied to clipboard');
-    } catch (err) {
-        mdui.snackbar({
-            message: '好像出问题了，再试一次吧',
-            position: 'left-top',
-        });
-        return false;
-        //console.error('Failed to copy: ', err);
     }
 }
 
