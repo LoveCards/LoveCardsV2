@@ -90,6 +90,8 @@
                             -2023年3月20日
                             --更新.前端图片放大查看
                             --优化.前端代码复用
+                            -2023年3月21日
+                            --更新.浏览量统计功能
                         </div>
                     </div>
 
@@ -113,7 +115,9 @@
                             {/if}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
-                        <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}</div>
+                        <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}
+                            <span class="css-caard-header-subtite-liulan">浏览{$data.look}</span>
+                        </div>
                         {else}
                         <div class="css-caard-header-title mdui-text-color-theme">
                             匿名的表白卡
@@ -122,7 +126,9 @@
                             <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
                             {/if}
                         </div>
-                        <div class="css-caard-header-subtite">表白 {$data.taName}</div>
+                        <div class="css-caard-header-subtite">表白 {$data.taName}
+                            <span class="css-caard-header-subtite-liulan">浏览{$data.look}</span>
+                        </div>
                         {/if}
                     </div>
                     {else}
@@ -136,7 +142,9 @@
                             {/if}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
-                        <div class="css-caard-header-subtite">{$data.woName} {if $data.taName}对 {$data.taName}{/if} 说</div>
+                        <div class="css-caard-header-subtite">{$data.woName} {if $data.taName}对 {$data.taName}{/if} 说
+                            <span class="css-caard-header-subtite-liulan">浏览{$data.look}</span>
+                        </div>
                         {else}
                         <div class="css-caard-header-title mdui-text-color-theme">
                             匿名的交流卡
@@ -145,7 +153,9 @@
                             <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
                             {/if}
                         </div>
-                        <div class="css-caard-header-subtite">{if $data.taName}对 {$data.taName}{/if} 说</div>
+                        <div class="css-caard-header-subtite">{if $data.taName}对 {$data.taName}{/if} 说
+                            <span class="css-caard-header-subtite-liulan">浏览{$data.look}</span>
+                        </div>
                         {/if}
                     </div>
                     {/if}

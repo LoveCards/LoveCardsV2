@@ -28,21 +28,21 @@ class Cards
         //参数
         $ip = Common::getIp();
         $model = Request::param('model');
-        if($model == 0){
+        if ($model == 0) {
             $model = 0;
-        }else{
+        } else {
             $model = 1;
         }
         View::assign('cardsModel', $model);
 
         //取Cards列表数据
         $listNum = 12; //每页个数
-        if($model == 0){
+        if ($model == 0) {
             $result = Db::table('cards')->where('state', 0)->where('model', 0)->order('id', 'desc')
-            ->paginate($listNum, true);
-        }else{
+                ->paginate($listNum, true);
+        } else {
             $result = Db::table('cards')->where('state', 0)->where('model', 1)->order('id', 'desc')
-            ->paginate($listNum, true);    
+                ->paginate($listNum, true);
         }
 
         $cardsListRaw = $result->render();
@@ -75,7 +75,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '卡片墙',
@@ -84,7 +84,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch($this->TemplateDirectoryPath .'/cards');
+        return View::fetch($this->TemplateDirectoryPath . '/cards');
     }
 
     //卡片详情
@@ -100,6 +100,17 @@ class Cards
             return Common::jumpUrl('/index/Cards', '卡片ID不存在');
         }
         $cardData = $result;
+
+        //防止快速刷新网页增加浏览量
+        $preventClicks = Common::preventClicks('LastGetTime', 60);
+        if ($preventClicks[0] == true) {
+            //获取Cards数据库对象
+            $resultCards = Db::table('cards')->where('id', $id);
+            //更新视图字段
+            if (!$resultCards->inc('look')->update()) {
+                return Common::create(['cards.look' => 'cards.look更新失败'], '无效浏览', 400);
+            };
+        }
 
         //取img数据
         $result = Db::table('img')->where('aid', 1)->where('pid', $cardData['id'])->select()->toArray();
@@ -143,7 +154,7 @@ class Cards
         if (!$cardData['woName']) $cardData['woName'] = '匿名';
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $cardData['woName'] . '的卡片',
@@ -152,16 +163,16 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch($this->TemplateDirectoryPath .'/card');
+        return View::fetch($this->TemplateDirectoryPath . '/card');
     }
 
     //添加卡片
     public function add()
     {
         $model = Request::param('model');
-        if($model == 0){
+        if ($model == 0) {
             $model = 0;
-        }else{
+        } else {
             $model = 1;
         }
         View::assign('cardsModel', $model);
@@ -173,7 +184,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '写卡',
@@ -182,7 +193,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch($this->TemplateDirectoryPath .'/cards-add');
+        return View::fetch($this->TemplateDirectoryPath . '/cards-add');
     }
 
     //卡片搜索
@@ -245,7 +256,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $viewTitle,
@@ -254,7 +265,7 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch($this->TemplateDirectoryPath .'/cards-search');
+        return View::fetch($this->TemplateDirectoryPath . '/cards-search');
     }
 
     //TAG集合
@@ -271,7 +282,7 @@ class Cards
             return Common::jumpUrl('/index/Cards/search', '请输入Tag');
         }
         $requestTag = Db::table('cards_tag')->where('id', $value)->findOrEmpty();
-        if(!$requestTag){
+        if (!$requestTag) {
             return Common::jumpUrl('/index/Cards/search', 'Tag已被删除或不存在');
         }
 
@@ -320,7 +331,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $viewTitle,
@@ -330,6 +341,6 @@ class Cards
         ]);
 
         //输出模板
-        return View::fetch($this->TemplateDirectoryPath .'/cards-tag');
+        return View::fetch($this->TemplateDirectoryPath . '/cards-tag');
     }
 }

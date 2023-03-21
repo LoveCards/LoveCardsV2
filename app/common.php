@@ -267,15 +267,15 @@ class Common extends Facade
     }
 
     //防手抖
-    protected static function preventClicks(){ 
-        if(strtotime(date("Y-m-d H:i:s"))>strtotime(Session::get('LastPostCardTime'))){
+    protected static function preventClicks($setName,$time = 6){ 
+        if(strtotime(date("Y-m-d H:i:s"))>strtotime(Session::get($setName))){
             //符合要求
             $result = [true];
         }else{
-            $result = [false,'是不是手抖了呢，稍后再试试试吧'];
+            $result = [false,'您的操作太快了，稍后再试试试吧'];
         }
         //设置上次时间
-        Session::set('LastPostCardTime', date("Y-m-d H:i:s", strtotime('+6 second')));
+        Session::set($setName, date("Y-m-d H:i:s", strtotime('+'.$time.' second')));
         //返回结果
         return $result;
     }
