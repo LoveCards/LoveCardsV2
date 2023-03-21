@@ -6,6 +6,7 @@
 
 /* 卡页面样式 */
 .css-cardsList-img {
+    cursor: pointer;
     Background-color: #0000000a;
     height: 240px;
     overflow: hidden;

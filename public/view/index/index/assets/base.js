@@ -89,6 +89,7 @@ $('.js-copyurl-cardId').click(function () {
         //更新为无法复制弹窗/Content
         $(this).attr('style', 'display:none;')
         $('#dialog-share').find("textarea").parent().parent().attr('style', '');
+        $('#dialog-share').find("textarea").siblings("div").filter(".mdui-typo-caption-opacity").text('请手动复制分享内容');
         $('#dialog-share').find("textarea").text(content);
     }
 });

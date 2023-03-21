@@ -1,0 +1,82 @@
+            {volist name='cardsListData' id='data'}
+            <div class="mdui-col mdui-m-b-2">
+
+                <div class="mdui-card">
+                    <!-- 卡片头部，包含头像、标题、副标题 -->
+                    {if $data.model == 0}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            {$data.woName}的表白卡
+                            <i class="js-Shareurl-cardId" value="{$data.id}">&#xe63d;</i>
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$data.woName} 表白 {$data.taName}</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的表白卡
+                            <i class="js-Shareurl-cardId" value="{$data.id}">&#xe63d;</i>
+                        </div>
+                        <div class="css-caard-header-subtite">表白 {$data.taName}</div>
+                        {/if}
+                    </div>
+                    {else}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $data.woName}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            {$data.woName}的交流卡
+                            <i class="js-Shareurl-cardId" value="{$data.id}">&#xe63d;</i>
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$data.woName} {if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {else}
+                        <div class="css-caard-header-title mdui-text-color-theme">
+                            匿名的交流卡
+                            <i class="js-Shareurl-cardId" value="{$data.id}">&#xe63d;</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{if $data.taName}对 {$data.taName}{/if} 说</div>
+                        {/if}
+                    </div>
+                    {/if}
+                    {if $data.img}
+                    <div class="mdui-card-media mdui-p-t-2">
+                        <div class="css-cards-img mdui-m-x-1">
+                            <img src="{$data.img}" class="js-jumpurl-cardId" value="{$data.id}" />
+                        </div>
+                    </div>
+                    {/if}
+
+                    <!-- 卡片的内容 -->
+                    <div class="mdui-p-a-2 mdui-typo">
+                        {if $data.tag}
+                        <div class="css-cards-primary-subtitle" value={$data.tag|raw}>
+                            <!-- Tag标签 -->
+                        </div>
+                        {/if}
+                        <div class="js-jumpurl-cardId mdui-p-t-1 css-cards-primary-content" value="{$data.id}">
+                            {$data.content}
+                        </div>
+                    </div>
+
+
+                    <!-- 卡片的按钮 -->
+                    <div class="mdui-card-actions">
+                        <button class="js-jumpurl-cardId css-card-actions-btn mdui-btn mdui-float-left"
+                            value="{$data.id}">
+                            <i class="mdui-icon material-icons">insert_comment</i>评论{$data.comments}
+                        </button>
+
+                        {if $data.ipGood == false}
+                        <button value="{$data.id}"
+                            class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {else}
+                        <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$data.good}
+                        </button>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            {/volist}
