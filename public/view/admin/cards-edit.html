@@ -83,10 +83,16 @@
                     </select>
                 </div>
             </div>
-            <div class="mdui-col-xs-12 mdui-col-md-6">
+            <div class="mdui-col-xs-6 mdui-col-md-3">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">点赞数</label>
-                    <input class="mdui-textfield-input" id="good" type="text" value="{$idCardData['good']}" />
+                    <input class="mdui-textfield-input" id="good" type="text" value="{$idCardData['good']}" disabled/>
+                </div>
+            </div>
+            <div class="mdui-col-xs-6 mdui-col-md-3">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">浏览量</label>
+                    <input class="mdui-textfield-input" id="look" type="text" value="{$idCardData['look']}" disabled/>
                 </div>
             </div>
         </div>
@@ -207,6 +213,7 @@
                 'model': $('#model').val(),
                 'good': $('#good').val(),
                 'content': $('#content').val(),
+                'look': $('#look').val(),
                 'woName': $('#woName').val(),
                 'taName': $('#taName').val(),
                 'woContact': $('#woContact').val(),

@@ -102,7 +102,7 @@ class Cards
         $cardData = $result;
 
         //防止快速刷新网页增加浏览量
-        $preventClicks = Common::preventClicks('LastGetTime', 60);
+        $preventClicks = Common::preventClicks('LastGetTimeCardID'.$id, 60);
         if ($preventClicks[0] == true) {
             //获取Cards数据库对象
             $resultCards = Db::table('cards')->where('id', $id);
@@ -110,6 +110,7 @@ class Cards
             if (!$resultCards->inc('look')->update()) {
                 return Common::create(['cards.look' => 'cards.look更新失败'], '无效浏览', 400);
             };
+            $cardData['look'] = $cardData['look']+1;
         }
 
         //取img数据

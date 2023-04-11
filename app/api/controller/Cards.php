@@ -252,6 +252,8 @@ class Cards
 
             'woName' => $woName,
             'woContact' => $woContact,
+            'taName' => $taName,
+            'taContact' => $taContact,
 
             'top' => $top,
             'model' => $model,
@@ -260,11 +262,11 @@ class Cards
             'time' => $time,
             'ip' => $ip,
         ];
-        if ($model == 0) {
-            //表白卡模式
-            $data['taName'] = $taName;
-            $data['taContact'] = $taContact;
-        }
+        // if ($model == 0) {
+        //     //表白卡模式
+        //     $data['taName'] = $taName;
+        //     $data['taContact'] = $taContact;
+        // }
         //Cards写入库
         if (!$result->update($data)) {
             return Common::create(['cards' => '更新失败'], '编辑失败', 400);
