@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: github.com/zhiguai
  * @Date: 2023-02-22 00:28:31
- * @LastEditTime: 2023-04-21 01:12:42
+ * @LastEditTime: 2023-04-21 01:26:27
  * @LastEditors: github.com/zhiguai
 -->
 {include file="index/public/header"}
@@ -101,9 +101,10 @@
         }
 
         //初始化高级搜索视图
-        if(getUrlParam('model') != 'false'){
+        if(getUrlParam('model') != 'false' && getUrlParam('search') == 'true'){
             var model = Number(getUrlParam('model'));
             $('#dialogFilterItemModel-'+model).prop("checked",true);
+            console.log(model);
             radioModel = model;
         }
 
