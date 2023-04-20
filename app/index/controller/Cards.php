@@ -217,9 +217,20 @@ class Cards
                 return Common::jumpUrl('/index/Cards/search', '请输入要搜索内容');
             }
 
+            if($model != 'false'){
+                if($model == 1){
+                    $whereData = 1;
+                }else{
+                    $whereData = 0;
+                }
+                $result = Db::table('cards')->where('state', 0)->where('model', $whereData);
+            }else{
+                $result = Db::table('cards')->where('state', 0);
+            }
+            //dd($result);
             //取Cards列表
             $listNum = 12; //每页个数
-            $result = Db::table('cards')->where('state', 0)->where('model', $model)->where('id|content|woName|taName', 'like', '%' . $value . '%')->order('id', 'desc')
+            $result = $result->where('id|content|woName|taName', 'like', '%' . $value . '%')->order('id', 'desc')
                 ->paginate($listNum, true);
             $cardsListRaw = $result->render();
             $listData = $result->items();

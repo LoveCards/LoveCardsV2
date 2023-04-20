@@ -1,3 +1,10 @@
+<!--
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2023-02-22 00:28:31
+ * @LastEditTime: 2023-04-21 01:12:42
+ * @LastEditors: github.com/zhiguai
+-->
 {include file="index/public/header"}
 
 <!-- 页体 -->
@@ -6,14 +13,55 @@
     <div class="mdui-row mdui-p-t-1">
         <div class="mdui-col-md-6 mdui-col-offset-md-3">
             <div class="mdui-row">
-                <div class="mdui-col-xs-9 mdui-col-sm-10">
+                <div class="mdui-col-xs-10 mdui-col-sm-11">
                     <div class="mdui-textfield">
+                        <i class="mdui-icon material-icons mdui-ripple"
+                            mdui-dialog="{target: '#dialogFilter'}">filter_list</i>
+                        <div class="mdui-dialog" id="dialogFilter">
+                            <div class="mdui-dialog-title">高级搜索</div>
+                            <div class="mdui-row mdui-p-x-4">
+                                <div class="mdui-row-xs-2 mdui-row-sm-4">
+                                    <div class="mdui-p-x-1">
+                                        <div class="mdui-row-xs-3 mdui-row-sm-3">
+
+                                            <div class="mdui-col">
+                                                <label class="mdui-radio">
+                                                    <input id="dialogFilterItemModel-0" type="radio" name="radioModelGroup" onclick="radioModel=0" />
+                                                    <i class="mdui-radio-icon"></i>
+                                                    表白卡
+                                                </label>
+                                            </div>
+
+                                            <div class="mdui-col">
+                                                <label class="mdui-radio">
+                                                    <input id="dialogFilterItemModel-1" type="radio" name="radioModelGroup" onclick="radioModel=1" />
+                                                    <i class="mdui-radio-icon"></i>
+                                                    交流卡
+                                                </label>
+                                            </div>
+
+                                            <div class="mdui-col">
+                                                <button class="mdui-btn mdui-ripple" id="btnRestChooseFilter">重置</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mdui-dialog-actions">
+                                <button class="mdui-btn mdui-ripple" id="btnChooseFilter" mdui-dialog-close>确定</button>
+                            </div>
+                        </div>
                         <input id="SearchValue" class="mdui-textfield-input" type="search" placeholder="ID、名字、内容">
                     </div>
                 </div>
-                <div class="mdui-col-xs-3 mdui-col-sm-2 mdui-text-center mdui-float-right">
-                    <button id="requestSearch" type="button"
-                        class="mdui-m-y-2 mdui-btn mdui-btn-raised mdui-color-theme-accent">搜索</button>
+                <div class="mdui-col-xs-2 mdui-col-sm-1 mdui-text-center mdui-float-right">
+                    <button id="requestSearch"
+                        class="mdui-btn mdui-btn-icon mdui-color-theme-accent mdui-ripple mdui-m-t-2">
+                        <i class="mdui-icon material-icons">search</i>
+                    </button>
+                    <!-- <button type="button"
+                        class="mdui-m-y-2 mdui-btn mdui-btn-raised mdui-color-theme-accent">搜索</button> -->
                 </div>
             </div>
         </div>
@@ -36,6 +84,9 @@
 {include file="index/public/footer"}
 
 <script>
+    //高级搜索状态
+    var radioModel = 'false';
+
     $(function () {
         //初始化-分页组件
         pager();
@@ -48,11 +99,25 @@
                 $('#jsMainComp').children().html('<div class="mdui-typo-title-opacity mdui-text-center" style="padding-top: 184px">没有唉~</div>')
             }
         }
+
+        //初始化高级搜索视图
+        if(getUrlParam('model') != 'false'){
+            var model = Number(getUrlParam('model'));
+            $('#dialogFilterItemModel-'+model).prop("checked",true);
+            radioModel = model;
+        }
+
+        //高级搜索重置按钮
+        $('#btnRestChooseFilter').click(function () {
+            $('#dialogFilterItemModel-1').prop("checked",false);
+            $('#dialogFilterItemModel-2').prop("checked",false);
+            radioModel = 'false';
+        })
     });
 
     //表单-按钮-搜索
     $('#requestSearch').click(function () {
-        jumpUrl('/index/Cards/search?search=true&model=0&value=' + $('#SearchValue').val(), 0);
+        jumpUrl('/index/Cards/search?search=true&model=' + radioModel + '&value=' + $('#SearchValue').val(), 0);
     });
 </script>
 
