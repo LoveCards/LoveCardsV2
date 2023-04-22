@@ -2,7 +2,7 @@
 PHP8+Composer+mysql  
 
 ### 安装  
-composer install  
+composer install
 
 ### 配置  
 设置运行目录为Public  
