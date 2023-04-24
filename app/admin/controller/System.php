@@ -64,10 +64,12 @@ class System
         //取模板config数据
         $templateDirectory = File::get_dirs('./view/index')['dir'];
         for ($i = 2; $i < count($templateDirectory); $i++) {
-            $t = './view/index/' . $templateDirectory[$i];
-            if (File::get_size($t) != 0) {
-                $testTemplateConfig[$templateDirectory[$i]] = json_decode(File::read_file($t . '/config.ini'), true);
-                $testTemplateConfig[$templateDirectory[$i]]['DirectoryName'] = $templateDirectory[$i];
+            if ($templateDirectory[$i] != '.' && $templateDirectory[$i] != '..') {
+                $t = './view/index/' . $templateDirectory[$i];
+                if (File::get_size($t) != 0) {
+                    $testTemplateConfig[$templateDirectory[$i]] = json_decode(File::read_file($t . '/config.ini'), true);
+                    $testTemplateConfig[$templateDirectory[$i]]['DirectoryName'] = $templateDirectory[$i];
+                }
             }
         }
         $templateConfig = array();
@@ -76,7 +78,7 @@ class System
         }
 
         $nowTemplateConfig = json_decode(File::read_file('./view/index/' . Config::get('lovecards.template_directory', 'index') . '/config.ini'), true);
-        if(!$nowTemplateConfig){
+        if (!$nowTemplateConfig) {
             $nowTemplateConfig = json_decode(File::read_file('./view/index/index/config.ini'), true);
         }
 

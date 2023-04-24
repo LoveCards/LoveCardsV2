@@ -94,6 +94,8 @@ class Cards
 
             'woName' => $woName,
             'woContact' => $woContact,
+            'taName' => $taName,
+            'taContact' => $taContact,
 
             'model' => $model,
             'state' => $state,
@@ -101,11 +103,11 @@ class Cards
             'time' => $time,
             'ip' => $ip,
         ];
-        if ($model == 0) {
-            //表白卡模式
-            $data['taName'] = $taName;
-            $data['taContact'] = $taContact;
-        }
+        // if ($model == 0) {
+        //     //表白卡模式
+        //     $data['taName'] = $taName;
+        //     $data['taContact'] = $taContact;
+        // }
 
         //Cards写入库
         $CardId = $result->insertGetId($data);
