@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>安装程序</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
+    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/base.css" />
+
+    <style>
+        .mask-xs {
+            max-height: 180px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mask-md {
+            max-height: 640px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-layout-light mdui-theme-accent-pink">
+    <div class="mdui-container-fluid">
+        <div class="mdui-card" style="margin: 5%;">
+            <div class="mdui-row">
+                <div class="mdui-col-xs-12 mdui-col-md-5 mask-md mdui-hidden-sm-down">
+                    <img style="height: 680px;"
+                        src="https://img1.imgtp.com/2023/05/05/rsGxwTe7.gif">
+                    <div class="mdui-card-media-covered mdui-p-x-2  ">
+                        <div class="mdui-card-primary">
+                            <div class="mdui-card-primary-title">LoveCards</div>
+                            <div class="mdui-card-primary-subtitle">Maed by 吃纸怪. Copyright © 2020. Crafted with <a
+                                    href="//fatda.cn">FatDa</a>. </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-col-xs-12 mdui-col-md-6 mask-xs mdui-hidden-md-up">
+                    <img src="https://img1.imgtp.com/2023/05/05/rsGxwTe7.gif"
+                        style="width: 100%;">
+                    <div class="mdui-card-media-covered mdui-p-x-2  ">
+                        <div class="mdui-card-primary">
+                            <div class="mdui-card-primary-title">LoveCards</div>
+                            <div class="mdui-card-primary-subtitle">Maed by 吃纸怪. Copyright © 2020. Crafted with <a
+                                    href="//fatda.cn">FatDa</a>. </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-col-xs-12 mdui-col-md-7">
+                    <div class="mdui-p-x-5 mdui-p-t-4">
+                        <div id="tab" class="mdui-tab mdui-tab-full-width">
+                            <a id="tab1" class="mdui-ripple">版本详情</a>
+                            <a id="tab2" class="mdui-ripple" disabled>配置数据库</a>
+                            <a id="tab3" class="mdui-ripple" disabled>创建账户</a>
+                            <a id="tab4" class="mdui-ripple" disabled>完成安装</a>
+                        </div>
+                    </div>
+
+                    <div class="mdui-p-x-5 mdui-p-t-5">
+                        <div id="tab-e1">
+                            版本详情
+                        </div>
+                        <div id="tab-e2" class="hide">
+                            <div class="mdui-textfield">
+                                <label class="mdui-textfield-label">数据库服务器</label>
+                                <textarea class="mdui-textfield-input">localhost</textarea>
+                            </div>
+                            <div class="mdui-textfield">
+                                <label class="mdui-textfield-label">数据库用户名</label>
+                                <textarea class="mdui-textfield-input"></textarea>
+                            </div>
+                            <div class="mdui-textfield">
+                                <label class="mdui-textfield-label">数据库密码</label>
+                                <textarea class="mdui-textfield-input"></textarea>
+                            </div>
+                            <div class="mdui-textfield">
+                                <label class="mdui-textfield-label">数据库端口</label>
+                                <textarea class="mdui-textfield-input">3306</textarea>
+                            </div>
+                            <div class="mdui-textfield">
+                                <label class="mdui-textfield-label">数据库名</label>
+                                <textarea class="mdui-textfield-input"></textarea>
+                            </div>
+                        </div>
+                        <div id="tab-e3" class="hide">
+                            创建账户
+                        </div>
+                        <div id="tab-e4" class="hide">
+                            安装完成
+                        </div>
+                    </div>
+
+                    <div class="mdui-p-x-5 mdui-p-t-5 mdui-p-b-4">
+                        <button id="btnPrev" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent"
+                            style="visibility: hidden;">上一步</button>
+                        <button id="btnNext"
+                            class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right">下一步</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
+    <script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
+    <script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+    <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+    <script src="{__A-assets__}/base.js"></script>
+    <script src="{__A-assets__}/public.js"></script>
+    <script>
+        var nowTab = 1;
+        var inst = new mdui.Tab('#tab');
+        var TabControl = (state) => {
+            nowTab = nowTab + state;
+            //显示下一个Tab
+            $('#tab' + nowTab).attr("disabled", false);
+            $('#tab-e' + nowTab).attr('class', '');
+            //隐藏当前Tab
+            $('#tab' + (nowTab - state)).attr("disabled", true);
+            $('#tab-e' + (nowTab - state)).attr('class', 'hide');
+        }
+        var btnNext = () => {
+            if (nowTab < $('#tab').children().length - 1) {
+                //显示上一页btn
+                $('#btnPrev').attr('style', '');
+                //锁定其他Tab
+                TabControl(1);
+                //更新进度条
+                inst.next();
+            } else {
+                console.log('最后一页了');
+            }
+        }
+        var btnPrev = () => {
+            if (nowTab > 1) {
+                //锁定其他Tab
+                TabControl(-1);
+                console.log(nowTab);
+                //更新进度条
+                inst.prev();
+                if (nowTab == 1) {
+                    //隐藏上一页btn
+                    $('#btnPrev').attr('style', 'visibility: hidden;');
+                }
+            } else {
+                console.log('第一页了');
+            }
+        }
+
+        $('#btnNext').click(function () {
+            btnNext();
+        })
+        $('#btnPrev').click(function () {
+            btnPrev();
+        })
+    </script>
+
+</body>

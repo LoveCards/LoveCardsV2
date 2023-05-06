@@ -20,7 +20,7 @@ composer install
 
 ### 开发相关  
 LC2模板存放目录“public\view\index\”,例如：默认模板路径“public\view\index\index”  
-说明：目前LC2支持模板开发，具体开发文档暂未完成，可参考默认模板以及ThinkTemplate开发指南(注意：config.ini不可少)
+说明：目前LC2支持模板开发，具体开发文档暂未完成，可参考默认模板以及ThinkTemplate开发指南(注意：config.ini不可少)  
 <a href="https://www.kancloud.cn/manual/think-template/1286403">ThinkTemplate开发指南(LC2模板开发语法指南)</a>  
 <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API文档</a>(待完善)  
 
