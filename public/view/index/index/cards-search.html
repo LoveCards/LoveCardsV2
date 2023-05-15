@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: github.com/zhiguai
  * @Date: 2023-02-22 00:28:31
- * @LastEditTime: 2023-04-21 01:26:27
+ * @LastEditTime: 2023-05-15 14:15:08
  * @LastEditors: github.com/zhiguai
 -->
 {include file="index/public/header"}
@@ -110,8 +110,8 @@
 
         //高级搜索重置按钮
         $('#btnRestChooseFilter').click(function () {
+            $('#dialogFilterItemModel-0').prop("checked",false);
             $('#dialogFilterItemModel-1').prop("checked",false);
-            $('#dialogFilterItemModel-2').prop("checked",false);
             radioModel = 'false';
         })
     });

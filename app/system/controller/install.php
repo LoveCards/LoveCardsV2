@@ -160,10 +160,14 @@ class Install
     //生成记录
     public function apiSetInstallLock()
     {
-        if (file_put_contents("../lock.txt", "LoveCards.cn")) {
-            return Common::create([], '安装记录已生成', 200);
+        if (fopen("../lock.txt", 'r')) {
+            return Common::create([], '安装记录已存在', 200);
         } else {
-            return Common::create([], '安装记录生成失败，请手动添加lock.txt文件到根目录！', 500);
+            if (file_put_contents("../lock.txt", "LoveCards.cn")) {
+                return Common::create([], '安装记录已生成', 200);
+            } else {
+                return Common::create([], '安装记录生成失败，请手动添加lock.txt文件到根目录！', 500);
+            }
         }
     }
 
