@@ -99,6 +99,8 @@ class Install
     //api
     public function apiSetDbConfig()
     {
+        //待完成-验证是否已经安装
+
         $hostname = Request::param('hostname');
         $database = Request::param('database');
         $username = Request::param('username');
@@ -153,12 +155,28 @@ class Install
             }
         }
 
-        return Common::create(['error' => $result], '数据库配置出现未知错误', 500);
+        return Common::create($result, '数据库配置出现未知错误', 500);
+    }
+    //生成记录
+    public function apiSetInstallLock()
+    {
+        if (file_put_contents("../lock.txt", "LoveCards.cn")) {
+            return Common::create([], '安装记录已生成', 200);
+        } else {
+            return Common::create([], '安装记录生成失败，请手动添加lock.txt文件到根目录！', 500);
+        }
     }
 
     //输出
     public function index()
     {
+
+        //安装检测
+        @$file = fopen("../lock.txt", "r");
+        if ($file) {
+            return Common::jumpUrl('/index/index', '检测到安装记录，如需重新安装请删除根目录[lock.txt]文件');
+            exit;
+        }
 
         //基础变量
         View::assign([

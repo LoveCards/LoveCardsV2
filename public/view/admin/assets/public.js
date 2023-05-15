@@ -8,7 +8,7 @@ const DefSetCardsTagNum = 3;
 /*
 *API请求函数
 */
-function apiAjax0(data, url, type = 'GET', dataType = 'json', fileState = false) {
+function apiAjax0(data, url, type = 'GET', dataType = 'json') {
     //设置公共变量
     var data;
     $.ajax({
@@ -57,6 +57,67 @@ function apiAjax0(data, url, type = 'GET', dataType = 'json', fileState = false)
     })
     //返回公共变量
     return data;
+}
+function apiAjax0a(data, url, type = 'GET', snackbar = true, dataType = 'json') {
+    //设置公共变量
+    var data;
+    var state;
+    $.ajax({
+        url: url,
+        type: type,
+        async: false,
+        dataType: dataType,
+        data: data,
+
+        beforeSend: function () {//提交数据前执行判断，根据返回t/f决定是否发送
+            return true;
+        },
+
+        success: function (result, status) {
+            if (result.ec == '200') {
+                //成功
+                data = result;
+                state = true;
+                return;
+            } else {
+                //失败
+                data = result;
+                state = false;
+                if (snackbar) {
+                    var arrData = result.data;
+                    var reuData = '';
+                    //整理二维数组
+                    for (let index in arrData) {
+                        reuData = reuData + arrData[index] + '&nbsp;';
+                    }
+                    //详细输出
+                    reuData = '<br>' + result.ec + '&nbsp;:&nbsp;' + reuData;
+                    mdui.snackbar({
+                        message: 'msg&nbsp;:&nbsp;' + result.msg + reuData,
+                        position: 'left-top'
+                    });
+                }
+                return;
+            }
+        },
+
+        error: function () {
+            data = result;
+            state = false;
+            if (snackbar) {
+                mdui.snackbar({
+                    message: '4XX&nbsp;:&nbsp;未知错误，数据获取失败',
+                    position: 'left-top'
+                });
+            }
+            return;
+        }
+    })
+    //返回公共变量
+    return {
+        'state': state,
+        'r': data
+    };
 }
 
 /*
@@ -213,13 +274,13 @@ function copyText(str) {
     } catch (err) {
         var state = false;
     }
-    if(state == false){
+    if (state == false) {
         mdui.snackbar({
             message: '好像出问题了，再试一次',
             position: 'left-top',
         });
         return false;
-    }else{
+    } else {
         mdui.snackbar({
             message: '复制成功',
             position: 'left-top',

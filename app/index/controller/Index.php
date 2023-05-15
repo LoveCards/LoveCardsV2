@@ -1,4 +1,11 @@
 <?php
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2022-12-26 18:53:25
+ * @LastEditTime: 2023-05-15 00:22:26
+ * @LastEditors: github.com/zhiguai
+ */
 
 namespace app\index\controller;
 
@@ -17,6 +24,13 @@ class Index
     var $TemplateDirectory;
     function __construct()
     {
+        //安装检测
+        @$file = fopen("../lock.txt", "r");
+        if (!$file) {
+            header("location:/system/install");
+            exit;
+        }
+
         $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
         $this->TemplateDirectory = Common::get_templateDirectory()[1];
     }
@@ -69,7 +83,7 @@ class Index
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/'.$this->TemplateDirectory.'/assets',
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '推荐',

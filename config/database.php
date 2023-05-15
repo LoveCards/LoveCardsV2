@@ -1,4 +1,11 @@
 <?php
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2022-12-26 18:53:25
+ * @LastEditTime: 2023-05-15 00:09:54
+ * @LastEditors: github.com/zhiguai
+ */
 
 return [
     // 默认使用的数据库连接配置
@@ -24,7 +31,7 @@ return [
             // 数据库类型
             'type'            => env('database.type', 'mysql'),
             // 服务器地址
-            'hostname'        => env('database.hostname', '127.0.0.1'),
+            'hostname'        => env('database.hostname', 'localhost'),
             // 数据库名
             'database'        => env('database.database', '1234567'),
             // 用户名

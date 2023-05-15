@@ -41,8 +41,7 @@
         <div class="mdui-card" style="margin: 5%;">
             <div class="mdui-row">
                 <div class="mdui-col-xs-12 mdui-col-md-5 mask-md mdui-hidden-sm-down">
-                    <img style="height: 680px;"
-                        src="https://img1.imgtp.com/2023/05/05/rsGxwTe7.gif">
+                    <img style="height: 680px;" src="https://img1.imgtp.com/2023/05/05/rsGxwTe7.gif">
                     <div class="mdui-card-media-covered mdui-p-x-2  ">
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
@@ -52,8 +51,7 @@
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-md-6 mask-xs mdui-hidden-md-up">
-                    <img src="https://img1.imgtp.com/2023/05/05/rsGxwTe7.gif"
-                        style="width: 100%;">
+                    <img src="https://img1.imgtp.com/2023/05/05/rsGxwTe7.gif" style="width: 100%;">
                     <div class="mdui-card-media-covered mdui-p-x-2  ">
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
@@ -79,23 +77,23 @@
                         <div id="tab-e2" class="hide">
                             <div class="mdui-textfield">
                                 <label class="mdui-textfield-label">数据库服务器</label>
-                                <textarea class="mdui-textfield-input">localhost</textarea>
+                                <textarea id="formDataHostname" class="mdui-textfield-input">localhost</textarea>
                             </div>
                             <div class="mdui-textfield">
                                 <label class="mdui-textfield-label">数据库用户名</label>
-                                <textarea class="mdui-textfield-input"></textarea>
+                                <textarea id="formDataUsername" class="mdui-textfield-input"></textarea>
                             </div>
                             <div class="mdui-textfield">
                                 <label class="mdui-textfield-label">数据库密码</label>
-                                <textarea class="mdui-textfield-input"></textarea>
+                                <textarea id="formDataPassword" class="mdui-textfield-input"></textarea>
                             </div>
                             <div class="mdui-textfield">
                                 <label class="mdui-textfield-label">数据库端口</label>
-                                <textarea class="mdui-textfield-input">3306</textarea>
+                                <textarea id="formDataHostport" class="mdui-textfield-input">3306</textarea>
                             </div>
                             <div class="mdui-textfield">
                                 <label class="mdui-textfield-label">数据库名</label>
-                                <textarea class="mdui-textfield-input"></textarea>
+                                <textarea id="formDataDatabase" class="mdui-textfield-input"></textarea>
                             </div>
                         </div>
                         <div id="tab-e3" class="hide">
@@ -124,9 +122,11 @@
     <script src="{__A-assets__}/base.js"></script>
     <script src="{__A-assets__}/public.js"></script>
     <script>
+        //初始化
         var nowTab = 1;
         var inst = new mdui.Tab('#tab');
-        var TabControl = (state) => {
+        //页面动态
+        var FunTabControl = (state) => {
             nowTab = nowTab + state;
             //显示下一个Tab
             $('#tab' + nowTab).attr("disabled", false);
@@ -135,23 +135,29 @@
             $('#tab' + (nowTab - state)).attr("disabled", true);
             $('#tab-e' + (nowTab - state)).attr('class', 'hide');
         }
+        //下一页
         var btnNext = () => {
             if (nowTab < $('#tab').children().length - 1) {
                 //显示上一页btn
                 $('#btnPrev').attr('style', '');
                 //锁定其他Tab
-                TabControl(1);
+                FunTabControl(1);
                 //更新进度条
                 inst.next();
+                if (nowTab == $('#tab').children().length - 1) {
+                    //隐藏上一页btn
+                    $('#btnPrev').remove();
+                    $('#btnNext').attr('class', 'mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-block').text('完成');
+                }
             } else {
-                console.log('最后一页了');
+                console.log('安装完成');
             }
         }
+        //上一页
         var btnPrev = () => {
             if (nowTab > 1) {
                 //锁定其他Tab
-                TabControl(-1);
-                console.log(nowTab);
+                FunTabControl(-1);
                 //更新进度条
                 inst.prev();
                 if (nowTab == 1) {
@@ -159,12 +165,67 @@
                     $('#btnPrev').attr('style', 'visibility: hidden;');
                 }
             } else {
-                console.log('第一页了');
+                //console.log('第一页了');
             }
         }
 
+        //操作
         $('#btnNext').click(function () {
-            btnNext();
+            //数据库tab
+            if (nowTab == 2) {
+                //数据库导入
+                var data = {
+                    'hostname': $('#formDataHostname').val(),
+                    'database': $('#formDataDatabase').val(),
+                    'username': $('#formDataUsername').val(),
+                    'password': $('#formDataPassword').val(),
+                    'hostport': $('#formDataHostport').val(),
+                };
+                var result = apiAjax0a(data, apiSystemInstallSetDbConfig, 'POST', false);
+                //console.log(result['r']);
+                if (result['r']['ec'] == 200) {
+                    //成功
+                    mdui.snackbar({
+                        message: '数据库配置成功',
+                        position: 'left-top'
+                    });
+                    btnNext();
+                } else if (result['r']['ec'] == 201) {
+                    //选择跳过
+                    mdui.snackbar({
+                        position: 'left-top',
+                        message: 'msg&nbsp;:&nbsp;' + result['r']['msg'],
+                        buttonText: '跳过',
+                        onButtonClick: function () {
+                            btnNext();
+                        }
+                    });
+                } else {
+                    //报错
+                    mdui.snackbar({
+                        position: 'left-top',
+                        message: 'msg&nbsp;:&nbsp;' + result['r']['msg'] + '<br>code&nbsp;:&nbsp;' + result['r']['ec'],
+                    });
+                }
+            } else if (nowTab == 4) {
+                var result = apiAjax0a([], apiSystemInstallSetInstallLock, 'POST', false);
+                if (result['r']['ec'] == 200) {
+                    //成功
+                    mdui.snackbar({
+                        message: '数据库配置成功',
+                        position: 'left-top'
+                    });
+                } else {
+                    //报错
+                    mdui.snackbar({
+                        position: 'left-top',
+                        message: 'msg&nbsp;:&nbsp;' + result['r']['msg'] + '<br>code&nbsp;:&nbsp;' + result['r']['ec'],
+                    });
+                }
+            } else {
+                //正常下一步
+                btnNext();
+            }
         })
         $('#btnPrev').click(function () {
             btnPrev();

@@ -20,3 +20,7 @@ var apiCardsTagDelete = '/api/CardsTag/delete';//删除标签
 
 var apiCardsCommentsEdit = '/api/CardsComments/edit';//编辑评论
 var apiCardsCommentsDelete = '/api/CardsComments/delete';//删除评论
+
+//install
+var apiSystemInstallSetDbConfig = '/system/Install/apiSetDbConfig';//配置数据库
+var apiSystemInstallSetInstallLock = '/system/Install/apiSetInstallLock';//生成安装记录

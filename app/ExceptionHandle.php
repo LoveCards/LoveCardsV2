@@ -14,9 +14,11 @@ class ExceptionHandle extends Handle
     public function render($request, Throwable $e): Response
     {
 
-        if ($e->getCode() == 10501) {
-            dd($e->getMessage());
-        }
+        //数据库异常接管
+        // if ($e->getCode() == 10501) {
+        //     dd($e->getMessage());
+        // }
+        
         // 其他错误交给系统处理
         return parent::render($request, $e);
     }
