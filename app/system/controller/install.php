@@ -160,7 +160,7 @@ class Install
     //生成记录
     public function apiSetInstallLock()
     {
-        if (fopen("../lock.txt", 'r')) {
+        if (@fopen("../lock.txt", 'r')) {
             return Common::create([], '安装记录已存在', 200);
         } else {
             if (file_put_contents("../lock.txt", "LoveCards.cn")) {
@@ -191,6 +191,6 @@ class Install
         ]);
 
         //输出模板
-        return View::fetch('../admin/system/install/index');
+        return View::fetch('admin@/system/install/index');
     }
 }
