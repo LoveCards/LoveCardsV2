@@ -123,53 +123,54 @@
 {include file="public/footer"}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.0/dist/chart.umd.min.js"></script>
 <script>
-        //图表数据传递
-        var dataChart = {$dataChart|raw};
-        //整理图表数据
-        var chartLabelsDataX = new Array();
-        var chartLabelsDataY = new Array();
-        for (const key in dataChart[0][1]) {
-            //console.log(dataChart[0][1][key]);
-            chartLabelsDataX.push(dataChart[0][1][key]);
+    //图表数据传递
+    var dataChart = {$dataChart|raw};
+    //整理图表数据
+    var chartLabelsDataX = new Array();
+    var chartLabelsDataY = new Array();
+    for (const key in dataChart[0][1]) {
+        //console.log(dataChart[0][1][key]);
+        chartLabelsDataX.push(dataChart[0][1][key]);
+    }
+    for (const i in dataChart) {
+        const nowArr = new Array();
+        for (const j in dataChart[i][0]) {
+            //console.log(dataChart[i][0][j]);
+            nowArr.push(dataChart[i][0][j]);
         }
-        for (const i in dataChart) {
-            const nowArr = new Array();
-            for (const j in dataChart[i][0]) {
-                //console.log(dataChart[i][0][j]);
-                nowArr.push(dataChart[i][0][j]);
-            }
-            chartLabelsDataY.push(nowArr);
+        chartLabelsDataY.push(nowArr);
+    }
+    //生成图表
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: chartLabelsDataX,
+            datasets: [{
+                label: '卡片',
+                data: chartLabelsDataY[0],
+                backgroundColor: ['rgba(33,150,243,0.5)'],
+                borderColor: ['rgba(33,150,243,1)'],
+            }, {
+                label: '评论',
+                data: chartLabelsDataY[1],
+                backgroundColor: ['rgba(253,216,53,0.5)'],
+                borderColor: ['rgba(253,216,53,1)'],
+            }, {
+                label: '点赞',
+                data: chartLabelsDataY[2],
+                backgroundColor: ['rgba(229,57,35,0.5)'],
+                borderColor: ['rgba(229,57,35,1)'],
+            }]
+        },
+        options: {
+            borderWidth: 1
         }
-        //生成图表
-        var ctx = document.getElementById("myChart").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: chartLabelsDataX,
-                datasets: [{
-                    label: '卡片',
-                    data: chartLabelsDataY[0],
-                    backgroundColor: ['rgba(33,150,243,0.5)'],
-                    borderColor: ['rgba(33,150,243,1)'],
-                }, {
-                    label: '评论',
-                    data: chartLabelsDataY[1],
-                    backgroundColor: ['rgba(253,216,53,0.5)'],
-                    borderColor: ['rgba(253,216,53,1)'],
-                }, {
-                    label: '点赞',
-                    data: chartLabelsDataY[2],
-                    backgroundColor: ['rgba(229,57,35,0.5)'],
-                    borderColor: ['rgba(229,57,35,1)'],
-                }]
-            },
-            options: {
-                borderWidth: 1
-            }
-        });
+    });
 
-        //获取LCS-Notice
-        $(function() {$.ajax({
+    //获取LCS-Notice
+    $(function () {
+        $.ajax({
             url: 'https://server.lovecards.cn/apiv1/Notice',
             type: 'GET',
             async: true,
@@ -184,8 +185,8 @@
                 if (result.ec == '200') {
                     $('.js-notice-ul').children().remove();
                     result.data.forEach(element => {
-                    $('.js-notice-ul').append(`
-                    <li class="css-list-item mdui-ripple">
+                        $('.js-notice-ul').append(`
+                    <li class="css-list-item mdui-ripple" onclick=jumpUrl('https://127.0.0.1',0)>
                         <div class="mdui-list-item-avatar">
                             <img src="{__A-assets__}/img/lcl.png" />
                         </div>
@@ -229,7 +230,8 @@
                 });
                 return;
             }
-        })})
+        })
+    })
 </script>
 </body>
 

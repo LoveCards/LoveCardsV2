@@ -33,6 +33,16 @@
         .hide {
             display: none;
         }
+
+        .mdui-card-primary-subtitle a {
+            color: #ff4081;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            text-decoration: none;
+            vertical-align: top;
+            outline: 0;
+        }
     </style>
 </head>
 
@@ -45,8 +55,9 @@
                     <div class="mdui-card-media-covered mdui-p-x-2  ">
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
-                            <div class="mdui-card-primary-subtitle">Maed by 吃纸怪. Copyright © 2020. Crafted with <a
-                                    href="//fatda.cn">FatDa</a>. </div>
+                            <div class="mdui-card-primary-subtitle">
+                                Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © 2023 time Made by 吃纸怪.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,8 +66,9 @@
                     <div class="mdui-card-media-covered mdui-p-x-2  ">
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
-                            <div class="mdui-card-primary-subtitle">Maed by 吃纸怪. Copyright © 2020. Crafted with <a
-                                    href="//fatda.cn">FatDa</a>. </div>
+                            <div class="mdui-card-primary-subtitle">
+                                Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © 2023 time Made by 吃纸怪.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,14 +77,19 @@
                         <div id="tab" class="mdui-tab mdui-tab-full-width">
                             <a id="tab1" class="mdui-ripple">版本详情</a>
                             <a id="tab2" class="mdui-ripple" disabled>配置数据库</a>
-                            <a id="tab3" class="mdui-ripple" disabled>创建账户</a>
-                            <a id="tab4" class="mdui-ripple" disabled>完成安装</a>
+                            <!-- <a id="tab3" class="mdui-ripple" disabled>创建账户</a> -->
+                            <a id="tab3" class="mdui-ripple" disabled>完成安装</a>
                         </div>
                     </div>
 
                     <div class="mdui-p-x-5 mdui-p-t-5">
                         <div id="tab-e1">
-                            版本详情
+                            <div class="mdui-typo">
+                                <h4>欢迎使用LoveCards</h4>
+                                <p>当前版本：<kbd>{$systemVer.VerS}/{$systemVer.Ver}</kbd></p>
+                                <p>项目主页：<a href="https://lovecards.cn/">lovecards.cn</a></p>
+                                <p>QQ交流群：<a href="{$systemVer.QGroupUrl}">801235342</a></p>
+                            </div>
                         </div>
                         <div id="tab-e2" class="hide">
                             <div class="mdui-textfield">
@@ -96,11 +113,22 @@
                                 <textarea id="formDataDatabase" class="mdui-textfield-input"></textarea>
                             </div>
                         </div>
-                        <div id="tab-e3" class="hide">
+                        <!-- <div id="tab-e3" class="hide">
                             创建账户
-                        </div>
-                        <div id="tab-e4" class="hide">
-                            安装完成
+                        </div> -->
+                        <div id="tab-e3" class="hide">
+                            <div class="mdui-typo">
+                                <h4 class="mdui-text-center">安装完成</h4>
+                                <p>
+                                <ul>
+                                    <li>管理地址：/admin</li>
+                                    <li>门户首页：/index</li>
+                                    <li>默认账户：admin admin</li>
+                                </ul>
+                                </p>
+                                <!-- <blockquote>如果您安装并使用了该程序，将默认您阅读并同意该条款<a
+                                        href="http://fatda.cn/index.php/archives/8/">《Fatda用户条款》</a></blockquote> -->
+                            </div>
                         </div>
                     </div>
 
@@ -122,6 +150,12 @@
     <script src="{__A-assets__}/base.js"></script>
     <script src="{__A-assets__}/public.js"></script>
     <script>
+        //Base
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        //更新版权
+        $('.mdui-card-primary-subtitle').html('Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © ' + currentYear + ' Made by 吃纸怪.')
+
         //初始化
         var nowTab = 1;
         var inst = new mdui.Tab('#tab');
@@ -147,10 +181,10 @@
                 if (nowTab == $('#tab').children().length - 1) {
                     //隐藏上一页btn
                     $('#btnPrev').remove();
-                    $('#btnNext').attr('class', 'mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-block').text('完成');
+                    $('#btnNext').attr('class', 'mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-block').text('进入你的领域！');
                 }
             } else {
-                console.log('安装完成');
+                //console.log('安装完成');
             }
         }
         //上一页
@@ -207,14 +241,15 @@
                         message: 'msg&nbsp;:&nbsp;' + result['r']['msg'] + '<br>code&nbsp;:&nbsp;' + result['r']['ec'],
                     });
                 }
-            } else if (nowTab == 4) {
+            } else if (nowTab == 3) {
                 var result = apiAjax0a([], apiSystemInstallSetInstallLock, 'POST', false);
                 if (result['r']['ec'] == 200) {
                     //成功
                     mdui.snackbar({
-                        message: '数据库配置成功',
+                        message: '安装记录生成成功',
                         position: 'left-top'
                     });
+                    jumpUrl('/', 0);
                 } else {
                     //报错
                     mdui.snackbar({
