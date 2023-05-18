@@ -18,17 +18,17 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{__A-assets__}/base.css" />
-    
     <script>
         var _paq = window._paq = window._paq || [];
+        _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
         _paq.push(['trackPageView']);
         _paq.push(['enableLinkTracking']);
-        (function() {
-        var u="//matomo.fatda.cn/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '9']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        (function () {
+            var u = "//matomo.fatda.cn/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '9']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
         })();
     </script>
 </head>
