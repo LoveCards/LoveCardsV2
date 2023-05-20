@@ -17,8 +17,11 @@
   <a href="https://lovecards.cn">主页</a> •
   <a href="http://test123.chizg.cn">演示站</a> •
   <a href="https://jq.qq.com/?_wv=1027&k=QTRjFYyB">QQ群组</a> •
-  <a href="https://github.com/zhiguai/LoveCards/releases">下载</a> •
+  <a href="https://github.com/zhiguai/LoveCards/releases">下载</a>
 </p>
+
+<img src="https://img1.imgtp.com/2023/05/21/G50Prq3T.png">
+<img src="https://img1.imgtp.com/2023/05/21/YSPANS28.png">
 
 ## 🌟 亮点
 
