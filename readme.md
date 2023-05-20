@@ -14,10 +14,10 @@
 </p>
 
 <p align="center">
-  <a href="https://lovecards">主页</a> •
-  <a href="https://test123.chizg.cn">演示站</a> •
+  <a href="https://lovecards.cn">主页</a> •
+  <a href="http://test123.chizg.cn">演示站</a> •
   <a href="https://forum.cloudreve.org/">QQ群组</a> •
-  <a href="https://github.com/cloudreve/Cloudreve/releases">下载</a> •
+  <a href="https://github.com/zhiguai/LoveCards/releases">下载</a> •
 </p>
 
 ## 🌟 亮点
