@@ -3,7 +3,7 @@
  * @Description: 
  * @Author: github.com/zhiguai
  * @Date: 2022-12-26 18:53:25
- * @LastEditTime: 2023-05-15 00:22:26
+ * @LastEditTime: 2023-05-21 03:15:51
  * @LastEditors: github.com/zhiguai
  */
 
@@ -52,7 +52,7 @@ class Index
         //取Cards推荐数据
         //$result = Db::table('cards')->where('state', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit($hotListNum)->select()->toArray();
-        $result = Db::query("select * from cards where top = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
+        $result = Db::query("select * from cards where top = 0 and state = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
         //合并到$listData数据
         $listData = array_merge($listData, $result);
 
