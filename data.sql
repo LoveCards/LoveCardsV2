@@ -45,7 +45,7 @@ CREATE TABLE `cards` (
   `ip` varchar(256) DEFAULT '' COMMENT '上传IP',
   `top` int(11) DEFAULT '0' COMMENT '置顶',
   `state` int(11) DEFAULT '0' COMMENT '状态'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `cards`
@@ -68,7 +68,7 @@ CREATE TABLE `cards_comments` (
   `ip` varchar(256) NOT NULL COMMENT '发布者IP',
   `time` timestamp NOT NULL COMMENT '发布时间',
   `state` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE `cards_tag` (
   `tip` varchar(64) DEFAULT '' COMMENT '提示',
   `state` int(11) NOT NULL DEFAULT '0',
   `time` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -95,7 +95,7 @@ CREATE TABLE `cards_tag_map` (
   `cid` int(11) DEFAULT NULL COMMENT 'CardsID',
   `tid` int(11) DEFAULT NULL COMMENT 'TagID',
   `time` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -109,7 +109,7 @@ CREATE TABLE `good` (
   `pid` int(11) NOT NULL COMMENT '条目ID',
   `ip` varchar(32) NOT NULL,
   `time` date NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `good`
@@ -130,7 +130,7 @@ CREATE TABLE `img` (
   `pid` int(11) NOT NULL COMMENT '条目ID',
   `url` varchar(256) NOT NULL,
   `time` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `img`
@@ -149,7 +149,7 @@ CREATE TABLE `system` (
   `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT '',
   `value` varchar(2555) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `system`
@@ -184,7 +184,7 @@ CREATE TABLE `user` (
   `password` varchar(64) NOT NULL,
   `power` int(11) NOT NULL DEFAULT '0',
   `uuid` varchar(64) DEFAULT '' COMMENT '登入凭证'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `user`
