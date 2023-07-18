@@ -13,7 +13,6 @@ use app\api\validate\Cards as CardsValidate;
 //公共类
 use app\Common\Common;
 
-
 class Cards
 {
     //默认卡片状态ON/OFF:0/1
@@ -23,157 +22,156 @@ class Cards
     //默认添加卡片标签个数
     const DefSetCardsTagNum = 3;
 
+    //基础参数
+    protected $NowTime;
+    protected $ReqIp;
+    public function __construct()
+    {
+        $this->NowTime = date('Y-m-d H:i:s');
+        $this->ReqIp = Common::getIp();
+    }
+
+    //操作函数
+    protected function CAndU($id, $data, $method)
+    {
+        // 获取数据
+        $Datas = $data;
+        $Datas['time'] = $this->NowTime;
+        $Datas['ip'] = $this->ReqIp;
+
+        // 返回结果
+        function FunResult($status, $msg, $id = '')
+        {
+            return [
+                'status' => $status,
+                'msg' => $msg,
+                'id' => $id
+            ];
+        }
+
+        // 数据校验
+        switch ((int)$Datas['model']) {
+                //
+            case 1:
+                try {
+                    validate(CardsValidate::class)
+                        ->batch(true)
+                        ->check($Datas);
+                } catch (ValidateException $e) {
+                    $validateerror = $e->getError();
+                    return FunResult(false, $validateerror);
+                }
+                break;
+                //默认
+            default:
+                try {
+                    validate(CardsValidate::class)
+                        ->batch(true)
+                        ->remove('taName', 'require')
+                        ->check($Datas);
+                } catch (ValidateException $e) {
+                    $validateerror = $e->getError();
+                    return FunResult(false, $validateerror);
+                }
+                break;
+        }
+
+        // 启动事务
+        Db::startTrans();
+        try {
+            //获取数据库对象
+            $DbResult = Db::table('cards');
+            $DbData = $Datas;
+            $DbData['img'] = '';
+            $DbData['tag'] = '';
+            // 方法选择
+            if ($method == 'c') {
+                //写入并返回ID
+                $CardId = $DbResult->insertGetId($DbData);
+            } else {
+                //获取Cards数据库对象
+                $DbResult = Db::table('cards')->where('id', $id);
+                if (!$DbResult->find()) {
+                    return FunResult(false, 'ID不存在');
+                }
+                //写入并返回ID
+                $DbResult->update($DbData);
+                $CardId = $id;
+                //清理原始数据
+                Db::table('img')->where('pid', $id)->delete();
+                Db::table('cards_tag_map')->where('cid', $id)->delete();
+            }
+
+            //写入img
+            $img = json_decode($Datas['img'], true);
+            if (!empty($img)) {
+                $JsonData = array();
+                foreach ($img as $key => $value) {
+                    $JsonData[$key]['aid'] = 1;
+                    $JsonData[$key]['pid'] = $CardId;
+                    $JsonData[$key]['url'] = $value;
+                    $JsonData[$key]['time'] = $this->NowTime;
+                }
+                Db::table('img')->insertAll($JsonData);
+                //更新img视图字段
+                $DbResult->where('id', $CardId)->update(['img' => $img[0]]);
+            }
+
+            //写入tag
+            $tag = json_decode($Datas['tag'], true);
+            if (!empty($tag)) {
+                //构建数据数组
+                $JsonData = array();
+                foreach ($tag as $key => $value) {
+                    $JsonData[$key]['cid'] = $CardId;
+                    $JsonData[$key]['tid'] = $value;
+                    $JsonData[$key]['time'] = $this->NowTime;
+                }
+                Db::table('cards_tag_map')->insertAll($JsonData);
+                //更新tag视图字段
+                $DbResult->where('id', $CardId)->update(['tag' => Json_encode($tag)]);
+            }
+
+            // 提交事务
+            Db::commit();
+            return FunResult(true, '操作成功', $CardId);
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return FunResult(false, '操作失败');
+        }
+    }
+
     //添加-POST
     public function add()
     {
         //防手抖
         $preventClicks = Common::preventClicks('LastPostTime');
-        if($preventClicks[0] == false){
+        if ($preventClicks[0] == false) {
             //返回数据
             return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
 
-        //获取数据
-        $content = Request::param('content');
+        $result = self::CAndU('', [
+            'content' => Request::param('content'),
 
-        $woName = Request::param('woName');
-        $woContact = Request::param('woContact');
-        $taName = Request::param('taName');
-        $taContact = Request::param('taContact');
+            'woName' => Request::param('woName'),
+            'woContact' => Request::param('content'),
+            'taName' => Request::param('taName'),
+            'taContact' => Request::param('taContact'),
 
-        $img = json_decode(Request::param('img'), true);
-        $tag = json_decode(Request::param('tag'), true);
+            'tag' => Request::param('tag'),
+            'img' => Request::param('img'),
 
-        $model = Request::param('model');
-        if($model == 0){
-            $model = 0;
-        }else{
-            $model = 1;
+            'model' => Request::param('model'),
+            'state' => '1'
+        ], 'c');
+
+        if ($result['status']) {
+            return Common::create(['id' => $result['id']], '添加成功', 200);
+        } else {
+            return Common::create($result['msg'], '添加失败', 500);
         }
-        $state = self::DefSetCardsState;
-
-        //免验证
-        $time = date('Y-m-d H:i:s');
-        $ip = Common::getIp();
-
-        //验证参数是否合法
-        try {
-            $tryData = [
-                'content' => $content,
-
-                'woName' => $woName,
-                'woContact' => $woContact,
-                'taName' => $taName,
-                'taContact' => $taContact,
-
-                'model' => $model,
-                'state' => $state
-            ];
-            if($model == 0){
-                validate(CardsValidate::class)->batch(true)
-                ->check($tryData);
-            }else{
-                validate(CardsValidate::class)->batch(true)
-                ->scene('add1')
-                ->check($tryData);
-            }
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $cardsvalidateerror = $e->getError();
-            return Common::create($cardsvalidateerror, '添加失败', 400);
-        }
-
-        //获取Cards数据库对象
-        $result = Db::table('cards');
-
-        //判断卡模式
-        $data = array(); //清空数组
-        //构建数据格式
-        $data = [
-            'content' => $content,
-
-            'woName' => $woName,
-            'woContact' => $woContact,
-            'taName' => $taName,
-            'taContact' => $taContact,
-
-            'model' => $model,
-            'state' => $state,
-
-            'time' => $time,
-            'ip' => $ip,
-        ];
-        // if ($model == 0) {
-        //     //表白卡模式
-        //     $data['taName'] = $taName;
-        //     $data['taContact'] = $taContact;
-        // }
-
-        //Cards写入库
-        $CardId = $result->insertGetId($data);
-        //Cards写入失败返回
-        if (!$CardId) {
-            return Common::create(['cards' => '写入失败'], '添加失败', 400);
-        }
-
-        //判断是否上传图片
-        if (!empty($img)) {
-            //判断图片数量
-            if (sizeof($img) > self::DefSetCardsImgNum) {
-                return Common::create(['img' => 'img超过数量限制'], '添加失败', 400);
-            }
-            //获取img数据库对象
-            $result = Db::table('img');
-            //构建数据数组
-            $data = array(); //清空数组
-            foreach ($img as $key => $value) {
-                $data[$key]['aid'] = 1;
-                $data[$key]['pid'] = $CardId;
-                $data[$key]['url'] = $value;
-                $data[$key]['time'] = $time;
-            }
-            //img写入数据库若失败返回
-            if (!$result->insertAll($data)) {
-                return Common::create(['img' => 'img写入失败'], '添加失败', 400);
-            }
-
-            //获取card数据库对象
-            $result = Db::table('cards');
-            //cards更新数据库若失败返回
-            if (!$result->where('id', $CardId)->update(['img' => $img[0]])) {
-                return Common::create(['cards.img' => 'cards.img更新失败'], '添加失败', 400);
-            }
-        }
-
-        //判断是否选择标签
-        if (!empty($tag)) {
-            //判断图片数量
-            if (sizeof($tag) > self::DefSetCardsTagNum) {
-                return Common::create(['tag' => 'tag超过数量限制'], '添加失败', 400);
-            }
-            //获取tag_map数据库对象
-            $result = Db::table('cards_tag_map');
-            //构建数据数组
-            $data = array(); //清空数组
-            foreach ($tag as $key => $value) {
-                $data[$key]['cid'] = $CardId;
-                $data[$key]['tid'] = $value;
-                $data[$key]['time'] = $time;
-            }
-            //tag写入数据库若失败返回
-            if (!$result->insertAll($data)) {
-                return Common::create(['tag' => 'tag写入失败'], '添加失败', 400);
-            }
-
-            //获取card数据库对象
-            $result = Db::table('cards');
-            //cards更新数据库若失败返回
-            if (!$result->where('id', $CardId)->update(['tag' => Json_encode($tag)])) {
-                return Common::create(['cards.tag' => 'cards.tag更新失败'], '添加失败', 400);
-            }
-        }
-        //返回数据
-        return Common::create(['id' => $CardId], '添加成功', 200);
     }
 
     //编辑-POST
@@ -186,162 +184,27 @@ class Cards
             return Common::create([], $userData[1], $userData[0]);
         }
 
-        //获取数据
-        $id = Request::param('id');
-        $content = Request::param('content');
+        $result = self::CAndU(Request::param('id'), [
+            'content' => Request::param('content'),
 
-        $woName = Request::param('woName');
-        $woContact = Request::param('woContact');
-        $taName = Request::param('taName');
-        $taContact = Request::param('taContact');
+            'woName' => Request::param('woName'),
+            'woContact' => Request::param('content'),
+            'taName' => Request::param('taName'),
+            'taContact' => Request::param('taContact'),
 
-        $img = json_decode(Request::param('img'), true);
-        //判断图片数量
-        if (sizeof($img) > self::DefSetCardsImgNum) {
-            return Common::create(['img' => 'img超过数量限制'], '编辑失败', 400);
+            'tag' => Request::param('tag'),
+            'img' => Request::param('img'),
+
+            'top' => Request::param('top'),
+            'model' => Request::param('model'),
+            'state' => Request::param('state')
+        ], 'u');
+
+        if ($result['status']) {
+            return Common::create(['id' => $result['id']], '添加成功', 200);
+        } else {
+            return Common::create($result['msg'], '添加失败', 500);
         }
-        $tag = json_decode(Request::param('tag'), true);
-        //判断Tag数量
-        if (sizeof($tag) > self::DefSetCardsTagNum) {
-            return Common::create(['tag' => 'tag超过数量限制'], '编辑失败', 400);
-        }
-
-        $top = Request::param('top');
-        $model = Request::param('model');
-        $state = Request::param('state');
-        //免验证
-        $time = date('Y-m-d H:i:s');
-        $ip = Common::getIp();
-
-        //验证参数是否合法
-        try {
-            $tryData = [
-                'content' => $content,
-
-                'woName' => $woName,
-                'woContact' => $woContact,
-                'taName' => $taName,
-                'taContact' => $taContact,
-
-                'model' => $model,
-                'state' => $state
-            ];
-            if($model == 0){
-                validate(CardsValidate::class)->batch(true)
-                ->check($tryData);
-            }else{
-                validate(CardsValidate::class)->batch(true)
-                ->scene('add1')
-                ->check($tryData);
-            }
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $cardsvalidateerror = $e->getError();
-            return Common::create($cardsvalidateerror, '添加失败', 400);
-        }
-        //获取Cards数据库对象
-        $result = Db::table('cards')->where('id', $id);
-        $resultCardData = $result->find();
-        if (!$resultCardData) {
-            return Common::create([], 'id不存在', 400);
-        }
-
-        //判断卡模式
-        $data = array(); //清空数组
-        //构建数据格式
-        $data = [
-            'content' => $content,
-
-            'woName' => $woName,
-            'woContact' => $woContact,
-            'taName' => $taName,
-            'taContact' => $taContact,
-
-            'top' => $top,
-            'model' => $model,
-            'state' => $state,
-
-            'time' => $time,
-            'ip' => $ip,
-        ];
-        // if ($model == 0) {
-        //     //表白卡模式
-        //     $data['taName'] = $taName;
-        //     $data['taContact'] = $taContact;
-        // }
-        //Cards写入库
-        if (!$result->update($data)) {
-            return Common::create(['cards' => '更新失败'], '编辑失败', 400);
-        }
-
-        //获取img数据库对象
-        $result = Db::table('img');
-        //清理原始数据
-        $resultCardId = $result->where('pid', $id);
-        if ($resultCardId->find()) {
-            $resultCardId->delete();
-        }
-        //判断是否写入新数据
-        if (!empty($img)) {
-            //清空数组
-            $data = array();
-            //构建数据数组
-            foreach ($img as $key => $value) {
-                $data[$key]['aid'] = 1;
-                $data[$key]['pid'] = $id;
-                $data[$key]['url'] = $value;
-                $data[$key]['time'] = $time;
-            }
-
-            //img写入数据库若失败返回
-            if (!$result->insertAll($data)) {
-                return Common::create(['img' => '写入失败'], '编辑失败', 400);
-            }
-            //判断是否需要更新视图字段
-            if ($resultCardData['img'] != $img[0]) {
-                //获取card数据库对象
-                $result = Db::table('cards');
-                //cards更新数据库若失败返回
-                if (!$result->where('id', $id)->update(['img' => $img[0]])) {
-                    return Common::create(['cards.img' => '更新失败'], '添加失败', 400);
-                }
-            }
-        }
-
-        //获取tag数据库对象
-        $result = Db::table('cards_tag_map');
-        //清理原始数据
-        $resultCardId = $result->where('cid', $id);
-        if ($resultCardId->find()) {
-            $resultCardId->delete();
-        }
-        //判断是否写入新数据
-        if (!empty($tag)) {
-            //清空数组
-            $data = array();
-            //构建数据数组
-            foreach ($tag as $key => $value) {
-                $data[$key]['cid'] = $id;
-                $data[$key]['tid'] = $value;
-                $data[$key]['time'] = $time;
-            }
-            //tag_map写入数据库若失败返回
-            if (!$result->insertAll($data)) {
-                return Common::create(['img' => '写入失败'], '添加失败', 400);
-            }
-            //判断是否需要更新视图字段
-            if ($resultCardData['tag'] != Json_encode($tag)) {
-                //获取card数据库对象
-                $result = Db::table('cards');
-                //cards更新数据库若失败返回
-                if (!$result->where('id', $id)->update(['tag' => Json_encode($tag)])) {
-                    return Common::create(['cards.tag' => 'cards.tag更新失败'], '添加失败', 400);
-                }
-            }
-        }
-
-        //返回数据
-        return Common::create(['id' => $id], '编辑成功', 200);
     }
 
     //删除-POST
