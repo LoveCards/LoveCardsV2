@@ -18,6 +18,9 @@ class Cards extends Validate
         'good' => 'number',
         'comments' => 'number',
 
+        'tag' => 'JSON',
+        'img' => 'JSON',
+
         'model' => 'in:0,1',
         'top' => 'in:0,1',
         'state' => 'in:0,1',
@@ -29,28 +32,38 @@ class Cards extends Validate
 
         'woName.chsDash' => 'woName只能是汉字、字母、数字和下划线_及破折号-',
         'woName.max' => 'woName超出范围(36)',
-        'woContact.max' => 'woContact格式非法',
+        'woContact.max' => 'woContact超出范围(60)',
 
         'taName.require' => 'taName不得为空',
         'taName.chsDash' => 'taName只能是汉字、字母、数字和下划线_及破折号-',
         'taName.max' => 'taName超出范围(36)',
-        'taContact.max' => 'taContact格式非法',
+        'taContact.max' => 'taContact超出范围(60)',
 
         'good.number' => 'good格式非法',
         'comments.number' => 'comments格式非法',
-        //'tag.array' => 'tag格式非法',
-        'model.in' => 'model格式非法',
 
-        //'time.date' => 'time格式非法',
-        //'ip.ip' => 'ip格式非法',
+        'tag.JSON' => 'tag格式非法',
+        'img.JSON' => 'img格式非法',
+
+        'model.in' => 'model格式非法',
         'top.in' => 'top格式非法',
         'state.in' => 'state格式非法',
     ];
 
-    //场景
-    // 1
-    public function sceneAdd1()
+    // 自定义验证规则
+    protected function JSON($value, $rule)
     {
-        return $this->remove('taName', 'require');
-    }   
+        //格式转换
+        $value = json_decode($value, true);
+        //判断JSON格式
+        if (json_last_error() == JSON_ERROR_NONE) {
+            //判断图片数量
+            if (sizeof($value) <= 9) {
+                //满足数量限制
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
