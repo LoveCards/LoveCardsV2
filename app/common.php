@@ -204,6 +204,14 @@ class Common extends Facade
     }
 
     //获取模板目录
+    /**
+     * @description: 获取模板目录
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-07-18 15:17:52
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     */
     protected static function get_templateDirectory()
     {
         $d = Config::get('lovecards.template_directory', 'index');
@@ -211,7 +219,7 @@ class Common extends Facade
         //dd($r);
         if ($r) {
             //当目录存在时
-            $r = $d;   
+            $r = $d;
         } else {
             $r = 'index';
         }
@@ -219,62 +227,59 @@ class Common extends Facade
         return [$r, $d];
     }
 
-    //编辑配置文件
-    protected static function extraconfig($arr = [], $file, $user = 'admin')
+    /**
+     * @description: 编辑配置文件
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-07-18 15:16:37
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $filename
+     * @param {*} $data
+     */
+    protected static function extraconfig($filename, $data)
     {
-        if (is_array($arr)) {
-            $filename = $file;
-            //文件位置，根据你之前的去修改
-            $filepath = '../config/' . $filename . ".php";
-            if (!file_exists($filepath)) {
-                if (!fopen($filepath, "w")) {
-                    return 'PermissionError1';
-                }
+        $filename = '../config/' . $filename . '.php';
+        $str_file = file_get_contents($filename);
+
+        foreach ($data as $key => $value) {
+            //构建正则匹配
+            $pattern = "/env\('lovecards\." . $key . "',\s*'([^']*)'\)/";
+            //判断是否成功匹配
+            if (preg_match($pattern, $str_file)) {
+                //匹配成功更新
+                $str_file = preg_replace($pattern, "env('lovecards." . $key . "', '" . $value . "')", $str_file);
             }
-            if (!is_writable($filepath)) {
-                return 'PermissionError2';
-            }
-            $conf = array();
-            foreach ($arr as $key => $value) {
-                $conf[$key] = $value;
-            }
-            $time = date('Y/m/d H:i:s');
-            $str = "<?php\r\n/**\r\n * 由" . $user . "建立.\r\n * $time\r\n */\r\nreturn [\r\n";
-            foreach ($conf as $key => $value) {
-                if (is_array($value)) {
-                    $str .= "\t'$key'=>[";
-                    foreach ($value as $r) {
-                        $str .= "'$r',";
-                    }
-                    $str = rtrim($str, ',');
-                    $str .= ']' . "\r\n";
-                } else {
-                    $str .= "\t'$key' => '$value',";
-                    $str .= "\r\n";
-                }
-            }
-            $str .= '];';
-            $result = file_put_contents($filepath, $str);
-            if ($result) {
-                return 'success';
-            } else {
-                return $result;
-            }
+        }
+
+        //写入并返回结果
+        if (!file_put_contents($filename, $str_file)) {
+            return false;
         } else {
-            return 'error';
+            return true;
         }
     }
 
-    //防手抖
-    protected static function preventClicks($setName,$time = 6){ 
-        if(strtotime(date("Y-m-d H:i:s"))>strtotime(Session::get($setName))){
+    /**
+     * @description: 防抖
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-07-18 15:17:21
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $setName
+     * @param {*} $time
+     */
+    protected static function preventClicks($setName, $time = 6)
+    {
+        if (strtotime(date("Y-m-d H:i:s")) > strtotime(Session::get($setName))) {
             //符合要求
             $result = [true];
-        }else{
-            $result = [false,'您的操作太快了，稍后再试试试吧'];
+        } else {
+            $result = [false, '您的操作太快了，稍后再试试试吧'];
         }
         //设置上次时间
-        Session::set($setName, date("Y-m-d H:i:s", strtotime('+'.$time.' second')));
+        Session::set($setName, date("Y-m-d H:i:s", strtotime('+' . $time . ' second')));
         //返回结果
         return $result;
     }

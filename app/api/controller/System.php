@@ -98,17 +98,11 @@ class System
         }
 
         $template_directory = Request::param('templateDirectory');
-
-        $arr = array(
-            'template_directory' => $template_directory
-        );
-        $result = Common::extraconfig($arr, 'lovecards', $userData['userName']);
-        if ($result == 'success') {
+        $result = Common::extraconfig('lovecards', ['template_directory' => $template_directory]);
+        if ($result == true) {
             return Common::create([], '修改成功', 200);
-        } elseif ($result == 'error') {
+        } else {
             return Common::create([], '修改失败，请重试', 400);
-        } elseif ($result == 'PermissionError') {
-            return Common::create([], '文件无权限', 400);
         }
     }
 }
