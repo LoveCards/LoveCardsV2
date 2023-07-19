@@ -156,7 +156,7 @@ class Cards
             'content' => Request::param('content'),
 
             'woName' => Request::param('woName'),
-            'woContact' => Request::param('content'),
+            'woContact' => Request::param('woContact'),
             'taName' => Request::param('taName'),
             'taContact' => Request::param('taContact'),
 
