@@ -6,6 +6,7 @@ namespace app\api\controller;
 use think\facade\Request;
 use think\exception\ValidateException;
 use think\facade\Db;
+use think\facade\Config;
 
 //验证类
 use app\api\validate\Cards as CardsValidate;
@@ -13,24 +14,8 @@ use app\api\validate\Cards as CardsValidate;
 //公共类
 use app\Common\Common;
 
-class Cards
+class Cards extends Common
 {
-    //默认卡片状态ON/OFF:0/1
-    const DefSetCardsState = 0;
-    //默认添加卡片上传图片个数
-    const DefSetCardsImgNum = 9;
-    //默认添加卡片标签个数
-    const DefSetCardsTagNum = 3;
-
-    //基础参数
-    protected $NowTime;
-    protected $ReqIp;
-    public function __construct()
-    {
-        $this->NowTime = date('Y-m-d H:i:s');
-        $this->ReqIp = Common::getIp();
-    }
-
     //操作函数
     protected function CAndU($id, $data, $method)
     {
@@ -86,8 +71,9 @@ class Cards
             $DbData['tag'] = '';
             // 方法选择
             if ($method == 'c') {
-                //写入并返回ID
-                $CardId = $DbResult->insertGetId($DbData);
+                //默认卡片状态ON/OFF:0/1
+                $DbData['state'] = Config::get('lovecards.api.Cards.DefSetCardsState');
+                $CardId = $DbResult->insertGetId($DbData); //写入并返回ID
             } else {
                 //获取Cards数据库对象
                 $DbResult = Db::table('cards')->where('id', $id);

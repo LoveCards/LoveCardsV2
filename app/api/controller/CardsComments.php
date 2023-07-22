@@ -6,6 +6,7 @@ namespace app\api\controller;
 use think\facade\Db;
 use think\facade\Request;
 use think\exception\ValidateException;
+use think\facade\Config;
 
 //验证类
 use app\api\validate\CardsComments as CommentsValidate;
@@ -14,7 +15,7 @@ use app\api\validate\CardsComments as CommentsValidate;
 use app\Common\Common;
 
 
-class CardsComments
+class CardsComments extends Common
 {
 
     //默认评论状态ON/OFF:0/1
@@ -22,58 +23,92 @@ class CardsComments
     //默认添加评论上传图片个数
     const DefCardsSetCommentsImgNum = 3;
 
+    protected function CAndU($id, $data, $method)
+    {
+        // 获取数据
+        $Datas = $data;
+        $Datas['time'] = $this->NowTime;
+        $Datas['ip'] = $this->ReqIp;
+
+        // 返回结果
+        function FunResult($status, $msg, $id = '')
+        {
+            return [
+                'status' => $status,
+                'msg' => $msg,
+                'id' => $id
+            ];
+        }
+
+        // 数据校验
+        try {
+            validate(CommentsValidate::class)
+                ->batch(true)
+                ->check($Datas);
+        } catch (ValidateException $e) {
+            $validateerror = $e->getError();
+            return FunResult(false, $validateerror);
+        }
+
+        // 启动事务
+        Db::startTrans();
+        try {
+            //获取数据库对象
+            $DbResult = Db::table('cards_comments');
+            $DbData = $Datas;
+            // 方法选择
+            if ($method == 'c') {
+                if (!Db::table('cards')->where('id', $Datas['cid'])->find()) {
+                    return FunResult(false, 'CID不存在');
+                }
+                //默认状态ON/OFF:0/1
+                $DbData['state'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsState');
+                //写入并返回ID
+                $Id = $DbResult->insertGetId($DbData);
+                //更新comments视图字段
+                Db::table('cards')->where('id', $Datas['cid'])->inc('comments')->update();
+            } else {
+                //获取Cards数据库对象
+                $DbResult = $DbResult->where('id', $id);
+                if (!$DbResult->find()) {
+                    return FunResult(false, 'ID不存在');
+                }
+                //写入并返回ID
+                $DbResult->update($DbData);
+            }
+
+            // 提交事务
+            Db::commit();
+            return FunResult(true, '操作成功');
+        } catch (\Exception $e) {
+            //dd($e);
+            // 回滚事务
+            Db::rollback();
+            return FunResult(false, '操作失败');
+        }
+    }
+
     //添加-POST
     public function add()
     {
         //防手抖
         $preventClicks = Common::preventClicks('LastPostTime');
-        if($preventClicks[0] == false){
+        if ($preventClicks[0] == false) {
             //返回数据
             return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
 
-        $cid = Request::param('cid');
-        if (!$cid) {
-            return Common::create(['cid' => '缺少参数'], '添加失败', 400);
+        $result = self::CAndU('', [
+            'cid' => Request::param('cid'),
+            'content' => Request::param('content'),
+            'name' => Request::param('name'),
+        ], 'c');
+
+        if ($result['status']) {
+            return Common::create(['id' => $result['id']], '添加成功', 200);
+        } else {
+            return Common::create($result['msg'], '添加失败', 500);
         }
-
-        $name = Request::param('name');
-        $content = Request::param('content');
-
-        $time = date('Y-m-d H:i:s');
-        $ip = Common::getIp();
-        $state = 0; //上/下:0/1
-
-        //验证参数是否合法
-        try {
-            validate(CommentsValidate::class)->batch(true)
-                ->check([
-                    'content' => $content,
-                    'name' => $name,
-                    'state' => $state
-                ]);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $Commentsvalidateerror = $e->getError();
-            return Common::create($Commentsvalidateerror, '添加失败', 400);
-        }
-
-        //获取数据库对象
-        $result = Db::table('cards_comments');
-        //整理数据
-        $data = ['cid' => $cid, 'content' => $content, 'name' => $name,  'state' => $state, 'ip' => $ip, 'time' => $time];
-        //写入失败返回
-        if (!$result->insert($data)) {
-            return Common::create(['CardsComments' => '写入失败'], '添加失败', 400);
-        }
-
-        //更新视图字段
-        $result = Db::table('cards')->where('id', $cid);
-        if (!$result->inc('comments')->update()) {
-            return Common::create(['cards.comments' => 'cards.comments更新失败'], '添加成功', 400);
-        };
-        //返回结果
-        return Common::create([], '添加成功', 200);
     }
 
     //编辑-POST
@@ -85,44 +120,17 @@ class CardsComments
             return Common::create([], $userData[1], $userData[0]);
         }
 
-        $id = Request::param('id');
-        if (!$id) {
-            return Common::create(['id' => '缺少参数'], '编辑失败', 400);
+        $result = self::CAndU(Request::param('id'), [
+            'content' => Request::param('content'),
+            'name' => Request::param('name'),
+            'state' => Request::param('state')
+        ], 'u');
+
+        if ($result['status']) {
+            return Common::create(['id' => $result['id']], '添加成功', 200);
+        } else {
+            return Common::create($result['msg'], '添加失败', 500);
         }
-
-        $name = Request::param('name');
-        $content = Request::param('content');
-
-        $state =  Request::param('state'); //上/下:0/1
-
-        //验证参数是否合法
-        try {
-            validate(CommentsValidate::class)->batch(true)
-                ->check([
-                    'content' => $content,
-                    'name' => $name,
-                    'state' => $state
-                ]);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $Commentsvalidateerror = $e->getError();
-            return Common::create($Commentsvalidateerror, '编辑失败', 400);
-        }
-
-        //获取数据库对象
-        $result = Db::table('cards_comments')->where('id', $id);
-        if (!$result->find()) {
-            return Common::create([], 'id不存在', 400);
-        }
-
-        //整理数据
-        $data = ['content' => $content, 'name' => $name,  'state' => $state];
-        //写入失败返回
-        if (!$result->update($data)) {
-            return Common::create(['CardsComments' => '写入失败'], '编辑失败', 400);
-        }
-        //返回结果
-        return Common::create([], '编辑成功', 200);
     }
 
     //删除-POST
