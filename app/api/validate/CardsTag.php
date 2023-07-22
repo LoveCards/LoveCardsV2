@@ -10,7 +10,7 @@ class CardsTag extends Validate
     protected $rule =   [
         'name'  => 'require|length:1,8',
         'tip'   => 'length:1,1024',
-        'state'   => 'in:0,1',
+        'status'   => 'in:0,1',
     ];
 
     //定义错误信息
@@ -20,6 +20,6 @@ class CardsTag extends Validate
 
         'tip.length'     => '内容超出范围(1-64)',
 
-        'state.in'     => '状态不存在',
+        'status.in'     => '状态不存在',
     ];
 }

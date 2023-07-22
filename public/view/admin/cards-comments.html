@@ -16,7 +16,7 @@
                 <tr>
                     <th>ID</th>
                     <th>CID</th>
-                    <th>状态</th>
+                    <th>封禁状态</th>
                     <th>昵称</th>
                     <th>内容</th>
                     <th>IP</th>
@@ -29,12 +29,12 @@
                 <tr>
                     <td>{$data.id}</td>
                     <td>{$data.cid}</td>
-                    <td value="{$data.state}">
+                    <td value="{$data.status}">
                         <div class="mdui-chip">
-                            {if $data.state == 0}
+                            {if $data.status == 0}
                             <span class="mdui-chip-title">正常</span>
                             {/if}
-                            {if $data.state == 1}
+                            {if $data.status == 1}
                             <span class="mdui-chip-title">封禁</span>
                             {/if}
                         </div>
@@ -74,8 +74,8 @@
                     </div>
                 </div>
                 <div class="mdui-col-xs-3 mdui-col-md-2">
-                    <label class="mdui-textfield-label mdui-m-t-2">状态</label>
-                    <select class="mdui-select" id="editCommentsDataState">
+                    <label class="mdui-textfield-label mdui-m-t-2">封禁状态</label>
+                    <select class="mdui-select" id="editCommentsDataStatus">
                         <option value="0">正常</option>
                         <option value="1">封禁</option>
                     </select>
@@ -132,7 +132,7 @@
             var thisObj = $(this).parent().siblings('td');
             $('#editCommentsDataName').val(thisObj.eq(3).html());
             $('#editCommentsDataContent').val(thisObj.eq(4).children().val());
-            $('#editCommentsDataState').val(thisObj.eq(2).attr('value'));
+            $('#editCommentsDataStatus').val(thisObj.eq(2).attr('value'));
             $('#btnEditComments').val(thisObj.eq(0).html());
         });
 
@@ -143,7 +143,7 @@
                 'id': $('#btnEditComments').val(),
                 'name': $('#editCommentsDataName').val(),
                 'content': $('#editCommentsDataContent').val(),
-                'state': $('#editCommentsDataState').val()
+                'status': $('#editCommentsDataStatus').val()
             };
             var result = apiAjax0(data, apiCardsCommentsEdit, 'POST');
             if (result) {

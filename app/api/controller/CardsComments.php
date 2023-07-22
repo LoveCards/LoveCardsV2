@@ -56,7 +56,7 @@ class CardsComments extends Common
                     return FunResult(false, 'CID不存在');
                 }
                 //默认状态ON/OFF:0/1
-                $DbData['state'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsState');
+                $DbData['status'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsstatus');
                 //写入并返回ID
                 $Id = $DbResult->insertGetId($DbData);
                 //更新comments视图字段
@@ -117,7 +117,7 @@ class CardsComments extends Common
         $result = self::CAndU(Request::param('id'), [
             'content' => Request::param('content'),
             'name' => Request::param('name'),
-            'state' => Request::param('state')
+            'status' => Request::param('status')
         ], 'u');
 
         if ($result['status']) {

@@ -76,7 +76,7 @@ class Cards
         }
 
         //获取标签数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         View::assign('cardsTagData', $result);
 
         //基础变量
