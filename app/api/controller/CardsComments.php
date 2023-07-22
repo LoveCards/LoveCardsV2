@@ -21,8 +21,6 @@ class CardsComments extends Common
     {
         // 获取数据
         $Datas = $data;
-        $Datas['time'] = $this->NowTime;
-        $Datas['ip'] = $this->ReqIp;
 
         // 返回结果
         function FunResult($status, $msg, $id = '')
@@ -52,7 +50,9 @@ class CardsComments extends Common
             $DbData = $Datas;
             // 方法选择
             if ($method == 'c') {
-                if (!Db::table('cards')->where('id', $Datas['cid'])->find()) {
+                $DbData['time'] = $this->NowTime;
+                $DbData['ip'] = $this->ReqIp;        
+                if (!Db::table('cards')->where('id', $DbData['cid'])->find()) {
                     return FunResult(false, 'CID不存在');
                 }
                 //默认状态ON/OFF:0/1
@@ -60,7 +60,7 @@ class CardsComments extends Common
                 //写入并返回ID
                 $Id = $DbResult->insertGetId($DbData);
                 //更新comments视图字段
-                Db::table('cards')->where('id', $Datas['cid'])->inc('comments')->update();
+                Db::table('cards')->where('id', $DbData['cid'])->inc('comments')->update();
             } else {
                 //获取Cards数据库对象
                 $DbResult = $DbResult->where('id', $id);
