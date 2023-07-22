@@ -39,6 +39,7 @@ class Cards extends Common
                 try {
                     validate(CardsValidate::class)
                         ->batch(true)
+                        ->remove('taName', 'require')
                         ->check($Datas);
                 } catch (ValidateException $e) {
                     $validateerror = $e->getError();
@@ -50,7 +51,6 @@ class Cards extends Common
                 try {
                     validate(CardsValidate::class)
                         ->batch(true)
-                        ->remove('taName', 'require')
                         ->check($Datas);
                 } catch (ValidateException $e) {
                     $validateerror = $e->getError();
@@ -72,7 +72,7 @@ class Cards extends Common
             // 方法选择
             if ($method == 'c') {
                 //默认卡片状态ON/OFF:0/1
-                $DbData['state'] = Config::get('lovecards.api.Cards.DefSetCardsState');
+                $DbData['status'] = Config::get('lovecards.api.Cards.DefSetCardsStatus');
                 $CardId = $DbResult->insertGetId($DbData); //写入并返回ID
             } else {
                 //获取Cards数据库对象
@@ -150,7 +150,7 @@ class Cards extends Common
             'img' => Request::param('img'),
 
             'model' => Request::param('model'),
-            'state' => '1'
+            'status' => '1'
         ], 'c');
 
         if ($result['status']) {
@@ -183,7 +183,7 @@ class Cards extends Common
 
             'top' => Request::param('top'),
             'model' => Request::param('model'),
-            'state' => Request::param('state')
+            'status' => Request::param('status')
         ], 'u');
 
         if ($result['status']) {

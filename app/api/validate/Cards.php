@@ -24,7 +24,7 @@ class Cards extends Validate
 
         'model' => 'in:0,1',
         'top' => 'in:0,1',
-        'state' => 'in:0,1',
+        'status' => 'in:0,1',
     ];
 
     //定义错误信息
@@ -48,7 +48,7 @@ class Cards extends Validate
 
         'model.in' => 'model格式非法',
         'top.in' => 'top格式非法',
-        'state.in' => 'state格式非法',
+        'status.in' => 'status格式非法',
     ];
 
     // 自定义验证规则

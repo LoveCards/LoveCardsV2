@@ -19,8 +19,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>状态</th>
-                    <th>置顶</th>
+                    <th>封禁状态</th>
+                    <th>置顶状态</th>
                     <th>模型</th>
                     <th>名字</th>
                     <th>联系方式</th>
@@ -40,30 +40,39 @@
                 {volist name='list' id='data'}
                 <tr>
                     <td>{$data.id}</td>
-                    <td value="{$data.state}">
+                    <td value="{$data.status}">
                         <div class="mdui-chip">
-                            {if $data.state == 0}
-                            <span class="mdui-chip-title">正常</span>
-                            {/if}
-                            {if $data.state == 1}
-                            <span class="mdui-chip-title">封禁</span>
-                            {/if}
+                            <span class="mdui-chip-title">
+                                {if $data.status == 0}
+                                正常
+                                {/if}
+                                {if $data.status == 1}
+                                封禁
+                                {/if}
+                            </span>
                         </div>
                     </td>
                     <td value="{$data.top}">
                         <div class="mdui-chip">
-                            {if $data.top == 1}
-                            <span class="mdui-chip-title">Yes</span>
-                            {/if}
-                            {if $data.top == 0}
-                            <span class="mdui-chip-title">No</span>
-                            {/if}
+                            <span class="mdui-chip-title">
+                                {if $data.status == 0}
+                                关闭
+                                {/if}
+                                {if $data.status == 1}
+                                置顶
+                                {/if}
+                            </span>
                         </div>
                     </td>
                     <td>
                         <div class="mdui-chip">
                             <span class="mdui-chip-title">
-                                {$data.model}
+                                {if $data.status == 0}
+                                表白卡
+                                {/if}
+                                {if $data.status == 1}
+                                交流卡
+                                {/if}
                             </span>
                         </div>
                     </td>
@@ -82,7 +91,7 @@
                     <td>
                         <div class="mdui-chip">
                             <span class="mdui-chip-title">
-                                {if $data.img != ''}Yes{else}No{/if}
+                                {if $data.img != ''}有{else}无{/if}
                             </span>
                         </div>
                     </td>

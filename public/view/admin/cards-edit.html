@@ -47,52 +47,52 @@
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">时间</label>
-                    <input class="mdui-textfield-input" type="text" value="{$idCardData['time']}" disabled/>
+                    <input class="mdui-textfield-input" type="text" value="{$idCardData['time']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">IP</label>
-                    <input class="mdui-textfield-input" type="text" value="{$idCardData['ip']}" disabled/>
+                    <input class="mdui-textfield-input" type="text" value="{$idCardData['ip']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-4 mdui-col-md-2">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">模型</label>
-                    <select class="mdui-select" id="model">
-                        <option value="0" {if $idCardData['model']==0}selected{/if}>表白卡</option>
-                        <option value="1" {if $idCardData['model']==1}selected{/if}>交流卡</option>
+                    <select class="mdui-select" style="width: 100%;" id="model">
+                        <option value="0" {if $idCardData['model']==0}selected{/if}>0:表白卡</option>
+                        <option value="1" {if $idCardData['model']==1}selected{/if}>1:交流卡</option>
                     </select>
                 </div>
             </div>
             <div class="mdui-col-xs-4 mdui-col-md-2">
                 <div class="mdui-textfield">
-                    <label class="mdui-textfield-label">置顶</label>
-                    <select class="mdui-select" id="top">
-                        <option value="0" {if $idCardData['top']==0}selected{/if}>No</option>
-                        <option value="1" {if $idCardData['top']==1}selected{/if}>Yes</option>
+                    <label class="mdui-textfield-label">置顶状态</label>
+                    <select class="mdui-select" style="width: 100%;" id="top">
+                        <option value="0" {if $idCardData['top']==0}selected{/if}>关闭</option>
+                        <option value="1" {if $idCardData['top']==1}selected{/if}>置顶</option>
                     </select>
                 </div>
             </div>
             <div class="mdui-col-xs-4 mdui-col-md-2">
                 <div class="mdui-textfield">
-                    <label class="mdui-textfield-label">状态</label>
-                    <select class="mdui-select" id="state">
-                        <option value="0" {if $idCardData['state']==0}selected{/if}>正常</option>
-                        <option value="1" {if $idCardData['state']==1}selected{/if}>封禁</option>
+                    <label class="mdui-textfield-label">封禁状态</label>
+                    <select class="mdui-select" style="width: 100%;" id="status">
+                        <option value="0" {if $idCardData['status']==0}selected{/if}>正常</option>
+                        <option value="1" {if $idCardData['status']==1}selected{/if}>封禁</option>
                     </select>
                 </div>
             </div>
             <div class="mdui-col-xs-6 mdui-col-md-3">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">点赞数</label>
-                    <input class="mdui-textfield-input" id="good" type="text" value="{$idCardData['good']}" disabled/>
+                    <input class="mdui-textfield-input" id="good" type="text" value="{$idCardData['good']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-6 mdui-col-md-3">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">浏览量</label>
-                    <input class="mdui-textfield-input" id="look" type="text" value="{$idCardData['look']}" disabled/>
+                    <input class="mdui-textfield-input" id="look" type="text" value="{$idCardData['look']}" disabled />
                 </div>
             </div>
         </div>
@@ -190,49 +190,50 @@
 <script src="{__A-assets__}/cardsEdit.js"></script>
 <script>
     //初始化-Tag组件
-    {if $idCardData['tag']}
+    { if $idCardData['tag']}
     InitialChooseTagAdd(JSON.parse('{$idCardData['tag']|raw}'));
-    {/if}
+    {
+        /if}
 
-    $(function () {
-        //按钮-请求-添加
-        $('#submitAdd').click(function () {
-            //构建图片url数组并获取
-            var jsonImageUrl = [];
-            $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
-                jsonImageUrl.push($(this).attr('src'));
-            });
-            img = JSON.stringify(jsonImageUrl);
-            tag = JSON.stringify(checkChooseTagId);
-
-            data = {
-                'uuid': $.cookie('uuid'),
-                'id': {$idCardData['id']},
-                'top': $('#top').val(),
-                'state': $('#state').val(),
-                'model': $('#model').val(),
-                'good': $('#good').val(),
-                'content': $('#content').val(),
-                'look': $('#look').val(),
-                'woName': $('#woName').val(),
-                'taName': $('#taName').val(),
-                'woContact': $('#woContact').val(),
-                'taContact': $('#taContact').val(),
-                'model': $('#model').val(),
-                'tag': tag,
-                'img': img,
-            };
-            var result = apiAjax0(data, apicardsEdit, 'POST');
-            if (result) {
-                mdui.snackbar({
-                    message: '编辑成功',
-                    position: 'left-top'
+        $(function () {
+            //按钮-请求-添加
+            $('#submitAdd').click(function () {
+                //构建图片url数组并获取
+                var jsonImageUrl = [];
+                $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
+                    jsonImageUrl.push($(this).attr('src'));
                 });
-                //jumpUrl('/index/cards/card/id/' + result.data.id);
-                return;
-            }
+                img = JSON.stringify(jsonImageUrl);
+                tag = JSON.stringify(checkChooseTagId);
+
+                data = {
+                    'uuid': $.cookie('uuid'),
+                    'id': { $idCardData['id']},
+                    'top': $('#top').val(),
+                    'status': $('#status').val(),
+                    'model': $('#model').val(),
+                    'good': $('#good').val(),
+                    'content': $('#content').val(),
+                    'look': $('#look').val(),
+                    'woName': $('#woName').val(),
+                    'taName': $('#taName').val(),
+                    'woContact': $('#woContact').val(),
+                    'taContact': $('#taContact').val(),
+                    'model': $('#model').val(),
+                    'tag': tag,
+                    'img': img,
+                };
+                var result = apiAjax0(data, apicardsEdit, 'POST');
+                if (result) {
+                    mdui.snackbar({
+                        message: '编辑成功',
+                        position: 'left-top'
+                    });
+                    //jumpUrl('/index/cards/card/id/' + result.data.id);
+                    return;
+                }
+            });
         });
-    });
 </script>
 </body>
 

@@ -36,7 +36,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>状态</th>
+                    <th>封禁状态</th>
                     <th>标签名</th>
                     <th>提示</th>
                     <th>操作</th>
@@ -46,13 +46,13 @@
                 {volist name='list' id='data'}
                 <tr>
                     <td>{$data.id}</td>
-                    <td value="{$data.state}">
+                    <td value="{$data.status}">
                         <div class="mdui-chip">
-                            {if $data.state == 0}
-                            <span class="mdui-chip-title">启用</span>
+                            {if $data.status == 0}
+                            <span class="mdui-chip-title">正常</span>
                             {/if}
-                            {if $data.state == 1}
-                            <span class="mdui-chip-title">关闭</span>
+                            {if $data.status == 1}
+                            <span class="mdui-chip-title">封禁</span>
                             {/if}
                         </div>
                     </td>
@@ -84,10 +84,10 @@
                     </div>
                 </div>
                 <div class="mdui-col-xs-3 mdui-col-md-2">
-                    <label class="mdui-textfield-label mdui-m-t-2">状态</label>
-                    <select class="mdui-select" id="editTagDataState">
-                        <option value="0">启用</option>
-                        <option value="1">关闭</option>
+                    <label class="mdui-textfield-label mdui-m-t-2">封禁状态</label>
+                    <select class="mdui-select" id="editTagDataStatus">
+                        <option value="0">正常</option>
+                        <option value="1">封禁</option>
                     </select>
                 </div>
             </div>
@@ -142,7 +142,7 @@
             var thisObj = $(this).parent().siblings('td');
             $('#editTagDataName').val(thisObj.eq(2).html());
             $('#editTagDataTip').val(thisObj.eq(3).html());
-            $('#editTagDataState').val(thisObj.eq(1).attr('value'));
+            $('#editTagDataStatus').val(thisObj.eq(1).attr('value'));
             $('#btnEditTag').val(thisObj.eq(0).html());
         });
 
@@ -153,7 +153,7 @@
                 'id': $('#btnEditTag').val(),
                 'name': $('#editTagDataName').val(),
                 'tip': $('#editTagDataTip').val(),
-                'state': $('#editTagDataState').val()
+                'status': $('#editTagDataStatus').val()
             };
             var result = apiAjax0(data, apiCardsTagEdit, 'POST');
             if (result) {

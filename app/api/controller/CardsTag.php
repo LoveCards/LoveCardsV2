@@ -51,7 +51,7 @@ class CardsTag extends Common
             if ($method == 'c') {
                 $DbData['time'] = $this->NowTime;
                 //默认状态:0/1
-                $DbData['state'] = 0;
+                $DbData['status'] = 0;
                 //写入并返回ID
                 $Id = $DbResult->insertGetId($DbData);
             } else {
@@ -68,7 +68,7 @@ class CardsTag extends Common
             Db::commit();
             return FunResult(true, '操作成功');
         } catch (\Exception $e) {
-            dd($e);
+            //dd($e);
             // 回滚事务
             Db::rollback();
             return FunResult(false, '操作失败');
@@ -115,7 +115,7 @@ class CardsTag extends Common
         $result = self::CAndU(Request::param('id'), [
             'tip' => Request::param('tip'),
             'name' => Request::param('name'),
-            'state' => Request::param('state'),
+            'status' => Request::param('status'),
         ], 'u');
 
         if ($result['status']) {

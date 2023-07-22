@@ -1,11 +1,4 @@
 <?php
-/*
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2022-12-26 18:53:25
- * @LastEditTime: 2023-05-21 03:15:51
- * @LastEditors: github.com/zhiguai
- */
 
 namespace app\index\controller;
 
@@ -46,20 +39,20 @@ class Index
         $topListNum = 32; //每页个数
 
         //取Cards.top数据
-        $result = Db::table('cards')->where('state', 0)->where('top', 1)->order('id', 'desc')
+        $result = Db::table('cards')->where('status', 0)->where('top', 1)->order('id', 'desc')
             ->limit($topListNum)->select()->toArray();
         $listData = $result;
         //取Cards推荐数据
-        //$result = Db::table('cards')->where('state', 0)->where('top', 0)->order(['good','comment'=>'desc'])
+        //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit($hotListNum)->select()->toArray();
-        $result = Db::query("select * from cards where top = 0 and state = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
+        $result = Db::query("select * from cards where top = 0 and status = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
         //合并到$listData数据
         $listData = array_merge($listData, $result);
 
         //dd($listData);
 
         //取标签数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $cardsTagData = $result;
         View::assign('cardsTagData', json_encode($cardsTagData));
 

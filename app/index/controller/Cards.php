@@ -38,10 +38,10 @@ class Cards
         //取Cards列表数据
         $listNum = 12; //每页个数
         if ($model == 0) {
-            $result = Db::table('cards')->where('state', 0)->where('model', 0)->order('id', 'desc')
+            $result = Db::table('cards')->where('status', 0)->where('model', 0)->order('id', 'desc')
                 ->paginate($listNum, true);
         } else {
-            $result = Db::table('cards')->where('state', 0)->where('model', 1)->order('id', 'desc')
+            $result = Db::table('cards')->where('status', 0)->where('model', 1)->order('id', 'desc')
                 ->paginate($listNum, true);
         }
 
@@ -49,7 +49,7 @@ class Cards
         $listData = $result->items();
 
         //取标签数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $cardsTagData = $result;
         View::assign('cardsTagData', json_encode($cardsTagData));
 
@@ -118,13 +118,13 @@ class Cards
         $imgData = $result;
 
         //取Tag数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $cardsTagData = $result;
         View::assign('cardsTagData', json_encode($cardsTagData));
 
         //获取评论列表
         $listNum = 6; //每页个数
-        $result = Db::table('cards_comments')->where('cid', $id)->where('state', 0)->order('id', 'desc')
+        $result = Db::table('cards_comments')->where('cid', $id)->where('status', 0)->order('id', 'desc')
             ->paginate($listNum, true);
         $cardsCommentsListRaw = $result->render();
         $listData = $result->items();
@@ -179,7 +179,7 @@ class Cards
         View::assign('cardsModel', $model);
 
         //取Tag数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $cardsTagData = $result;
         View::assign('cardsTagData', $cardsTagData);
 
@@ -223,9 +223,9 @@ class Cards
                 }else{
                     $whereData = 0;
                 }
-                $result = Db::table('cards')->where('state', 0)->where('model', $whereData);
+                $result = Db::table('cards')->where('status', 0)->where('model', $whereData);
             }else{
-                $result = Db::table('cards')->where('state', 0);
+                $result = Db::table('cards')->where('status', 0);
             }
             //dd($result);
             //取Cards列表
@@ -255,7 +255,7 @@ class Cards
         }
 
         //取Tag数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $cardsTagData = $result;
         View::assign('cardsTagData', json_encode($cardsTagData));
 
@@ -313,7 +313,7 @@ class Cards
         //组合Good状态到$listData列表
         for ($i = 0; $i < sizeof($TaglistData); $i++) {
             //取Cards数据
-            $requestCards = Db::table('cards')->where('state', 0)->where('id', $TaglistData[$i]['cid'])->findOrEmpty();
+            $requestCards = Db::table('cards')->where('status', 0)->where('id', $TaglistData[$i]['cid'])->findOrEmpty();
             if ($requestCards) {
                 $resultGood = Db::table('good')->where('aid', 1)->where('ip', $ip);
                 //查找对应封面
@@ -330,7 +330,7 @@ class Cards
         }
 
         //取Tag数据
-        $result = Db::table('cards_tag')->where('state', 0)->select()->toArray();
+        $result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $cardsTagData = $result;
         View::assign('cardsTagData', json_encode($cardsTagData));
 
