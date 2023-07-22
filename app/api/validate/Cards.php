@@ -3,6 +3,7 @@
 namespace app\api\validate;
 
 use think\Validate;
+use think\facade\Config;
 
 class Cards extends Validate
 {
@@ -18,7 +19,7 @@ class Cards extends Validate
         'good' => 'number',
         'comments' => 'number',
 
-        'tag' => 'JSON',
+        'tag' => 'JSON:TAG',
         'img' => 'JSON',
 
         'model' => 'in:0,1',
@@ -53,12 +54,19 @@ class Cards extends Validate
     // 自定义验证规则
     protected function JSON($value, $rule)
     {
+        //获取数量限制配置
+        if ($rule == 'TAG') {
+            $rule = Config::get('lovecards.api.Cards.DefSetCardsTagNum');
+        } else {
+            //默认数量限制
+            $rule = Config::get('lovecards.api.Cards.DefSetCardsImgNum');
+        }
         //格式转换
         $value = json_decode($value, true);
         //判断JSON格式
         if (json_last_error() == JSON_ERROR_NONE) {
             //判断图片数量
-            if (sizeof($value) <= 9) {
+            if (sizeof($value) <= $rule) {
                 //满足数量限制
                 return true;
             }

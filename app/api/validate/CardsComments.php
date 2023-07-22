@@ -10,7 +10,7 @@ class CardsComments extends Validate
     protected $rule =   [
         'name'  => 'require|length:1,12',
         'content'   => 'require|length:1,1024',
-        'state'   => 'number|between:0,1',
+        'state'   => 'number|in:0,1',
     ];
 
     //定义错误信息
@@ -22,6 +22,6 @@ class CardsComments extends Validate
         'content.length'     => '内容超出范围(1-1024)',
 
         'state.number' => '状态格式非法',
-        'state.between'     => '状态不存在',
+        'state.in'     => '状态不存在',
     ];
 }

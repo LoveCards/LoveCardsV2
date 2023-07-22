@@ -16,6 +16,16 @@ use think\facade\Session;
 class Common extends Facade
 {
 
+
+    //基础参数
+    protected $NowTime;
+    protected $ReqIp;
+    public function __construct()
+    {
+        $this->NowTime = date('Y-m-d H:i:s');
+        $this->ReqIp = Common::getIp();
+    }
+
     /**
      * @description: 版本信息
      * @return {*}
