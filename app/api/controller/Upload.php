@@ -8,9 +8,6 @@ use think\facade\Config;
 
 class Upload
 {
-    //最大上传图片大小 单位:M
-    const DefSetCardsImgSize = 2;
-
     //上传图片-POST
     public function image()
     {
@@ -19,11 +16,11 @@ class Upload
         }
         // 获取表单上传文件
         $file = request()->file('file');
-
+        $DefSetCardsImgSize = Config::get('lovecards.api.Upload.DefSetCardsImgSize');
         //验证
         try {
             validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的
-                'fileSize' => 1024 * 1000 * Config::get('lovecards.api.upload.DefSetCardsImgSize'), //允许文件大小
+                'fileSize' => 1024 * 1000 * $DefSetCardsImgSize, //允许文件大小
                 'fileExt'  => array('jpg', 'png'),  //文件后缀
                 //'fileMime' => array('jpg', 'png'),  //文件类型
             ]])->check(['file' => $file]); //对上传的$file进行验证

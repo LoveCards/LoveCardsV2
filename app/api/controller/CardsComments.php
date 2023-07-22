@@ -17,12 +17,6 @@ use app\Common\Common;
 
 class CardsComments extends Common
 {
-
-    //默认评论状态ON/OFF:0/1
-    const DefSetCardsCommentsState = 0;
-    //默认添加评论上传图片个数
-    const DefCardsSetCommentsImgNum = 3;
-
     protected function CAndU($id, $data, $method)
     {
         // 获取数据
@@ -105,7 +99,7 @@ class CardsComments extends Common
         ], 'c');
 
         if ($result['status']) {
-            return Common::create(['id' => $result['id']], '添加成功', 200);
+            return Common::create('', '添加成功', 200);
         } else {
             return Common::create($result['msg'], '添加失败', 500);
         }
@@ -127,9 +121,9 @@ class CardsComments extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Common::create(['id' => $result['id']], '添加成功', 200);
+            return Common::create('', '编辑成功', 200);
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return Common::create($result['msg'], '编辑失败', 500);
         }
     }
 
