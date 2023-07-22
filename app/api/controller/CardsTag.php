@@ -5,12 +5,76 @@ namespace app\api\controller;
 //TP类
 use think\facade\Request;
 use think\facade\Db;
+use think\exception\ValidateException;
+
+//验证类
+use app\api\validate\CardsTag as TagValidate;
 
 //类
 use app\Common\Common;
 
-class CardsTag
+class CardsTag extends Common
 {
+
+    protected function CAndU($id, $data, $method)
+    {
+        // 获取数据
+        $Datas = $data;
+
+        // 返回结果
+        function FunResult($status, $msg, $id = '')
+        {
+            return [
+                'status' => $status,
+                'msg' => $msg,
+                'id' => $id
+            ];
+        }
+
+        // 数据校验
+        try {
+            validate(TagValidate::class)
+                ->batch(true)
+                ->check($Datas);
+        } catch (ValidateException $e) {
+            $validateerror = $e->getError();
+            return FunResult(false, $validateerror);
+        }
+
+        // 启动事务
+        Db::startTrans();
+        try {
+            //获取数据库对象
+            $DbResult = Db::table('cards_tag');
+            $DbData = $Datas;
+            // 方法选择
+            if ($method == 'c') {
+                $DbData['time'] = $this->NowTime;
+                //默认状态:0/1
+                $DbData['state'] = 0;
+                //写入并返回ID
+                $Id = $DbResult->insertGetId($DbData);
+            } else {
+                //获取Cards数据库对象
+                $DbResult = $DbResult->where('id', $id);
+                if (!$DbResult->find()) {
+                    return FunResult(false, 'ID不存在');
+                }
+                //写入并返回ID
+                $DbResult->update($DbData);
+            }
+
+            // 提交事务
+            Db::commit();
+            return FunResult(true, '操作成功');
+        } catch (\Exception $e) {
+            dd($e);
+            // 回滚事务
+            Db::rollback();
+            return FunResult(false, '操作失败');
+        }
+    }
+
     //添加-POST
     public function add()
     {
@@ -20,24 +84,23 @@ class CardsTag
             return Common::create([], $userData[1], $userData[0]);
         }
 
-        $name = Request::param('name');
-        $tip = Request::param('tip');
-        if (mb_strlen($name, 'utf-8') > 8 || mb_strlen($tip, 'utf-8') > 64) {
-            return Common::create(['name' => 'name长度<=8', 'tip' => 'tip长度<=64'], '添加失败', 400);
+        //防手抖
+        $preventClicks = Common::preventClicks('LastPostTime');
+        if ($preventClicks[0] == false) {
+            //返回数据
+            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
-        $time = date('Y-m-d H:i:s');
-        $state = 0; //上/下:0/1
 
-        //获取数据库对象
-        $result = Db::table('cards_tag');
-        //整理数据
-        $data = ['name' => $name, 'tip' => $tip, 'state' => $state, 'time' => $time];
-        //写入失败返回
-        if (!$result->insert($data)) {
-            return Common::create(['CardsTag' => '写入失败'], '添加失败', 400);
+        $result = self::CAndU('', [
+            'tip' => Request::param('tip'),
+            'name' => Request::param('name'),
+        ], 'c');
+
+        if ($result['status']) {
+            return Common::create('', '添加成功', 200);
+        } else {
+            return Common::create($result['msg'], '添加失败', 500);
         }
-        //返回结果
-        return Common::create([], '添加成功', 200);
     }
 
     //编辑-POST
@@ -49,41 +112,17 @@ class CardsTag
             return Common::create([], $userData[1], $userData[0]);
         }
 
-        $id = Request::param('id');
-        $name = Request::param('name');
-        $tip = Request::param('tip');
-        $state = Request::param('state'); //上/下:0/1       
-        $time = date('Y-m-d H:i:s');
+        $result = self::CAndU(Request::param('id'), [
+            'tip' => Request::param('tip'),
+            'name' => Request::param('name'),
+            'state' => Request::param('state'),
+        ], 'u');
 
-        //验证数据格式
-        if (mb_strlen($name, 'utf-8') > 8 || mb_strlen($tip, 'utf-8') > 64) {
-            return Common::create(['name' => 'name长度<=8', 'tip' => 'tip长度<=64'], '编辑失败', 400);
+        if ($result['status']) {
+            return Common::create('', '添加成功', 200);
+        } else {
+            return Common::create($result['msg'], '添加失败', 500);
         }
-        if ($state != 0 && $state != 1) {
-            return Common::create(['state' => 'state格式错误'], '编辑失败', 400);
-        }
-        //验证ID是否正常传入
-        if (empty($id)) {
-            //跳转返回消息
-            return Common::create(['id' => '缺少id参数'], '编辑失败', 400);
-        }
-
-
-        //获取数据库对象
-        $result = Db::table('cards_tag')->where('id', $id);
-        //验证ID是否存在
-        if (!$result->find()) {
-            return Common::create(['CardsTagID' => 'ID不存在'], '编辑失败', 400);
-        }
-
-        //整理数据
-        $data = ['name' => $name, 'tip' => $tip, 'state' => $state];
-        //编辑失败返回
-        if (!$result->update($data)) {
-            return Common::create(['CardsTag' => '更新失败'], '编辑失败', 400);
-        }
-        //返回结果
-        return Common::create([], '编辑成功', 200);
     }
 
     //删除-POST

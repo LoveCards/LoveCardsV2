@@ -21,8 +21,6 @@ class Cards extends Common
     {
         // 获取数据
         $Datas = $data;
-        $Datas['time'] = $this->NowTime;
-        $Datas['ip'] = $this->ReqIp;
 
         // 返回结果
         function FunResult($status, $msg, $id = '')
@@ -67,6 +65,8 @@ class Cards extends Common
             //获取数据库对象
             $DbResult = Db::table('cards');
             $DbData = $Datas;
+            $DbData['time'] = $this->NowTime;
+            $DbData['ip'] = $this->ReqIp;
             $DbData['img'] = '';
             $DbData['tag'] = '';
             // 方法选择
