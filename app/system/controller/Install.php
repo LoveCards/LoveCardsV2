@@ -96,7 +96,24 @@ class Install
         }
     }
 
+    //验证安装环境
+    protected static function DataVerifyEnvironment()
+    {
+        $IE = Common::systemVer()['InstallEnvironment'];
+        $data = [
+            'php' => [
+                'v' => phpversion(),
+                's' => (($IE['php']['f'] <= phpversion()) && (phpversion() <= $IE['php']['l'])),
+            ],
+            'pdo_mysql' => extension_loaded('pdo')
+        ];
+        return $data;
+    }
+
     //api
+    public function apiVerifyEnvironment(){
+        return Common::create(Install::DataVerifyEnvironment(), '验证结果', 200);
+    }
     public function apiSetDbConfig()
     {
         //待完成-验证是否已经安装
@@ -185,12 +202,13 @@ class Install
         //基础变量
         View::assign([
             'systemVer' => Common::systemVer(),
+            'verifyEnvironment' => Install::DataVerifyEnvironment(),
             'viewTitle'  => '安装',
             'viewDescription' => false,
             'viewKeywords' => false
         ]);
 
         //输出模板
-        return View::fetch('admin@/system/install/index');
+        return View::fetch('/install');
     }
 }

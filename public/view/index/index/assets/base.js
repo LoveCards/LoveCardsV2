@@ -116,3 +116,48 @@ $('.js-Btn-Update-CardsGood').click(function () {
         return;
     }
 });
+
+//历史路由记录
+const historyUrl = () => {
+    //0级重置
+    if ($('#jsParameter').attr('jsTabClass') <= 4) {
+        $.removeCookie('historyUrl', { path: '/' });
+    }
+
+    //历史路径
+    var historyUrl = $.cookie('historyUrl');
+    //测试
+    //console.log(historyUrl);
+
+    if (historyUrl == undefined) {
+        historyUrl = [];
+    } else {
+        historyUrl = JSON.parse(historyUrl);
+    }
+
+    if (historyUrl[historyUrl.length - 1] != window.location.href && historyUrl[historyUrl.length - 1] != '') {
+        //刷新不计入
+        if (historyUrl[historyUrl.length - 2] != window.location.href) {
+            //确保不是返回
+            historyUrl[historyUrl.length] = window.location.href;
+            $.cookie('historyUrl', JSON.stringify(historyUrl), { path: '/' });
+        } else {
+            //返回清除记录
+            historyUrl.pop();
+            $.cookie('historyUrl', JSON.stringify(historyUrl), { path: '/' });
+        }
+
+    }
+}
+historyUrl();
+
+//返回来时的路由
+//$('.js-jumpurl-BackUp').attr('style', $('.js-jumpurl-BackUp').attr('style') + 'z-index: 99999;');
+$('.js-jumpurl-BackUp').click(function () {
+    var historyUrl = JSON.parse($.cookie('historyUrl'));
+    if (historyUrl[historyUrl.length - 2] != '') {
+        window.location.href = historyUrl[historyUrl.length - 2];
+    } else {
+        return;
+    }
+});
