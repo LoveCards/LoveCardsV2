@@ -11,6 +11,7 @@
   <a href="https://github.com/zhiguai/LoveCards/releases">
     <img src="https://img.shields.io/github/v/release/zhiguai/LoveCards?include_prereleases&style=flat-square" />
   </a>
+  <img src="https://img.shields.io/github/stars/zhiguai/LoveCards?style=social">
 </p>
 
 <p align="center">
@@ -52,9 +53,9 @@ mysql
 #### 3. 配置
 
 1. 设置运行目录为“Public”
-2. 设置伪静态，伪静态规则参考“Public”目录下的“nginx.htaccess”与“nginx.htaccess”
+2. 设置伪静态，伪静态规则参考“Public”目录下的“.htaccess”与“nginx.htaccess”
 3. 删除“lock.txt”安装记录文件
-4. 赋予程序根目录操作权限为“777（出现异常时可选）
+4. 赋予程序根目录操作权限为“777”（出现异常时可选）
 5. 关闭防跨站(宝塔可选)
 
 #### 4. 进入网站自动跳转至安装引导
@@ -83,6 +84,12 @@ mysql
 
 <a href="https://jq.qq.com/?_wv=1027&k=QTRjFYyB">QQ 交流群 801235342</a>  
 **如有问题，请先加群咨询**
+
+## ⭐ Star History
+
+<a href="https://github.com/zhiguai/LoveCards/stargazers">
+    <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=zhiguai/LoveCards&type=Date">
+</a> 
 
 ## 📜 License
 GPL V3

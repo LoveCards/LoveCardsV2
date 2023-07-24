@@ -1,10 +1,3 @@
-<!--
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2023-02-22 00:28:31
- * @LastEditTime: 2023-05-15 14:15:08
- * @LastEditors: github.com/zhiguai
--->
 {include file="index/public/header"}
 
 <!-- 页体 -->
@@ -91,7 +84,7 @@
         //初始化-分页组件
         pager();
         //初始化-Tag组件
-        ViewCardsTag({$cardsTagData|raw});
+        ViewCardsTag('{$cardsTagData|raw}');
         //初始化-View-搜索
         if (getUrlParam('search')) {
             $('#SearchValue').val(getUrlParam('value'));

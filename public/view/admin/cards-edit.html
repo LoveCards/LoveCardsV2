@@ -46,13 +46,13 @@
         <div class="mdui-row">
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
-                    <label class="mdui-textfield-label">时间</label>
+                    <label class="mdui-textfield-label">发布时间</label>
                     <input class="mdui-textfield-input" type="text" value="{$idCardData['time']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
-                    <label class="mdui-textfield-label">IP</label>
+                    <label class="mdui-textfield-label">发布IP</label>
                     <input class="mdui-textfield-input" type="text" value="{$idCardData['ip']}" disabled />
                 </div>
             </div>
@@ -190,50 +190,47 @@
 <script src="{__A-assets__}/cardsEdit.js"></script>
 <script>
     //初始化-Tag组件
-    { if $idCardData['tag']}
-    InitialChooseTagAdd(JSON.parse('{$idCardData['tag']|raw}'));
-    {
-        /if}
+    InitialChooseTagAdd('{$idCardData["tag"]|raw}');
 
-        $(function () {
-            //按钮-请求-添加
-            $('#submitAdd').click(function () {
-                //构建图片url数组并获取
-                var jsonImageUrl = [];
-                $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
-                    jsonImageUrl.push($(this).attr('src'));
-                });
-                img = JSON.stringify(jsonImageUrl);
-                tag = JSON.stringify(checkChooseTagId);
-
-                data = {
-                    'uuid': $.cookie('uuid'),
-                    'id': { $idCardData['id']},
-                    'top': $('#top').val(),
-                    'status': $('#status').val(),
-                    'model': $('#model').val(),
-                    'good': $('#good').val(),
-                    'content': $('#content').val(),
-                    'look': $('#look').val(),
-                    'woName': $('#woName').val(),
-                    'taName': $('#taName').val(),
-                    'woContact': $('#woContact').val(),
-                    'taContact': $('#taContact').val(),
-                    'model': $('#model').val(),
-                    'tag': tag,
-                    'img': img,
-                };
-                var result = apiAjax0(data, apicardsEdit, 'POST');
-                if (result) {
-                    mdui.snackbar({
-                        message: '编辑成功',
-                        position: 'left-top'
-                    });
-                    //jumpUrl('/index/cards/card/id/' + result.data.id);
-                    return;
-                }
+    $(function () {
+        //按钮-请求-添加
+        $('#submitAdd').click(function () {
+            //构建图片url数组并获取
+            var jsonImageUrl = [];
+            $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
+                jsonImageUrl.push($(this).attr('src'));
             });
+            img = JSON.stringify(jsonImageUrl);
+            tag = JSON.stringify(checkChooseTagId);
+
+            data = {
+                'uuid': $.cookie('uuid'),
+                'id': "{$idCardData['id']}",
+                'top': $('#top').val(),
+                'status': $('#status').val(),
+                'model': $('#model').val(),
+                'good': $('#good').val(),
+                'content': $('#content').val(),
+                'look': $('#look').val(),
+                'woName': $('#woName').val(),
+                'taName': $('#taName').val(),
+                'woContact': $('#woContact').val(),
+                'taContact': $('#taContact').val(),
+                'model': $('#model').val(),
+                'tag': tag,
+                'img': img,
+            };
+            var result = apiAjax0(data, apicardsEdit, 'POST');
+            if (result) {
+                mdui.snackbar({
+                    message: '编辑成功',
+                    position: 'left-top'
+                });
+                //jumpUrl('/index/cards/card/id/' + result.data.id);
+                return;
+            }
         });
+    });
 </script>
 </body>
 

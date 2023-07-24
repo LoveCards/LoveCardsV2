@@ -43,6 +43,10 @@
             vertical-align: top;
             outline: 0;
         }
+
+        .tab-e {
+            height: 400px;
+        }
     </style>
 </head>
 
@@ -76,49 +80,110 @@
                     <div class="mdui-p-x-5 mdui-p-t-4">
                         <div id="tab" class="mdui-tab mdui-tab-full-width">
                             <a id="tab1" class="mdui-ripple">版本详情</a>
-                            <a id="tab2" class="mdui-ripple" disabled>配置数据库</a>
-                            <!-- <a id="tab3" class="mdui-ripple" disabled>创建账户</a> -->
-                            <a id="tab3" class="mdui-ripple" disabled>完成安装</a>
+                            <a id="tab2" class="mdui-ripple" disabled>环境检测</a>
+                            <a id="tab3" class="mdui-ripple" disabled>配置数据库</a>
+                            <a id="tab4" class="mdui-ripple" disabled>完成安装</a>
                         </div>
                     </div>
 
                     <div class="mdui-p-x-5 mdui-p-t-5">
                         <div id="tab-e1">
-                            <div class="mdui-typo">
-                                <h4>欢迎使用LoveCards</h4>
-                                <p>当前版本：<kbd>{$systemVer.VerS}/{$systemVer.Ver}</kbd></p>
-                                <p>项目主页：<a href="https://lovecards.cn/">lovecards.cn</a></p>
-                                <p>QQ交流群：<a href="{$systemVer.QGroupUrl}">801235342</a></p>
+                            <div class="mdui-typo tab-e">
+                                <h4 style="margin-top: 0;font-weight:500;">LoveCards</h4>
+                                <ul>
+                                    <li>🗃️当前版本：<kbd>{$systemVer.VerS}[{$systemVer.Ver}]</kbd></li>
+                                    <li>🆕最新版本：<a href="https://github.com/zhiguai/LoveCards/releases"><kbd
+                                                id="NewVerS">加载中...</kbd></a></li>
+                                </ul>
+                                <ul>
+                                    <li>💻项目主页：<a href="https://lovecards.cn/" target="_blank">lovecards.cn</a></li>
+                                    <li>👨‍💻Github主页：<a href="https://github.com/zhiguai/LoveCards"
+                                            target="_blank">github.com/zhiguai/LoveCards</a></li>
+                                    <li>👩‍👧‍👦交流社区：<a href="https://forum.lovecards.cn/"
+                                            target="_blank">forum.lovecards.cn</a></li>
+                                    <li>👯‍♂QQ交流群：<a href="{$systemVer.QGroupUrl}" target="_blank">801235342</a></li>
+                                </ul>
+                                <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
                             </div>
                         </div>
                         <div id="tab-e2" class="hide">
-                            <div class="mdui-textfield">
-                                <label class="mdui-textfield-label">数据库服务器</label>
-                                <textarea id="formDataHostname" class="mdui-textfield-input">localhost</textarea>
-                            </div>
-                            <div class="mdui-textfield">
-                                <label class="mdui-textfield-label">数据库用户名</label>
-                                <textarea id="formDataUsername" class="mdui-textfield-input"></textarea>
-                            </div>
-                            <div class="mdui-textfield">
-                                <label class="mdui-textfield-label">数据库密码</label>
-                                <textarea id="formDataPassword" class="mdui-textfield-input"></textarea>
-                            </div>
-                            <div class="mdui-textfield">
-                                <label class="mdui-textfield-label">数据库端口</label>
-                                <textarea id="formDataHostport" class="mdui-textfield-input">3306</textarea>
-                            </div>
-                            <div class="mdui-textfield">
-                                <label class="mdui-textfield-label">数据库名</label>
-                                <textarea id="formDataDatabase" class="mdui-textfield-input"></textarea>
+                            <div class="mdui-typo tab-e">
+                                <div class="mdui-row mdui-p-b-1">
+                                    <div class="mdui-col-xs-6">
+                                        <h4 style="margin-top: 0;font-weight:500;">环境检测</h4>
+                                    </div>
+                                    <div class="mdui-col-xs-6">
+                                        <button id="btnVerifyEnvironment"
+                                            class="mdui-float-right mdui-btn mdui-color-theme-accent mdui-ripple mdui-btn-dense">重新检测</button>
+                                    </div>
+                                </div>
+                                <div class="mdui-table-fluid">
+                                    <table class="mdui-table">
+                                        <thead>
+                                            <tr>
+                                                <th>检测项目</th>
+                                                <th>本地版本</th>
+                                                <th>要求版本</th>
+                                                <th>状态</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>PHP</td>
+                                                <td id="verifyEnvironmentPhpV">{$verifyEnvironment.php.v}</td>
+                                                <td>[{$systemVer.InstallEnvironment.php.f},{$systemVer.InstallEnvironment.php.l})
+                                                </td>
+                                                <td id="verifyEnvironmentPhpS">{$verifyEnvironment.php.s ? '可用' : '不可用'}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>MySQL</td>
+                                                <td>自查</td>
+                                                <td>[{$systemVer.InstallEnvironment.mysql.f},{$systemVer.InstallEnvironment.mysql.l})
+                                                </td>
+                                                <td>自查</td>
+                                            </tr>
+                                            <tr>
+                                                <td>PDO扩展</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td id="verifyEnvironmentPdo_mysql">{$verifyEnvironment.pdo_mysql ? '可用'
+                                                    : '不可用'}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
                         </div>
-                        <!-- <div id="tab-e3" class="hide">
-                            创建账户
-                        </div> -->
                         <div id="tab-e3" class="hide">
-                            <div class="mdui-typo">
-                                <h4 class="mdui-text-center">安装完成</h4>
+                            <div class="tab-e">
+                                <div class="mdui-textfield">
+                                    <label class="mdui-textfield-label">数据库服务器</label>
+                                    <textarea id="formDataHostname" class="mdui-textfield-input">localhost</textarea>
+                                </div>
+                                <div class="mdui-textfield">
+                                    <label class="mdui-textfield-label">数据库用户名</label>
+                                    <textarea id="formDataUsername" class="mdui-textfield-input"></textarea>
+                                </div>
+                                <div class="mdui-textfield">
+                                    <label class="mdui-textfield-label">数据库密码</label>
+                                    <textarea id="formDataPassword" class="mdui-textfield-input"></textarea>
+                                </div>
+                                <div class="mdui-textfield">
+                                    <label class="mdui-textfield-label">数据库端口</label>
+                                    <textarea id="formDataHostport" class="mdui-textfield-input">3306</textarea>
+                                </div>
+                                <div class="mdui-textfield">
+                                    <label class="mdui-textfield-label">数据库名</label>
+                                    <textarea id="formDataDatabase" class="mdui-textfield-input"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-e4" class="hide">
+                            <div class="mdui-typo tab-e">
+                                <h4 class="mdui-text-center" style="margin-top: 0;">安装完成</h4>
                                 <p>
                                 <ul>
                                     <li>管理地址：/admin</li>
@@ -133,10 +198,10 @@
                     </div>
 
                     <div class="mdui-p-x-5 mdui-p-t-5 mdui-p-b-4">
-                        <button id="btnPrev" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent"
+                        <button id="btnPrev" class="mdui-btn mdui-ripple mdui-color-theme-accent"
                             style="visibility: hidden;">上一步</button>
                         <button id="btnNext"
-                            class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-float-right">下一步</button>
+                            class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-float-right">下一步</button>
                     </div>
                 </div>
             </div>
@@ -153,6 +218,22 @@
         //Base
         var currentDate = new Date();
         var currentYear = currentDate.getFullYear();
+        //主页信息
+        const BaseFun = () => {
+            //最新版本
+            var result = apiAjax0a('', 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest', 'get', false);
+            if (result['r'] != []) {
+                var data = result['r'];
+                $('#NewVerS').text(data['name']);
+            } else {
+                $('#NewVerS').text('前往查看');
+            }
+            $.ajax({ url: "https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md", async: true }).then(function (data) {
+                $('#NewVerSVerLog').text(data);
+            }).catch(function (error) {
+                $('#NewVerSVerLog').text('获取失败');
+            });
+        }; BaseFun();
         //更新版权
         $('.mdui-card-primary-subtitle').html('Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © ' + currentYear + ' Made by 吃纸怪.')
 
@@ -203,10 +284,36 @@
             }
         }
 
+        //重新检测环境
+        $('#btnVerifyEnvironment').click(function () {
+            var result = apiAjax0('', apiSystemInstallVerifyEnvironment, 'POST', false);
+            if (result['ec'] == 200) {
+                mdui.snackbar({
+                    message: '结果已更新',
+                    position: 'left-top'
+                });
+                VEStatus = String(result['data']['pdo_mysql'] && result['data']['php']['s']);
+                $('#verifyEnvironmentPhpV').text(result['data']['php']['v']);
+                $('#verifyEnvironmentPhpS').text(result['data']['php']['s'] ? '可用' : '不可用');
+                $('#verifyEnvironmentPdo_mysql').text(result['data']['pdo_mysql'] ? '可用' : '不可用');
+            }
+        })
+        var VEStatus = '{$verifyEnvironment.php.s && $verifyEnvironment.pdo_mysql ? "true" : "fasle"}';
+
         //操作
         $('#btnNext').click(function () {
             //数据库tab
             if (nowTab == 2) {
+                if (VEStatus != 'true') {
+                    //失败
+                    mdui.snackbar({
+                        message: '环境不可用请重新检测后再继续',
+                        position: 'left-top'
+                    });
+                } else {
+                    btnNext();
+                }
+            } else if (nowTab == 3) {
                 //数据库导入
                 var data = {
                     'hostname': $('#formDataHostname').val(),
@@ -241,7 +348,7 @@
                         message: 'msg&nbsp;:&nbsp;' + result['r']['msg'] + '<br>code&nbsp;:&nbsp;' + result['r']['ec'],
                     });
                 }
-            } else if (nowTab == 3) {
+            } else if (nowTab == 4) {
                 var result = apiAjax0a([], apiSystemInstallSetInstallLock, 'POST', false);
                 if (result['r']['ec'] == 200) {
                     //成功

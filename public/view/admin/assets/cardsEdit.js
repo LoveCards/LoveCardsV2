@@ -3,8 +3,12 @@ var checkChooseTagId = [];
 
 //函数-初始化标签组件
 function InitialChooseTagAdd(arrData) {
+    if (arrData == '') {
+        return;
+    }
+    arrData = JSON.parse(arrData);
     //重置组件
-    $('#btnChooseTagAdd').siblings("div[class='mdui-chip']").empty();
+    $('#btnChooseTagAdd').siblings("div[class='mdui-chip']").remove();
     //设置组件
     $("input[name='inputChooseTag']").each(function (i) {
         for (var i in arrData) {
@@ -92,7 +96,7 @@ $('#btnUpdataImgUrl').click(function () {
 //按钮-加载标签组件
 $('#btnChooseTag').click(function () {
     //重置标签组件
-    $('#btnChooseTagAdd').siblings("div[class='mdui-chip']").empty();
+    $('#btnChooseTagAdd').siblings("div[class='mdui-chip']").remove();
     checkChooseTagId = [];
     //加载标签组件
     $("input[name='inputChooseTag']:checked").each(function (i) {
