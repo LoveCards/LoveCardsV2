@@ -93,7 +93,9 @@
                                 <ul>
                                     <li>🗃️当前版本：<kbd>{$systemVer.VerS}[{$systemVer.Ver}]</kbd></li>
                                     <li>🆕最新版本：<a href="https://github.com/zhiguai/LoveCards/releases"><kbd
-                                                id="NewVerS">加载中...</kbd></a></li>
+                                                id="NewVerS">加载中...</kbd></a>
+                                                <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
+                                    </li>
                                 </ul>
                                 <ul>
                                     <li>💻项目主页：<a href="https://lovecards.cn/" target="_blank">lovecards.cn</a></li>
@@ -103,7 +105,7 @@
                                             target="_blank">forum.lovecards.cn</a></li>
                                     <li>👯‍♂QQ交流群：<a href="{$systemVer.QGroupUrl}" target="_blank">801235342</a></li>
                                 </ul>
-                                <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
+
                             </div>
                         </div>
                         <div id="tab-e2" class="hide">
@@ -186,9 +188,9 @@
                                 <h4 class="mdui-text-center" style="margin-top: 0;">安装完成</h4>
                                 <p>
                                 <ul>
-                                    <li>管理地址：/admin</li>
-                                    <li>门户首页：/index</li>
-                                    <li>默认账户：admin admin</li>
+                                    <li>⚙️管理地址：/admin</li>
+                                    <li>🚪门户首页：/index</li>
+                                    <li>💻默认账户：admin admin</li>
                                 </ul>
                                 </p>
                                 <!-- <blockquote>如果您安装并使用了该程序，将默认您阅读并同意该条款<a
@@ -228,7 +230,7 @@
             } else {
                 $('#NewVerS').text('前往查看');
             }
-            $.ajax({ url: "https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md", async: true }).then(function (data) {
+            $.ajax({ url: "https://ghps.cc/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md", type: 'GET', async: true }).then(function (data) {
                 $('#NewVerSVerLog').text(data);
             }).catch(function (error) {
                 $('#NewVerSVerLog').text('获取失败');
