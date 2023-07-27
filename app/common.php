@@ -257,18 +257,30 @@ class Common extends Facade
      * @param {*} $filename
      * @param {*} $data
      */
-    protected static function extraconfig($filename, $data)
+    protected static function extraconfig($filename, $data, $free = false)
     {
         $filename = '../config/' . $filename . '.php';
         $str_file = file_get_contents($filename);
 
-        foreach ($data as $key => $value) {
-            //构建正则匹配
-            $pattern = "/env\('lovecards\." . $key . "',\s*'([^']*)'\)/";
-            //判断是否成功匹配
-            if (preg_match($pattern, $str_file)) {
-                //匹配成功更新
-                $str_file = preg_replace($pattern, "env('lovecards." . $key . "', '" . $value . "')", $str_file);
+        if ($free == true) {
+            foreach ($data as $key => $value) {
+                //构建正则匹配
+                $pattern = "/env\('lovecards\." . $key . "',\s*([^']*)\)/";
+                //判断是否成功匹配
+                if (preg_match($pattern, $str_file)) {
+                    //匹配成功更新
+                    $str_file = preg_replace($pattern, "env('lovecards." . $key . "', " . $value . ")", $str_file);
+                }
+            }
+        } else {
+            foreach ($data as $key => $value) {
+                //构建正则匹配
+                $pattern = "/env\('lovecards\." . $key . "',\s*'([^']*)'\)/";
+                //判断是否成功匹配
+                if (preg_match($pattern, $str_file)) {
+                    //匹配成功更新
+                    $str_file = preg_replace($pattern, "env('lovecards." . $key . "', '" . $value . "')", $str_file);
+                }
             }
         }
 

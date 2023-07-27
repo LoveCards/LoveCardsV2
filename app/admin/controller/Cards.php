@@ -5,6 +5,7 @@ namespace app\admin\controller;
 //TP类
 use think\facade\View;
 use think\facade\Db;
+use think\facade\Config;
 
 //类
 use app\common\Common;
@@ -88,5 +89,30 @@ class Cards
 
         //输出模板
         return View::fetch('/cards-edit');
+    }
+
+    //setting
+    public function setting()
+    {
+        //验证身份并返回数据
+        $userData = Common::validateViewAuth();
+        if ($userData[0] == false) {
+            return Common::jumpUrl('/admin/login/index', '请先登入');
+        }
+
+        //获取配置
+        View::assign([
+            'configData' => Config::get('lovecards.api')
+        ]);
+
+        //基础变量
+        View::assign([
+            'adminData'  => $userData[1],
+            'systemVer' => Common::systemVer(),
+            'viewTitle'  => '模块设置'
+        ]);
+
+        //输出模板
+        return View::fetch('/cards-setting');
     }
 }

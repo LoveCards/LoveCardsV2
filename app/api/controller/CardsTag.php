@@ -19,7 +19,11 @@ class CardsTag extends Common
     protected function CAndU($id, $data, $method)
     {
         // 获取数据
-        $Datas = $data;
+        foreach ($data as $k => $v) {
+            if ($v != '#') {
+                $Datas[$k] = $v;
+            }
+        }
 
         // 返回结果
         function FunResult($status, $msg, $id = '')
