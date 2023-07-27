@@ -8,7 +8,9 @@
         <div class="mdui-col-md-6 mdui-col-offset-md-3">
 
             <div class="mdui-p-b-2">
-                <button class="js-jumpurl-BackUp mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised">返 回</button>
+                <button
+                    class="js-jumpurl-BackUp mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised">返
+                    回</button>
             </div>
 
             <div class="mdui-card mdui-m-b-1">
@@ -73,7 +75,7 @@
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">交流写些什么*</label>
                         <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
-                    </div>                
+                    </div>
                     {/if}
 
                     <div class="mdui-textfield">
@@ -146,13 +148,16 @@
                 'tag': tag,
                 'img': img,
             };
-            var result = apiAjax0(data, apiUrlCardsAdd, 'POST');
-            if (result) {
+            var result = apiAjax0a(data, apiUrlCardsAdd, 'POST');
+            if (result['r']['ec'] == 200) {
                 mdui.snackbar({
                     message: '添加成功',
                     position: 'left-top'
                 });
                 jumpUrl('/index/cards/card/id/' + result.data.id);
+                return;
+            }else if(result['r']['ec'] == 201){
+                jumpUrl('/index');
                 return;
             }
         });

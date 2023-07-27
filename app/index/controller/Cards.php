@@ -95,14 +95,14 @@ class Cards
         $id = Request::param('id');
 
         //验证ID取Cards数据
-        $result = Db::table('cards')->where('id', $id)->findOrEmpty();
+        $result = Db::table('cards')->where('id', $id)->where('status', 0)->findOrEmpty();
         if (!$result) {
             return Common::jumpUrl('/index/Cards', '卡片ID不存在');
         }
         $cardData = $result;
 
         //防止快速刷新网页增加浏览量
-        $preventClicks = Common::preventClicks('LastGetTimeCardID'.$id, 60);
+        $preventClicks = Common::preventClicks('LastGetTimeCardID' . $id, 60);
         if ($preventClicks[0] == true) {
             //获取Cards数据库对象
             $resultCards = Db::table('cards')->where('id', $id);
@@ -110,7 +110,7 @@ class Cards
             if (!$resultCards->inc('look')->update()) {
                 return Common::create(['cards.look' => 'cards.look更新失败'], '无效浏览', 400);
             };
-            $cardData['look'] = $cardData['look']+1;
+            $cardData['look'] = $cardData['look'] + 1;
         }
 
         //取img数据
@@ -217,14 +217,14 @@ class Cards
                 return Common::jumpUrl('/index/Cards/search', '请输入要搜索内容');
             }
 
-            if($model != 'false'){
-                if($model == 1){
+            if ($model != 'false') {
+                if ($model == 1) {
                     $whereData = 1;
-                }else{
+                } else {
                     $whereData = 0;
                 }
                 $result = Db::table('cards')->where('status', 0)->where('model', $whereData);
-            }else{
+            } else {
                 $result = Db::table('cards')->where('status', 0);
             }
             //dd($result);

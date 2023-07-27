@@ -13,6 +13,7 @@ var apiSystemTemplate = '/api/system/template';//模板设置
 var apicardsAdd = '/api/cards/add';//添加卡片
 var apicardsEdit = '/api/cards/edit';//编辑卡片
 var apicardsDelete = '/api/cards/delete';//删除卡片
+var apicardsSetting = '/api/cards/setting';//模块设置
 
 var apiCardsTagAdd = '/api/CardsTag/add';//添加标签
 var apiCardsTagEdit = '/api/CardsTag/edit';//编辑标签

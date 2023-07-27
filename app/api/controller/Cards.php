@@ -10,6 +10,7 @@ use think\facade\Config;
 
 //验证类
 use app\api\validate\Cards as CardsValidate;
+use app\api\validate\CardsSetting as CardsValidateSetting;
 
 //公共类
 use app\Common\Common;
@@ -20,7 +21,11 @@ class Cards extends Common
     protected function CAndU($id, $data, $method)
     {
         // 获取数据
-        $Datas = $data;
+        foreach ($data as $k => $v) {
+            if ($v != '#') {
+                $Datas[$k] = $v;
+            }
+        }
 
         // 返回结果
         function FunResult($status, $msg, $id = '')
@@ -150,11 +155,15 @@ class Cards extends Common
             'img' => Request::param('img'),
 
             'model' => Request::param('model'),
-            'status' => '1'
+            'status' => Config::get('lovecards.api.Cards.DefSetCardsStatus')
         ], 'c');
 
         if ($result['status']) {
-            return Common::create(['id' => $result['id']], '添加成功', 200);
+            if(Config::get('lovecards.api.Cards.DefSetCardsStatus')){
+                return Common::create('', '添加成功,等待审核', 201);
+            }else{
+                return Common::create('', '添加成功', 200);
+            }
         } else {
             return Common::create($result['msg'], '添加失败', 500);
         }
@@ -187,9 +196,9 @@ class Cards extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Common::create(['id' => $result['id']], '添加成功', 200);
+            return Common::create(['id' => $result['id']], '编辑成功', 200);
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return Common::create($result['msg'], '编辑失败', 500);
         }
     }
 
@@ -233,6 +242,46 @@ class Cards extends Common
 
         //返回数据
         return Common::create([], '删除成功', 200);
+    }
+
+    //设置-POST
+    public function setting()
+    {
+        //验证身份并返回数据
+        $userData = Common::validateAuth();
+        if (!empty($userData[0])) {
+            return Common::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
+        }
+
+        $data = [
+            'DefSetCardsImgNum' => Request::param('DefSetCardsImgNum'),
+            'DefSetCardsTagNum' => Request::param('DefSetCardsTagNum'),
+            'DefSetCardsStatus' => Request::param('DefSetCardsStatus'),
+            'DefSetCardsImgSize' => Request::param('DefSetCardsImgSize'),
+            'DefSetCardsCommentsStatus' => Request::param('DefSetCardsCommentsStatus')
+        ];
+
+        // 数据校验
+        try {
+            validate(CardsValidateSetting::class)
+                ->batch(true)
+                ->check($data);
+        } catch (ValidateException $e) {
+            $validateerror = $e->getError();
+            return Common::create($validateerror, '修改失败', 400);
+        }
+
+        $result = Common::extraconfig('lovecards', $data, true);
+
+        if ($result == true) {
+            return Common::create([], '修改成功', 200);
+        } else {
+            return Common::create([], '修改失败，请重试', 400);
+        }
     }
 
     //点赞-POST

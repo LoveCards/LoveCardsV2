@@ -20,8 +20,12 @@ class CardsComments extends Common
     protected function CAndU($id, $data, $method)
     {
         // 获取数据
-        $Datas = $data;
-
+        foreach ($data as $k => $v) {
+            if ($v != '#') {
+                $Datas[$k] = $v;
+            }
+        }
+        
         // 返回结果
         function FunResult($status, $msg, $id = '')
         {
@@ -56,7 +60,7 @@ class CardsComments extends Common
                     return FunResult(false, 'CID不存在');
                 }
                 //默认状态ON/OFF:0/1
-                $DbData['status'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsstatus');
+                $DbData['status'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus');
                 //写入并返回ID
                 $Id = $DbResult->insertGetId($DbData);
                 //更新comments视图字段
@@ -95,11 +99,15 @@ class CardsComments extends Common
         $result = self::CAndU('', [
             'cid' => Request::param('cid'),
             'content' => Request::param('content'),
-            'name' => Request::param('name'),
+            'name' => Request::param('name')
         ], 'c');
 
         if ($result['status']) {
-            return Common::create('', '添加成功', 200);
+            if(Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')){
+                return Common::create('', '添加成功,等待审核', 201);
+            }else{
+                return Common::create('', '添加成功', 200);
+            }
         } else {
             return Common::create($result['msg'], '添加失败', 500);
         }

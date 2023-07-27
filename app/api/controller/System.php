@@ -99,6 +99,7 @@ class System
 
         $template_directory = Request::param('templateDirectory');
         $result = Common::extraconfig('lovecards', ['template_directory' => $template_directory]);
+        
         if ($result == true) {
             return Common::create([], '修改成功', 200);
         } else {
