@@ -31,7 +31,8 @@
                     </button>
                     <div class="mdui-dialog" id="dialogChooseTag">
                         <div class="mdui-dialog-title">选择标签</div>
-                        <div class="mdui-row mdui-p-x-4">
+                        <div class="mdui-dialog-content"
+                            style="color: unset; font-size: unset; line-height: unset;">
                             <div class="mdui-row-xs-2 mdui-row-sm-4">
                                 {volist name="cardsTagData" id="data"}
                                 <div class="mdui-col">
@@ -156,7 +157,7 @@
                 });
                 jumpUrl('/index/cards/card/id/' + result.r.data.id);
                 return;
-            }else if(result['r']['ec'] == 201){
+            } else if (result['r']['ec'] == 201) {
                 jumpUrl('/index');
                 return;
             }

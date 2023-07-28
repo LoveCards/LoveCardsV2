@@ -119,7 +119,6 @@ $('.js-Btn-Update-CardsGood').click(function () {
 
 //历史路由记录
 const historyUrl = () => {
-    console.log($('#jsParameter').attr('jsPageHierarchy') <= 4);
     //0级重置
     if ($('#jsParameter').attr('jsPageHierarchy') == 0) {
         $.removeCookie('historyUrl', { path: '/' });
@@ -127,8 +126,6 @@ const historyUrl = () => {
 
     //历史路径
     var historyUrl = $.cookie('historyUrl');
-    //测试
-    console.log(historyUrl);
 
     if (historyUrl == undefined) {
         historyUrl = [];
