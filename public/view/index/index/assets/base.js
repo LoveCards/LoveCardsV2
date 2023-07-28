@@ -5,7 +5,7 @@ var apiUrlCardsCommentsAdd = '/api/CardsComments/add'//添加评论
 
 //初始化标签
 function ViewCardsTag(arr) {
-    var CardsTagData = arr;
+    var CardsTagData = JSON.parse(arr);
     for (let i = 0; i < $(".css-cards-primary-subtitle").length; i++) {
         //jq的坑$()取不到class的对象，取回的是数组，要变对象要套个$();
         var tagList = JSON.parse($($(".css-cards-primary-subtitle")[i])[0].attributes[1].value);
@@ -119,15 +119,16 @@ $('.js-Btn-Update-CardsGood').click(function () {
 
 //历史路由记录
 const historyUrl = () => {
+    console.log($('#jsParameter').attr('jsPageHierarchy') <= 4);
     //0级重置
-    if ($('#jsParameter').attr('jsTabClass') <= 4) {
+    if ($('#jsParameter').attr('jsPageHierarchy') == 0) {
         $.removeCookie('historyUrl', { path: '/' });
     }
 
     //历史路径
     var historyUrl = $.cookie('historyUrl');
     //测试
-    //console.log(historyUrl);
+    console.log(historyUrl);
 
     if (historyUrl == undefined) {
         historyUrl = [];

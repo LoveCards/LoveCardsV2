@@ -1,7 +1,7 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
+<div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
 
     <div class="mdui-row mdui-p-t-2">
 
@@ -154,7 +154,7 @@
                     message: '添加成功',
                     position: 'left-top'
                 });
-                jumpUrl('/index/cards/card/id/' + result.data.id);
+                jumpUrl('/index/cards/card/id/' + result.r.data.id);
                 return;
             }else if(result['r']['ec'] == 201){
                 jumpUrl('/index');

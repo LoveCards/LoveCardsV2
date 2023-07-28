@@ -159,10 +159,10 @@ class Cards extends Common
         ], 'c');
 
         if ($result['status']) {
-            if(Config::get('lovecards.api.Cards.DefSetCardsStatus')){
+            if (Config::get('lovecards.api.Cards.DefSetCardsStatus')) {
                 return Common::create('', '添加成功,等待审核', 201);
-            }else{
-                return Common::create('', '添加成功', 200);
+            } else {
+                return Common::create(['id' => $result['id']], '添加成功', 200);
             }
         } else {
             return Common::create($result['msg'], '添加失败', 500);
