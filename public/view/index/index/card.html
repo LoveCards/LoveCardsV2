@@ -1,40 +1,40 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
+<div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
 
     <div class="mdui-row mdui-p-t-2">
         <div style="display: none;" id="CardDataTitle">
-        {if $cardsModel == 0}
+            {if $cardsModel == 0}
             {if $cardData['woName']}[{$cardData['woName']} 的表白卡]-{$cardData['woName']} 表白 {$cardData['taName']}
             {else}[匿名 的表白卡]-对 {$cardData['taName']} 说
             {/if}
-        {else}
+            {else}
             {if $cardData['woName']}[{$cardData['woName']} 的交流卡]-{$cardData['woName']} 对 {$cardData['taName']} 说
             {else}[匿名 的交流卡]-对 {$cardData['taName']} 说
             {/if}
-        {/if}
+            {/if}
         </div>
         <!-- 顶部信息组件 -->
         <div class="mdui-col-xs-10">
             {if $cardsModel == 0}
-                {if $cardData['woName']}
-                <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
-                {else}
-                <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
-                {/if}
+            {if $cardData['woName']}
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的表白卡</div>
             {else}
-                {if $cardData['woName']}
-                <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的交流卡</div>
-                {else}
-                <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的交流卡</div>
-                {/if}
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
             {/if}
-                <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
+            {else}
+            {if $cardData['woName']}
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$cardData['woName']} 的交流卡</div>
+            {else}
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的交流卡</div>
+            {/if}
+            {/if}
+            <div class="mdui-typo-subheading-opacity">{$cardData['id']}# {$cardData['time']}</div>
         </div>
         <div class="mdui-col-xs-2">
-            <button class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right"
-                onclick="javascript :history.back(-1);">
+            <button
+                class="js-jumpurl-BackUp mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </button>
         </div>
