@@ -89,11 +89,11 @@ class CardsTag extends Common
         }
 
         //防手抖
-        // $preventClicks = Common::preventClicks('LastPostTime');
-        // if ($preventClicks[0] == false) {
-        //     //返回数据
-        //     return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
-        // }
+        $preventClicks = Common::preventClicks('LastPostTime');
+        if ($preventClicks[0] == false) {
+            //返回数据
+            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+        }
 
         $result = self::CAndU('', [
             'tip' => Request::param('tip'),
