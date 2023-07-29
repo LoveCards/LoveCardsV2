@@ -4,7 +4,7 @@ namespace app\api\validate;
 
 use think\Validate;
 
-class User extends Validate
+class Admin extends Validate
 {
     //定义验证规则
     protected $rule =   [

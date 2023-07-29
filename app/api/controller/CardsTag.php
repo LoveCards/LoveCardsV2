@@ -2,16 +2,17 @@
 
 namespace app\api\controller;
 
-//TP类
+//TP
 use think\facade\Request;
 use think\facade\Db;
 use think\exception\ValidateException;
 
-//验证类
+//验证
 use app\api\validate\CardsTag as TagValidate;
 
-//类
+//公共
 use app\Common\Common;
+use app\api\common\Common as ApiCommon;
 
 class CardsTag extends Common
 {
@@ -83,16 +84,16 @@ class CardsTag extends Common
     public function add()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
 
         //防手抖
-        $preventClicks = Common::preventClicks('LastPostTime');
+        $preventClicks = ApiCommon::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
-            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+            return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
 
         $result = self::CAndU('', [
@@ -101,9 +102,9 @@ class CardsTag extends Common
         ], 'c');
 
         if ($result['status']) {
-            return Common::create('', '添加成功', 200);
+            return ApiCommon::create('', '添加成功', 200);
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return ApiCommon::create($result['msg'], '添加失败', 500);
         }
     }
 
@@ -111,9 +112,9 @@ class CardsTag extends Common
     public function edit()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
 
         $result = self::CAndU(Request::param('id'), [
@@ -123,9 +124,9 @@ class CardsTag extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Common::create('', '添加成功', 200);
+            return ApiCommon::create('', '添加成功', 200);
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return ApiCommon::create($result['msg'], '添加失败', 500);
         }
     }
 
@@ -134,9 +135,9 @@ class CardsTag extends Common
     {
 
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
 
         //获取数据
@@ -145,7 +146,7 @@ class CardsTag extends Common
         //获取数据库对象
         $result = Db::table('cards_tag')->where('id', $id);
         if (!$result->find()) {
-            return Common::create([], 'id不存在', 400);
+            return ApiCommon::create([], 'id不存在', 400);
         }
         $result->delete();
 
@@ -156,6 +157,6 @@ class CardsTag extends Common
         }
 
         //返回数据
-        return Common::create([], '删除成功', 200);
+        return ApiCommon::create([], '删除成功', 200);
     }
 }

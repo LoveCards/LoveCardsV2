@@ -2,9 +2,9 @@
 var apiUrlAuthlogin = '/api/auth/login';//登入
 var apiUrlAuthlogout = '/api/auth/logout';//注销
 
-var apiUserDelete = '/api/user/delete';//删除用户
-var apiUserAdd = '/api/user/add';//添加用户
-var apiUserEdit = '/api/user/edit';//添加用户
+var apiAdminDelete = '/api/admin/delete';//删除用户
+var apiAdminAdd = '/api/admin/add';//添加用户
+var apiAdminEdit = '/api/admin/edit';//添加用户
 
 var apiSystemSite = '/api/system/site';//系统设置
 var apiSystemEmail = '/api/system/email';//系统邮箱设置

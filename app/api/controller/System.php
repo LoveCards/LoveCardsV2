@@ -2,14 +2,14 @@
 
 namespace app\api\controller;
 
-//TP类
+//TP
 use think\facade\Request;
 use think\facade\Db;
 use think\facade\Config;
 
-//类
+//公共
 use app\Common\Common;
-
+use app\api\common\Common as ApiCommon;
 
 class System
 {
@@ -17,18 +17,18 @@ class System
     public function site()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return Common::create(['power' => 1], '权限不足', 401);
+            return ApiCommon::create(['power' => 1], '权限不足', 401);
         }
 
         $siteUrl = Request::param('siteUrl');
         if (empty($siteUrl)) {
-            return Common::create([], '站点域名不得为空', 400);
+            return ApiCommon::create([], '站点域名不得为空', 400);
         }
         $siteName = Request::param('siteName');
         $siteICPId = Request::param('siteICPId');
@@ -47,20 +47,20 @@ class System
         Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
 
         //返回数据
-        return Common::create([], '更新成功', 200);
+        return ApiCommon::create([], '更新成功', 200);
     }
 
     //邮箱配置-POST
     public function email()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return Common::create(['power' => 1], '权限不足', 401);
+            return ApiCommon::create(['power' => 1], '权限不足', 401);
         }
 
         $LCEAPI = Request::param('LCEAPI');
@@ -81,29 +81,29 @@ class System
         Db::table('system')->where('name', 'smtpSecure')->update(['value' => $smtpSecure]);
 
         //返回数据
-        return Common::create([], '更新成功', 200);
+        return ApiCommon::create([], '更新成功', 200);
     }
 
     //模板配置-POST
     public function template()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return Common::create(['power' => 1], '权限不足', 401);
+            return ApiCommon::create(['power' => 1], '权限不足', 401);
         }
 
         $template_directory = Request::param('templateDirectory');
-        $result = Common::extraconfig('lovecards', ['template_directory' => $template_directory]);
+        $result = ApiCommon::extraconfig('lovecards', ['template_directory' => $template_directory]);
         
         if ($result == true) {
-            return Common::create([], '修改成功', 200);
+            return ApiCommon::create([], '修改成功', 200);
         } else {
-            return Common::create([], '修改失败，请重试', 400);
+            return ApiCommon::create([], '修改失败，请重试', 400);
         }
     }
 }
