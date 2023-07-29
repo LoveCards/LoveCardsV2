@@ -2,17 +2,18 @@
 
 namespace app\api\controller;
 
-//TP类
+//TP
 use think\facade\Db;
 use think\facade\Request;
 use think\exception\ValidateException;
 use think\facade\Config;
 
-//验证类
+//验证
 use app\api\validate\CardsComments as CommentsValidate;
 
-//类
+//公共
 use app\Common\Common;
+use app\api\common\Common as ApiCommon;
 
 
 class CardsComments extends Common
@@ -90,10 +91,10 @@ class CardsComments extends Common
     public function add()
     {
         //防手抖
-        $preventClicks = Common::preventClicks('LastPostTime');
+        $preventClicks = ApiCommon::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
-            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+            return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
 
         $result = self::CAndU('', [
@@ -104,12 +105,12 @@ class CardsComments extends Common
 
         if ($result['status']) {
             if(Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')){
-                return Common::create('', '添加成功,等待审核', 201);
+                return ApiCommon::create('', '添加成功,等待审核', 201);
             }else{
-                return Common::create('', '添加成功', 200);
+                return ApiCommon::create('', '添加成功', 200);
             }
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return ApiCommon::create($result['msg'], '添加失败', 500);
         }
     }
 
@@ -117,9 +118,9 @@ class CardsComments extends Common
     public function edit()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
 
         $result = self::CAndU(Request::param('id'), [
@@ -129,9 +130,9 @@ class CardsComments extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Common::create('', '编辑成功', 200);
+            return ApiCommon::create('', '编辑成功', 200);
         } else {
-            return Common::create($result['msg'], '编辑失败', 500);
+            return ApiCommon::create($result['msg'], '编辑失败', 500);
         }
     }
 
@@ -139,24 +140,24 @@ class CardsComments extends Common
     public function delete()
     {
         //验证身份并返回数据
-        $userData = Common::validateAuth();
+        $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
+            return ApiCommon::create([], $userData[1], $userData[0]);
         }
 
         $id = Request::param('id');
         if (!$id) {
-            return Common::create(['id' => '缺少参数'], '删除失败', 400);
+            return ApiCommon::create(['id' => '缺少参数'], '删除失败', 400);
         }
 
         //获取数据库对象
         $result = Db::table('cards_comments')->where('id', $id);
         if (!$result->find()) {
-            return Common::create([], 'id不存在', 400);
+            return ApiCommon::create([], 'id不存在', 400);
         }
         if (!$result->delete()) {
-            return Common::create([], '删除失败', 400);
+            return ApiCommon::create([], '删除失败', 400);
         }
-        return Common::create([], '删除成功', 200);
+        return ApiCommon::create([], '删除成功', 200);
     }
 }

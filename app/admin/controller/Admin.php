@@ -9,7 +9,7 @@ use think\facade\Db;
 //类
 use app\common\Common;
 
-class User
+class Admin
 {
     //Index
     public function index()
@@ -26,7 +26,7 @@ class User
 
         //获取列表
         $listNum = 5;
-        $list = Db::table('user')
+        $list = Db::table('admin')
             ->paginate($listNum, true);
         View::assign([
             'list'  => $list,
@@ -42,6 +42,6 @@ class User
         ]);
 
         //输出模板
-        return View::fetch('/user');
+        return View::fetch('/admin');
     }
 }

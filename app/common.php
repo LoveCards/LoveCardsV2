@@ -16,7 +16,6 @@ use think\facade\Session;
 class Common extends Facade
 {
 
-
     //基础参数
     protected $NowTime;
     protected $ReqIp;
@@ -119,112 +118,6 @@ class Common extends Facade
     }
 
     /**
-     * @description: 前端Coockie验证uuid
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:56:45
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    protected static function validateViewAuth()
-    {
-        //整理数据
-        $uuid = Cookie::get('uuid');
-        if (empty($uuid)) {
-            return array(false, '请先登入');
-        }
-        //查询数据
-        $result = Db::table('user')
-            ->where('uuid', $uuid)
-            ->find();
-        //判断数据是否存在
-        if (empty($result)) {
-            return array(false, '当前uuid已失效请重新登入');
-        } else {
-            //返回用户数据
-            return array(true, $result);
-        }
-    }
-
-    /**
-     * @description: API验证uuid并获取当前用户数据
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:57:00
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    protected static function validateAuth()
-    {
-        //整理数据
-        $uuid = Request::param('uuid');
-        if (empty($uuid)) {
-            return array(400, '缺少uuid');
-        }
-        //查询数据
-        $result = Db::table('user')
-            ->where('uuid', $uuid)
-            ->find();
-        //判断数据是否存在
-        if (empty($result)) {
-            return array(401, '当前uuid已失效请重新登入');
-        } else {
-            //返回用户数据
-            return $result;
-        }
-    }
-
-    /**
-     * @description: API格式输出方法
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:57:16
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $data
-     * @param {string} $msg
-     * @param {int} $code
-     * @param {string} $type
-     */
-    protected static function create($data, string $msg = '', int $code = 200, string $type = 'json'): Response
-    {
-        $result = [
-            //状态码
-            'ec' => $code,
-            //消息
-            'msg' => $msg,
-            //数据
-            'data' => $data
-        ];
-
-        //返回API接口
-        return Response::create($result, $type);
-    }
-
-    /**
-     * @description: 生成UUID
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:57:34
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    protected static function get_uuid()
-    {
-        $charid = md5(uniqid(mt_rand(), true));
-        $hyphen = chr(45); // "-"
-        $uuid = //chr(123) "{"
-            substr($charid, 0, 8) . $hyphen
-            . substr($charid, 8, 4) . $hyphen
-            . substr($charid, 12, 4) . $hyphen
-            . substr($charid, 16, 4) . $hyphen
-            . substr($charid, 20, 12);
-        //.chr(125); "}"
-        return $uuid;
-    }
-
-    //获取模板目录
-    /**
      * @description: 获取模板目录
      * @return {*}
      * @Author: github.com/zhiguai
@@ -248,72 +141,31 @@ class Common extends Facade
     }
 
     /**
-     * @description: 编辑配置文件
+     * @description: 前端Coockie验证uuid
      * @return {*}
      * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:16:37
+     * @Date: 2022-12-29 18:56:45
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
-     * @param {*} $filename
-     * @param {*} $data
      */
-    protected static function extraconfig($filename, $data, $free = false)
+    protected static function validateViewAuth()
     {
-        $filename = '../config/' . $filename . '.php';
-        $str_file = file_get_contents($filename);
-
-        if ($free == true) {
-            foreach ($data as $key => $value) {
-                //构建正则匹配
-                $pattern = "/env\('lovecards\." . $key . "',\s*([^']*)\)/";
-                //判断是否成功匹配
-                if (preg_match($pattern, $str_file)) {
-                    //匹配成功更新
-                    $str_file = preg_replace($pattern, "env('lovecards." . $key . "', " . $value . ")", $str_file);
-                }
-            }
-        } else {
-            foreach ($data as $key => $value) {
-                //构建正则匹配
-                $pattern = "/env\('lovecards\." . $key . "',\s*'([^']*)'\)/";
-                //判断是否成功匹配
-                if (preg_match($pattern, $str_file)) {
-                    //匹配成功更新
-                    $str_file = preg_replace($pattern, "env('lovecards." . $key . "', '" . $value . "')", $str_file);
-                }
-            }
+        //整理数据
+        $uuid = Cookie::get('uuid');
+        if (empty($uuid)) {
+            return array(false, '请先登入');
         }
-
-        //写入并返回结果
-        if (!file_put_contents($filename, $str_file)) {
-            return false;
+        //查询数据
+        $result = Db::table('admin')
+            ->where('uuid', $uuid)
+            ->find();
+        //判断数据是否存在
+        if (empty($result)) {
+            return array(false, '当前uuid已失效请重新登入');
         } else {
-            return true;
+            //返回用户数据
+            return array(true, $result);
         }
-    }
-
-    /**
-     * @description: 防抖
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:17:21
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $setName
-     * @param {*} $time
-     */
-    protected static function preventClicks($setName, $time = 6)
-    {
-        if (strtotime(date("Y-m-d H:i:s")) > strtotime(Session::get($setName))) {
-            //符合要求
-            $result = [true];
-        } else {
-            $result = [false, '您的操作太快了，稍后再试试试吧'];
-        }
-        //设置上次时间
-        Session::set($setName, date("Y-m-d H:i:s", strtotime('+' . $time . ' second')));
-        //返回结果
-        return $result;
     }
 }
 

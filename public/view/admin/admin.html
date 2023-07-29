@@ -98,7 +98,7 @@
                 </div>
                 <div class="mdui-col-xs-3 mdui-col-md-2">
                     <label class="mdui-textfield-label mdui-m-t-2">权限</label>
-                    <select class="mdui-select" id="editUserDataPower">
+                    <select class="mdui-select" id="editUserDataPower" style="width: 100%;">
                         <option value="0">站长</option>
                         <option value="1">管理员</option>
                     </select>
@@ -140,7 +140,7 @@
                 'uuid': $.cookie('uuid'),
                 'id': $(this).parent().siblings('td:first').html()
             };
-            var result = apiAjax0(data, apiUserDelete, 'POST');
+            var result = apiAjax0(data, apiAdminDelete, 'POST');
             if (result) {
                 $(this).parent().html("已删除");
                 mdui.snackbar({
@@ -167,7 +167,7 @@
                 'password': $('#editUserDataPassword').val(),
                 'power': $('#editUserDataPower').val()
             };
-            var result = apiAjax0(data, apiUserEdit, 'POST');
+            var result = apiAjax0(data, apiAdminEdit, 'POST');
             if (result) {
                 $.cookie('msg', '编辑成功', { path: '/' });
                 jumpUrl('', 100);
@@ -182,7 +182,7 @@
                 'password': $('#addUserDataPassword').val(),
                 'power': $('#addUserDataPower').val()
             };
-            var result = apiAjax0(data, apiUserAdd, 'POST');
+            var result = apiAjax0(data, apiAdminAdd, 'POST');
             if (result) {
                 $.cookie('msg', '添加成功', { path: '/' });
                 jumpUrl('', 100);
