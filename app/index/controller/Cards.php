@@ -6,6 +6,7 @@ namespace app\index\controller;
 use think\facade\View;
 use think\facade\Db;
 use think\facade\Request;
+use think\facade\Config;
 
 //类
 use app\common\Common;
@@ -156,6 +157,7 @@ class Cards
         //基础变量
         View::assign([
             'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
+            'configData' => config::get('lovecards.class'),
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => $cardData['woName'] . '的卡片',
@@ -186,6 +188,7 @@ class Cards
         //基础变量
         View::assign([
             'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
+            'configData' => config::get('lovecards.class'),
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '写卡',

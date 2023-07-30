@@ -199,38 +199,52 @@
 
 </div>
 
-</div>
 
 {include file="index/public/footer"}
-
+{if $configData.geetest.DefSetValidatesStatus == 1}
+<script src="https://static.geetest.com/v4/gt4.js"></script>
+<script src="{__A-assets__}/gt4/base.js"></script>
+{/if}
 <script>
     $(function () {
         //初始化-分页组件
         pager();
         //初始化-Tag组件
-        {$cardData['tag']|raw}
+        ViewCardsTag('{$cardsTagData|raw}');
         //viewer图片放大插件初始化
         $('#viewer').viewer({
             url: 'src'
         });
+
+        //请求-按钮-评论
+        const FunAddComments = (CaptchaData) => {
+            //是否存在验证参数
+            var data;
+            if (CaptchaData) { data = CaptchaData; }
+
+            var data = {
+                ...data,//合并验证参数
+                'cid': '{$cardData.id}',
+                'name': $('#addCommentsDataName').val(),
+                'content': $('#addCommentsDataContent').val(),
+            };
+            //提交数据
+            var result = apiAjax0(data, apiUrlCardsCommentsAdd, 'POST');
+            if (result) {
+                //附加功能
+                $.cookie('msg', '评论成功', { path: '/' });//写入提示
+                //刷新页面
+                jumpUrl('', 100);
+            }
+        };
+        //验证
+        /*{if $configData.geetest.DefSetValidatesStatus == 1}*/
+        geetest4('#btnAddComments', FunAddComments, '{$configData.geetest.DefSetGeetestId}');
+        /*{else /}*/
+        $('#btnAddComments').click(function () { FunAddComments() });
+        /*{/if}*/
     });
 
-    //请求-按钮-评论
-    $('#btnAddComments').click(function () {
-        var data = {
-            'cid': '{$cardData.id}',
-            'name': $('#addCommentsDataName').val(),
-            'content': $('#addCommentsDataContent').val(),
-        };
-        //提交数据
-        var result = apiAjax0(data, apiUrlCardsCommentsAdd, 'POST');
-        if (result) {
-            //附加功能
-            $.cookie('msg', '评论成功', { path: '/' });//写入提示
-            //刷新页面
-            jumpUrl('', 100);
-        }
-    });
 </script>
 
 </body>

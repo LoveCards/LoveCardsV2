@@ -15,6 +15,10 @@ use app\api\validate\CardsComments as CommentsValidate;
 use app\Common\Common;
 use app\api\common\Common as ApiCommon;
 
+//第三方
+require($_SERVER['DOCUMENT_ROOT'] . '/../class/geetest/gt4.php');
+
+use class\geetest\gt4\base as gt4;
 
 class CardsComments extends Common
 {
@@ -26,7 +30,7 @@ class CardsComments extends Common
                 $Datas[$k] = $v;
             }
         }
-        
+
         // 返回结果
         function FunResult($status, $msg, $id = '')
         {
@@ -56,7 +60,7 @@ class CardsComments extends Common
             // 方法选择
             if ($method == 'c') {
                 $DbData['time'] = $this->NowTime;
-                $DbData['ip'] = $this->ReqIp;        
+                $DbData['ip'] = $this->ReqIp;
                 if (!Db::table('cards')->where('id', $DbData['cid'])->find()) {
                     return FunResult(false, 'CID不存在');
                 }
@@ -91,10 +95,15 @@ class CardsComments extends Common
     public function add()
     {
         //防手抖
-        $preventClicks = ApiCommon::preventClicks('LastPostTime');
+        $preventClicks = Common::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
             return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+        }
+
+        //人机二次验证
+        if (!gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
+            return ApiCommon::create(['prompt' => '人机验证失败'], '添加失败', 500);
         }
 
         $result = self::CAndU('', [
@@ -104,9 +113,9 @@ class CardsComments extends Common
         ], 'c');
 
         if ($result['status']) {
-            if(Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')){
+            if (Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')) {
                 return ApiCommon::create('', '添加成功,等待审核', 201);
-            }else{
+            } else {
                 return ApiCommon::create('', '添加成功', 200);
             }
         } else {

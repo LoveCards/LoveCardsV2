@@ -33,7 +33,7 @@
                     <th>图片</th>
                     <th>时间</th>
                     <th>IP</th>
-                    <th>操作</th>
+                    <th class="mdui-table-col-numeric">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,9 +81,8 @@
                     <td>{$data.taName}</td>
                     <td>{if $data.taContact != ''}{$data.taContact}{else}[无]{/if}</td>
                     <td>
-                        <input class="mdui-textfield-input" style="width:unset"
-                            mdui-tooltip="{content: '{$data.content}'}" type="text" value="{$data.content}"
-                            readonly="true" />
+                        <input class="js-mdui-Tooltip mdui-textfield-input" style="width:unset" type="text"
+                            value="{$data.content}" readonly="true" />
                     </td>
                     <td>{$data.good}</td>
                     <td>{$data.comments}</td>

@@ -9,9 +9,6 @@ use think\Response;
 //TP门面类
 use think\facade\Request;
 use think\facade\Db;
-use think\facade\Cookie;
-use think\facade\Config;
-use think\facade\Session;
 
 class Common extends Facade
 {
@@ -135,29 +132,5 @@ class Common extends Facade
         } else {
             return true;
         }
-    }
-
-    /**
-     * @description: 防抖
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:17:21
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $setName
-     * @param {*} $time
-     */
-    protected static function preventClicks($setName, $time = 6)
-    {
-        if (strtotime(date("Y-m-d H:i:s")) > strtotime(Session::get($setName))) {
-            //符合要求
-            $result = [true];
-        } else {
-            $result = [false, '您的操作太快了，稍后再试试试吧'];
-        }
-        //设置上次时间
-        Session::set($setName, date("Y-m-d H:i:s", strtotime('+' . $time . ' second')));
-        //返回结果
-        return $result;
     }
 }

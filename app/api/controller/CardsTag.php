@@ -90,7 +90,7 @@ class CardsTag extends Common
         }
 
         //防手抖
-        $preventClicks = ApiCommon::preventClicks('LastPostTime');
+        $preventClicks = Common::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
             return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);

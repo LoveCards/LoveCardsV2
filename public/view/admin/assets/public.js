@@ -305,4 +305,8 @@ $(function () {
         //重置
         $.cookie('msg', 'undefined', { path: '/' });
     }
+    //初始化-提示
+    $('.js-mdui-Tooltip').each(function (index, domEle) {
+        $(domEle).attr('mdui-tooltip', "{content:'" + $(domEle).val() + "'}")
+    });
 });
