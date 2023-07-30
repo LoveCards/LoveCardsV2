@@ -70,8 +70,8 @@
 }
 
 .css-caard-header-subtite-liulan {
-    font-size:6px;
-    float: right!important;
+    font-size: 6px;
+    float: right !important;
 }
 
 .css-caard-header-btn-round {
@@ -126,6 +126,11 @@
     /* cursor: pointer; */
     -webkit-transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
     transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* mdui原样式覆盖 */
+.mdui-table {
+    white-space:nowrap;
 }
 
 /* 主题配色 */

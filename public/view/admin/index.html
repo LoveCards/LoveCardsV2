@@ -59,7 +59,7 @@
                 <div class="mdui-p-a-2">
                     <div class="mdui-row">
                         <div class="mdui-col-xs-2 mdui-col-sm-3 mdui-text-center">
-                            <i class="css-icon iconfont icon-heart-pulse mdui-text-color-red-400"></i>
+                            <i class="css-icon iconfont icon-heart-pulse mdui-text-color-light-blue-500"></i>
                         </div>
                         <div class="mdui-col-xs-10 mdui-col-sm-9 mdui-p-t-1 mdui-text-color-grey-800">
                             <div class="mdui-typo-title-opacity">{$systemVer['Name']}</div>
@@ -124,7 +124,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.0/dist/chart.umd.min.js"></script>
 <script>
     //图表数据传递
-    var dataChart = {$dataChart|raw};
+    var dataChart = JSON.parse('{$dataChart|raw}');
     //整理图表数据
     var chartLabelsDataX = new Array();
     var chartLabelsDataY = new Array();

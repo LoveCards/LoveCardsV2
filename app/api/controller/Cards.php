@@ -13,8 +13,13 @@ use app\api\validate\Cards as CardsValidate;
 use app\api\validate\CardsSetting as CardsValidateSetting;
 
 //公共
-use app\Common\Common;
+use app\common\Common;
 use app\api\common\Common as ApiCommon;
+
+//第三方
+require($_SERVER['DOCUMENT_ROOT'] . '/../class/geetest/gt4.php');
+
+use class\geetest\gt4\base as gt4;
 
 class Cards extends Common
 {
@@ -138,10 +143,15 @@ class Cards extends Common
     public function add()
     {
         //防手抖
-        $preventClicks = ApiCommon::preventClicks('LastPostTime');
+        $preventClicks = Common::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
             return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+        }
+
+        //人机二次验证
+        if (!gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
+            return ApiCommon::create(['prompt' => '人机验证失败'], '添加失败', 500);
         }
 
         $result = self::CAndU('', [

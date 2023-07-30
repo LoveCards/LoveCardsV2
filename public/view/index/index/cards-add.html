@@ -31,8 +31,7 @@
                     </button>
                     <div class="mdui-dialog" id="dialogChooseTag">
                         <div class="mdui-dialog-title">选择标签</div>
-                        <div class="mdui-dialog-content"
-                            style="color: unset; font-size: unset; line-height: unset;">
+                        <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
                             <div class="mdui-row-xs-2 mdui-row-sm-4">
                                 {volist name="cardsTagData" id="data"}
                                 <div class="mdui-col">
@@ -113,7 +112,6 @@
                     </div>
 
                 </div>
-
                 <div id="model" value="{$cardsModel}" class="mdui-card-actions">
                     <button id="submitAdd"
                         class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">提交</button>
@@ -127,10 +125,18 @@
 
 {include file="index/public/footer"}
 <script src="{__A-assets__}/cardsEdit.js"></script>
+{if $configData.geetest.DefSetValidatesStatus == 1}
+<script src="https://static.geetest.com/v4/gt4.js"></script>
+<script src="{__A-assets__}/gt4/base.js"></script>
+{/if}
 <script>
     $(function () {
         //提交
-        $('#submitAdd').click(function () {
+        const FunResultAdd = (CaptchaData) => {
+            //是否存在验证参数
+            var data;
+            if (CaptchaData) { data = CaptchaData; }
+
             //构建图片url数组并获取
             var jsonImageUrl = [];
             $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
@@ -140,6 +146,7 @@
             tag = JSON.stringify(checkChooseTagId);
 
             data = {
+                ...data,//合并验证参数
                 'content': $('#content').val(),
                 'woName': $('#woName').val(),
                 'taName': $('#taName').val(),
@@ -161,7 +168,13 @@
                 jumpUrl('/index');
                 return;
             }
-        });
+        }
+        //验证
+        /*{if $configData.geetest.DefSetValidatesStatus == 1}*/
+        geetest4('#submitAdd', FunResultAdd, '{$configData.geetest.DefSetGeetestId}');
+        /*{else /}*/
+        $('#submitAdd').click(function () { FunResultAdd() });
+        /*{/if}*/
     });
 </script>
 
