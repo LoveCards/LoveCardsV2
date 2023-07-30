@@ -35,6 +35,7 @@ class System
         //基础变量
         View::assign([
             'adminData'  => $userData[1],
+            'configData' => Config::get('lovecards'),
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '系统设置'
         ]);

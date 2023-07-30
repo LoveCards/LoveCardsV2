@@ -87,11 +87,20 @@
     <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
     <script src="{__A-assets__}/base.js"></script>
     <script src="{__A-assets__}/public.js"></script>
+    {if $configData.class.geetest.DefSetValidatesStatus == 1}
+    <script src="https://static.geetest.com/v4/gt4.js"></script>
+    <script src="{__A-assets__}/gt4/base.js"></script>
+    {/if}
     <script>
         $(function () {
             //提交
-            $('#submitLogin').click(function () {
-                data = {
+            FunLogin = (CaptchaData) => {
+                //是否存在验证参数
+                var data;
+                if (CaptchaData) { data = CaptchaData; }
+
+                var data = {
+                    ...data,//合并验证参数
                     'userName': $('#userName').val(),
                     'password': $('#password').val(),
                 };
@@ -109,7 +118,13 @@
                     jumpUrl('/admin/index');
                     return;
                 }
-            })
+            }
+            //验证
+            /*{if $configData.class.geetest.DefSetValidatesStatus == 1}*/
+            geetest4('#submitLogin', FunLogin, '{$configData.class.geetest.DefSetGeetestId}');
+            /*{else /}*/
+            $('#submitLogin').click(function () { FunLogin() });
+            /*{/if}*/
         });
     </script>
 </body>

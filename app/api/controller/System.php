@@ -99,10 +99,36 @@ class System
 
         $template_directory = Request::param('templateDirectory');
         $result = ApiCommon::extraconfig('lovecards', ['template_directory' => $template_directory]);
-        
+
         if ($result == true) {
             return ApiCommon::create([], '修改成功', 200);
         } else {
+            return ApiCommon::create([], '修改失败，请重试', 400);
+        }
+    }
+
+    //极验验证码配置-POST
+    public function geetest()
+    {
+        //验证身份并返回数据
+        $userData = ApiCommon::validateAuth();
+        if (!empty($userData[0])) {
+            return ApiCommon::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return ApiCommon::create(['power' => 1], '权限不足', 401);
+        }
+
+        try {
+            $data = [
+                'DefSetGeetestId' => Request::param('DefSetGeetestId'),
+                'DefSetGeetestKey' => Request::param('DefSetGeetestKey'),
+            ];
+            ApiCommon::extraconfig('lovecards', $data);
+            ApiCommon::extraconfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
+            return ApiCommon::create([], '修改成功', 200);
+        } catch (\Throwable $th) {
             return ApiCommon::create([], '修改失败，请重试', 400);
         }
     }
