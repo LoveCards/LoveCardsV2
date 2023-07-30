@@ -8,11 +8,16 @@ use think\exception\ValidateException;
 use think\facade\Db;
 
 //验证
-use app\api\validate\User as UserValidate;
+use app\api\validate\Admin as AdminValidate;
 
 //公共
 use app\Common\Common;
 use app\api\common\Common as ApiCommon;
+
+//第三方
+require($_SERVER['DOCUMENT_ROOT'] . '/../class/geetest/gt4.php');
+
+use class\geetest\gt4\base as gt4;
 
 class Auth
 {
@@ -20,12 +25,18 @@ class Auth
     //登入-POST
     public function login()
     {
+        
+        //人机二次验证
+        if (!gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
+            return ApiCommon::create(['prompt' => '人机验证失败'], '添加失败', 500);
+        }
+
         $userName = Request::param('userName');
         $password = Request::param('password');
 
         //验证参数是否合法
         try {
-            validate(UserValidate::class)->batch(true)
+            validate(AdminValidate::class)->batch(true)
                 ->scene('login')
                 ->check([
                     'userName'  => $userName,

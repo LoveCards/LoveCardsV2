@@ -27,9 +27,9 @@ return [
             //默认全局验证ON/OFF:1/0
             'DefSetValidatesStatus' => env('lovecards.DefSetValidatesStatus', 1),
             //默认添加卡片上传图片个数
-            'DefSetGeetestId' => env('lovecards.DefSetGeetestId', '000'),
+            'DefSetGeetestId' => env('lovecards.DefSetGeetestId', ''),
             //默认添加卡片标签个数
-            'DefSetGeetestKey' => env('lovecards.DefSetGeetestKey', '000')
+            'DefSetGeetestKey' => env('lovecards.DefSetGeetestKey', '')
         ]
     ]
 ];
