@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://lovecards.cn/" alt="logo" ><img src="https://i.imgloc.com/2023/05/20/Vyh7jo.png" width="150"/></a>
+  <a href="https://lovecards.cn/" alt="logo" ><img src="https://img1.imgtp.com/2023/08/04/TiKztuPI.png" width="150"/></a>
   <br>
   LoveCards
   <br>
