@@ -41,7 +41,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `userName`, `password`, `power`, `uuid`) VALUES
-(1, 'admin', '', 0, '');
+(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 0, '');
 
 -- --------------------------------------------------------
 
