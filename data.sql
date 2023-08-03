@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2023-05-20 20:02:37
+-- 生成日期： 2023-08-03 20:58:14
 -- 服务器版本： 8.0.12
 -- PHP 版本： 7.3.4
 
@@ -19,8 +19,29 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `1234567`
+-- 数据库： `127_0_0_1`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `userName` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `power` int(11) NOT NULL DEFAULT '0',
+  `uuid` varchar(64) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '登入凭证'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT;
+
+--
+-- 转存表中的数据 `admin`
+--
+
+INSERT INTO `admin` (`id`, `userName`, `password`, `power`, `uuid`) VALUES
+(1, 'admin', '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -30,29 +51,22 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `cards` (
   `id` int(11) NOT NULL COMMENT 'cid/pid/aid:1',
-  `content` mediumtext NOT NULL COMMENT '内容',
-  `img` varchar(256) DEFAULT '' COMMENT '封面',
-  `woName` varchar(256) DEFAULT '' COMMENT '发布者名字',
-  `woContact` varchar(256) DEFAULT '' COMMENT '我的联系方式',
-  `taName` varchar(256) DEFAULT '' COMMENT '对方的名字',
-  `taContact` varchar(256) DEFAULT '' COMMENT '对方的联系方式',
+  `content` mediumtext COLLATE utf8mb4_general_ci NOT NULL COMMENT '内容',
+  `img` varchar(256) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '封面',
+  `woName` varchar(256) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '发布者名字',
+  `woContact` varchar(256) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '我的联系方式',
+  `taName` varchar(256) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '对方的名字',
+  `taContact` varchar(256) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '对方的联系方式',
   `good` int(11) NOT NULL DEFAULT '0' COMMENT '点赞数',
   `comments` int(11) NOT NULL DEFAULT '0' COMMENT '评论数',
-  `look` int(11) NOT NULL DEFAULT '0',
-  `tag` varchar(256) DEFAULT '' COMMENT '标签Json',
+  `look` int(11) NOT NULL DEFAULT '0' COMMENT '浏览量',
+  `tag` varchar(256) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '标签Json',
   `model` int(11) DEFAULT '0' COMMENT '卡片模式',
-  `time` timestamp NOT NULL COMMENT '上传时间',
-  `ip` varchar(256) DEFAULT '' COMMENT '上传IP',
-  `top` int(11) DEFAULT '0' COMMENT '置顶',
-  `state` int(11) DEFAULT '0' COMMENT '状态'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `cards`
---
-
-INSERT INTO `cards` (`id`, `content`, `img`, `woName`, `woContact`, `taName`, `taContact`, `good`, `comments`, `look`, `tag`, `model`, `time`, `ip`, `top`, `state`) VALUES
-(1, 'LoveCards简约而不简单', 'http://5b0988e595225.cdn.sohucs.com/images/20170922/eaab95242c534e11b29f9fdd407f0e3c.jpeg', '吃纸怪', '', '', '', 1, 0, 2, '', 1, '2023-04-23 23:56:21', '223.104.19.72', 0, 0);
+  `time` timestamp NOT NULL COMMENT '发布时间',
+  `ip` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '发布IP',
+  `top` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '0' COMMENT '置顶状态',
+  `status` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '0' COMMENT '封禁状态'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -62,13 +76,13 @@ INSERT INTO `cards` (`id`, `content`, `img`, `woName`, `woContact`, `taName`, `t
 
 CREATE TABLE `cards_comments` (
   `id` int(11) NOT NULL COMMENT 'pid/aid:2',
-  `cid` varchar(256) NOT NULL COMMENT 'CardsID',
-  `content` varchar(256) NOT NULL COMMENT '内容',
-  `name` varchar(256) NOT NULL COMMENT '我的名字',
-  `ip` varchar(256) NOT NULL COMMENT '发布者IP',
+  `cid` varchar(256) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'CardsID',
+  `content` varchar(256) COLLATE utf8mb4_general_ci NOT NULL COMMENT '内容',
+  `name` varchar(256) COLLATE utf8mb4_general_ci NOT NULL COMMENT '我的名字',
+  `ip` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布IP',
   `time` timestamp NOT NULL COMMENT '发布时间',
-  `state` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `status` int(11) NOT NULL COMMENT '封禁状态'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -77,12 +91,12 @@ CREATE TABLE `cards_comments` (
 --
 
 CREATE TABLE `cards_tag` (
-  `id` int(11) NOT NULL COMMENT 'pid',
-  `name` varchar(8) DEFAULT '',
-  `tip` varchar(64) DEFAULT '' COMMENT '提示',
-  `state` int(11) NOT NULL DEFAULT '0',
-  `time` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `id` int(11) NOT NULL COMMENT 'tid/pid',
+  `name` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '标签名',
+  `tip` varchar(64) COLLATE utf8mb4_general_ci DEFAULT '' COMMENT '提示',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '封禁状态',
+  `time` timestamp NOT NULL COMMENT '发布时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -91,11 +105,11 @@ CREATE TABLE `cards_tag` (
 --
 
 CREATE TABLE `cards_tag_map` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL COMMENT 'pid',
   `cid` int(11) DEFAULT NULL COMMENT 'CardsID',
   `tid` int(11) DEFAULT NULL COMMENT 'TagID',
   `time` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -107,16 +121,9 @@ CREATE TABLE `good` (
   `id` int(11) NOT NULL,
   `aid` int(11) NOT NULL COMMENT '应用ID',
   `pid` int(11) NOT NULL COMMENT '条目ID',
-  `ip` varchar(32) NOT NULL,
-  `time` date NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `good`
---
-
-INSERT INTO `good` (`id`, `aid`, `pid`, `ip`, `time`) VALUES
-(1, 1, 1, '127.0.0.1', '2023-05-14');
+  `ip` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布IP',
+  `time` datetime NOT NULL COMMENT '发布时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -128,16 +135,9 @@ CREATE TABLE `img` (
   `id` int(11) NOT NULL,
   `aid` int(11) NOT NULL COMMENT '应用ID',
   `pid` int(11) NOT NULL COMMENT '条目ID',
-  `url` varchar(256) NOT NULL,
+  `url` varchar(256) COLLATE utf8mb4_general_ci NOT NULL,
   `time` timestamp NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `img`
---
-
-INSERT INTO `img` (`id`, `aid`, `pid`, `url`, `time`) VALUES
-(1, 1, 1, 'http://5b0988e595225.cdn.sohucs.com/images/20170922/eaab95242c534e11b29f9fdd407f0e3c.jpeg', '2023-04-23 23:56:21');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -147,8 +147,8 @@ INSERT INTO `img` (`id`, `aid`, `pid`, `url`, `time`) VALUES
 
 CREATE TABLE `system` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT '',
-  `value` varchar(2555) NOT NULL DEFAULT ''
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT '',
+  `value` varchar(2555) COLLATE utf8mb4_general_ci NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -157,10 +157,10 @@ CREATE TABLE `system` (
 
 INSERT INTO `system` (`id`, `name`, `value`) VALUES
 (1, 'siteUrl', 'lovecards.cn'),
-(2, 'siteName', 'LC2测试版本'),
+(2, 'siteName', 'LoveCardsv2'),
 (3, 'siteICPId', '备案信息'),
 (4, 'siteKeywords', 'LoveCards,lovecards.cn,吃纸怪'),
-(5, 'siteDes', 'LoveCards2测试版本'),
+(5, 'siteDes', 'LoveCardsv2'),
 (6, 'smtpUser', ''),
 (7, 'smtpHost', ''),
 (8, 'smtpPort', ''),
@@ -172,30 +172,15 @@ INSERT INTO `system` (`id`, `name`, `value`) VALUES
 (14, 'smtpSecure', ''),
 (15, 'smtpName', '');
 
--- --------------------------------------------------------
-
---
--- 表的结构 `user`
---
-
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `power` int(11) NOT NULL DEFAULT '0',
-  `uuid` varchar(64) DEFAULT '' COMMENT '登入凭证'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `user`
---
-
-INSERT INTO `user` (`id`, `userName`, `password`, `power`, `uuid`) VALUES
-(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 0, '');
-
 --
 -- 转储表的索引
 --
+
+--
+-- 表的索引 `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `cards`
@@ -240,20 +225,20 @@ ALTER TABLE `system`
   ADD PRIMARY KEY (`id`);
 
 --
--- 表的索引 `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
 -- 在导出的表使用AUTO_INCREMENT
 --
+
+--
+-- 使用表AUTO_INCREMENT `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `cards`
 --
 ALTER TABLE `cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'cid/pid/aid:1', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'cid/pid/aid:1';
 
 --
 -- 使用表AUTO_INCREMENT `cards_comments`
@@ -265,37 +250,31 @@ ALTER TABLE `cards_comments`
 -- 使用表AUTO_INCREMENT `cards_tag`
 --
 ALTER TABLE `cards_tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pid';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'tid/pid';
 
 --
 -- 使用表AUTO_INCREMENT `cards_tag_map`
 --
 ALTER TABLE `cards_tag_map`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pid';
 
 --
 -- 使用表AUTO_INCREMENT `good`
 --
 ALTER TABLE `good`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `img`
 --
 ALTER TABLE `img`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `system`
 --
 ALTER TABLE `system`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- 使用表AUTO_INCREMENT `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

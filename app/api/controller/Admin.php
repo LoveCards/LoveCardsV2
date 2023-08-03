@@ -45,12 +45,12 @@ class Admin
                 ]);
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
-            $uservalidateerror = $e->getError();
-            return ApiCommon::create($uservalidateerror, '添加失败', 400);
+            $validateerror = $e->getError();
+            return ApiCommon::create($validateerror, '添加失败', 400);
         }
 
         //获取数据库对象
-        $result = Db::table('user');
+        $result = Db::table('admin');
         //整理数据
         $data = ['userName' => $userName, 'password' => sha1($password), 'power' => $power];
         //写入库

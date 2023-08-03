@@ -87,4 +87,24 @@ class Index
         //输出模板
         return View::fetch($this->TemplateDirectoryPath . '/index');
     }
+
+    public function error()
+    {
+        $code = request()->param('code');
+        //基础变量
+        View::assign([
+            'systemVer' => Common::systemVer(),
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
+            'viewDescription' => false,
+            'viewKeywords' => false
+        ]);
+
+        //输出模板
+        if ($code == 404) {
+            View::assign(['viewTitle'  => '页面走丢了']);
+            return View::fetch('../admin/error/404');
+        } else {
+            return redirect('/');
+        }
+    }
 }
