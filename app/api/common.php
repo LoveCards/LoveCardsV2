@@ -4,7 +4,6 @@ namespace app\api\common;
 
 //TP类
 use think\Facade;
-use think\Response;
 
 //TP门面类
 use think\facade\Request;
@@ -38,33 +37,6 @@ class Common extends Facade
             //返回用户数据
             return $result;
         }
-    }
-
-    /**
-     * @description: API格式输出方法
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:57:16
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $data
-     * @param {string} $msg
-     * @param {int} $code
-     * @param {string} $type
-     */
-    protected static function create($data, string $msg = '', int $code = 200, string $type = 'json'): Response
-    {
-        $result = [
-            //状态码
-            'ec' => $code,
-            //消息
-            'msg' => $msg,
-            //数据
-            'data' => $data
-        ];
-
-        //返回API接口
-        return Response::create($result, $type);
     }
 
     /**

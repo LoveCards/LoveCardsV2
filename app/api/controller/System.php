@@ -19,16 +19,16 @@ class System
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return ApiCommon::create(['power' => 1], '权限不足', 401);
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         $siteUrl = Request::param('siteUrl');
         if (empty($siteUrl)) {
-            return ApiCommon::create([], '站点域名不得为空', 400);
+            return Common::create([], '站点域名不得为空', 400);
         }
         $siteName = Request::param('siteName');
         $siteICPId = Request::param('siteICPId');
@@ -47,7 +47,7 @@ class System
         Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
 
         //返回数据
-        return ApiCommon::create([], '更新成功', 200);
+        return Common::create([], '更新成功', 200);
     }
 
     //邮箱配置-POST
@@ -56,11 +56,11 @@ class System
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return ApiCommon::create(['power' => 1], '权限不足', 401);
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         $LCEAPI = Request::param('LCEAPI');
@@ -81,7 +81,7 @@ class System
         Db::table('system')->where('name', 'smtpSecure')->update(['value' => $smtpSecure]);
 
         //返回数据
-        return ApiCommon::create([], '更新成功', 200);
+        return Common::create([], '更新成功', 200);
     }
 
     //模板配置-POST
@@ -90,20 +90,20 @@ class System
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return ApiCommon::create(['power' => 1], '权限不足', 401);
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         $template_directory = Request::param('templateDirectory');
         $result = ApiCommon::extraconfig('lovecards', ['template_directory' => $template_directory]);
 
         if ($result == true) {
-            return ApiCommon::create([], '修改成功', 200);
+            return Common::create([], '修改成功', 200);
         } else {
-            return ApiCommon::create([], '修改失败，请重试', 400);
+            return Common::create([], '修改失败，请重试', 400);
         }
     }
 
@@ -113,11 +113,11 @@ class System
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return ApiCommon::create(['power' => 1], '权限不足', 401);
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         try {
@@ -127,9 +127,9 @@ class System
             ];
             ApiCommon::extraconfig('lovecards', $data);
             ApiCommon::extraconfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
-            return ApiCommon::create([], '修改成功', 200);
+            return Common::create([], '修改成功', 200);
         } catch (\Throwable $th) {
-            return ApiCommon::create([], '修改失败，请重试', 400);
+            return Common::create([], '修改失败，请重试', 400);
         }
     }
 }
