@@ -44,7 +44,7 @@ class Common extends Facade
             'InstallEnvironment' => [
                 'php' => [
                     'f' => '8.0.0',
-                    'l' => '8.1.0'
+                    'l' => '8.1.99'
                 ],
                 'mysql' => [
                     'f' => '5.7',
