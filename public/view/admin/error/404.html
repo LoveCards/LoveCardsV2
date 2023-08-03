@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{$viewTitle} - {$systemVer['Name']}</title>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
+    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/base.css" />
+    <script>
+        var _paq = window._paq = window._paq || [];
+        _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//matomo.fatda.cn/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '9']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <style>
+        body {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 6rem;
+            margin-bottom: 30px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #616161;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body class="mdui-theme-primary-indigo mdui-theme-layout-light mdui-theme-accent-pink">
+    <div class="container">
+        <h1>
+            <span class="mdui-text-color-indigo">4<i class="css-icon iconfont icon-heart-pulse"
+                    style="font-size: 5.333rem;"></i>4</span>
+        </h1>
+        <p>抱歉，您访问的页面不存在</p>
+        <div>
+
+        </div>
+        <button class="js-jumpurl-BackUp mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">返回上一页</button>
+    </div>
+
+    <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
+    <script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
+    <script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+    <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+    <script src="{$TemplateDirectory}/base.js"></script>
+    <script src="{__A-assets__}/public.js"></script>
+</body>
+
+</html>

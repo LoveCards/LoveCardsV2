@@ -8,7 +8,7 @@ class Admin extends Validate
 {
     //定义验证规则
     protected $rule =   [
-        'userName'  => 'require|length:3,12|unique:user',
+        'userName'  => 'require|length:3,12|unique:admin',
         'password'   => 'require|length:5,12',
         'power' => 'require|in:0,1',
     ];
