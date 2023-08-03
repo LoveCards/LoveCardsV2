@@ -10,6 +10,7 @@ use think\facade\Db;
 use think\facade\Cookie;
 use think\facade\Config;
 use think\facade\Session;
+use think\Response;
 
 class Common extends Facade
 {
@@ -189,6 +190,33 @@ class Common extends Facade
         Session::set($setName, date("Y-m-d H:i:s", strtotime('+' . $time . ' second')));
         //返回结果
         return $result;
+    }
+
+    /**
+     * @description: API格式输出方法
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2022-12-29 18:57:16
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $data
+     * @param {string} $msg
+     * @param {int} $code
+     * @param {string} $type
+     */
+    protected static function create($data, string $msg = '', int $code = 200, string $type = 'json'): Response
+    {
+        $result = [
+            //状态码
+            'ec' => $code,
+            //消息
+            'msg' => $msg,
+            //数据
+            'data' => $data
+        ];
+
+        //返回API接口
+        return Response::create($result, $type);
     }
 }
 

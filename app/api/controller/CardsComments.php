@@ -15,11 +15,6 @@ use app\api\validate\CardsComments as CommentsValidate;
 use app\Common\Common;
 use app\api\common\Common as ApiCommon;
 
-//第三方
-require($_SERVER['DOCUMENT_ROOT'] . '/../class/geetest/gt4.php');
-
-use class\geetest\gt4\base as gt4;
-
 class CardsComments extends Common
 {
     protected function CAndU($id, $data, $method)
@@ -98,12 +93,13 @@ class CardsComments extends Common
         $preventClicks = Common::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
-            return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
 
         //人机二次验证
-        if (!gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
-            return ApiCommon::create(['prompt' => '人机验证失败'], '添加失败', 500);
+        $gt4 = new \geetest\gt4();
+        if (!$gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
+            return Common::create(['prompt' => '人机验证失败'], '添加失败', 500);
         }
 
         $result = self::CAndU('', [
@@ -114,12 +110,12 @@ class CardsComments extends Common
 
         if ($result['status']) {
             if (Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')) {
-                return ApiCommon::create('', '添加成功,等待审核', 201);
+                return Common::create('', '添加成功,等待审核', 201);
             } else {
-                return ApiCommon::create('', '添加成功', 200);
+                return Common::create('', '添加成功', 200);
             }
         } else {
-            return ApiCommon::create($result['msg'], '添加失败', 500);
+            return Common::create($result['msg'], '添加失败', 500);
         }
     }
 
@@ -129,7 +125,7 @@ class CardsComments extends Common
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
 
         $result = self::CAndU(Request::param('id'), [
@@ -139,9 +135,9 @@ class CardsComments extends Common
         ], 'u');
 
         if ($result['status']) {
-            return ApiCommon::create('', '编辑成功', 200);
+            return Common::create('', '编辑成功', 200);
         } else {
-            return ApiCommon::create($result['msg'], '编辑失败', 500);
+            return Common::create($result['msg'], '编辑失败', 500);
         }
     }
 
@@ -151,22 +147,22 @@ class CardsComments extends Common
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
 
         $id = Request::param('id');
         if (!$id) {
-            return ApiCommon::create(['id' => '缺少参数'], '删除失败', 400);
+            return Common::create(['id' => '缺少参数'], '删除失败', 400);
         }
 
         //获取数据库对象
         $result = Db::table('cards_comments')->where('id', $id);
         if (!$result->find()) {
-            return ApiCommon::create([], 'id不存在', 400);
+            return Common::create([], 'id不存在', 400);
         }
         if (!$result->delete()) {
-            return ApiCommon::create([], '删除失败', 400);
+            return Common::create([], '删除失败', 400);
         }
-        return ApiCommon::create([], '删除成功', 200);
+        return Common::create([], '删除成功', 200);
     }
 }

@@ -16,11 +16,6 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\common\Common;
 use app\api\common\Common as ApiCommon;
 
-//第三方
-require($_SERVER['DOCUMENT_ROOT'] . '/../class/geetest/gt4.php');
-
-use class\geetest\gt4\base as gt4;
-
 class Cards extends Common
 {
     //操作函数
@@ -146,12 +141,12 @@ class Cards extends Common
         $preventClicks = Common::preventClicks('LastPostTime');
         if ($preventClicks[0] == false) {
             //返回数据
-            return ApiCommon::create(['prompt' => $preventClicks[1]], '添加失败', 500);
+            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
         }
 
-        //人机二次验证
-        if (!gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
-            return ApiCommon::create(['prompt' => '人机验证失败'], '添加失败', 500);
+        $gt4 = new \geetest\gt4();
+        if (!$gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
+            return Common::create(['prompt' => '人机验证失败'], '添加失败', 500);
         }
 
         $result = self::CAndU('', [
@@ -171,12 +166,12 @@ class Cards extends Common
 
         if ($result['status']) {
             if (Config::get('lovecards.api.Cards.DefSetCardsStatus')) {
-                return ApiCommon::create('', '添加成功,等待审核', 201);
+                return Common::create('', '添加成功,等待审核', 201);
             } else {
-                return ApiCommon::create(['id' => $result['id']], '添加成功', 200);
+                return Common::create(['id' => $result['id']], '添加成功', 200);
             }
         } else {
-            return ApiCommon::create($result['msg'], '添加失败', 500);
+            return Common::create($result['msg'], '添加失败', 500);
         }
     }
 
@@ -187,7 +182,7 @@ class Cards extends Common
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
 
         $result = self::CAndU(Request::param('id'), [
@@ -207,9 +202,9 @@ class Cards extends Common
         ], 'u');
 
         if ($result['status']) {
-            return ApiCommon::create(['id' => $result['id']], '编辑成功', 200);
+            return Common::create(['id' => $result['id']], '编辑成功', 200);
         } else {
-            return ApiCommon::create($result['msg'], '编辑失败', 500);
+            return Common::create($result['msg'], '编辑失败', 500);
         }
     }
 
@@ -220,7 +215,7 @@ class Cards extends Common
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
 
         //获取数据
@@ -229,7 +224,7 @@ class Cards extends Common
         //获取Cards数据库对象
         $result = Db::table('cards')->where('id', $id);
         if (!$result->find()) {
-            return ApiCommon::create([], 'id不存在', 400);
+            return Common::create([], 'id不存在', 400);
         }
         $result->delete();
 
@@ -252,7 +247,7 @@ class Cards extends Common
         }
 
         //返回数据
-        return ApiCommon::create([], '删除成功', 200);
+        return Common::create([], '删除成功', 200);
     }
 
     //设置-POST
@@ -261,11 +256,11 @@ class Cards extends Common
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
         //权限验证
         if ($userData['power'] != 0) {
-            return ApiCommon::create(['power' => 1], '权限不足', 401);
+            return Common::create(['power' => 1], '权限不足', 401);
         }
 
         $data = [
@@ -283,15 +278,15 @@ class Cards extends Common
                 ->check($data);
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
-            return ApiCommon::create($validateerror, '修改失败', 400);
+            return Common::create($validateerror, '修改失败', 400);
         }
 
         $result = ApiCommon::extraconfig('lovecards', $data, true);
 
         if ($result == true) {
-            return ApiCommon::create([], '修改成功', 200);
+            return Common::create([], '修改成功', 200);
         } else {
-            return ApiCommon::create([], '修改失败，请重试', 400);
+            return Common::create([], '修改失败，请重试', 400);
         }
     }
 
@@ -307,26 +302,26 @@ class Cards extends Common
         $resultCards = Db::table('cards')->where('id', $id);
         $resultCardsData = $resultCards->find();
         if (!$resultCardsData) {
-            return ApiCommon::create([], 'id不存在', 400);
+            return Common::create([], 'id不存在', 400);
         }
 
         //获取good数据库对象
         $resultGood = Db::table('good');
         if ($resultGood->where('pid', $id)->where('ip', $ip)->find()) {
-            return ApiCommon::create(['tip' => '请勿重复点赞'], '点赞失败', 400);
+            return Common::create(['tip' => '请勿重复点赞'], '点赞失败', 400);
         }
 
         //更新视图字段
         if (!$resultCards->inc('good')->update()) {
-            return ApiCommon::create(['cards.good' => 'cards.good更新失败'], '点赞失败', 400);
+            return Common::create(['cards.good' => 'cards.good更新失败'], '点赞失败', 400);
         };
 
         $data = ['aid' => '1', 'pid' => $id, 'ip' => $ip, 'time' => $time];
         if (!$resultGood->insert($data)) {
-            return ApiCommon::create(['good' => 'good写入失败'], '点赞失败', 400);
+            return Common::create(['good' => 'good写入失败'], '点赞失败', 400);
         };
 
         //返回数据
-        return ApiCommon::create(['Num' => $resultCardsData['good'] + 1], '点赞成功', 200);
+        return Common::create(['Num' => $resultCardsData['good'] + 1], '点赞成功', 200);
     }
 }

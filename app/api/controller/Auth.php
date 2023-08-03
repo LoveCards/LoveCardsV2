@@ -14,11 +14,6 @@ use app\api\validate\Admin as AdminValidate;
 use app\Common\Common;
 use app\api\common\Common as ApiCommon;
 
-//第三方
-require($_SERVER['DOCUMENT_ROOT'] . '/../class/geetest/gt4.php');
-
-use class\geetest\gt4\base as gt4;
-
 class Auth
 {
 
@@ -27,8 +22,9 @@ class Auth
     {
         
         //人机二次验证
-        if (!gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
-            return ApiCommon::create(['prompt' => '人机验证失败'], '添加失败', 500);
+        $gt4 = new \geetest\gt4();
+        if (!$gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
+            return Common::create(['prompt' => '人机验证失败'], '添加失败', 500);
         }
 
         $userName = Request::param('userName');
@@ -45,7 +41,7 @@ class Auth
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $uservalidateerror = $e->getError();
-            return ApiCommon::create($uservalidateerror, '登入失败', 401);
+            return Common::create($uservalidateerror, '登入失败', 401);
         }
 
         //获取数据对象
@@ -55,7 +51,7 @@ class Auth
 
         //验证账号是否否存在
         if (empty($result->find())) {
-            return ApiCommon::create([], '用户名或密码错误', 401);
+            return Common::create([], '用户名或密码错误', 401);
         } else {
             //整理数据
             $uuid = ApiCommon::get_uuid();
@@ -66,7 +62,7 @@ class Auth
                 'uuid' => $uuid
             ];
             //返回数据
-            return ApiCommon::create($data, '登录成功', 200);
+            return Common::create($data, '登录成功', 200);
         }
     }
 
@@ -76,7 +72,7 @@ class Auth
         //验证身份并返回数据
         $userData = ApiCommon::validateAuth();
         if (!empty($userData[0])) {
-            return ApiCommon::create([], $userData[1], $userData[0]);
+            return Common::create([], $userData[1], $userData[0]);
         }
 
         //获取数据对象
@@ -89,6 +85,6 @@ class Auth
         $result->update(['uuid' => $uuid]);
 
         //返回数据
-        return ApiCommon::create([], '注销成功', 200);
+        return Common::create([], '注销成功', 200);
     }
 }

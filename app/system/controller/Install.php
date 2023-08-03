@@ -11,6 +11,7 @@ use think\facade\Config;
 
 //类
 use app\common\Common;
+use app\api\common\Common as ApiCommon;
 
 class Install
 {
