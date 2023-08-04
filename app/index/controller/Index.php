@@ -45,7 +45,7 @@ class Index
         //取Cards推荐数据
         //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit($hotListNum)->select()->toArray();
-        $result = Db::query("select * from cards where top = 0 and status = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
+        $result = Db::query("select * from cards where top = '0' and status = '0' order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . $hotListNum);
         //合并到$listData数据
         $listData = array_merge($listData, $result);
 

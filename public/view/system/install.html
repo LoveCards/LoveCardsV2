@@ -135,7 +135,7 @@
                                                 <td id="verifyEnvironmentPhpV">{$verifyEnvironment.php.v}</td>
                                                 <td>[{$systemVer.InstallEnvironment.php.f},{$systemVer.InstallEnvironment.php.l})
                                                 </td>
-                                                <td id="verifyEnvironmentPhpS">{$verifyEnvironment.php.s ? '可用' : '不可用'}
+                                                <td id="verifyEnvironmentPhpS">{$verifyEnvironment.php.s ? '✔️可用' : '❌不可用'}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -143,14 +143,14 @@
                                                 <td>自查</td>
                                                 <td>[{$systemVer.InstallEnvironment.mysql.f},{$systemVer.InstallEnvironment.mysql.l})
                                                 </td>
-                                                <td>自查</td>
+                                                <td>🔍自查</td>
                                             </tr>
                                             <tr>
                                                 <td>PDO扩展</td>
                                                 <td></td>
                                                 <td></td>
-                                                <td id="verifyEnvironmentPdo_mysql">{$verifyEnvironment.pdo_mysql ? '可用'
-                                                    : '不可用'}</td>
+                                                <td id="verifyEnvironmentPdo_mysql">{$verifyEnvironment.pdo_mysql ? '✔️可用'
+                                                    : '❌不可用'}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -296,8 +296,8 @@
                 });
                 VEStatus = String(result['data']['pdo_mysql'] && result['data']['php']['s']);
                 $('#verifyEnvironmentPhpV').text(result['data']['php']['v']);
-                $('#verifyEnvironmentPhpS').text(result['data']['php']['s'] ? '可用' : '不可用');
-                $('#verifyEnvironmentPdo_mysql').text(result['data']['pdo_mysql'] ? '可用' : '不可用');
+                $('#verifyEnvironmentPhpS').text(result['data']['php']['s'] ? '✔️可用' : '❌不可用');
+                $('#verifyEnvironmentPdo_mysql').text(result['data']['pdo_mysql'] ? '✔️可用' : '❌不可用');
             }
         })
         var VEStatus = '{$verifyEnvironment.php.s && $verifyEnvironment.pdo_mysql ? "true" : "fasle"}';
