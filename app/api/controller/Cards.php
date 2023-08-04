@@ -189,7 +189,7 @@ class Cards extends Common
             'content' => Request::param('content'),
 
             'woName' => Request::param('woName'),
-            'woContact' => Request::param('content'),
+            'woContact' => Request::param('woContact'),
             'taName' => Request::param('taName'),
             'taContact' => Request::param('taContact'),
 
@@ -295,7 +295,7 @@ class Cards extends Common
     {
         //获取数据
         $id = Request::param('id');
-        $ip = ApiCommon::getIp();
+        $ip = Common::getIp();
         $time = date('Y-m-d H:i:s');
 
         //获取Cards数据库对象

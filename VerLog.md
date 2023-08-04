@@ -12,6 +12,10 @@
 
 ## 开发日志
 
+-   2023 年 8 月 5 日 (1.0.12)  
+    --修复.api/Cards/good的IP获取函数问题
+    --修复.api/Cards/edit的Contact验证问题
+
 -   2023 年 8 月 3 日 (1.0.11)  
     --更新.接管 404 错误并通过路由重定向至 index/error  
     --修复.api/Admin/add 的验证
