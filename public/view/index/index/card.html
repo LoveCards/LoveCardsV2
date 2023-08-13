@@ -68,7 +68,7 @@
                 <div class="mdui-p-t-2 mdui-p-x-2">
                     <div class="mdui-typo-title-opacity">
                         内容
-                        <i class="js-Shareurl-cardId" state="card" value="{$cardData['id']}">&#xe63d;</i>
+                        <i class="js-Shareurl-cardId" state="card" value={$cardData.id}>&#xe63d;</i>
                     </div>
                 </div>
                 <div class="mdui-typo">
@@ -79,7 +79,7 @@
                     </blockquote>
                     {if $cardData['tag']}
                     <div class="mdui-p-x-2" id="CardDataTag">
-                        <div class="css-cards-primary-subtitle" value="{$cardData['tag']|raw}">
+                        <div class="css-cards-primary-subtitle" value={$cardData.tag|raw}>
                             <!-- Tag标签 -->
                         </div>
                     </div>

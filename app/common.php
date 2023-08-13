@@ -370,21 +370,23 @@ class File extends Facade
     protected static function get_dirs($dir)
     {
         $dir = rtrim($dir, '/') . '/';
-        $dirArray[][] = NULL;
-        if (false != ($handle = opendir($dir))) {
-            $i = 0;
-            $j = 0;
+        $dirArray = array('dir' => array(), 'file' => array());
+
+        if (false !== ($handle = opendir($dir))) {
             while (false !== ($file = readdir($handle))) {
-                if (is_dir($dir . $file)) { //判断是否文件夹
-                    $dirArray['dir'][$i] = $file;
-                    $i++;
+                if (is_dir($dir . $file)) {
+                    $dirArray['dir'][] = $file;
                 } else {
-                    $dirArray['file'][$j] = $file;
-                    $j++;
+                    $dirArray['file'][] = $file;
                 }
             }
             closedir($handle);
         }
+
+        // 对子数组进行排序
+        sort($dirArray['dir']);
+        sort($dirArray['file']);
+        
         return $dirArray;
     }
 
