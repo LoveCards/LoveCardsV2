@@ -24,6 +24,7 @@ class Cards
         //获取列表
         $listNum = 12; //每页个数
         $list = Db::table('cards')
+            ->order('id', 'desc')
             ->paginate($listNum, true);
         View::assign([
             'list'  => $list,
