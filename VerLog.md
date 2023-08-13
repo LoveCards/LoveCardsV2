@@ -12,14 +12,18 @@
 
 ## 开发日志
 
+-   2023 年 8 月 14 日 (1.0.13)  
+    --修复.admin/System/view 的$testTemplateConfig 获取问题（原因是 File::read_file 在不同环境下获取目录列表的顺序不同，对该函数输出的 array 进行快排）
+    --修复.index/cards/card 的标签存在时无法评论问题（标签输出格式存在问题导致JS的标签渲染报错阻塞JS加载）
+
 -   2023 年 8 月 5 日 (1.0.12)  
-    --修复.api/Cards/good的IP获取函数问题
-    --修复.api/Cards/edit的Contact验证问题
+    --修复.api/Cards/good 的 IP 获取函数问题
+    --修复.api/Cards/edit 的 Contact 验证问题
 
 -   2023 年 8 月 3 日 (1.0.11)  
     --更新.接管 404 错误并通过路由重定向至 index/error  
     --修复.api/Admin/add 的验证
-    --优化.class/geetest->extend/geetest改为扩展类库，相关加载方法也随着更改
+    --优化.class/geetest->extend/geetest 改为扩展类库，相关加载方法也随着更改
 
 -   2023 年 7 月 30 日 (1.0.10)  
     --更新.验证码模块  

@@ -64,6 +64,7 @@ class System
 
         //取模板config数据
         $templateDirectory = File::get_dirs('./view/index')['dir'];
+        $testTemplateConfig = array();
         for ($i = 2; $i < count($templateDirectory); $i++) {
             if ($templateDirectory[$i] != '.' && $templateDirectory[$i] != '..') {
                 $t = './view/index/' . $templateDirectory[$i];
