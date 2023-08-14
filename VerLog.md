@@ -3,7 +3,7 @@
 -   2023 年 8 月 14 日  
     --Ver：1.0.14  
     --VerS：2.1.1  
-    --commit：详见论坛[forum.lovecards.cn/d/26]
+    --commit：详见论坛[forum.lovecards.cn/d/35]
 
 -   2023 年 8 月 10 日（失效）  
     --Ver：1.1.0  
