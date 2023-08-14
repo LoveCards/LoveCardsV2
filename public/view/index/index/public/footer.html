@@ -1,22 +1,35 @@
 <div class="mdui-p-y-5"></div>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
-<!-- <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script> -->
-<script>
-    /*
-    *初始化导航栏样式
-    */
-    jsTabClass = $('#jsParameter').attr('jsTabClass')
-    $('#jsTab' + jsTabClass + 'Class').attr('class', 'mdui-tab-active')
-</script>
 <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
-<!-- <script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+<!-- <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
+<script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
 <script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
 <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
 <script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
-<script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script> -->
+<script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
+<script src="{$TemplateDirectory}/masonry-4.2.2/masonry.pkgd.min.js"></script> -->
+<script>
+    /*
+    *初始化导航栏样式
+    */
+    var jsTabClass = $('#jsParameter').attr('jsTabClass')
+    $('#jsTab' + jsTabClass + 'Class').attr('class', 'mdui-tab-active')
+    /*
+    *瀑布流加载
+    */
+    window.onload = function () {
+        var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');
+        var msnry = new Masonry(elem, {
+            itemSelector: '.mdui-col',
+            columnWidth: '.mdui-col',
+            percentPosition: true
+        });
+    };
+</script>
 <script src="{$TemplateDirectory}/base.js"></script>
 <script src="{__A-assets__}/public.js"></script>
