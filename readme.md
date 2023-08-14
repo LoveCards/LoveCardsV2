@@ -53,7 +53,7 @@ mysql
 #### 3. 配置
 
 1. 设置运行目录为“Public”
-2. 设置伪静态，伪静态规则参考“Public”目录下的“.htaccess”与“nginx.htaccess”
+2. 设置伪静态，伪静态规则参考“Public”目录下的“.htaccess”与“nginx.htaccess”（无法自动识别时请手动设置）
 3. 删除“lock.txt”安装记录文件
 4. 赋予程序根目录操作权限为“777”（出现异常时可选）
 5. 关闭防跨站(宝塔可选)
@@ -74,6 +74,18 @@ mysql
 -   目前 LC2 支持模板开发，具体开发文档暂未完成，可参考默认模板以及 ThinkTemplate 开发指南(注意：config.ini 不可少)
 -   <a href="https://www.kancloud.cn/manual/think-template/1286403">ThinkTemplate 开发指南(LC2 模板开发语法指南)</a>
 -   <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API 文档</a>(待完善)
+
+#### 版本号说明  
+-   Ver为实际版本号，程序中的“版本检测”将优先或仅以Ver为准
+-   VerS为展示版本号，用作发行版的展示
+-   VerS中[A.B.C]  
+    当 A 改变意味着 有较低层的代码或架构等存在重大改动  
+    当 B 改变意味着 数据库相关有改动  
+    当 C 改变意味着 一般逻辑代码有改动
+-   Ver中[A.B.C]  
+    A 指的也就是LC2中的2 一般不变  
+    B 可简单对照 VerS中的 A
+    C 可简单对照 VerS中的 B与C的合
 
 ## ⚗️ 技术栈
 
