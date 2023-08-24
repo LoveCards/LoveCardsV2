@@ -13,10 +13,13 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 
     <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
-    <!-- <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
-    <link rel="stylesheet" href="{__A-assets__}/libs/viewer-jquery-1.1.0/viewer.min.css"> -->
+    {if $TemplateConfigPHP['ThemeLinkCDN']}
+    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.css">
+    {else /}
     <link href="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.css" rel="stylesheet">
+    {/if}
     <link rel="stylesheet" href="{__A-assets__}/base.css" />
     <script>
         var _paq = window._paq = window._paq || [];
@@ -33,7 +36,12 @@
     </script>
 </head>
 
-<body class="mdui-appbar-with-toolbar mdui-appbar-with-tab mdui-theme-primary-indigo mdui-theme-accent-pink">
+<body class="mdui-appbar-with-toolbar 
+            mdui-appbar-with-tab 
+            mdui-theme-primary-{$TemplateConfigPHP['ThemePrimary']} 
+            mdui-theme-accent-{$TemplateConfigPHP['ThemeAccent']} 
+            {if $TemplateConfigPHP['ThemeDark']} mdui-theme-layout-dark{/if}
+            ">
 
     <!-- 顶栏 -->
     <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">

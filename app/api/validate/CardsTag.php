@@ -9,7 +9,7 @@ class CardsTag extends Validate
     //定义验证规则
     protected $rule =   [
         'name'  => 'require|length:1,8',
-        'tip'   => 'length:1,1024',
+        'tip'   => 'length:1,64',
         'status'   => 'in:0,1',
     ];
 

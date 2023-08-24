@@ -5,7 +5,7 @@
     <!-- 顶部按钮组件 -->
     <div class="mdui-p-t-2">
         <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
-            onclick="location.assign('/index/cards/add')">发布卡片</button>
+            onclick="jumpUrl('/index/cards/add',0)">发布卡片</button>
     </div>
 
     <!-- 主体组件 -->
@@ -119,7 +119,6 @@
             {/volist}
             <!-- 分享弹窗 -->
             {include file="index/public/component-share"}
-
         </div>
     </div>
 
@@ -132,6 +131,11 @@
     $(function () {
         //获取Tag数据
         ViewCardsTag('{$cardsTagData|raw}');
+
+        //悬浮按钮
+        $('#jsBtnGreen').click(function () {
+            jumpUrl('/index/cards/add', 0);
+        })
     })
 </script>
 

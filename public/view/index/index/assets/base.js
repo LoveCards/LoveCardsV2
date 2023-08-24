@@ -146,16 +146,19 @@ const historyUrl = () => {
         }
 
     }
-}
-historyUrl();
+}; historyUrl();
 
 //返回来时的路由
 //$('.js-jumpurl-BackUp').attr('style', $('.js-jumpurl-BackUp').attr('style') + 'z-index: 99999;');
-$('.js-jumpurl-BackUp').click(function () {
+const FunBackUpHistoryUrl = () => {
     var historyUrl = JSON.parse($.cookie('historyUrl'));
-    if (historyUrl[historyUrl.length - 2] != '') {
-        window.location.href = historyUrl[historyUrl.length - 2];
+    const BackUpUrl = historyUrl[historyUrl.length - 2];
+    if (BackUpUrl != '' && BackUpUrl != undefined) {
+        window.location.href = BackUpUrl;
     } else {
         return;
     }
+}
+$('.js-jumpurl-BackUp').click(function () {
+    FunBackUpHistoryUrl()
 });

@@ -169,12 +169,18 @@
                 return;
             }
         }
+
         //验证
         /*{if $configData.geetest.DefSetValidatesStatus == 1}*/
         geetest4('#submitAdd', FunResultAdd, '{$configData.geetest.DefSetGeetestId}');
         /*{else /}*/
         $('#submitAdd').click(function () { FunResultAdd() });
         /*{/if}*/
+
+        //悬浮按钮
+        $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
+            FunBackUpHistoryUrl();
+        });
     });
 </script>
 

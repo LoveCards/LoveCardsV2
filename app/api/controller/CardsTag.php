@@ -124,9 +124,9 @@ class CardsTag extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Common::create('', '添加成功', 200);
+            return Common::create('', '编辑成功', 200);
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return Common::create($result['msg'], '编辑失败', 500);
         }
     }
 

@@ -237,12 +237,18 @@
                 jumpUrl('', 100);
             }
         };
+
         //验证
         /*{if $configData.geetest.DefSetValidatesStatus == 1}*/
         geetest4('#btnAddComments', FunAddComments, '{$configData.geetest.DefSetGeetestId}');
         /*{else /}*/
         $('#btnAddComments').click(function () { FunAddComments() });
         /*{/if}*/
+
+        //悬浮按钮
+        $('#jsBtnGreen').click(function () {
+            jumpUrl('/index/cards/add{if $cardsModel == 1}/model/1{/if}', 0);
+        })
     });
 
 </script>
