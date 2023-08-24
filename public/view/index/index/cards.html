@@ -47,6 +47,11 @@
         pager();
         //获取Tag数据
         ViewCardsTag('{$cardsTagData|raw}');
+
+        //悬浮按钮
+        $('#jsBtnGreen').click(function () {
+            jumpUrl('/index/cards/add{if $cardsModel == 1}/model/1{/if}', 0);
+        })
     })
 
 </script>

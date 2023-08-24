@@ -19,7 +19,8 @@
 
                                             <div class="mdui-col">
                                                 <label class="mdui-radio">
-                                                    <input id="dialogFilterItemModel-0" type="radio" name="radioModelGroup" onclick="radioModel=0" />
+                                                    <input id="dialogFilterItemModel-0" type="radio"
+                                                        name="radioModelGroup" onclick="radioModel=0" />
                                                     <i class="mdui-radio-icon"></i>
                                                     表白卡
                                                 </label>
@@ -27,14 +28,16 @@
 
                                             <div class="mdui-col">
                                                 <label class="mdui-radio">
-                                                    <input id="dialogFilterItemModel-1" type="radio" name="radioModelGroup" onclick="radioModel=1" />
+                                                    <input id="dialogFilterItemModel-1" type="radio"
+                                                        name="radioModelGroup" onclick="radioModel=1" />
                                                     <i class="mdui-radio-icon"></i>
                                                     交流卡
                                                 </label>
                                             </div>
 
                                             <div class="mdui-col">
-                                                <button class="mdui-btn mdui-ripple" id="btnRestChooseFilter">重置</button>
+                                                <button class="mdui-btn mdui-ripple"
+                                                    id="btnRestChooseFilter">重置</button>
                                             </div>
                                         </div>
                                     </div>
@@ -94,19 +97,24 @@
         }
 
         //初始化高级搜索视图
-        if(getUrlParam('model') != 'false' && getUrlParam('search') == 'true'){
+        if (getUrlParam('model') != 'false' && getUrlParam('search') == 'true') {
             var model = Number(getUrlParam('model'));
-            $('#dialogFilterItemModel-'+model).prop("checked",true);
+            $('#dialogFilterItemModel-' + model).prop("checked", true);
             console.log(model);
             radioModel = model;
         }
 
         //高级搜索重置按钮
         $('#btnRestChooseFilter').click(function () {
-            $('#dialogFilterItemModel-0').prop("checked",false);
-            $('#dialogFilterItemModel-1').prop("checked",false);
+            $('#dialogFilterItemModel-0').prop("checked", false);
+            $('#dialogFilterItemModel-1').prop("checked", false);
             radioModel = 'false';
         })
+
+        //悬浮按钮
+        $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
+            FunBackUpHistoryUrl();
+        });
     });
 
     //表单-按钮-搜索

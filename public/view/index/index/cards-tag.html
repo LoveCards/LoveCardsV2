@@ -38,6 +38,11 @@
         if (getUrlParam('value')) {
             $('#SearchValue').html('')
         }
+
+        //悬浮按钮
+        $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
+            FunBackUpHistoryUrl();
+        });
     });
 
     //表单-按钮-搜索

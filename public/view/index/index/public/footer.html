@@ -1,4 +1,31 @@
+<div class="mdui-fab-wrapper" id="exampleFab" mdui-fab="{trigger: 'hover'}">
+    <button class="mdui-fab mdui-ripple mdui-color-theme-accent">
+        <!-- 默认显示的图标 -->
+        <i class="mdui-icon material-icons">add</i>
+        <!-- 在拨号菜单开始打开时，平滑切换到该图标，若不需要切换图标，则可以省略该元素 -->
+        <i class="mdui-icon material-icons mdui-fab-opened">add</i>
+    </button>
+    <div class="mdui-fab-dial">
+        <button id="jsBtnThemeDark" value="{$TemplateConfigPHP['ThemeDark']}"
+            class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-black">
+            <i class="mdui-icon material-icons">brightness_high</i>
+        </button>
+        <button id="jsBtnGreen" class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-green">
+            <i class="mdui-icon material-icons">create</i>
+        </button>
+    </div>
+</div>
+
 <div class="mdui-p-y-5"></div>
+{if $TemplateConfigPHP['ThemeLinkCDN']}
+<script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
+<script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
+<script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+<script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+<script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
+<script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
+<script src="{$TemplateDirectory}/masonry-4.2.2/masonry.pkgd.min.js"></script>
+{else /}
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
@@ -6,30 +33,79 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
-<!-- <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
-<script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
-<script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
-<script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
-<script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
-<script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
-<script src="{$TemplateDirectory}/masonry-4.2.2/masonry.pkgd.min.js"></script> -->
+{/if}
 <script>
     /*
     *初始化导航栏样式
     */
-    var jsTabClass = $('#jsParameter').attr('jsTabClass')
-    $('#jsTab' + jsTabClass + 'Class').attr('class', 'mdui-tab-active')
+    var jsTabClass = $('#jsParameter').attr('jsTabClass');
+    $('#jsTab' + jsTabClass + 'Class').attr('class', 'mdui-tab-active');
+
+    /*
+    *主题控制
+    */
+    const FunSetThemeDarkStyle = () => {
+        //按钮主体刷新
+        const Obj = $('#jsBtnThemeDark');
+        if (Obj.attr('value') == 'true') {
+            Obj.removeClass('mdui-color-white');
+            Obj.addClass('mdui-color-black');
+            Obj.children('i').html('brightness_low');
+            $('body').removeClass('mdui-theme-layout-dark');
+            $('body').addClass('mdui-theme-layout-white');
+        } else {
+            Obj.removeClass('mdui-color-black');
+            Obj.addClass('mdui-color-white');
+            Obj.children('i').html('brightness_high');
+            $('body').removeClass('mdui-theme-layout-white');
+            $('body').addClass('mdui-theme-layout-dark');
+        }
+    };
+    const FunSetBtnThemeDarkValue = () => {
+        //根据Cookie初始化主题
+        const cookieValue = $.cookie('ThemeDark');
+        if (cookieValue == undefined) {
+            $.cookie('ThemeDark', $('#jsBtnThemeDark').attr('value'));
+        }
+        if (cookieValue == 'true') {
+            $('#jsBtnThemeDark').attr('value', 'true');
+            FunSetThemeDarkStyle();
+        } else {
+            $('#jsBtnThemeDark').attr('value', 'false');
+            FunSetThemeDarkStyle();
+        }
+    }; FunSetBtnThemeDarkValue();
+    const FunSetThemeDark = (Obj) => {
+        //暗色设置
+        if (Obj.attr('value') == 'true') {
+            $.cookie('ThemeDark', 'false');
+            Obj.attr('value', 'false');
+            FunSetThemeDarkStyle();
+        } else {
+            $.cookie('ThemeDark', 'true');
+            Obj.attr('value', 'true');
+            FunSetThemeDarkStyle();
+        }
+    }
+    $('#jsBtnThemeDark').click(function () {
+        //绑定按钮
+        FunSetThemeDark($(this));
+    });
+
     /*
     *瀑布流加载
     */
     window.onload = function () {
         var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');
-        var msnry = new Masonry(elem, {
-            itemSelector: '.mdui-col',
-            columnWidth: '.mdui-col',
-            percentPosition: true
-        });
+        if (elem != null) {
+            var msnry = new Masonry(elem, {
+                itemSelector: '.mdui-col',
+                columnWidth: '.mdui-col',
+                percentPosition: true
+            });
+        }
     };
+
 </script>
 <script src="{$TemplateDirectory}/base.js"></script>
 <script src="{__A-assets__}/public.js"></script>

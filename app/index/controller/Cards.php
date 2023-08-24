@@ -21,6 +21,16 @@ class Cards
     {
         $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
         $this->TemplateDirectory = Common::get_templateDirectory()[1];
+
+        //公共模板变量
+        View::assign([
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets', //模板路径
+            'TemplateConfigPHP' => Common::GetTemplateConfigPHP($this->TemplateDirectory), //模板配置
+            'systemVer' => Common::systemVer(), //程序版本信息
+            'systemData' => Common::systemData(), //系统配置信息
+            'viewKeywords' => false,
+            'viewDescription' => false,
+        ]);
     }
 
     //Index
@@ -76,12 +86,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
-            'systemVer' => Common::systemVer(),
-            'systemData' => Common::systemData(),
             'viewTitle'  => '卡片墙',
-            'viewDescription' => false,
-            'viewKeywords' => false
         ]);
 
         //输出模板
@@ -156,10 +161,7 @@ class Cards
         if (!$cardData['woName']) $cardData['woName'] = '匿名';
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'configData' => config::get('lovecards.class'),
-            'systemVer' => Common::systemVer(),
-            'systemData' => Common::systemData(),
             'viewTitle'  => $cardData['woName'] . '的卡片',
             'viewDescription' => $cardData['woName'] . '表白' . $cardData['woName'] . '说' . $cardData['content'],
             'viewKeywords' => $cardData['woName'] . ',' . $cardData['taName'] . ',LoveCards,表白卡'
@@ -187,13 +189,8 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
             'configData' => config::get('lovecards.class'),
-            'systemVer' => Common::systemVer(),
-            'systemData' => Common::systemData(),
             'viewTitle'  => '写卡',
-            'viewDescription' => false,
-            'viewKeywords' => false
         ]);
 
         //输出模板
@@ -271,12 +268,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
-            'systemVer' => Common::systemVer(),
-            'systemData' => Common::systemData(),
             'viewTitle'  => $viewTitle,
-            'viewDescription' => false,
-            'viewKeywords' => false
         ]);
 
         //输出模板
@@ -346,12 +338,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
-            'systemVer' => Common::systemVer(),
-            'systemData' => Common::systemData(),
             'viewTitle'  => $viewTitle,
-            'viewDescription' => false,
-            'viewKeywords' => false,
             'searchValue'  => $requestTag['name']
         ]);
 

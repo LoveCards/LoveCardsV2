@@ -218,6 +218,23 @@ class Common extends Facade
         //返回API接口
         return Response::create($result, $type);
     }
+
+    protected static function GetTemplateConfigPHP($TemplateDirectory)
+    {
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/view/index/' . $TemplateDirectory . '/config.php';
+        if (is_file($path)) {
+            include $path;
+            $require = array();
+            
+            foreach ($Config['Select'] as $key => $value) {
+                $require[$key] = $Config['Select'][$key][$value[0]];
+            }
+
+            return $require;
+        } else {
+            return false;
+        }
+    }
 }
 
 class File extends Facade

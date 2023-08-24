@@ -26,6 +26,16 @@ class Index
 
         $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
         $this->TemplateDirectory = Common::get_templateDirectory()[1];
+
+        //公共模板变量
+        View::assign([
+            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets', //模板路径
+            'TemplateConfigPHP' => Common::GetTemplateConfigPHP($this->TemplateDirectory), //模板配置
+            'systemVer' => Common::systemVer(), //程序版本信息
+            'systemData' => Common::systemData(), //系统配置信息
+            'viewKeywords' => false,
+            'viewDescription' => false,
+        ]);
     }
 
     //输出
@@ -76,12 +86,7 @@ class Index
 
         //基础变量
         View::assign([
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
-            'systemVer' => Common::systemVer(),
-            'systemData' => Common::systemData(),
             'viewTitle'  => '推荐',
-            'viewDescription' => false,
-            'viewKeywords' => false
         ]);
 
         //输出模板
@@ -91,17 +96,14 @@ class Index
     public function error()
     {
         $code = request()->param('code');
-        //基础变量
-        View::assign([
-            'systemVer' => Common::systemVer(),
-            'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets',
-            'viewDescription' => false,
-            'viewKeywords' => false
-        ]);
 
         //输出模板
         if ($code == 404) {
-            View::assign(['viewTitle'  => '页面走丢了']);
+            View::assign([
+                'viewTitle'  => '页面走丢了',
+                'viewKeywords' => '',
+                'viewDescription' => ''
+            ]);
             return View::fetch('../admin/error/404');
         } else {
             return redirect('/');
