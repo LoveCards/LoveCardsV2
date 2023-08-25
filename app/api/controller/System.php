@@ -110,15 +110,15 @@ class System
     //主题配置-POST
     public function TemplateSet()
     {
-        // //验证身份并返回数据
-        // $userData = ApiCommon::validateAuth();
-        // if (!empty($userData[0])) {
-        //     return Common::create([], $userData[1], $userData[0]);
-        // }
-        // //权限验证
-        // if ($userData['power'] != 0) {
-        //     return Common::create(['power' => 1], '权限不足', 401);
-        // }
+        //验证身份并返回数据
+        $userData = ApiCommon::validateAuth();
+        if (!empty($userData[0])) {
+            return Common::create([], $userData[1], $userData[0]);
+        }
+        //权限验证
+        if ($userData['power'] != 0) {
+            return Common::create(['power' => 1], '权限不足', 401);
+        }
 
         $templateDirectory = Config::get('lovecards.template_directory', 'index') ?: 'index';
 
