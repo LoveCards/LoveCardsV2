@@ -43,10 +43,15 @@
                 <div class="mdui-card-actions">
                     {if md5($nowTemplateConfig['Name'].$nowTemplateConfig['Version']) != md5($data['Name'].$data['Version'])}
                     <button value="{$data.DirectoryName}"
-                        class="submit-template mdui-btn mdui-ripple mdui-color-theme-accent mdui-float-right">设为当前模板</button>
+                        class="submit-template mdui-btn mdui-ripple mdui-color-theme-accent mdui-float-right">设为当前主题</button>
                     {else}
+                    {if $nowTemplateConfig['Config'] != false}
+                    <button value="{$data.DirectoryName}" onclick="jumpUrl('/admin/System/viewset',0)"
+                        class="mdui-btn mdui-ripple mdui-color-green mdui-text-color-white mdui-float-right">设置当前主题</button>
+                    {else /}
                     <button value="{$data.DirectoryName}"
-                        class="mdui-btn mdui-ripple mdui-color-blue mdui-text-color-white mdui-float-right">当前模板</button>
+                        class="mdui-btn mdui-ripple mdui-color-blue mdui-text-color-white mdui-float-right">当前主题</button>
+                    {/if}
                     {/if}
                 </div>
 

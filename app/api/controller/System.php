@@ -84,7 +84,7 @@ class System
         return Common::create([], '更新成功', 200);
     }
 
-    //模板配置-POST
+    //主题设置-POST
     public function template()
     {
         //验证身份并返回数据
@@ -99,6 +99,43 @@ class System
 
         $template_directory = Request::param('templateDirectory');
         $result = ApiCommon::extraconfig('lovecards', ['template_directory' => $template_directory]);
+
+        if ($result == true) {
+            return Common::create([], '修改成功', 200);
+        } else {
+            return Common::create([], '修改失败，请重试', 400);
+        }
+    }
+
+    //主题配置-POST
+    public function TemplateSet()
+    {
+        // //验证身份并返回数据
+        // $userData = ApiCommon::validateAuth();
+        // if (!empty($userData[0])) {
+        //     return Common::create([], $userData[1], $userData[0]);
+        // }
+        // //权限验证
+        // if ($userData['power'] != 0) {
+        //     return Common::create(['power' => 1], '权限不足', 401);
+        // }
+
+        $templateDirectory = Config::get('lovecards.template_directory', 'index') ?: 'index';
+
+        $select = json_decode(Request::param('select'));
+
+        $TemplateConfigPHP = Common::GetTemplateConfigPHP($templateDirectory, true);
+
+        //校验元素是否合法
+        foreach($select as $key => $value) {
+            if(count($TemplateConfigPHP['Select'][$key]['Element']) < $value) {
+                return Common::create([], '修改失败，存在非法元素', 400);
+            }
+        }
+
+        //dd($select);
+
+        $result = ApiCommon::extraThemeConfig('/index/' . $templateDirectory . '/config', $select, true, 'ThemeConfig');
 
         if ($result == true) {
             return Common::create([], '修改成功', 200);

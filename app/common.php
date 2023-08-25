@@ -126,7 +126,7 @@ class Common extends Facade
      */
     protected static function get_templateDirectory()
     {
-        $d = Config::get('lovecards.template_directory', 'index');
+        $d = Config::get('lovecards.template_directory', 'index') ?: 'index';
         $r = Is_dir('./view/index/' . $d);
         //dd($r);
         if ($r) {
@@ -219,17 +219,20 @@ class Common extends Facade
         return Response::create($result, $type);
     }
 
-    protected static function GetTemplateConfigPHP($TemplateDirectory)
+    protected static function GetTemplateConfigPHP($TemplateDirectory, $Original = false)
     {
         $path = $_SERVER['DOCUMENT_ROOT'] . '/view/index/' . $TemplateDirectory . '/config.php';
         if (is_file($path)) {
             include $path;
             $require = array();
-            
-            foreach ($Config['Select'] as $key => $value) {
-                $require[$key] = $Config['Select'][$key][$value[0]];
+            if ($Original) {
+                $require = $Config;
+            } else {
+                //选择格式数据获取
+                foreach ($Config['Select'] as $key => $value) {
+                    $require[$key] = $value['Element'][$value['Default']];
+                }
             }
-
             return $require;
         } else {
             return false;
@@ -403,7 +406,7 @@ class File extends Facade
         // 对子数组进行排序
         sort($dirArray['dir']);
         sort($dirArray['file']);
-        
+
         return $dirArray;
     }
 

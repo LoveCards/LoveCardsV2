@@ -3,6 +3,8 @@
 namespace app\admin\controller;
 
 //TP类
+
+use app\api\common\Common as CommonCommon;
 use think\facade\View;
 use think\facade\Db;
 
@@ -79,7 +81,9 @@ class System
             array_push($templateConfig, $value);
         }
 
-        $nowTemplateConfig = json_decode(File::read_file('./view/index/' . Config::get('lovecards.template_directory', 'index') . '/config.ini'), true);
+        $nowTemplateDirectory = Config::get('lovecards.template_directory', 'index') ?: 'index';
+        $nowTemplateConfig = json_decode(File::read_file('./view/index/' . $nowTemplateDirectory . '/config.ini'), true);
+        $nowTemplateConfig['Config'] = Common::GetTemplateConfigPHP($nowTemplateDirectory);
         if (!$nowTemplateConfig) {
             $nowTemplateConfig = json_decode(File::read_file('./view/index/index/config.ini'), true);
         }
@@ -97,5 +101,41 @@ class System
 
         //输出模板
         return View::fetch('/system-view');
+    }
+
+    //View-Set
+    public function ViewSet()
+    {
+        //验证身份并返回数据
+        $userData = Common::validateViewAuth();
+        if ($userData[0] == false) {
+            //跳转返回消息
+            return Common::jumpUrl('/admin/login/index', '请先登入');
+        }
+        //验证权限
+        if ($userData[1]['power'] != 0) {
+            return Common::jumpUrl('/admin/index', '权限不足');
+        }
+
+        //取系统数据
+        $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
+        View::assign($systemData);
+
+        $TemplateConfig = Common::GetTemplateConfigPHP(Config::get('lovecards.template_directory', 'index') ?: 'index', true);
+        if (!$TemplateConfig) {
+            return Common::jumpUrl('/admin/system/view', '当前主题没有配置项');
+        }
+
+        //基础变量
+        View::assign([
+            'adminData'  => $userData[1],
+            'systemVer' => Common::systemVer(),
+            'viewTitle'  => '主题设置',
+            //当前模板配置
+            'TemplateConfig' => $TemplateConfig
+        ]);
+
+        //输出模板
+        return View::fetch('/system-view-set');
     }
 }

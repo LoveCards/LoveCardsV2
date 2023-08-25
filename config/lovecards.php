@@ -1,7 +1,6 @@
 <?php
-
 return [
-    'template_directory' => env('lovecards.template_directory', 'index'),
+    'template_directory' => env('lovecards.template_directory', ''),
     'api' => [
         'Cards' => [
             //默认卡片状态ON/OFF:0/1

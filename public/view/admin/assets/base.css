@@ -38,7 +38,7 @@
 }
 
 .css-cards-img {
-    height: 280px;
+    /* height: 280px; */
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -130,7 +130,7 @@
 
 /* mdui原样式覆盖 */
 .mdui-table {
-    white-space:nowrap;
+    white-space: nowrap;
 }
 
 /* 主题配色 */
