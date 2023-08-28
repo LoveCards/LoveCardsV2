@@ -1,25 +1,23 @@
 <?php
 
-namespace app\api\common;
+namespace app\common;
 
-//TP类
 use think\Facade;
-
-//TP门面类
+use think\facade\Session;
 use think\facade\Request;
 use think\facade\Db;
 
-class Common extends Facade
+class BackEnd extends Facade
 {
     /**
-     * @description: API验证uuid并获取当前用户数据
+     * @description: 后端依API验证uuid并获取当前用户数据
      * @return {*}
      * @Author: github.com/zhiguai
      * @Date: 2022-12-29 18:57:00
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function validateAuth()
+    protected static function mArrayGetNowAdminAllData()
     {
         //整理数据
         $uuid = Request::param('uuid');
@@ -47,7 +45,7 @@ class Common extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function get_uuid()
+    protected static function mStringGenerateUUID()
     {
         $charid = md5(uniqid(mt_rand(), true));
         $hyphen = chr(45); // "-"
@@ -71,7 +69,7 @@ class Common extends Facade
      * @param {*} $filename
      * @param {*} $data
      */
-    protected static function extraconfig($filename, $data, $free = false, $env = 'lovecards')
+    protected static function mBoolCoverConfig($filename, $data, $free = false, $env = 'lovecards'): bool
     {
         $filename = '../config/' . $filename . '.php';
         $str_file = file_get_contents($filename);
@@ -106,48 +104,28 @@ class Common extends Facade
         }
     }
 
+
     /**
-     * @description: 编辑配置文件
+     * @description: 依Session实现的防抖
      * @return {*}
      * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:16:37
+     * @Date: 2023-07-18 15:17:21
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
-     * @param {*} $filename
-     * @param {*} $data
+     * @param {*} $setName
+     * @param {*} $time
      */
-    protected static function extraThemeConfig($filename, $data, $free = false, $env = 'ThemeConfig')
+    protected static function mRemindEasyDebounce($setName, $time = 6)
     {
-        $filename = '../public/view' . $filename . '.php';
-        $str_file = file_get_contents($filename);
-
-        if ($free == true) {
-            foreach ($data as $key => $value) {
-                //构建正则匹配
-                $pattern = "/env\('" . $env . "\." . $key . "',\s*([^']*)\)/";
-                //判断是否成功匹配
-                if (preg_match($pattern, $str_file)) {
-                    //匹配成功更新
-                    $str_file = preg_replace($pattern, "env('" . $env . "." . $key . "', " . $value . ")", $str_file);
-                }
-            }
+        if (strtotime(date("Y-m-d H:i:s")) > strtotime(Session::get($setName))) {
+            //符合要求
+            $result = [true];
         } else {
-            foreach ($data as $key => $value) {
-                //构建正则匹配
-                $pattern = "/env\('" . $env . "\." . $key . "',\s*'([^']*)'\)/";
-                //判断是否成功匹配
-                if (preg_match($pattern, $str_file)) {
-                    //匹配成功更新
-                    $str_file = preg_replace($pattern, "env('" . $env . "." . $key . "', '" . $value . "')", $str_file);
-                }
-            }
+            $result = [false, '您的操作太快了，稍后再试试试吧'];
         }
-
-        //写入并返回结果
-        if (!file_put_contents($filename, $str_file)) {
-            return false;
-        } else {
-            return true;
-        }
+        //设置上次时间
+        Session::set($setName, date("Y-m-d H:i:s", strtotime('+' . $time . ' second')));
+        //返回结果
+        return $result;
     }
 }

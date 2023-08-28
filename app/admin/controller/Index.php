@@ -2,26 +2,20 @@
 
 namespace app\admin\controller;
 
-//TP类
+use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 
-//类
 use app\common\Common;
 
 class Index
 {
+    //中间件
+    protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
 
     //Index
-    public function index()
+    public function Index(TypeRequest $var_t_def_request)
     {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            //跳转返回消息
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
-
         //函数-取图表数据
         function ChartData($key)
         {
@@ -29,7 +23,7 @@ class Index
                 $time = date('Y-m-d', strtotime('-' . $i . 'day'));
                 $arr[0][$i] = Db::table($key)->whereDay('time', $time)->count();
                 $arr[1][$i] = $time;
-                if($i==1)$arr[1][$i] = '昨日';
+                if ($i == 1) $arr[1][$i] = '昨日';
             }
             $arr[0] = Array_reverse($arr[0]);
             $arr[1] = Array_reverse($arr[1]);
@@ -51,7 +45,7 @@ class Index
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'systemData' => Common::systemData(),
             'viewTitle'  => '总览'

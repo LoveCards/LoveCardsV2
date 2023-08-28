@@ -2,21 +2,39 @@
 
 namespace app\api\controller;
 
-//TP
 use think\facade\Db;
 use think\facade\Request;
 use think\exception\ValidateException;
 use think\facade\Config;
 
-//验证
 use app\api\validate\CardsComments as CommentsValidate;
 
-//公共
-use app\Common\Common;
-use app\api\common\Common as ApiCommon;
+use app\common\Common;
+use app\Common\Export;
 
 class CardsComments extends Common
 {
+
+    //中间件
+    protected $middleware = [
+        \app\api\middleware\AdminAuthCheck::class => [
+            'only' => [
+                'Edit',
+                'Delet'
+            ]
+        ],
+        \app\api\middleware\SessionDebounce::class => [
+            'only' => [
+                'Add'
+            ]
+        ],
+        \app\api\middleware\GeetestCheck::class => [
+            'only' => [
+                'Add'
+            ]
+        ],
+    ];
+
     protected function CAndU($id, $data, $method)
     {
         // 获取数据
@@ -54,8 +72,8 @@ class CardsComments extends Common
             $DbData = $Datas;
             // 方法选择
             if ($method == 'c') {
-                $DbData['time'] = $this->NowTime;
-                $DbData['ip'] = $this->ReqIp;
+                $DbData['time'] = $this->attrGReqTime;
+                $DbData['ip'] = $this->attrGReqIp;
                 if (!Db::table('cards')->where('id', $DbData['cid'])->find()) {
                     return FunResult(false, 'CID不存在');
                 }
@@ -87,21 +105,8 @@ class CardsComments extends Common
     }
 
     //添加-POST
-    public function add()
+    public function Add()
     {
-        //防手抖
-        $preventClicks = Common::preventClicks('LastPostTime');
-        if ($preventClicks[0] == false) {
-            //返回数据
-            return Common::create(['prompt' => $preventClicks[1]], '添加失败', 500);
-        }
-
-        //人机二次验证
-        $gt4 = new \geetest\gt4();
-        if (!$gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
-            return Common::create(['prompt' => '人机验证失败'], '添加失败', 500);
-        }
-
         $result = self::CAndU('', [
             'cid' => Request::param('cid'),
             'content' => Request::param('content'),
@@ -110,24 +115,18 @@ class CardsComments extends Common
 
         if ($result['status']) {
             if (Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')) {
-                return Common::create('', '添加成功,等待审核', 201);
+                return Export::mObjectEasyCreate('', '添加成功,等待审核', 201);
             } else {
-                return Common::create('', '添加成功', 200);
+                return Export::mObjectEasyCreate('', '添加成功', 200);
             }
         } else {
-            return Common::create($result['msg'], '添加失败', 500);
+            return Export::mObjectEasyCreate($result['msg'], '添加失败', 500);
         }
     }
 
     //编辑-POST
-    public function edit()
+    public function Edit()
     {
-        //验证身份并返回数据
-        $userData = ApiCommon::validateAuth();
-        if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
-        }
-
         $result = self::CAndU(Request::param('id'), [
             'content' => Request::param('content'),
             'name' => Request::param('name'),
@@ -135,34 +134,28 @@ class CardsComments extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Common::create('', '编辑成功', 200);
+            return Export::mObjectEasyCreate('', '编辑成功', 200);
         } else {
-            return Common::create($result['msg'], '编辑失败', 500);
+            return Export::mObjectEasyCreate($result['msg'], '编辑失败', 500);
         }
     }
 
     //删除-POST
-    public function delete()
+    public function Delete()
     {
-        //验证身份并返回数据
-        $userData = ApiCommon::validateAuth();
-        if (!empty($userData[0])) {
-            return Common::create([], $userData[1], $userData[0]);
-        }
-
         $id = Request::param('id');
         if (!$id) {
-            return Common::create(['id' => '缺少参数'], '删除失败', 400);
+            return Export::mObjectEasyCreate(['id' => '缺少参数'], '删除失败', 400);
         }
 
         //获取数据库对象
         $result = Db::table('cards_comments')->where('id', $id);
         if (!$result->find()) {
-            return Common::create([], 'id不存在', 400);
+            return Export::mObjectEasyCreate([], 'id不存在', 400);
         }
         if (!$result->delete()) {
-            return Common::create([], '删除失败', 400);
+            return Export::mObjectEasyCreate([], '删除失败', 400);
         }
-        return Common::create([], '删除成功', 200);
+        return Export::mObjectEasyCreate([], '删除成功', 200);
     }
 }

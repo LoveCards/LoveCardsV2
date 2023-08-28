@@ -6,7 +6,7 @@ namespace geetest;
 use think\Facade;
 use think\facade\Config;
 
-class gt4 extends Facade
+class Gt4 extends Facade
 {
     public static function validate($lotNumber, $captchaOutput, $passToken, $genTime)
     {
