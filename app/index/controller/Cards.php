@@ -10,8 +10,9 @@ use think\facade\Config;
 
 //类
 use app\common\Common;
+use app\common\Theme;
 
-class Cards
+class Cards extends Common
 {
 
     //获取模板路径
@@ -19,13 +20,13 @@ class Cards
     var $TemplateDirectory;
     function __construct()
     {
-        $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
-        $this->TemplateDirectory = Common::get_templateDirectory()[1];
+        $this->TemplateDirectoryPath = Theme::mArrayGetThemeDirectory()[0];
+        $this->TemplateDirectory = Theme::mArrayGetThemeDirectory()[1];
 
         //公共模板变量
         View::assign([
             'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets', //模板路径
-            'TemplateConfigPHP' => Common::GetTemplateConfigPHP($this->TemplateDirectory), //模板配置
+            'TemplateConfigPHP' => Theme::mResultGetThemeConfig($this->TemplateDirectory), //模板配置
             'systemVer' => Common::systemVer(), //程序版本信息
             'systemData' => Common::systemData(), //系统配置信息
             'viewKeywords' => false,
@@ -34,10 +35,10 @@ class Cards
     }
 
     //Index
-    public function index()
+    public function Index()
     {
         //参数
-        $ip = Common::getIp();
+        $ip = $this->attrGReqIp;
         $model = Request::param('model');
         if ($model == 0) {
             $model = 0;
@@ -94,10 +95,10 @@ class Cards
     }
 
     //卡片详情
-    public function card()
+    public function Card()
     {
         //参数
-        $ip = Common::getIp();
+        $ip = $this->attrGReqIp;
         $id = Request::param('id');
 
         //验证ID取Cards数据
@@ -172,7 +173,7 @@ class Cards
     }
 
     //添加卡片
-    public function add()
+    public function Add()
     {
         $model = Request::param('model');
         if ($model == 0) {
@@ -198,11 +199,11 @@ class Cards
     }
 
     //卡片搜索
-    public function search()
+    public function Search()
     {
 
         //参数
-        $ip = Common::getIp();
+        $ip = $this->attrGReqIp;
         $search = Request::param('search');
         $viewTitle = '搜索';
 
@@ -276,11 +277,11 @@ class Cards
     }
 
     //TAG集合
-    public function tag()
+    public function Tag()
     {
 
         //参数
-        $ip = Common::getIp();
+        $ip = $this->attrGReqIp;
         //传入Tid
         $value = Request::param('value');
 

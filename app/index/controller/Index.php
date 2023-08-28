@@ -8,8 +8,9 @@ use think\facade\Db;
 
 //类
 use app\common\Common;
+use app\common\Theme;
 
-class Index
+class Index extends Common
 {
 
     //获取模板路径
@@ -24,13 +25,13 @@ class Index
             exit;
         }
 
-        $this->TemplateDirectoryPath = Common::get_templateDirectory()[0];
-        $this->TemplateDirectory = Common::get_templateDirectory()[1];
+        $this->TemplateDirectoryPath = Theme::mArrayGetThemeDirectory()[0];
+        $this->TemplateDirectory = Theme::mArrayGetThemeDirectory()[1];
 
         //公共模板变量
         View::assign([
             'TemplateDirectory' => '/view/index/' . $this->TemplateDirectory . '/assets', //模板路径
-            'TemplateConfigPHP' => Common::GetTemplateConfigPHP($this->TemplateDirectory), //模板配置
+            'TemplateConfigPHP' => Theme::mResultGetThemeConfig($this->TemplateDirectory), //模板配置
             'systemVer' => Common::systemVer(), //程序版本信息
             'systemData' => Common::systemData(), //系统配置信息
             'viewKeywords' => false,
@@ -39,10 +40,10 @@ class Index
     }
 
     //输出
-    public function index()
+    public function Index()
     {
         //参数
-        $ip = Common::getIp();
+        $ip = $this->attrGReqIp;
 
         //取Cards列表数据
         $hotListNum = 8; //每页个数
@@ -93,7 +94,7 @@ class Index
         return View::fetch($this->TemplateDirectoryPath . '/index');
     }
 
-    public function error()
+    public function Error()
     {
         $code = request()->param('code');
 

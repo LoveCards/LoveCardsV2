@@ -2,24 +2,29 @@
 
 namespace app\admin\controller;
 
-//TP类
+use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 use think\facade\Config;
 
-//类
 use app\common\Common;
 
 class Cards
 {
+
+    //中间件
+    protected $middleware = [
+        \app\admin\middleware\AdminAuthCheck::class => [
+            'only' => ['Index', 'Edit']
+        ],
+        \app\admin\middleware\AdminPowerCheck::class => [
+            'only' => ['Setting']
+        ]
+    ];
+
     //Index
-    public function index()
+    public function Index(TypeRequest $var_t_def_request)
     {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
 
         //获取列表
         $listNum = 12; //每页个数
@@ -33,7 +38,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '卡片管理'
         ]);
@@ -43,14 +48,8 @@ class Cards
     }
 
     //Edit
-    public function edit()
+    public function Edit(TypeRequest $var_t_def_request)
     {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
-
         //传入必要参数
         $id = request()->param('id');
         //验证ID是否正常传入
@@ -83,7 +82,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '编辑卡片'
         ]);
@@ -93,14 +92,8 @@ class Cards
     }
 
     //setting
-    public function setting()
+    public function Setting(TypeRequest $var_t_def_request)
     {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
-
         //获取配置
         View::assign([
             'configData' => Config::get('lovecards.api')
@@ -108,7 +101,7 @@ class Cards
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '模块设置'
         ]);

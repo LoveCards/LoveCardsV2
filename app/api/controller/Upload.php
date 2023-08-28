@@ -2,20 +2,17 @@
 
 namespace app\api\controller;
 
-//TP
 use think\facade\Config;
 
-//公共
-use app\Common\Common;
-use app\api\common\Common as ApiCommon;
+use app\common\Export;
 
 class Upload
 {
     //上传图片-POST
-    public function image()
+    public function Image()
     {
         if (empty(request()->file('file'))) {
-            return Common::create([], '请提交文件', 400);
+            return Export::mObjectEasyCreate([], '请提交文件', 400);
         }
         // 获取表单上传文件
         $file = request()->file('file');
@@ -30,9 +27,9 @@ class Upload
 
             $saveName = \think\facade\Filesystem::disk('public')->putFile('image', $file); //保存文件名
 
-            return Common::create($saveName, '上传成功', 200);
+            return Export::mObjectEasyCreate($saveName, '上传成功', 200);
         } catch (\Exception $e) {
-            return Common::create($e->getMessage(), '上传失败', 400);
+            return Export::mObjectEasyCreate($e->getMessage(), '上传失败', 400);
         }
     }
 }

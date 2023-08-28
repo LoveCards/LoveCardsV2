@@ -64,8 +64,8 @@
     const FunSetBtnThemeDarkValue = () => {
         //根据Cookie初始化主题
         const cookieValue = $.cookie('ThemeDark');
-        if (cookieValue == undefined) {
-            $.cookie('ThemeDark', $('#jsBtnThemeDark').attr('value'));
+        if (cookieValue == undefined || cookieValue == '') {
+            $.cookie('ThemeDark', $('#jsBtnThemeDark').attr('value'), { expires: 7, path: '/' });
         }
         if (cookieValue == 'true') {
             $('#jsBtnThemeDark').attr('value', 'true');
@@ -78,11 +78,11 @@
     const FunSetThemeDark = (Obj) => {
         //暗色设置
         if (Obj.attr('value') == 'true') {
-            $.cookie('ThemeDark', 'false');
+            $.cookie('ThemeDark', 'false', { expires: 7, path: '/' });
             Obj.attr('value', 'false');
             FunSetThemeDarkStyle();
         } else {
-            $.cookie('ThemeDark', 'true');
+            $.cookie('ThemeDark', 'true', { expires: 7, path: '/' });
             Obj.attr('value', 'true');
             FunSetThemeDarkStyle();
         }

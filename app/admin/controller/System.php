@@ -2,41 +2,32 @@
 
 namespace app\admin\controller;
 
-//TP类
-
-use app\api\common\Common as CommonCommon;
+use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
+use think\facade\Config;
 
-//类
 use app\common\Common;
 use app\common\File;
-use think\facade\Config;
+use app\common\FrontEnd;
+use app\common\Theme;
 
 class System
 {
 
-    //Index
-    public function index()
-    {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            //跳转返回消息
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
-        //验证权限
-        if ($userData[1]['power'] != 0) {
-            return Common::jumpUrl('/admin/index', '权限不足');
-        }
+    //中间件
+    protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
 
+    //Index
+    public function Index(TypeRequest $var_t_def_request)
+    {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
         View::assign($systemData);
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'configData' => Config::get('lovecards'),
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '系统设置'
@@ -47,19 +38,8 @@ class System
     }
 
     //View
-    public function View()
+    public function View(TypeRequest $var_t_def_request)
     {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            //跳转返回消息
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
-        //验证权限
-        if ($userData[1]['power'] != 0) {
-            return Common::jumpUrl('/admin/index', '权限不足');
-        }
-
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
         View::assign($systemData);
@@ -83,14 +63,14 @@ class System
 
         $nowTemplateDirectory = Config::get('lovecards.template_directory', 'index') ?: 'index';
         $nowTemplateConfig = json_decode(File::read_file('./view/index/' . $nowTemplateDirectory . '/config.ini'), true);
-        $nowTemplateConfig['Config'] = Common::GetTemplateConfigPHP($nowTemplateDirectory);
+        $nowTemplateConfig['Config'] = Theme::mResultGetThemeConfig($nowTemplateDirectory);
         if (!$nowTemplateConfig) {
             $nowTemplateConfig = json_decode(File::read_file('./view/index/index/config.ini'), true);
         }
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '外观设置',
             //模板配置列表
@@ -104,31 +84,20 @@ class System
     }
 
     //View-Set
-    public function ViewSet()
+    public function ViewSet(TypeRequest $var_t_def_request)
     {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            //跳转返回消息
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
-        //验证权限
-        if ($userData[1]['power'] != 0) {
-            return Common::jumpUrl('/admin/index', '权限不足');
-        }
-
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
         View::assign($systemData);
 
-        $TemplateConfig = Common::GetTemplateConfigPHP(Config::get('lovecards.template_directory', 'index') ?: 'index', true);
+        $TemplateConfig = Theme::mResultGetThemeConfig(Config::get('lovecards.template_directory', 'index') ?: 'index', true);
         if (!$TemplateConfig) {
-            return Common::jumpUrl('/admin/system/view', '当前主题没有配置项');
+            return FrontEnd::jumpUrl('/admin/system/view', '当前主题没有配置项');
         }
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '主题设置',
             //当前模板配置

@@ -2,24 +2,20 @@
 
 namespace app\admin\controller;
 
-//TP类
+use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 
-//类
 use app\common\Common;
 
 class CardsTag
 {
-    //Index
-    public function index()
-    {
-        //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == false) {
-            return Common::jumpUrl('/admin/login/index', '请先登入');
-        }
+    //中间件
+    protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
 
+    //Index
+    public function Index(TypeRequest $var_t_def_request)
+    {
         //获取列表
         $listNum = 12; //每页个数
         $list = Db::table('cards_tag')
@@ -31,7 +27,7 @@ class CardsTag
 
         //基础变量
         View::assign([
-            'adminData'  => $userData[1],
+            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
             'systemVer' => Common::systemVer(),
             'viewTitle'  => '标签管理'
         ]);

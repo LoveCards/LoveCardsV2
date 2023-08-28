@@ -2,18 +2,17 @@
 
 namespace app\admin\controller;
 
-//TP类
+use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Config;
 
-//类
 use app\common\Common;
 
 class Login
 {
 
     //Index
-    public function index()
+    public function Index(TypeRequest $var_t_def_request)
     {
         //验证身份并返回数据
         $userData = Common::validateViewAuth();
