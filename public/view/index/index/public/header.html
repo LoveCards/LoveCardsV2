@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <title>{$viewTitle} - {$systemData['siteName']}</title>
-    <meta name="description" content="{if $viewDescription}{$viewDescription}{else}{$systemData['siteDes']}{/if}">
-    <meta name="keywords" content="{if $viewKeywords}{$viewKeywords}{else}{$systemData['siteKeywords']}{/if}">
+    <title>{$ViewTitle} - {$SystemData['siteName']}</title>
+    <meta name="description" content="{if $ViewDescription}{$ViewDescription}{else}{$SystemData.siteDes}{/if}">
+    <meta name="keywords" content="{if $ViewKeywords}{$ViewKeywords}{else}{$SystemData.siteKeywords}{/if}">
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -13,7 +13,7 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 
     <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
-    {if $TemplateConfigPHP['ThemeLinkCDN']}
+    {if $ThemeConfig['ThemeLinkCDN']}
     <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
     <link rel="stylesheet" href="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.css">
     {else /}
@@ -21,7 +21,7 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.css" rel="stylesheet">
     {/if}
     <link rel="stylesheet" href="{__A-assets__}/base.css" />
-    <script>
+    <!-- <script>
         var _paq = window._paq = window._paq || [];
         _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
         _paq.push(['trackPageView']);
@@ -33,20 +33,20 @@
             var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
             g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
         })();
-    </script>
+    </script> -->
 </head>
 
 <body class="mdui-appbar-with-toolbar 
             mdui-appbar-with-tab 
-            mdui-theme-primary-{$TemplateConfigPHP['ThemePrimary']} 
-            mdui-theme-accent-{$TemplateConfigPHP['ThemeAccent']} 
-            {if $TemplateConfigPHP['ThemeDark']} mdui-theme-layout-dark{/if}
+            mdui-theme-primary-{$ThemeConfig.ThemePrimary} 
+            mdui-theme-accent-{$ThemeConfig.ThemeAccent} 
+            {if $ThemeConfig.ThemeDark} mdui-theme-layout-dark{/if}
             ">
 
     <!-- 顶栏 -->
     <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
         <div class="mdui-toolbar mdui-color-theme">
-            <a href="#" class="mdui-typo-headline">{$systemData['siteName']}</a>
+            <a href="#" class="mdui-typo-headline">{$SystemData['siteName']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
         </div>

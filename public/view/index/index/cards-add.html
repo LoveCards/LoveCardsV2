@@ -1,7 +1,7 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
+<div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $CardModel == 0}2{else}1{/if}" class="mdui-container">
 
     <div class="mdui-row mdui-p-t-2">
 
@@ -33,12 +33,12 @@
                         <div class="mdui-dialog-title">选择标签</div>
                         <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
                             <div class="mdui-row-xs-2 mdui-row-sm-4">
-                                {volist name="cardsTagData" id="data"}
+                                {volist name="CardsTagsLists" id="D"}
                                 <div class="mdui-col">
                                     <label class="mdui-checkbox">
-                                        <input type="checkbox" value="{$data.id}" name="inputChooseTag" />
+                                        <input type="checkbox" value="{$D.id}" name="inputChooseTag" />
                                         <i class="mdui-checkbox-icon"></i>
-                                        {$data.name}
+                                        {$D['name']}
                                     </label>
                                 </div>
                                 {/volist}
@@ -62,7 +62,7 @@
                         <label class="mdui-textfield-label">TA的姓名(与谁交流)</label>
                         <input class="mdui-textfield-input" id="taName" type="text" />
                     </div>
-                    {if $cardsModel == 0}
+                    {if $CardModel == 0}
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">表白写些什么*</label>
                         <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
@@ -112,7 +112,7 @@
                     </div>
 
                 </div>
-                <div id="model" value="{$cardsModel}" class="mdui-card-actions">
+                <div id="model" value="{$CardModel}" class="mdui-card-actions">
                     <button id="submitAdd"
                         class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">提交</button>
                 </div>
@@ -125,7 +125,7 @@
 
 {include file="index/public/footer"}
 <script src="{__A-assets__}/cardsEdit.js"></script>
-{if $configData.geetest.DefSetValidatesStatus == 1}
+{if $SystemConfig.geetest.DefSetValidatesStatus == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 <script src="{__A-assets__}/gt4/base.js"></script>
 {/if}
@@ -171,8 +171,8 @@
         }
 
         //验证
-        /*{if $configData.geetest.DefSetValidatesStatus == 1}*/
-        geetest4('#submitAdd', FunResultAdd, '{$configData.geetest.DefSetGeetestId}');
+        /*{if $SystemConfig.geetest.DefSetValidatesStatus == 1}*/
+        geetest4('#submitAdd', FunResultAdd, '{$SystemConfig.geetest.DefSetGeetestId}');
         /*{else /}*/
         $('#submitAdd').click(function () { FunResultAdd() });
         /*{/if}*/

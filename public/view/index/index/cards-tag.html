@@ -7,7 +7,7 @@
         <div class="mdui-typo-headline-opacity">
             关于
             <div class="mdui-chip">
-                <span class="mdui-chip-title">{$searchValue}</span>
+                <span class="mdui-chip-title">{$ViewTagName}</span>
             </div> 的合集
         </div>
     </div>
@@ -33,7 +33,7 @@
         //初始化-分页组件
         pager();
         //初始化-Tag组件
-        ViewCardsTag('{$cardsTagData|raw}');
+        ViewCardsTag('{$CardsTagsListsJson|raw}');
         //初始化-View-搜索
         if (getUrlParam('value')) {
             $('#SearchValue').html('')
@@ -43,11 +43,6 @@
         $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
             FunBackUpHistoryUrl();
         });
-    });
-
-    //表单-按钮-搜索
-    $('#requestSearch').click(function () {
-        jumpUrl('/index/Cards/search?search=true&model=0&value=' + $('#SearchValue').val(), 0);
     });
 </script>
 

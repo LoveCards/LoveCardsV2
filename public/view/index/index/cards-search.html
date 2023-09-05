@@ -87,7 +87,7 @@
         //初始化-分页组件
         pager();
         //初始化-Tag组件
-        ViewCardsTag('{$cardsTagData|raw}');
+        ViewCardsTag('{$CardsTagsListsJson|raw}');
         //初始化-View-搜索
         if (getUrlParam('search')) {
             $('#SearchValue').val(getUrlParam('value'));
@@ -100,7 +100,6 @@
         if (getUrlParam('model') != 'false' && getUrlParam('search') == 'true') {
             var model = Number(getUrlParam('model'));
             $('#dialogFilterItemModel-' + model).prop("checked", true);
-            console.log(model);
             radioModel = model;
         }
 

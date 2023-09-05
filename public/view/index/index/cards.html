@@ -1,10 +1,10 @@
 {include file="index/public/header"}
 
 <!-- 页体 -->
-<div id="jsParameter" jsPageHierarchy=0 jsTabClass="{if $cardsModel == 0}2{else}1{/if}" class="mdui-container">
+<div id="jsParameter" jsPageHierarchy=0 jsTabClass="{if $CardsModel == 0}2{else}1{/if}" class="mdui-container">
     <!-- 顶部按钮组件 -->
     <div class="mdui-p-t-2">
-        {if $cardsModel == 0}
+        {if $CardsModel == 0}
         <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
             onclick="location.assign('/index/cards/add/model/0')">发布表白卡</button>
         {else}
@@ -21,13 +21,12 @@
             {include file="index/public/component-list-cards"}
             <!-- 分享弹窗 -->
             {include file="index/public/component-share"}
-
         </div>
     </div>
 
     <!-- 分页按钮组件 -->
     <div class="mdui-p-t-2 mdui-text-center">
-        <div style="display: none;">{$cardsListRaw|raw}</div>
+        <div style="display: none;">{$CardsListsEasyPagingComponent|raw}</div>
         <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
             <i class="mdui-icon material-icons ">first_page</i>
         </button>
@@ -46,11 +45,11 @@
         //初始化分页
         pager();
         //获取Tag数据
-        ViewCardsTag('{$cardsTagData|raw}');
+        ViewCardsTag('{$CardsTagsListsJson|raw}');
 
         //悬浮按钮
         $('#jsBtnGreen').click(function () {
-            jumpUrl('/index/cards/add{if $cardsModel == 1}/model/1{/if}', 0);
+            jumpUrl('/index/cards/add{if $CardsModel == 1}/model/1{/if}', 0);
         })
     })
 
