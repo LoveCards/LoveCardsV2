@@ -42,7 +42,15 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    border-radius: 3%
+    border-radius: 3%;
+    z-index: 2;
+}
+
+.css-cards-img-loading {
+    float: right;
+    margin-top: -40px;
+    margin-right: 20px;
+    z-index: 0;
 }
 
 .css-caard-header-title {

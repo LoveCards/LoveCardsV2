@@ -25,7 +25,7 @@ class Common extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function systemVer()
+    protected static function mArrayGetLCVersionInfo()
     {
         return [
             'Name' => 'LoveCards',
@@ -48,14 +48,14 @@ class Common extends Facade
     }
 
     /**
-     * @description: 取system数据
+     * @description: 取数据库system数据
      * @return {*}
      * @Author: github.com/zhiguai
      * @Date: 2023-01-18 18:10:57
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function systemData()
+    protected static function mArrayGetDbSystemData()
     {
         $result = Db::table('system')->select()->toArray();
         return array_column($result, 'value', 'name');

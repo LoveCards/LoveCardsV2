@@ -6,7 +6,7 @@
         <i class="mdui-icon material-icons mdui-fab-opened">add</i>
     </button>
     <div class="mdui-fab-dial">
-        <button id="jsBtnThemeDark" value="{$TemplateConfigPHP['ThemeDark']}"
+        <button id="jsBtnThemeDark" value="{if $ThemeConfig.ThemeDark}true{else /}false{/if}"
             class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-black">
             <i class="mdui-icon material-icons">brightness_high</i>
         </button>
@@ -17,14 +17,14 @@
 </div>
 
 <div class="mdui-p-y-5"></div>
-{if $TemplateConfigPHP['ThemeLinkCDN']}
+{if $ThemeConfig['ThemeLinkCDN']}
 <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
 <script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
 <script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
 <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
 <script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
 <script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
-<script src="{$TemplateDirectory}/masonry-4.2.2/masonry.pkgd.min.js"></script>
+<script src="{$ThemeDirectoryPath}/masonry-4.2.2/masonry.pkgd.min.js"></script>
 {else /}
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
@@ -48,17 +48,17 @@
         //按钮和主体样式刷新
         const Obj = $('#jsBtnThemeDark');
         if (Obj.attr('value') == 'true') {
-            Obj.removeClass('mdui-color-white');
-            Obj.addClass('mdui-color-black');
-            Obj.children('i').html('brightness_low');
-            $('body').removeClass('mdui-theme-layout-dark');
-            $('body').addClass('mdui-theme-layout-white');
-        } else {
             Obj.removeClass('mdui-color-black');
             Obj.addClass('mdui-color-white');
             Obj.children('i').html('brightness_high');
             $('body').removeClass('mdui-theme-layout-white');
             $('body').addClass('mdui-theme-layout-dark');
+        } else {
+            Obj.removeClass('mdui-color-white');
+            Obj.addClass('mdui-color-black');
+            Obj.children('i').html('brightness_low');
+            $('body').removeClass('mdui-theme-layout-dark');
+            $('body').addClass('mdui-theme-layout-white');
         }
     };
     const FunSetBtnThemeDarkValue = () => {
@@ -93,9 +93,45 @@
     });
 
     /*
-    *瀑布流加载
+    *渲染初始化
     */
-    window.onload = function () {
+    $(function () {
+        const setImgError = (el) => {
+            // 删除加载元素
+            el.parent().parent().next().remove();
+            el.attr('src', '{$ThemeDirectoryPath}/image/error.png');
+        }
+
+        $("img").lazyload({
+            threshold: 200,
+            effect: "fadeIn",
+            placeholder: '{$ThemeDirectoryPath}/image/loading.png',
+            //failure_limit: 3, // 设置尝试加载的次数,
+            appear: function () {
+                setTimeout(function () {
+                    initMasonry();
+                }, 300)
+            },
+            load: function () {
+                // 图片加载完成后初始化瀑布流
+                initMasonry();
+                setImgError($(this));
+            }
+        });
+
+        setTimeout(function () {
+            $("img.js-jumpurl-cardId").each(function () {
+                //加载失败图片更新
+                if ($(this).attr('src') == '{$ThemeDirectoryPath}/image/loading.png') {
+                    setImgError($(this));
+                }
+            });
+        }, 5000);
+
+    });
+
+    //瀑布流初始化
+    function initMasonry() {
         var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');
         if (elem != null) {
             var msnry = new Masonry(elem, {
@@ -104,8 +140,8 @@
                 percentPosition: true
             });
         }
-    };
+    }
 
 </script>
-<script src="{$TemplateDirectory}/base.js"></script>
+<script src="{$ThemeDirectoryPath}/base.js"></script>
 <script src="{__A-assets__}/public.js"></script>
