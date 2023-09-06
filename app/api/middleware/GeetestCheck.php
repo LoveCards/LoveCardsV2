@@ -9,7 +9,7 @@ use geetest\gt4;
 
 class GeetestCheck
 {
-    public function handle($var_t_def_request, \Closure $var_t_def_next)
+    public function handle($tDef_Request, \Closure $var_t_def_next)
     {
 
         //实现gt4鉴权
@@ -18,6 +18,6 @@ class GeetestCheck
             return Export::mObjectEasyCreate(['prompt' => '人机验证失败'], '添加失败', 500);
         }
 
-        return $var_t_def_next($var_t_def_request);
+        return $var_t_def_next($tDef_Request);
     }
 }

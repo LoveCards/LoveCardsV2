@@ -74,11 +74,11 @@ class Auth
     }
 
     //注销-POST
-    public function Logout(TypeRequest $var_t_def_request)
+    public function Logout(TypeRequest $tDef_Request)
     {
         //获取数据对象
         $result = Db::table('admin')
-            ->where('id', $var_t_def_request->attrLDefAdminAllData['id']);
+            ->where('id', $tDef_Request->attrLDefAdminAllData['id']);
 
         //整理数据
         $uuid = Null;

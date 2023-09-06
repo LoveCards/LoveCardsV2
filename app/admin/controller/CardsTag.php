@@ -6,30 +6,39 @@ use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 
-use app\common\Common;
+use app\common\FrontEnd;
 
-class CardsTag
+use app\admin\BaseController;
+
+class CardsTag extends BaseController
 {
     //中间件
     protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
 
     //Index
-    public function Index(TypeRequest $var_t_def_request)
+    public function Index(TypeRequest $tDef_Request)
     {
         //获取列表
-        $listNum = 12; //每页个数
-        $list = Db::table('cards_tag')
-            ->paginate($listNum, true);
+        $tDef_CardsTagListMax = 12; //每页个数
+        $lDef_Result = Db::table('cards_tag')
+            ->paginate($tDef_CardsTagListMax, true);
+
+        $tDef_CardsTagListEasyPagingComponent = $lDef_Result->render();
+        $lDef_CardsTagList = $lDef_Result->items();
+
         View::assign([
-            'list'  => $list,
-            'listNum'  => $listNum
+            'CardsTagList'  => $lDef_CardsTagList,
+            'CardsTagListEasyPagingComponent'  => $tDef_CardsTagListEasyPagingComponent,
+            'CardsTagListMax'  => $tDef_CardsTagListMax
         ]);
+
+        //通用列表
+        FrontEnd::mObjectEasyAssignCommonNowList($lDef_CardsTagList,$tDef_CardsTagListEasyPagingComponent,$tDef_CardsTagListMax);
 
         //基础变量
         View::assign([
-            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
-            'systemVer' => Common::systemVer(),
-            'viewTitle'  => '标签管理'
+            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'ViewTitle'  => '标签管理'
         ]);
 
         //输出模板

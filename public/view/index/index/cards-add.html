@@ -33,7 +33,7 @@
                         <div class="mdui-dialog-title">选择标签</div>
                         <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
                             <div class="mdui-row-xs-2 mdui-row-sm-4">
-                                {volist name="CardsTagsLists" id="D"}
+                                {volist name="CardsTagsList" id="D"}
                                 <div class="mdui-col">
                                     <label class="mdui-checkbox">
                                         <input type="checkbox" value="{$D.id}" name="inputChooseTag" />
@@ -125,7 +125,7 @@
 
 {include file="index/public/footer"}
 <script src="{__A-assets__}/cardsEdit.js"></script>
-{if $SystemConfig.geetest.DefSetValidatesStatus == 1}
+{if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 <script src="{__A-assets__}/gt4/base.js"></script>
 {/if}
@@ -171,8 +171,8 @@
         }
 
         //验证
-        /*{if $SystemConfig.geetest.DefSetValidatesStatus == 1}*/
-        geetest4('#submitAdd', FunResultAdd, '{$SystemConfig.geetest.DefSetGeetestId}');
+        /*{if  $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}*/
+        geetest4('#submitAdd', FunResultAdd, '{$SystemConfig.class.geetest.DefSetGeetestId}');
         /*{else /}*/
         $('#submitAdd').click(function () { FunResultAdd() });
         /*{/if}*/

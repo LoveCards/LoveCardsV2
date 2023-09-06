@@ -744,8 +744,8 @@
     var _handler = listener;
     type.trim().split(REGEXP_SPACES).forEach(function (event) {
       if (options.once && !onceSupported) {
-        var _element$listeners = element.listeners,
-            listeners = _element$listeners === void 0 ? {} : _element$listeners;
+        var _element$CommonNowListEasyPagingComponenteners = element.listeners,
+            listeners = _element$CommonNowListEasyPagingComponenteners === void 0 ? {} : _element$CommonNowListEasyPagingComponenteners;
 
         _handler = function handler() {
           delete listeners[event][listener];

@@ -107,11 +107,11 @@
                     <img class="mdui-img-fluid" src="//test.fatda.cn/uploads/20221122019047855.jpeg" />
                 </div>
             </div> -->
-            {if $CardImgLists}
+            {if $CardImgList}
             <div class="mdui-card mdui-m-t-1">
                 <div class="mdui-m-x-1 mdui-m-t-1">
                     <div class="mdui-row-xs-2 mdui-row-sm-3" id="viewer">
-                        {volist name="CardImgLists" id="D"}
+                        {volist name="CardImgList" id="D"}
                         <div class="mdui-col mdui-p-b-1">
                             <div class="mdui-grid-tile">
                                 <div class="css-cardsList-img">
@@ -149,7 +149,7 @@
                 </div>
             </div>
 
-            {if $CardCommentsLists}
+            {if $CardCommentsList}
             <div class="mdui-card mdui-m-t-1">
                 <!-- 卡片的内容 -->
                 <div class="mdui-p-t-2 mdui-p-x-2">
@@ -157,7 +157,7 @@
                 </div>
                 <!-- 卡片的内容 -->
                 <ul class="mdui-list">
-                    {volist name="CardCommentsLists" id="D"}
+                    {volist name="CardCommentsList" id="D"}
                     <li class="mdui-divider"></li>
                     <li class="css-list-item">
                         <div class="mdui-list-item-content">
@@ -176,7 +176,7 @@
 
             <!-- 分页按钮组件 -->
             <div class="mdui-p-t-2 mdui-text-center">
-                <div style="display: none;">{$CardCommentsListsEasyPagingComponent|raw}</div>
+                <div style="display: none;">{$CardCommentsListEasyPagingComponent|raw}</div>
                 <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
                     <i class="mdui-icon material-icons ">first_page</i>
                 </button>
@@ -201,7 +201,7 @@
 
 
 {include file="index/public/footer"}
-{if $SystemConfig.geetest.DefSetValidatesStatus == 1}
+{if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 <script src="{__A-assets__}/gt4/base.js"></script>
 {/if}
@@ -210,7 +210,7 @@
         //初始化-分页组件
         pager();
         //初始化-Tag组件
-        ViewCardsTag('{$CardsTagsListsJson|raw}');
+        ViewCardsTag('{$CardsTagsListJson|raw}');
         //viewer图片放大插件初始化
         $('#viewer').viewer({
             url: 'src'
@@ -239,8 +239,8 @@
         };
 
         //验证
-        /*{if $SystemConfig.geetest.DefSetValidatesStatus == 1}*/
-        geetest4('#btnAddComments', FunAddComments, '{$SystemConfig.geetest.DefSetGeetestId}');
+        /*{if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}*/
+        geetest4('#btnAddComments', FunAddComments, '{$SystemConfig.class.geetest.DefSetGeetestId}');
         /*{else /}*/
         $('#btnAddComments').click(function () { FunAddComments() });
         /*{/if}*/

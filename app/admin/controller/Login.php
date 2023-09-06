@@ -7,24 +7,25 @@ use think\facade\View;
 use think\facade\Config;
 
 use app\common\Common;
+use app\common\FrontEnd;
 
-class Login
+use app\admin\BaseController;
+
+class Login extends BaseController
 {
 
     //Index
-    public function Index(TypeRequest $var_t_def_request)
+    public function Index(TypeRequest $tDef_Request)
     {
         //验证身份并返回数据
-        $userData = Common::validateViewAuth();
-        if ($userData[0] == true) {
-            return Common::jumpUrl('/admin/index', '请不要重复登入');
+        $tDef_UserData = FrontEnd::mResultGetNowAdminAllData();
+        if ($tDef_UserData[0] == true) {
+            return FrontEnd::mObjectEasyFrontEndJumpUrl('/admin/index', '请不要重复登入');
         }
 
         //基础变量
         View::assign([
-            'systemVer' => Common::systemVer(),
-            'configData' => Config::get('lovecards'),
-            'viewTitle'  => '登入后台'
+            'ViewTitle'  => '登入后台'
         ]);
 
         //输出模板

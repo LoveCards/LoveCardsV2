@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{$viewTitle} - {$systemVer['Name']}</title>
+    <title>{$ViewTitle} - {$LCVersionInfo['Name']}</title>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -19,7 +19,7 @@
     <!-- 顶栏 -->
     <header class="mdui-appbar mdui-appbar-fixed">
         <div class="mdui-toolbar mdui-color-theme">
-            <a href="#" class="mdui-typo-headline">{$systemVer['Name']}</a>
+            <a href="#" class="mdui-typo-headline">{$LCVersionInfo['Name']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
         </div>
@@ -30,7 +30,7 @@
 
     <!-- 页体 -->
     <div class="mdui-container">
-        <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+        <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
 
         <!-- 框架层 -->
         <div class="mdui-col-offset-md-3">
@@ -71,9 +71,9 @@
 
                 <!-- 组件层 -->
                 <div class="mdui-typo-caption mdui-text-color-black-disabled mdui-p-t-1 mdui-typo">
-                    <!--废话 <kbd>Ver-{$systemVer['VerS']}-{$systemVer['Ver']}</kbd> -->
-                    <p>本站由<a href="{$systemVer['Url']}" target="_blank"
-                            class="mdui-text-color-pink">{$systemVer['Name']}</a>强力驱动</p>
+                    <!--废话 <kbd>Ver-{$LCVersionInfo['VerS']}-{$LCVersionInfo['Ver']}</kbd> -->
+                    <p>本站由<a href="{$LCVersionInfo['Url']}" target="_blank"
+                            class="mdui-text-color-pink">{$LCVersionInfo['Name']}</a>强力驱动</p>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
     <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
     <script src="{__A-assets__}/base.js"></script>
     <script src="{__A-assets__}/public.js"></script>
-    {if $configData.class.geetest.DefSetValidatesStatus == 1}
+    {if $SystemConfig.class.geetest.DefSetValidatesStatus == 1}
     <script src="https://static.geetest.com/v4/gt4.js"></script>
     <script src="{__A-assets__}/gt4/base.js"></script>
     {/if}
@@ -120,8 +120,8 @@
                 }
             }
             //验证
-            /*{if $configData.class.geetest.DefSetValidatesStatus == 1}*/
-            geetest4('#submitLogin', FunLogin, '{$configData.class.geetest.DefSetGeetestId}');
+            /*{if $SystemConfig.class.geetest.DefSetValidatesStatus == 1}*/
+            geetest4('#submitLogin', FunLogin, '{$SystemConfig.class.geetest.DefSetGeetestId}');
             /*{else /}*/
             $('#submitLogin').click(function () { FunLogin() });
             /*{/if}*/
