@@ -110,7 +110,7 @@ class Admin
     }
 
     //删除用户-POST
-    public function Delete(TypeRequest $var_t_def_request)
+    public function Delete(TypeRequest $tDef_Request)
     {
         //传入必要参数
         $id = Request::param('id');
@@ -120,7 +120,7 @@ class Admin
             return Export::mObjectEasyCreate([], '缺少id参数', 400);
         }
 
-        if ($var_t_def_request->attrGReqNowAdminAllData['id'] == $id) {
+        if ($tDef_Request->attrGReqNowAdminAllData['id'] == $id) {
             return Export::mObjectEasyCreate(['tip' => '您不能删除您自己的账户'], '删除失败', 400);
         }
         //获取数据库对象

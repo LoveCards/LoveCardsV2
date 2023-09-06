@@ -5,7 +5,7 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
         </div>
     </div>
 
@@ -93,7 +93,7 @@
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">验证 ID</label>
                             <input class="mdui-textfield-input" type="text" id="DefSetGeetestId"
-                                value="{$configData.class.geetest.DefSetGeetestId}" placeholder="145e5424cb8xxx"
+                                value="{$SystemConfig.class.geetest.DefSetGeetestId}" placeholder="145e5424cb8xxx"
                                 maxlength="">
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">验证 Key</label>
                             <input class="mdui-textfield-input" type="text" id="DefSetGeetestKey"
-                                value="{$configData.class.geetest.DefSetGeetestKey}" placeholder="e4a515f6443xxx"
+                                value="{$SystemConfig.class.geetest.DefSetGeetestKey}" placeholder="e4a515f6443xxx"
                                 maxlength="">
                         </div>
                     </div>
@@ -109,10 +109,10 @@
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">验证模块状态</label>
                             <select class="mdui-select" style="width: 100%;" id="DefSetValidatesStatus">
-                                <option value="0" {if $configData.class.geetest.DefSetValidatesStatus==0}selected{/if}>
+                                <option value="0" {if $SystemConfig.class.geetest.DefSetValidatesStatus==0}selected{/if}>
                                     关闭
                                 </option>
-                                <option value="1" {if $configData.class.geetest.DefSetValidatesStatus==1}selected{/if}>
+                                <option value="1" {if $SystemConfig.class.geetest.DefSetValidatesStatus==1}selected{/if}>
                                     开启
                                 </option>
                             </select>

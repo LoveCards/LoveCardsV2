@@ -7,7 +7,7 @@ use app\common\Export;
 
 class SessionDebounce
 {
-    public function handle($var_t_def_request, \Closure $var_t_def_next)
+    public function handle($tDef_Request, \Closure $var_t_def_next)
     {
 
         //实现防抖
@@ -17,6 +17,6 @@ class SessionDebounce
             return Export::mObjectEasyCreate(['prompt' => $var_t_def_result[1]], '添加失败', 500);
         }
 
-        return $var_t_def_next($var_t_def_request);
+        return $var_t_def_next($tDef_Request);
     }
 }

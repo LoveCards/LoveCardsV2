@@ -5,7 +5,7 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
         </div>
         <div class="mdui-col-xs-6">
             <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
@@ -55,7 +55,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {volist name='list' id='data'}
+                    {volist name='CommonNowList' id='data'}
                     <tr>
                         <td>{$data.id}</td>
                         <td>{$data.userName}</td>
@@ -114,17 +114,9 @@
             <button class="mdui-btn mdui-ripple" id="btnEditUser" mdui-dialog-close>确定</button>
         </div>
     </div>
-
+    
     <!-- 分页按钮组件 -->
-    <div class="mdui-row mdui-text-center">
-        <div style="display: none;">{$list|raw}</div>
-        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
-            <i class="mdui-icon material-icons ">first_page</i>
-        </button>
-        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
-            <i class="mdui-icon material-icons">last_page</i>
-        </button>
-    </div>
+    {include file="public/component-easyPaging"}
 
 </div>
 {include file="public/footer"}

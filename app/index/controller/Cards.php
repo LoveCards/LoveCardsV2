@@ -28,17 +28,17 @@ class Cards extends BaseController
         View::assign('CardsModel', $tReq_ParamModel);
 
         //取Cards列表数据
-        $tDef_CardsListsMax = 12; //每页个数
+        $tDef_CardsListMax = 12; //每页个数
         $lDef_Result = Db::table('cards')->alias('CARD')
             ->field(self::G_Def_DbCardsCommonField)
             ->leftJoin('good GOOD', self::G_Def_DbCardsCommonJoin . "'$this->attrGReqIp'")
             ->where('CARD.status', 0)
             ->where('CARD.model', $tReq_ParamModel)
             ->order('CARD.id', 'desc')
-            ->paginate($tDef_CardsListsMax, true);
+            ->paginate($tDef_CardsListMax, true);
         $tDef_CardsEasyPagingComponent = $lDef_Result->render();
-        $lDef_CardsLists = $lDef_Result->items();
-        $this->mObjectEasyAssignCards($lDef_CardsLists, $tDef_CardsEasyPagingComponent, $tDef_CardsListsMax); //Cards相关变量
+        $lDef_CardsList = $lDef_Result->items();
+        $this->mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsEasyPagingComponent, $tDef_CardsListMax); //Cards相关变量
 
         $this->mObjectEasyGetAndAssignCardsTags(); //获取并赋值CardsTag相关变量
 
@@ -87,23 +87,23 @@ class Cards extends BaseController
         $this->mObjectEasyGetAndAssignCardsTags();
 
         // 获取评论列表
-        $tDef_CommentsListsMax = 6; // 每页个数
+        $tDef_CommentsListMax = 6; // 每页个数
         $lDef_Result = Db::table('cards_comments')->where('cid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
-            ->paginate($tDef_CommentsListsMax, true);
-        $tDef_CommentsListsEasyPagingComponent = $lDef_Result->render();
-        $tDef_CommentsLists = $lDef_Result->items();
+            ->paginate($tDef_CommentsListMax, true);
+        $tDef_CommentsListEasyPagingComponent = $lDef_Result->render();
+        $tDef_CommentsList = $lDef_Result->items();
 
         // 评论列表变量
         View::assign([
-            'CardCommentsListsEasyPagingComponent' => $tDef_CommentsListsEasyPagingComponent,
-            'CardCommentsLists' => $tDef_CommentsLists,
-            'CardCommentsListsMax' => $tDef_CommentsListsMax
+            'CardCommentsListEasyPagingComponent' => $tDef_CommentsListEasyPagingComponent,
+            'CardCommentsList' => $tDef_CommentsList,
+            'CardCommentsListMax' => $tDef_CommentsListMax
         ]);
 
         // 卡片变量
         View::assign([
             'CardData' =>  $lDef_CardData,
-            'CardImgLists' => $tDef_ImgData
+            'CardImgList' => $tDef_ImgData
         ]);
 
         if (!$lDef_CardData['woName']) {
@@ -131,8 +131,8 @@ class Cards extends BaseController
         $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         $tDef_CardsTagData = $lDef_Result;
         View::assign([
-            'CardsTagsListsJson' => json_encode($tDef_CardsTagData),
-            'CardsTagsLists' => $tDef_CardsTagData
+            'CardsTagsListJson' => json_encode($tDef_CardsTagData),
+            'CardsTagsList' => $tDef_CardsTagData
         ]);
 
         // 基础变量
@@ -171,14 +171,14 @@ class Cards extends BaseController
             }
 
             // 取 Cards 列表
-            $tDef_CardsListsMax = 12; // 每页个数
+            $tDef_CardsListMax = 12; // 每页个数
             $tDef_Result = $tDef_Result->where('id|content|woName|taName', 'like', '%' . $tReq_ParamSearchValue . '%')->order('id', 'desc')
-                ->paginate($tDef_CardsListsMax, true);
-            $tDef_CardsListsEasyPagingComponent = $tDef_Result->render();
-            $lDef_CardsLists = $tDef_Result->items();
+                ->paginate($tDef_CardsListMax, true);
+            $tDef_CardsListEasyPagingComponent = $tDef_Result->render();
+            $lDef_CardsList = $tDef_Result->items();
 
             // 组合 Good 状态到 $tListData 列表
-            foreach ($lDef_CardsLists as &$card) {
+            foreach ($lDef_CardsList as &$card) {
                 $tResultGood = Db::table('good')->where('aid', 1)->where('ip', $this->attrGReqIp);
                 // 查找对应封面
                 if ($tResultGood->where('pid', $card['id'])->findOrEmpty() == []) {
@@ -191,23 +191,23 @@ class Cards extends BaseController
             }
         } else {
             // 定义为空
-            $tDef_CardsListsEasyPagingComponent = [];
-            $lDef_CardsLists = [];
-            $tDef_CardsListsMax = [];
+            $tDef_CardsListEasyPagingComponent = [];
+            $lDef_CardsList = [];
+            $tDef_CardsListMax = [];
         }
 
         // 取 Tag 数据
         $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         View::assign([
-            'CardsTagsListsJson' => json_encode($lDef_Result),
-            'CardsTagsLists' => $lDef_Result
+            'CardsTagsListJson' => json_encode($lDef_Result),
+            'CardsTagsList' => $lDef_Result
         ]);
 
         //Cards分页变量;
         View::assign([
-            'CardsListsEasyPagingComponent'  => $tDef_CardsListsEasyPagingComponent,
-            'CardsLists'  => $lDef_CardsLists,
-            'CardsListsMax'  => $tDef_CardsListsMax
+            'CardsListEasyPagingComponent'  => $tDef_CardsListEasyPagingComponent,
+            'CardsList'  => $lDef_CardsList,
+            'CardsListMax'  => $tDef_CardsListMax
         ]);
         // 基础变量
         View::assign([
@@ -236,17 +236,17 @@ class Cards extends BaseController
         $tDef_ViewTitle = '关于' . $tReq_TagId['name'] . '的卡片合集';
 
         // 取 cards_tag_map 列表
-        $tDef_CardsListsMax = 12; // 每页个数
+        $tDef_CardsListMax = 12; // 每页个数
         $lDef_Result = Db::table('cards_tag_map')->alias('CTM')
             ->join('cards CARD', 'CTM.cid = CARD.id')
             ->field(self::G_Def_DbCardsCommonField)
             ->leftJoin('good GOOD', self::G_Def_DbCardsCommonJoin . "'$this->attrGReqIp'")
             ->where('CTM.tid', $tReq_TagIdValue)
             ->order('CARD.id', 'desc')
-            ->paginate($tDef_CardsListsMax, true);
-        $tDef_CardsListsEasyPagingComponent = $lDef_Result->render();
-        $lDef_CardsLists = $lDef_Result->items();
-        $this->mObjectEasyAssignCards($lDef_CardsLists, $tDef_CardsListsEasyPagingComponent, $tDef_CardsListsMax); //赋值Cards相关变量
+            ->paginate($tDef_CardsListMax, true);
+        $tDef_CardsListEasyPagingComponent = $lDef_Result->render();
+        $lDef_CardsList = $lDef_Result->items();
+        $this->mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax); //赋值Cards相关变量
 
         $this->mObjectEasyGetAndAssignCardsTags(); //获取并赋值CardsTag相关变量
 

@@ -26,7 +26,7 @@
 
     <!-- 分页按钮组件 -->
     <div class="mdui-p-t-2 mdui-text-center">
-        <div style="display: none;">{$CardsListsEasyPagingComponent|raw}</div>
+        <div style="display: none;">{$CardsListEasyPagingComponent|raw}</div>
         <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
             <i class="mdui-icon material-icons ">first_page</i>
         </button>
@@ -45,7 +45,7 @@
         //初始化分页
         pager();
         //获取Tag数据
-        ViewCardsTag('{$CardsTagsListsJson|raw}');
+        ViewCardsTag('{$CardsTagsListJson|raw}');
 
         //悬浮按钮
         $('#jsBtnGreen').click(function () {

@@ -4,7 +4,7 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
                         <i
                             class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue mdui-text-color-white">note</i>
                         <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">{$dataNum['cards']}</div>
+                            <div class="mdui-list-item-title">{$ViewDataCount['cards']}</div>
                             <div class="mdui-list-item-text">卡片总数</div>
                         </div>
                     </li>
@@ -37,7 +37,7 @@
                         <i
                             class="mdui-list-item-avatar mdui-icon material-icons mdui-color-yellow-600 mdui-text-color-white">insert_comment</i>
                         <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">{$dataNum['cardsComments']}</div>
+                            <div class="mdui-list-item-title">{$ViewDataCount['cardsComments']}</div>
                             <div class="mdui-list-item-text">评论总数</div>
                         </div>
                     </li>
@@ -45,7 +45,7 @@
                         <i
                             class="mdui-list-item-avatar mdui-icon material-icons mdui-color-red-600 mdui-text-color-white">favorite</i>
                         <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">{$dataNum['good']}</div>
+                            <div class="mdui-list-item-title">{$ViewDataCount['good']}</div>
                             <div class="mdui-list-item-text">点赞总数</div>
                         </div>
                     </li>
@@ -62,30 +62,30 @@
                             <i class="css-icon iconfont icon-heart-pulse mdui-text-color-light-blue-500"></i>
                         </div>
                         <div class="mdui-col-xs-10 mdui-col-sm-9 mdui-p-t-1 mdui-text-color-grey-800">
-                            <div class="mdui-typo-title-opacity">{$systemVer['Name']}</div>
-                            <div class="mdui-typo-subheading-opacity">{$systemVer['VerS']}</div>
+                            <div class="mdui-typo-title-opacity">{$LCVersionInfo['Name']}</div>
+                            <div class="mdui-typo-subheading-opacity">{$LCVersionInfo['VerS']}</div>
                         </div>
                     </div>
                 </div>
                 <div class="mdui-divider"></div>
                 <ul class="mdui-list">
-                    <a href="{$systemVer['Url']}" target="_blank">
+                    <a href="{$LCVersionInfo.Url}" target="_blank">
                         <li class="mdui-list-item mdui-ripple">
                             <i class="mdui-list-item-icon mdui-icon material-icons">move_to_inbox</i>
                             <div class="mdui-list-item-content">项目主页</div>
                         </li>
                     </a>
-                    <a href="{$systemVer['Url']}" target="_blank">
+                    <a href="{$LCVersionInfo.Url}" target="_blank">
                         <li class="mdui-list-item mdui-ripple">
                             <i class="mdui-list-item-icon mdui-icon material-icons">send</i>
                             <div class="mdui-list-item-content">使用文档</div>
                         </li>
-                    </a><a href="{$systemVer['GithubUrl']}" target="_blank">
+                    </a><a href="{$LCVersionInfo.GithubUrl}" target="_blank">
                         <li class="mdui-list-item mdui-ripple">
                             <i class="mdui-list-item-icon iconfont">&#xe885;</i>
                             <div class="mdui-list-item-content">Github</div>
                         </li>
-                    </a><a href="{$systemVer['QGroupUrl']}" target="_blank">
+                    </a><a href="{$LCVersionInfo.QGroupUrl}" target="_blank">
                         <li class="mdui-list-item mdui-ripple">
                             <i class="mdui-list-item-icon iconfont">&#xe882;</i>
                             <div class="mdui-list-item-content">QQ交流群</div>
@@ -124,7 +124,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.0/dist/chart.umd.min.js"></script>
 <script>
     //图表数据传递
-    var dataChart = JSON.parse('{$dataChart|raw}');
+    var dataChart = JSON.parse('{$ViewChartJson|raw}');
     //整理图表数据
     var chartLabelsDataX = new Array();
     var chartLabelsDataY = new Array();

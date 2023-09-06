@@ -14,7 +14,7 @@
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
 
             <!-- TOP 卡片循环 -->
-            {volist name='CardsLists' id='D'}
+            {volist name='CardsList' id='D'}
             <div class="mdui-col mdui-m-b-2">
 
                 <div class="mdui-card">
@@ -129,7 +129,7 @@
 <script>
     $(function () {
         //获取Tag数据
-        ViewCardsTag('{$CardsTagsListsJson|raw}');
+        ViewCardsTag('{$CardsTagsListJson|raw}');
 
         //悬浮按钮
         $('#jsBtnGreen').click(function () {

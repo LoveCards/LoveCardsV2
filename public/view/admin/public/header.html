@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{$viewTitle} - {$systemVer['Name']}</title>
+    <title>{$ViewTitle} - {LCVersionInfo['Name']}</title>
     <meta charset="utf-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
@@ -42,7 +42,7 @@
             <div class="mdui-toolbar-spacer"></div>
 
             <div class="mdui-typo">
-                <kbd>{$adminData['userName']}</kbd>
+                <kbd>{$AdminData['userName']}</kbd>
             </div>
 
         </div>
@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            {if $adminData['power'] == 0}
+            {if $AdminData['power'] == 0}
             <div class="mdui-collapse-item">
                 <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
                     <i class="mdui-list-item-icon mdui-icon material-icons">settings</i>

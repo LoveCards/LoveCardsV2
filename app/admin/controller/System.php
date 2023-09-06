@@ -12,14 +12,16 @@ use app\common\File;
 use app\common\FrontEnd;
 use app\common\Theme;
 
-class System
+use app\admin\BaseController;
+
+class System extends BaseController
 {
 
     //中间件
     protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
 
     //Index
-    public function Index(TypeRequest $var_t_def_request)
+    public function Index(TypeRequest $tDef_Request)
     {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
@@ -27,10 +29,8 @@ class System
 
         //基础变量
         View::assign([
-            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
-            'configData' => Config::get('lovecards'),
-            'systemVer' => Common::systemVer(),
-            'viewTitle'  => '系统设置'
+            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'ViewTitle'  => '系统设置'
         ]);
 
         //输出模板
@@ -38,7 +38,7 @@ class System
     }
 
     //View
-    public function View(TypeRequest $var_t_def_request)
+    public function View(TypeRequest $tDef_Request)
     {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
@@ -70,9 +70,8 @@ class System
 
         //基础变量
         View::assign([
-            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
-            'systemVer' => Common::systemVer(),
-            'viewTitle'  => '外观设置',
+            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'ViewTitle'  => '外观设置',
             //模板配置列表
             'templateConfig' => $templateConfig,
             //当前模板配置
@@ -84,7 +83,7 @@ class System
     }
 
     //View-Set
-    public function ViewSet(TypeRequest $var_t_def_request)
+    public function ViewSet(TypeRequest $tDef_Request)
     {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
@@ -97,9 +96,8 @@ class System
 
         //基础变量
         View::assign([
-            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
-            'systemVer' => Common::systemVer(),
-            'viewTitle'  => '主题设置',
+            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'ViewTitle'  => '主题设置',
             //当前模板配置
             'TemplateConfig' => $TemplateConfig
         ]);

@@ -73,19 +73,19 @@ class BaseController extends Common
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
-            'SystemConfig' => config::get('lovecards.class'),
+            'SystemConfig' => config::get('lovecards'),
             'ViewKeywords' => false,
             'ViewDescription' => false,
         ]);
     }
 
-    protected function mObjectEasyAssignCards($lDef_CardsLists, $tDef_CardsListsEasyPagingComponent, $tDef_CardsListsMax)
+    protected function mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
     {
         //赋值Cards相关变量;
         View::assign([
-            'CardsLists'  => $lDef_CardsLists,
-            'CardsListsEasyPagingComponent'  => $tDef_CardsListsEasyPagingComponent,
-            'CardsListsMax'  => $tDef_CardsListsMax
+            'CardsList'  => $lDef_CardsList,
+            'CardsListEasyPagingComponent'  => $tDef_CardsListEasyPagingComponent,
+            'CardsListMax'  => $tDef_CardsListMax
         ]);
     }
 
@@ -94,8 +94,8 @@ class BaseController extends Common
         //获取并赋值CardsTag相关变量
         $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         View::assign([
-            'CardsTagsListsJson' => json_encode($lDef_Result),
-            'CardsTagsLists' => $lDef_Result
+            'CardsTagsListJson' => json_encode($lDef_Result),
+            'CardsTagsList' => $lDef_Result
         ]);
     }
 }

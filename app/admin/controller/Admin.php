@@ -6,31 +6,38 @@ use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 
-use app\common\Common;
+use app\common\FrontEnd;
 
-class Admin
+use app\admin\BaseController;
+
+class Admin extends BaseController
 {
 
     //中间件
     protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
 
     //Index
-    public function Index(TypeRequest $var_t_def_request)
+    public function Index(TypeRequest $tDef_Request)
     {
-        //获取列表
-        $listNum = 5;
-        $list = Db::table('admin')
-            ->paginate($listNum, true);
+        $tDef_AdminListMax = 5;
+        $lDef_Result = Db::table('admin')
+            ->paginate($tDef_AdminListMax, true);
+
+        $tDef_AdminListEasyPagingComponent = $lDef_Result->render();
+        $lDef_AdminList = $lDef_Result->items();
+
         View::assign([
-            'list'  => $list,
-            'listNum'  => $listNum
+            'AdminList'  => $lDef_AdminList,
+            'AdminListEasyPagingComponent'  => $tDef_AdminListEasyPagingComponent,
+            'AdminListMax'  => $tDef_AdminListMax
         ]);
+        //通用列表
+        FrontEnd::mObjectEasyAssignCommonNowList($lDef_AdminList, $tDef_AdminListEasyPagingComponent, $tDef_AdminListMax);
 
         //基础变量
         View::assign([
-            'adminData'  => $var_t_def_request->attrLDefNowAdminAllData,
-            'systemVer' => Common::systemVer(),
-            'viewTitle'  => '账号管理'
+            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'ViewTitle'  => '账号管理'
         ]);
 
         //输出模板

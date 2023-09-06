@@ -5,7 +5,7 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
         </div>
     </div>
 
@@ -17,22 +17,24 @@
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">图片上传最大数</label>
                         <input class="mdui-textfield-input" type="text" id="DefSetCardsImgNum"
-                            value="{$configData['Cards']['DefSetCardsImgNum']}" placeholder="9" maxlength="">
+                            value="{$SystemConfig['api']['Cards']['DefSetCardsImgNum']}" placeholder="9" maxlength="">
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-md-4">
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">标签最大选择数</label>
                         <input class="mdui-textfield-input" type="text" id="DefSetCardsTagNum"
-                            value="{$configData['Cards']['DefSetCardsTagNum']}" placeholder="3" maxlength="">
+                            value="{$SystemConfig['api']['Cards']['DefSetCardsTagNum']}" placeholder="3" maxlength="">
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-md-4">
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">卡片审核</label>
                         <select class="mdui-select" style="width: 100%;" id="DefSetCardsStatus">
-                            <option value="0" {if $configData['Cards']['DefSetCardsStatus']==0}selected{/if}>关闭</option>
-                            <option value="1" {if $configData['Cards']['DefSetCardsStatus']==1}selected{/if}>开启</option>
+                            <option value="0" {if $SystemConfig['api']['Cards']['DefSetCardsStatus']==0}selected{/if}>关闭
+                            </option>
+                            <option value="1" {if $SystemConfig['api']['Cards']['DefSetCardsStatus']==1}selected{/if}>开启
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -40,7 +42,7 @@
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">图片大小限制(单位：M/每张)</label>
                         <input class="mdui-textfield-input" type="text" id="DefSetCardsImgSize"
-                            value="{$configData['Upload']['DefSetCardsImgSize']}" placeholder="2" maxlength="">
+                            value="{$SystemConfig['api']['Upload']['DefSetCardsImgSize']}" placeholder="2" maxlength="">
                     </div>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-md-6">
@@ -48,9 +50,11 @@
                         <label class="mdui-textfield-label">评论审核</label>
                         <select class="mdui-select" style="width: 100%;" id="DefSetCardsCommentsStatus">
                             <option value="0" {if
-                                $configData['CardsComments']['DefSetCardsCommentsStatus']==0}selected{/if}>关闭</option>
+                                $SystemConfig['api']['CardsComments']['DefSetCardsCommentsStatus']==0}selected{/if}>关闭
+                            </option>
                             <option value="1" {if
-                                $configData['CardsComments']['DefSetCardsCommentsStatus']==1}selected{/if}>开启</option>
+                                $SystemConfig['api']['CardsComments']['DefSetCardsCommentsStatus']==1}selected{/if}>开启
+                            </option>
                         </select>
                     </div>
                 </div>

@@ -96,16 +96,14 @@
     *渲染初始化
     */
     $(function () {
-        const setImgError = (el) => {
-            // 删除加载元素
-            el.parent().parent().next().remove();
-            el.attr('src', '{$ThemeDirectoryPath}/image/error.png');
-        }
+        const LoadingImgSrc = '{$ThemeDirectoryPath}/image/loading.png'
+        const ErrorImgSrc = '{$ThemeDirectoryPath}/image/error.png'
+        const FunEndLoad = (el) => { el.parent().parent().next().remove(); }
 
         $("img").lazyload({
             threshold: 200,
             effect: "fadeIn",
-            placeholder: '{$ThemeDirectoryPath}/image/loading.png',
+            placeholder: LoadingImgSrc,
             //failure_limit: 3, // 设置尝试加载的次数,
             appear: function () {
                 setTimeout(function () {
@@ -115,15 +113,16 @@
             load: function () {
                 // 图片加载完成后初始化瀑布流
                 initMasonry();
-                setImgError($(this));
+                FunEndLoad($(this));
             }
         });
 
         setTimeout(function () {
             $("img.js-jumpurl-cardId").each(function () {
                 //加载失败图片更新
-                if ($(this).attr('src') == '{$ThemeDirectoryPath}/image/loading.png') {
-                    setImgError($(this));
+                if ($(this).attr('src') == LoadingImgSrc) {
+                    FunEndLoad($(this));
+                    $(this).attr('src', ErrorImgSrc);
                 }
             });
         }, 5000);

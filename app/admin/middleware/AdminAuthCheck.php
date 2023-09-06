@@ -6,16 +6,16 @@ use app\admin\middleware\CheckClass;
 
 class AdminAuthCheck extends CheckClass
 {
-    public function handle($var_t_def_request, \Closure $var_t_def_next)
+    public function handle($tDef_Request, \Closure $tDef_Next)
     {
         //实现Admin鉴权
-        $var_t_def_result = $this->mObjectGetNowAdminAllData();
-        if ($var_t_def_result) {
-            return $var_t_def_result;
+        $tDef_Result = $this->mObjectGetNowAdminAllData();
+        if ($tDef_Result) {
+            return $tDef_Result;
         }
         //传递当前管理员全部数据
-        $var_t_def_request->attrLDefNowAdminAllData = $this->attrLDefNowAdminAllData[1];
+        $tDef_Request->attrLDefNowAdminAllData = $this->attrLDefNowAdminAllData[1];
 
-        return $var_t_def_next($var_t_def_request);
+        return $tDef_Next($tDef_Request);
     }
 }

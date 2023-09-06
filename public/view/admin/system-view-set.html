@@ -5,7 +5,7 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$viewTitle}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
         </div>
     </div>
 
@@ -13,25 +13,25 @@
     <div class="mdui-card">
         <div class="mdui-p-b-2 mdui-p-x-2">
             <div class="mdui-row">
-                {foreach $TemplateConfig['Select'] as $key=>$Data0 }
+                {foreach $TemplateConfig['Select'] as $key=>$D0 }
                 <div class="mdui-col-xs-12">
                     <div class="mdui-textfield">
-                        <label class="mdui-textfield-label">{$Data0['Name']}</label>
+                        <label class="mdui-textfield-label">{$D0['Name']}</label>
                         <select class="mdui-select" style="width: 100%;" id="{$key}">
-                            {foreach $Data0['Element'] as $key=>$Data1 }
-                            <option value="{$key}" {if $Data0['Default']==$key}selected{/if}>
-                                {if $Data1===false}
+                            {foreach $D0['Element'] as $key=>$D1 }
+                            <option value="{$key}" {if $D0['Default']==$key}selected{/if}>
+                                {if $D1===false}
                                 关闭
-                                {elseif $Data1===true/}
+                                {elseif $D1===true/}
                                 开启
                                 {else /}
-                                {$Data1}
+                                {$D1}
                                 {/if}
                             </option>
                             {/foreach}
                         </select>
                         <div class="mdui-textfield">
-                            <div class="mdui-textfield-helper">{$Data0['Introduction']}</div>
+                            <div class="mdui-textfield-helper">{$D0['Introduction']}</div>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
 
             //赋值
             $('.mdui-select').each(function () {
-                SelectJson['Select'+$(this).attr('id')] = $(this).val();
+                SelectJson['Select' + $(this).attr('id')] = $(this).val();
             });
 
 

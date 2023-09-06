@@ -31,7 +31,7 @@ class Index extends BaseController
         $var_l_def_result = Db::query("select * from cards where top = '0' and status = '0' order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
         //合并推荐列表到置顶列表
         $var_l_def_cards_lists = array_merge($var_l_def_cards_lists, $var_l_def_result);
-        //取Good状态合并到CardsLists数据
+        //取Good状态合并到CardsList数据
         for ($i = 0; $i < sizeof($var_l_def_cards_lists); $i++) {
             $var_l_def_result = Db::table('good')->where('aid', 1)->where('ip', $this->attrGReqIp);
             //查找对应封面
@@ -47,12 +47,12 @@ class Index extends BaseController
         //Tag列表
         $var_l_def_result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
         View::assign([
-            'CardsTagsListsJson' => json_encode($var_l_def_result),
-            'CardsTagsLists' => $var_l_def_result
+            'CardsTagsListJson' => json_encode($var_l_def_result),
+            'CardsTagsList' => $var_l_def_result
         ]);
 
         //Cards列表;
-        View::assign('CardsLists', $var_l_def_cards_lists);
+        View::assign('CardsList', $var_l_def_cards_lists);
 
         //基础变量
         View::assign([
