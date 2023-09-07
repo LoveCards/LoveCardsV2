@@ -11,7 +11,6 @@ use app\index\BaseController;
 
 class Index extends BaseController
 {
-    //输出
     public function Index()
     {
         define("CONST_G_TOP_LISTS_MAX", 32); //置顶卡片列表最大个数
