@@ -4,6 +4,7 @@ namespace app\common;
 
 use think\Facade;
 use think\facade\Config;
+use think\facade\View;
 
 class Theme extends Facade
 {
@@ -75,7 +76,16 @@ class Theme extends Facade
         }
     }
 
-    //获取主题配置
+    /**
+     * @description: 获取主题配置
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-09-07 12:57:15
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $TemplateDirectory
+     * @param {*} $Original
+     */
     protected static function mResultGetThemeConfig($TemplateDirectory, $Original = false)
     {
         $path = $_SERVER['DOCUMENT_ROOT'] . '/view/index/' . $TemplateDirectory . '/config.php';
@@ -94,5 +104,24 @@ class Theme extends Facade
         } else {
             return false;
         }
+    }
+
+    /**
+     * @description: 规范化View::fetch
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-09-07 13:06:14
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $tDef_Path
+     */    
+    protected static function mObjectEasyViewFetch($tDef_Path)
+    {
+        try {
+            $tDef_Result = View::fetch($tDef_Path);
+        } catch (\Throwable $th) {
+            return redirect('/index/404');
+        }
+        return $tDef_Result;
     }
 }

@@ -2,15 +2,14 @@
 
 namespace app\index\controller;
 
-//TP类
 use think\facade\View;
 use think\facade\Db;
 use think\facade\Request;
 use think\facade\Config;
 
-//类
 use app\common\BackEnd;
 use app\common\FrontEnd;
+use app\common\Theme;
 use app\index\BaseController;
 
 class Cards extends BaseController
@@ -48,7 +47,7 @@ class Cards extends BaseController
         ]);
 
         //输出模板
-        return View::fetch($this->attrGDefNowThemeDirectoryPath . '/cards');
+        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards');
     }
 
     // 卡片详情
@@ -117,7 +116,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGDefNowThemeDirectoryPath . '/card');
+        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/card');
     }
 
     // 添加卡片
@@ -141,7 +140,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGDefNowThemeDirectoryPath . '/cards-add');
+        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards-add');
     }
 
 
@@ -215,7 +214,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGDefNowThemeDirectoryPath . '/cards-search');
+        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards-search');
     }
 
     // TAG集合
@@ -257,6 +256,6 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGDefNowThemeDirectoryPath . '/cards-tag');
+        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards-tag');
     }
 }
