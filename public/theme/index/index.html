@@ -1,4 +1,4 @@
-{include file="index/public/header"}
+{include file="public/header"}
 
 <!-- 页体 -->
 <div id="jsParameter" jsPageHierarchy=0 jsTabClass="0" class="mdui-container">
@@ -16,7 +16,7 @@
             <!-- TOP 卡片循环 -->
             {volist name='CardsList' id='D'}
             <div class="mdui-col mdui-m-b-2">
-
+                <a href="{__ThemeUrlPath__}/index.html"></a>
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
                     {if $D['model'] == 0}
@@ -117,14 +117,14 @@
             </div>
             {/volist}
             <!-- 分享弹窗 -->
-            {include file="index/public/component-share"}
+            {include file="public/component-share"}
         </div>
     </div>
 
 </div>
 
 
-{include file="index/public/footer"}
+{include file="public/footer"}
 
 <script>
     $(function () {

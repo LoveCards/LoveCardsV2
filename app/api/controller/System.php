@@ -6,9 +6,11 @@ use think\facade\Request;
 use think\facade\Db;
 use think\facade\Config;
 
+use app\common\File;
 use app\common\Export;
 use app\common\BackEnd;
 use app\common\Theme;
+use app\common\Common;
 
 class System
 {
@@ -70,10 +72,17 @@ class System
     //主题设置-POST
     public function Template()
     {
-        $template_directory = Request::param('templateDirectory');
-        $result = BackEnd::mBoolCoverConfig('lovecards', ['template_directory' => $template_directory]);
+        $tReq_ThemeDirectoryName = Request::param('themeDirectory');
+        $tReq_ThemeInfo = json_decode(File::read_file('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
+        $tDef_LCVersionInfo = Common::mArrayGetLCVersionInfo();
 
-        if ($result == true) {
+        if (!($tDef_LCVersionInfo['VerS'] >= $tReq_ThemeInfo['SysVersionL'] && $tDef_LCVersionInfo['VerS'] < $tReq_ThemeInfo['SysVersionR'])) {
+            return Export::mObjectEasyCreate([], '修改失败，该主题不适用当前版本', 400);
+        }
+
+        $tDef_Result = BackEnd::mBoolCoverConfig('lovecards', ['theme_directory' => $tReq_ThemeDirectoryName]);
+
+        if ($tDef_Result == true) {
             return Export::mObjectEasyCreate([], '修改成功', 200);
         } else {
             return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
@@ -83,22 +92,38 @@ class System
     //主题配置-POST
     public function TemplateSet()
     {
-        $templateDirectory = Config::get('lovecards.template_directory', 'index') ?: 'index';
+        $tDef_ThemeDirectory = Config::get('lovecards.theme_directory', 'index') ?: 'index';
 
-        $select = json_decode(Request::param('select'));
+        $lReq_ParamSelect = json_decode(Request::param('select'));
+        $lReq_ParamText = json_decode(Request::param('text'));
 
-        $TemplateConfigPHP = Theme::mResultGetThemeConfig($templateDirectory, true);
+        $tDef_ThemeConfig = Theme::mResultGetThemeConfig($tDef_ThemeDirectory, true);
 
+        $lDef_ParamThemeConfig = [];
         //校验元素是否合法
-        foreach ($select as $key => $value) {
-            if (count($TemplateConfigPHP['Select'][$key]['Element']) < $value) {
-                return Export::mObjectEasyCreate([], '修改失败，存在非法元素', 400);
+        if (!empty($lReq_ParamSelect)) {
+            foreach ($lReq_ParamSelect as $key => $value) {
+                if (count($tDef_ThemeConfig['Select'][$key]['Element']) < $value) {
+                    return Export::mObjectEasyCreate([], '修改失败，Select存在非法元素', 400);
+                }
+                $lDef_ParamThemeConfig['Select' . $key] = $value;
             }
         }
 
-        $result = Theme::mBoolCoverThemeConfig('/index/' . $templateDirectory . '/config', $select, true, 'ThemeConfig');
+        //转义
+        if (!empty($lReq_ParamText)) {
+            foreach ($lReq_ParamText as $key => $value) {
+                if (empty($tDef_ThemeConfig['Text'][$key]['Name'])) {
+                    return Export::mObjectEasyCreate([], '修改失败，Text存在非法元素', 400);
+                }
+                $lDef_ParamThemeConfig['Text' . $key] = $value;
+            }
+        }
 
-        if ($result == true) {
+        //更新
+        $tDef_Result = Theme::mBoolCoverThemeConfig($tDef_ThemeDirectory, $lDef_ParamThemeConfig);
+
+        if ($tDef_Result) {
             return Export::mObjectEasyCreate([], '修改成功', 200);
         } else {
             return Export::mObjectEasyCreate([], '修改失败，请重试', 400);

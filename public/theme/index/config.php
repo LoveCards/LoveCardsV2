@@ -6,7 +6,7 @@ $Config = [
         'ThemeLinkCDN' => [
             'Name' => '资源CDN开关',
             'Introduction' => 'HTML中的部分Link资源CDN的开关',
-            'Default' => env('ThemeConfig.SelectThemeLinkCDN', 1),
+            'Default' => env('ThemeConfig.SelectThemeLinkCDN', 0),
             'Element' => [
                 0 => false,
                 1 => true,
@@ -16,7 +16,7 @@ $Config = [
         'ThemeDark' => [
             'Name' => '默认暗色开关',
             'Introduction' => '主题为默认暗色的开关',
-            'Default' => env('ThemeConfig.SelectThemeDark', 0),
+            'Default' => env('ThemeConfig.SelectThemeDark', 1),
             'Element' => [
                 0 => false,
                 1 => true
@@ -72,6 +72,15 @@ $Config = [
                 14 => 'deep-orange',
                 15 => 'blue-grey'
             ]
+        ],
+    ],
+    //文本格式配置
+    'Text' => [
+        //统计代码变量
+        'ThemeStatistics' => [
+            'Name' => '统计代码',
+            'Introduction' => '该代码会插入<head></head>内',
+            'Default' => env('ThemeConfig.TextThemeStatistics', '')
         ],
     ]
 ];

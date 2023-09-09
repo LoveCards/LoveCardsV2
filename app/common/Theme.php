@@ -18,53 +18,47 @@ class Theme extends Facade
      */
     protected static function mArrayGetThemeDirectory()
     {
-        $d = Config::get('lovecards.template_directory', 'index') ?: 'index';
-        $r = Is_dir('./view/index/' . $d);
-        //dd($r);
-        if ($r) {
-            //当目录存在时
-            $r = $d;
-        } else {
-            $r = 'index';
+        $N = Config::get('lovecards.theme_directory', 'index');
+        $P = 'theme/' . $N;
+        if (!Is_dir($P)) {
+            $N = 'index';
+            $P = 'theme/index';
         }
-        //dd($r, $d);
-        return [$r, $d];
+        return ['P' => $P, 'N' => $N];
     }
 
     /**
      * @description: 编辑配置文件
      * @return {*}
      * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:16:37
+     * @Date: 2023-09-07 15:52:36
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      * @param {*} $fileName
-     * @param {*} $data
+     * @param {*} $Select
+     * @param {*} $Text
      */
-    protected static function mBoolCoverThemeConfig($fileName, $data, $free = false, $env = 'ThemeConfig')
+    protected static function mBoolCoverThemeConfig($fileName, $data)
     {
-        $fileName = '../public/view' . $fileName . '.php';
+        $fileName = '../public/theme/' . $fileName . '/config.php';
         $str_file = file_get_contents($fileName);
+        $env = 'ThemeConfig';
 
-        if ($free == true) {
-            foreach ($data as $key => $value) {
-                //构建正则匹配
-                $pattern = "/env\('" . $env . "\." . $key . "',\s*([^']*)\)/";
-                //判断是否成功匹配
-                if (preg_match($pattern, $str_file)) {
-                    //匹配成功更新
-                    $str_file = preg_replace($pattern, "env('" . $env . "." . $key . "', " . $value . ")", $str_file);
-                }
-            }
-        } else {
-            foreach ($data as $key => $value) {
-                //构建正则匹配
+        foreach ($data as $key => $value) {
+            //构建正则匹配
+            $pattern = "/env\('" . $env . "\." . $key . "',\s*([^']*)\)/";
+            $replacement =  "env('" . $env . "." . $key . "', " . $value . ")";
+
+            if (substr($key, 0, 4) === "Text") {
                 $pattern = "/env\('" . $env . "\." . $key . "',\s*'([^']*)'\)/";
-                //判断是否成功匹配
-                if (preg_match($pattern, $str_file)) {
-                    //匹配成功更新
-                    $str_file = preg_replace($pattern, "env('" . $env . "." . $key . "', '" . $value . "')", $str_file);
-                }
+                //单行转义处理
+                $value = urlencode($value);
+                $replacement =  "env('" . $env . "." . $key . "', '" . $value . "')";
+            }
+
+            //判断是否成功匹配
+            if (preg_match($pattern, $str_file)) {
+                $str_file = preg_replace($pattern, $replacement, $str_file);
             }
         }
 
@@ -88,7 +82,7 @@ class Theme extends Facade
      */
     protected static function mResultGetThemeConfig($TemplateDirectory, $Original = false)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/view/index/' . $TemplateDirectory . '/config.php';
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $TemplateDirectory . '/config.php';
         if (is_file($path)) {
             include $path;
             $require = array();
@@ -99,7 +93,13 @@ class Theme extends Facade
                 foreach ($Config['Select'] as $key => $value) {
                     $require[$key] = $value['Element'][$value['Default']];
                 }
+                foreach ($Config['Text'] as $key => $value) {
+                    //反转义
+                    $require[$key] = urldecode($value['Default']);
+                    //dd($require[$key]);
+                }
             }
+            //dd($require);
             return $require;
         } else {
             return false;
@@ -114,7 +114,7 @@ class Theme extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      * @param {*} $tDef_Path
-     */    
+     */
     protected static function mObjectEasyViewFetch($tDef_Path)
     {
         try {
@@ -123,5 +123,31 @@ class Theme extends Facade
             return redirect('/index/404');
         }
         return $tDef_Result;
+    }
+
+    /**
+     * @description: 根据主题设置View::config
+     * @return {*}
+     * @Author: github.com/zhiguai
+     * @Date: 2023-09-09 16:12:51
+     * @LastEditTime: Do not edit
+     * @LastEditors: github.com/zhiguai
+     * @param {*} $tDef_ThemeDirectoryName
+     */
+    protected static function mObjectEasySetViewConfig($tDef_ThemeDirectoryName = '')
+    {
+        if (empty($tDef_ThemeDirectoryName)) {
+            $tDef_Config = [
+                'view_path' => '',
+                'tpl_replace_string' => Config::get('view.tpl_replace_string')
+            ];
+        } else {
+            $tDef_Config = [
+                'view_path' => 'theme/' . $tDef_ThemeDirectoryName . '/',
+                'tpl_replace_string' => Config::get('view.tpl_replace_string')
+            ];
+            $tDef_Config['tpl_replace_string']['{__ThemeUrlPath__}'] = '/theme/' . $tDef_ThemeDirectoryName;
+        }
+        return View::config($tDef_Config);
     }
 }

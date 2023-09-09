@@ -26,6 +26,6 @@ return [
     // 便捷路径
     'tpl_replace_string'    =>  [
         '{__A-assets__}' =>  '/view/admin/assets',
-        '{__I-assets__}' =>  '/view/index/assets',
+        '{__I-assets__}' =>  '/theme/index/assets',
     ]
 ];

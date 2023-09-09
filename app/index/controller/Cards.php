@@ -47,7 +47,7 @@ class Cards extends BaseController
         ]);
 
         //输出模板
-        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards');
+        return Theme::mObjectEasyViewFetch('/cards');
     }
 
     // 卡片详情
@@ -116,7 +116,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/card');
+        return Theme::mObjectEasyViewFetch('/card');
     }
 
     // 添加卡片
@@ -140,7 +140,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards-add');
+        return Theme::mObjectEasyViewFetch('/cards-add');
     }
 
 
@@ -214,7 +214,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards-search');
+        return Theme::mObjectEasyViewFetch('/cards-search');
     }
 
     // TAG集合
@@ -256,6 +256,6 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch($this->attrGDefNowThemeDirectoryPath . '/cards-tag');
+        return Theme::mObjectEasyViewFetch('/cards-tag');
     }
 }
