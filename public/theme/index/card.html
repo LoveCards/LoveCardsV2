@@ -1,4 +1,4 @@
-{include file="index/public/header"}
+{include file="public/header"}
 
 <!-- 页体 -->
 <div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $CardData.model == 0}2{else}1{/if}" class="mdui-container">
@@ -195,12 +195,12 @@
         </div>
     </div>
     <!-- 分享弹窗 -->
-    {include file="index/public/component-share"}
+    {include file="public/component-share"}
 
 </div>
 
 
-{include file="index/public/footer"}
+{include file="public/footer"}
 {if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 <script src="{__A-assets__}/gt4/base.js"></script>

@@ -59,12 +59,15 @@ class Index extends BaseController
         ]);
 
         //输出模板
-        return View::fetch($this->attrGDefNowThemeDirectoryPath . '/index');
+        return View::fetch('/index');
     }
 
     public function Error()
     {
         $code = request()->param('code');
+
+        //恢复view为系统配置
+        Theme::mObjectEasySetViewConfig('');
 
         //输出模板
         if ($code == 404) {
@@ -73,7 +76,7 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
-            return View::fetch('../admin/error/404');
+            return View::fetch('../error/404');
         } else {
             return redirect('/');
         }

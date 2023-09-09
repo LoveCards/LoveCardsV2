@@ -24,7 +24,7 @@
 <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
 <script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
 <script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
-<script src="{$ThemeDirectoryPath}/masonry-4.2.2/masonry.pkgd.min.js"></script>
+<script src="{$ThemeAssetsUrlPath}/masonry-4.2.2/masonry.pkgd.min.js"></script>
 {else /}
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
@@ -96,8 +96,8 @@
     *渲染初始化
     */
     $(function () {
-        const LoadingImgSrc = '{$ThemeDirectoryPath}/image/loading.png'
-        const ErrorImgSrc = '{$ThemeDirectoryPath}/image/error.png'
+        const LoadingImgSrc = '{$ThemeAssetsUrlPath}/image/loading.png'
+        const ErrorImgSrc = '{$ThemeAssetsUrlPath}/image/error.png'
         const FunEndLoad = (el) => { el.parent().parent().next().remove(); }
 
         $("img").lazyload({
@@ -142,5 +142,5 @@
     }
 
 </script>
-<script src="{$ThemeDirectoryPath}/base.js"></script>
+<script src="{$ThemeAssetsUrlPath}/base.js"></script>
 <script src="{__A-assets__}/public.js"></script>

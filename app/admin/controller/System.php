@@ -45,27 +45,27 @@ class System extends BaseController
         View::assign($systemData);
 
         //取模板config数据
-        $templateDirectory = File::get_dirs('./view/index')['dir'];
-        $testTemplateConfig = array();
-        for ($i = 2; $i < count($templateDirectory); $i++) {
-            if ($templateDirectory[$i] != '.' && $templateDirectory[$i] != '..') {
-                $t = './view/index/' . $templateDirectory[$i];
-                if (File::get_size($t) != 0) {
-                    $testTemplateConfig[$templateDirectory[$i]] = json_decode(File::read_file($t . '/config.ini'), true);
-                    $testTemplateConfig[$templateDirectory[$i]]['DirectoryName'] = $templateDirectory[$i];
-                }
+        $lDef_ThemeDirectoryList = File::get_dirs('./theme')['dir'];
+        sort($lDef_ThemeDirectoryList);
+        $lDef_ThemeConfigList = array();
+        for ($i = 2; $i < count($lDef_ThemeDirectoryList); $i++) {
+            $tDef_ThemeBasePath = './theme/' . $lDef_ThemeDirectoryList[$i];
+            if (File::get_size($tDef_ThemeBasePath) != 0) {
+                // 以目录名为键
+                // $lDef_ThemeConfigList[$lDef_ThemeDirectoryList[$i]] = json_decode(File::read_file($tDef_ThemeBasePath . '/info.ini'), true);
+                // $lDef_ThemeConfigList[$lDef_ThemeDirectoryList[$i]]['DirectoryName'] = $lDef_ThemeDirectoryList[$i];
+                // 无键
+                $lDef_ThemeConfigList[$i - 2] = json_decode(File::read_file($tDef_ThemeBasePath . '/info.ini'), true);
+                $lDef_ThemeConfigList[$i - 2]['DirectoryName'] = $lDef_ThemeDirectoryList[$i];
             }
         }
-        $templateConfig = array();
-        foreach ($testTemplateConfig as $value) {
-            array_push($templateConfig, $value);
-        }
 
-        $nowTemplateDirectory = Config::get('lovecards.template_directory', 'index') ?: 'index';
-        $nowTemplateConfig = json_decode(File::read_file('./view/index/' . $nowTemplateDirectory . '/config.ini'), true);
-        $nowTemplateConfig['Config'] = Theme::mResultGetThemeConfig($nowTemplateDirectory);
-        if (!$nowTemplateConfig) {
-            $nowTemplateConfig = json_decode(File::read_file('./view/index/index/config.ini'), true);
+        $tDef_NowThemeDirectory = Theme::mArrayGetThemeDirectory()['N'];
+        $lDef_NowThemeInfo = json_decode(File::read_file('./theme/' . $tDef_NowThemeDirectory . '/info.ini'), true);
+        $lDef_NowThemeInfo['Config'] = Theme::mResultGetThemeConfig($tDef_NowThemeDirectory); //用来给前端判断主题是否可以配置
+
+        if (!$lDef_NowThemeInfo) {
+            $lDef_NowThemeInfo = json_decode(File::read_file('./theme/index/info.ini'), true);
         }
 
         //基础变量
@@ -73,9 +73,9 @@ class System extends BaseController
             'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
             'ViewTitle'  => '外观设置',
             //模板配置列表
-            'templateConfig' => $templateConfig,
+            'ThemeConfig' =>  $lDef_ThemeConfigList,
             //当前模板配置
-            'nowTemplateConfig' => $nowTemplateConfig
+            'nowThemeInfo' => $lDef_NowThemeInfo
         ]);
 
         //输出模板
@@ -89,9 +89,16 @@ class System extends BaseController
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
         View::assign($systemData);
 
-        $TemplateConfig = Theme::mResultGetThemeConfig(Config::get('lovecards.template_directory', 'index') ?: 'index', true);
-        if (!$TemplateConfig) {
+        $tDef_NowThemeConfig = Theme::mResultGetThemeConfig(Theme::mArrayGetThemeDirectory()['N'], true);
+        if (!$tDef_NowThemeConfig) {
             return FrontEnd::jumpUrl('/admin/system/view', '当前主题没有配置项');
+        }
+
+        //解码输出
+        if (!empty($tDef_NowThemeConfig['Text'])) {
+            foreach ($tDef_NowThemeConfig['Text'] as $key => $value) {
+                $tDef_NowThemeConfig['Text'][$key]['Default'] = urldecode($value['Default']);
+            }
         }
 
         //基础变量
@@ -99,7 +106,7 @@ class System extends BaseController
             'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
             'ViewTitle'  => '主题设置',
             //当前模板配置
-            'TemplateConfig' => $TemplateConfig
+            'TemplateConfig' => $tDef_NowThemeConfig
         ]);
 
         //输出模板

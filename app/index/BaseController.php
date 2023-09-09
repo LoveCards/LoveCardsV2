@@ -49,11 +49,13 @@ class BaseController extends Common
             exit;
         }
 
+        //基础变量
         $this->attrGReqTime = date('Y-m-d H:i:s');
         $this->attrGReqIp = $this->mStringGetIP();
-        $this->attrGDefNowThemeDirectoryPath = Theme::mArrayGetThemeDirectory()[0];
-        $this->attrGDefNowThemeDirectoryName = Theme::mArrayGetThemeDirectory()[1];
+        $this->attrGDefNowThemeDirectoryPath = Theme::mArrayGetThemeDirectory()['P'];
+        $this->attrGDefNowThemeDirectoryName = Theme::mArrayGetThemeDirectory()['N'];
 
+        //主题dark模式支持
         $lRes_ThemeConfig = Theme::mResultGetThemeConfig($this->attrGDefNowThemeDirectoryName);
         //dd(cookie('ThemeDark'));
         if (array_key_exists('ThemeDark', $lRes_ThemeConfig)) {
@@ -65,11 +67,13 @@ class BaseController extends Common
                 }
             }
         }
-        //dd(dd($lRes_ThemeConfig));
+
+        //根据主题覆盖模板配置
+        Theme::mObjectEasySetViewConfig($this->attrGDefNowThemeDirectoryName);
 
         //公共模板变量
         View::assign([
-            'ThemeDirectoryPath' => '/view/index/' . $this->attrGDefNowThemeDirectoryName . '/assets', //模板路径
+            'ThemeAssetsUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName . '/assets', //模板路径
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
