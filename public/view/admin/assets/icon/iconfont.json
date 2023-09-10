@@ -1,0 +1,359 @@
+{
+  "id": "3815034",
+  "name": "LoveCards2",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7134734",
+      "name": "浏览",
+      "font_class": "liulan",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "659168",
+      "name": "ic_share",
+      "font_class": "icshare",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "683274",
+      "name": "分享",
+      "font_class": "fenxiang",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "5633967",
+      "name": "copy",
+      "font_class": "copy",
+      "unicode": "ef86",
+      "unicode_decimal": 61318
+    },
+    {
+      "icon_id": "11294377",
+      "name": "icon_支付(union pay) ",
+      "font_class": "icon_zhifuunionpay",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "11992204",
+      "name": "amazon-pay",
+      "font_class": "amazon-pay1",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "12971024",
+      "name": "社交-微信",
+      "font_class": "shejiao-weixin",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "12971027",
+      "name": "社交-QQ",
+      "font_class": "shejiao-QQ",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "13743894",
+      "name": "applepay",
+      "font_class": "applepay",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "13744036",
+      "name": "we-chatpay",
+      "font_class": "we-chatpay",
+      "unicode": "e69b",
+      "unicode_decimal": 59035
+    },
+    {
+      "icon_id": "15188183",
+      "name": "amazon-pay",
+      "font_class": "amazon-pay2",
+      "unicode": "e6c5",
+      "unicode_decimal": 59077
+    },
+    {
+      "icon_id": "15559664",
+      "name": "社交图标-20",
+      "font_class": "shejiaotubiao-20",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "15559688",
+      "name": "社交图标-41",
+      "font_class": "shejiaotubiao-41",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "15559702",
+      "name": "社交图标-55",
+      "font_class": "shejiaotubiao-55",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "15559711",
+      "name": "社交图标-61",
+      "font_class": "shejiaotubiao-61",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "15559716",
+      "name": "比特币",
+      "font_class": "shejiaotubiao-69",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "18166644",
+      "name": "社交,qq",
+      "font_class": "qq",
+      "unicode": "e8d4",
+      "unicode_decimal": 59604
+    },
+    {
+      "icon_id": "18166653",
+      "name": "社交,微信,wechat",
+      "font_class": "wechat",
+      "unicode": "e8d5",
+      "unicode_decimal": 59605
+    },
+    {
+      "icon_id": "18166663",
+      "name": "社交,飞信",
+      "font_class": "fly-letter",
+      "unicode": "e8d7",
+      "unicode_decimal": 59607
+    },
+    {
+      "icon_id": "18166670",
+      "name": "社交,米聊,mitalk",
+      "font_class": "mitalk",
+      "unicode": "e8d8",
+      "unicode_decimal": 59608
+    },
+    {
+      "icon_id": "18166683",
+      "name": "社交,陌陌,momo",
+      "font_class": "momo",
+      "unicode": "e8d9",
+      "unicode_decimal": 59609
+    },
+    {
+      "icon_id": "18166690",
+      "name": "社交,微博,microblog",
+      "font_class": "microblog",
+      "unicode": "e8da",
+      "unicode_decimal": 59610
+    },
+    {
+      "icon_id": "19449267",
+      "name": "linkedin",
+      "font_class": "linkedin-fill",
+      "unicode": "eab1",
+      "unicode_decimal": 60081
+    },
+    {
+      "icon_id": "19449269",
+      "name": "linkedin",
+      "font_class": "linkedin",
+      "unicode": "eab2",
+      "unicode_decimal": 60082
+    },
+    {
+      "icon_id": "21712497",
+      "name": "alipay",
+      "font_class": "alipay4",
+      "unicode": "e694",
+      "unicode_decimal": 59028
+    },
+    {
+      "icon_id": "22065038",
+      "name": "color-pay-success",
+      "font_class": "color-pay-success",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "27364944",
+      "name": "apple-pay",
+      "font_class": "apple-pay1",
+      "unicode": "ebec",
+      "unicode_decimal": 60396
+    },
+    {
+      "icon_id": "27365105",
+      "name": "google-pay",
+      "font_class": "google-pay",
+      "unicode": "ec04",
+      "unicode_decimal": 60420
+    },
+    {
+      "icon_id": "29391698",
+      "name": "alipay",
+      "font_class": "alipay5",
+      "unicode": "e94e",
+      "unicode_decimal": 59726
+    },
+    {
+      "icon_id": "431779",
+      "name": "github",
+      "font_class": "github",
+      "unicode": "e709",
+      "unicode_decimal": 59145
+    },
+    {
+      "icon_id": "431920",
+      "name": "paypal",
+      "font_class": "paypal",
+      "unicode": "e78b",
+      "unicode_decimal": 59275
+    },
+    {
+      "icon_id": "1010232",
+      "name": "alipay",
+      "font_class": "alipay",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "1045613",
+      "name": "yxx_wechat_pay_success",
+      "font_class": "weixinzhifu",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "3176643",
+      "name": "GitHub",
+      "font_class": "GitHub",
+      "unicode": "ea09",
+      "unicode_decimal": 59913
+    },
+    {
+      "icon_id": "3176823",
+      "name": "Paypal",
+      "font_class": "Paypal",
+      "unicode": "ea24",
+      "unicode_decimal": 59940
+    },
+    {
+      "icon_id": "4936955",
+      "name": "alipay",
+      "font_class": "alipay1",
+      "unicode": "e87c",
+      "unicode_decimal": 59516
+    },
+    {
+      "icon_id": "4936984",
+      "name": "QQ",
+      "font_class": "QQ",
+      "unicode": "e882",
+      "unicode_decimal": 59522
+    },
+    {
+      "icon_id": "4936993",
+      "name": "alipay-circle-fill",
+      "font_class": "alipay-circle-fill",
+      "unicode": "e884",
+      "unicode_decimal": 59524
+    },
+    {
+      "icon_id": "4937000",
+      "name": "github-fill",
+      "font_class": "github-fill",
+      "unicode": "e885",
+      "unicode_decimal": 59525
+    },
+    {
+      "icon_id": "4937015",
+      "name": "alipay-square-fill",
+      "font_class": "alipay-square-fill",
+      "unicode": "e88c",
+      "unicode_decimal": 59532
+    },
+    {
+      "icon_id": "5634560",
+      "name": "amazon-pay",
+      "font_class": "amazon-pay",
+      "unicode": "f161",
+      "unicode_decimal": 61793
+    },
+    {
+      "icon_id": "5634565",
+      "name": "apple-pay",
+      "font_class": "apple-pay",
+      "unicode": "f166",
+      "unicode_decimal": 61798
+    },
+    {
+      "icon_id": "8554955",
+      "name": "wechat-pay-fill",
+      "font_class": "wechat-pay-fill",
+      "unicode": "e6d0",
+      "unicode_decimal": 59088
+    },
+    {
+      "icon_id": "9053654",
+      "name": "wechat-pay-line",
+      "font_class": "wechat-pay-line",
+      "unicode": "e773",
+      "unicode_decimal": 59251
+    },
+    {
+      "icon_id": "9096739",
+      "name": "alipay",
+      "font_class": "alipay2",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "10304443",
+      "name": "wechat-pay",
+      "font_class": "wechat-pay",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "10304459",
+      "name": "alipay",
+      "font_class": "alipay3",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "10928221",
+      "name": "wechatpayment",
+      "font_class": "wechatpayment",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "11294365",
+      "name": "icon_支付(apple pay)",
+      "font_class": "icon_zhifuapplepay",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "1444721",
+      "name": "heart-pulse",
+      "font_class": "heart-pulse",
+      "unicode": "e79c",
+      "unicode_decimal": 59292
+    }
+  ]
+}

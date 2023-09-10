@@ -1,0 +1,215 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3815034 */
+  src: url('iconfont.woff2?t=1694322651073') format('woff2'),
+       url('iconfont.woff?t=1694322651073') format('woff'),
+       url('iconfont.ttf?t=1694322651073') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-liulan:before {
+  content: "\e67e";
+}
+
+.icon-icshare:before {
+  content: "\e63d";
+}
+
+.icon-fenxiang:before {
+  content: "\e655";
+}
+
+.icon-copy:before {
+  content: "\ef86";
+}
+
+.icon-icon_zhifuunionpay:before {
+  content: "\e64f";
+}
+
+.icon-amazon-pay1:before {
+  content: "\e61e";
+}
+
+.icon-shejiao-weixin:before {
+  content: "\e622";
+}
+
+.icon-shejiao-QQ:before {
+  content: "\e623";
+}
+
+.icon-applepay:before {
+  content: "\e680";
+}
+
+.icon-we-chatpay:before {
+  content: "\e69b";
+}
+
+.icon-amazon-pay2:before {
+  content: "\e6c5";
+}
+
+.icon-shejiaotubiao-20:before {
+  content: "\e643";
+}
+
+.icon-shejiaotubiao-41:before {
+  content: "\e646";
+}
+
+.icon-shejiaotubiao-55:before {
+  content: "\e649";
+}
+
+.icon-shejiaotubiao-61:before {
+  content: "\e64a";
+}
+
+.icon-shejiaotubiao-69:before {
+  content: "\e64c";
+}
+
+.icon-qq:before {
+  content: "\e8d4";
+}
+
+.icon-wechat:before {
+  content: "\e8d5";
+}
+
+.icon-fly-letter:before {
+  content: "\e8d7";
+}
+
+.icon-mitalk:before {
+  content: "\e8d8";
+}
+
+.icon-momo:before {
+  content: "\e8d9";
+}
+
+.icon-microblog:before {
+  content: "\e8da";
+}
+
+.icon-linkedin-fill:before {
+  content: "\eab1";
+}
+
+.icon-linkedin:before {
+  content: "\eab2";
+}
+
+.icon-alipay4:before {
+  content: "\e694";
+}
+
+.icon-color-pay-success:before {
+  content: "\e60f";
+}
+
+.icon-apple-pay1:before {
+  content: "\ebec";
+}
+
+.icon-google-pay:before {
+  content: "\ec04";
+}
+
+.icon-alipay5:before {
+  content: "\e94e";
+}
+
+.icon-github:before {
+  content: "\e709";
+}
+
+.icon-paypal:before {
+  content: "\e78b";
+}
+
+.icon-alipay:before {
+  content: "\e60d";
+}
+
+.icon-weixinzhifu:before {
+  content: "\e657";
+}
+
+.icon-GitHub:before {
+  content: "\ea09";
+}
+
+.icon-Paypal:before {
+  content: "\ea24";
+}
+
+.icon-alipay1:before {
+  content: "\e87c";
+}
+
+.icon-QQ:before {
+  content: "\e882";
+}
+
+.icon-alipay-circle-fill:before {
+  content: "\e884";
+}
+
+.icon-github-fill:before {
+  content: "\e885";
+}
+
+.icon-alipay-square-fill:before {
+  content: "\e88c";
+}
+
+.icon-amazon-pay:before {
+  content: "\f161";
+}
+
+.icon-apple-pay:before {
+  content: "\f166";
+}
+
+.icon-wechat-pay-fill:before {
+  content: "\e6d0";
+}
+
+.icon-wechat-pay-line:before {
+  content: "\e773";
+}
+
+.icon-alipay2:before {
+  content: "\e666";
+}
+
+.icon-wechat-pay:before {
+  content: "\e60e";
+}
+
+.icon-alipay3:before {
+  content: "\e612";
+}
+
+.icon-wechatpayment:before {
+  content: "\e607";
+}
+
+.icon-icon_zhifuapplepay:before {
+  content: "\e64b";
+}
+
+.icon-heart-pulse:before {
+  content: "\e79c";
+}
+

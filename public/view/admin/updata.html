@@ -14,7 +14,7 @@
             <ul>
                 <li>🗃️当前版本：<kbd>{$LCVersionInfo.VerS}[{$LCVersionInfo.Ver}]</kbd></li>
                 <li>🆕最新版本：<a href="https://github.com/zhiguai/LoveCards/releases"><kbd id="NewVerS">加载中...</kbd></a>
-                    
+
                 </li>
             </ul>
             <pre id="NewVerSVerLog">加载中...</pre>
@@ -30,13 +30,14 @@
 <script>
     const BaseFun = () => {
         //最新版本
-        var result = apiAjax0a('', 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest', 'get', false);
-        if (result['r'] != []) {
-            var data = result['r'];
-            $('#NewVerS').text(data['name']);
-        } else {
-            $('#NewVerS').text('前往查看');
-        }
+        GithubDateRelesesLatest().then(function (result) {
+            if (result != 'error') {
+                $('#NewVerS').text(result['name']);
+            } else {
+                $('#NewVerS').text('前往查看');
+            }
+        })
+
         $.ajax({ url: "https://ghps.cc/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md", type: 'GET', async: true }).then(function (data) {
             $('#NewVerSVerLog').text(data);
         }).catch(function (error) {
