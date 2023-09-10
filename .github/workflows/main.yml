@@ -40,7 +40,7 @@ jobs:
 
             - name: ❌删除非必要文件
               run: |
-                  rm -rf script .gitignore composer.json composer.lock lock.txt upload.md test.env think
+                  rm -rf .gitignore .github .git DOCKER_ENV docker_tag composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
               run: zip -r LoveCards-${{ env.TAG_NAME }}.zip ./
