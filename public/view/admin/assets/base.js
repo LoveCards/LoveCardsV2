@@ -32,17 +32,16 @@ var apiSystemInstallSetInstallLock = '/system/Install/apiSetInstallLock';//生�
 const GithubDateRelesesLatest = () => {
     return new Promise((resolve, reject) => {
         const storedData = $.cookie('GithubDateRelesesLatest');
-        const currentTime = new Date();
+        const currentTime = new Date().getTime();
         const FunSetCookie = (data) => {
-            const time = new Date();
-            const result = { 'time': time, 'data': data };
+            const result = { 'time': currentTime, 'data': data };
             $.cookie('GithubDateRelesesLatest', JSON.stringify(result), { expires: 1, path: '/' });
         }
 
         if (storedData) {
             var storedDataParse = JSON.parse(storedData);
         }
-        if (!storedData || !storedDataParse.time || currentTime - new Date(storedDataParse.time) >= 600000) {
+        if (!storedData || !storedDataParse.time || currentTime - storedDataParse.time >= 600000) {
             // 如果没有存储数据或数据已过期（超过十分钟），则重新请求
             $.ajax({
                 url: 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest',
