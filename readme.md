@@ -5,7 +5,7 @@
   LoveCards
   <br>
 </h1>
-<h4 align="center">或许，它可以不只是表白墙.</h4>
+<h4 align="center">由你筑起的“领域” 众人皆可“倾心倾意”.</h4>
 
 <p align="center">
   <a href="https://github.com/zhiguai/LoveCards/releases">
@@ -70,10 +70,9 @@ mysql
 
 #### 模板说明
 
--   LC2 模板存放目录“public\view\index\”,例如：默认模板路径“public\view\index\index”
--   目前 LC2 支持模板开发，具体开发文档暂未完成，可参考默认模板以及 ThinkTemplate 开发指南(注意：config.ini 不可少)
--   <a href="https://www.kancloud.cn/manual/think-template/1286403">ThinkTemplate 开发指南(LC2 模板开发语法指南)</a>
--   <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API 文档</a>(待完善)
+-   <a href="https://docs.lovecards.cn">LoveCards文档🪞</a>
+-   <a href="https://lovecards.github.io">LoveCards文档🐱</a>
+-   <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API 文档</a>(未完)
 
 #### 版本号说明  
 -   Ver为实际版本号，程序中的“版本检测”将优先或仅以Ver为准
