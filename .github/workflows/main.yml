@@ -30,8 +30,8 @@ jobs:
               id: tag_name
 
             - name: 💾保存环境变量
-            #   run: echo "TAG_NAME=${{ steps.tag_name.outputs.stdout }}" >> $GITHUB_ENV
-              run: echo "::set-env name=TAG_NAME::${{ steps.tag_name.outputs.stdout }}"
+              run: echo "TAG_NAME=${{ steps.tag_name.outputs.stdout }}" >> $GITHUB_ENV
+            #  run: echo "::set-env name=TAG_NAME::${{ steps.tag_name.outputs.stdout }}"
 
             - name: 🛠️安装依赖
               uses: php-actions/composer@v6
