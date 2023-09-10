@@ -52,7 +52,7 @@ jobs:
               with:
                   tag_name: ${{ steps.tag_name.outputs.stdout }}
                   name: 2.2.0[1.0.15] # 记得修改
-                  body_path: .github/RELEASE.txt
+                  body_path: RELEASE.txt
                   draft: false
                   prerelease: false
                   files: |
