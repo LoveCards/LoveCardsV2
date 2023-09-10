@@ -29,8 +29,11 @@ jobs:
               run: echo "${{ github.ref }}" | cut -d '/' -f 3
               id: tag_name
 
-            - name: 💾保存环境变量
-              run: echo "TAG_NAME=${{ steps.tag_name.outputs.stdout }}" >> $GITHUB_ENV
+            # - name: 💾保存环境变量
+            #   run: echo "TAG_NAME=${{ steps.tag_name.outputs.stdout }}" >> $GITHUB_ENV
+            - name: 💾保存签名称
+              run: echo "${{ steps.tag_name.outputs.stdout }}" > $GITHUB_WORKSPACE/tagname.txt
+      
 
             - name: 🛠️安装依赖
               uses: php-actions/composer@v6
@@ -43,21 +46,22 @@ jobs:
                   rm -rf .gitignore .github .git DOCKER_ENV docker_tag composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
-              run: zip -r LoveCards-${{ env.TAG_NAME }}.zip ./
-              env:
-                  TAG_NAME: ${{ env.TAG_NAME }}
+              run: |
+                  TAG_NAME=$(cat $GITHUB_WORKSPACE/tagname.txt)
+                  zip -r LoveCards-$TAG_NAME.zip ./
+                  echo "LoveCards-$TAG_NAME.zip" > zipfilename.txt
 
             - name: 🎅创建发布并上传压缩包
               uses: softprops/action-gh-release@v1
               if: startsWith(github.ref, 'refs/tags/')
               with:
-                  tag_name: ${{ env.TAG_NAME }}
+                  tag_name: ${{ steps.tag_name.outputs.stdout }}
                   name: 2.2.0[1.0.15] # 记得修改
                   body_path: .github/RELEASE.txt
                   draft: false
                   prerelease: false
                   files: |
-                      LoveCards-${{ env.TAG_NAME }}.zip
+                      $(cat $GITHUB_WORKSPACE/tagname.txt)
                       LICENSE
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
