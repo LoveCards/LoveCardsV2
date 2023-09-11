@@ -24,8 +24,8 @@ $Config = [
         ],
         //MD主题色配置
         'ThemePrimary' => [
-            'Name' => '默认暗色开关',
-            'Introduction' => '主题为默认暗色的开关',
+            'Name' => '前台主题主色',
+            'Introduction' => '颜色可参考<a href="https://www.mdui.org/docs/color" target="_blank">MDUI颜色与主题</a>',
             'Default' => env('ThemeConfig.SelectThemePrimary', 4),
             'Element' => [
                 0 => 'red',
@@ -51,8 +51,8 @@ $Config = [
         ],
         //MD强调色配置
         'ThemeAccent' => [
-            'Name' => '默认暗色开关',
-            'Introduction' => '主题为默认暗色的开关',
+            'Name' => '前台主题强调色',
+            'Introduction' => '颜色可参考<a href="https://www.mdui.org/docs/color" target="_blank">MDUI颜色与主题</a>',
             'Default' => env('ThemeConfig.SelectThemeAccent', 1),
             'Element' => [
                 0 => 'red',
@@ -79,7 +79,7 @@ $Config = [
         //统计代码变量
         'ThemeStatistics' => [
             'Name' => '统计代码',
-            'Introduction' => '该代码会插入<head></head>内',
+            'Introduction' => '该代码会插入&lt;head&gt;&lt;/head&gt;内',
             'Default' => env('ThemeConfig.TextThemeStatistics', '')
         ],
     ]
