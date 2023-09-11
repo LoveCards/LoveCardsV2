@@ -30,14 +30,14 @@ class Common extends Facade
         return [
             'Name' => 'LoveCards',
             'Url' => '//lovecards.cn',
-            'VerS' => '2.1.1',
-            'Ver' => '1.0.14',
+            'VerS' => '2.2.0',
+            'Ver' => '1.0.15',
             'GithubUrl' => '//github.com/zhiguai/CZ-LoveCards',
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
             'InstallEnvironment' => [
                 'php' => [
                     'f' => '8.0.0',
-                    'l' => '8.1.99'
+                    'l' => '8.0.99'
                 ],
                 'mysql' => [
                     'f' => '5.7',
