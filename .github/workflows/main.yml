@@ -36,9 +36,9 @@ jobs:
                   php_version: "8.1"
                   version: 2
 
-            - name: ❌删除非必要文件
-              run: |
-                  rm -rf .gitignore .github .git DOCKER_ENV docker_tag composer.json composer.lock script lock.txt upload.md test.env think
+            # - name: ❌删除非必要文件
+            #   run: |
+            #       rm -rf .gitignore .github .git DOCKER_ENV docker_tag composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
               run: zip -r LoveCards-v2.2.0.zip ./  # 记得修改
