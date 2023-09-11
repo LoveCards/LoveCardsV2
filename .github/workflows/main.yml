@@ -28,7 +28,7 @@ jobs:
             - name: ✍️提取标签名称
               id: github_ref
               run: tag=$(echo "${{ github.ref }}" | cut -d '/' -f 3)
-                  echo "::set-output name=tag::$tag"
+                  echo "tag=$tag" >> $GITHUB_STATE
 
             - name: 🛠️安装依赖
               uses: php-actions/composer@v6
@@ -36,9 +36,9 @@ jobs:
                   php_version: "8.1"
                   version: 2
 
-            # - name: ❌删除非必要文件
-            #   run: |
-            #       rm -rf .gitignore .github .git DOCKER_ENV docker_tag composer.json composer.lock script lock.txt upload.md test.env think
+            - name: ❌删除非必要文件
+              run: |
+                  rm -rf .gitignore .github .git DOCKER_ENV docker_tag composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
               run: zip -r LoveCards-v2.2.0.zip ./  # 记得修改
