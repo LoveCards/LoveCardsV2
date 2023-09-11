@@ -51,7 +51,7 @@ jobs:
                   name: 2.2.0[1.0.15] # 记得修改
                   body_path: RELEASE.txt
                   draft: false
-                  prerelease: false
+                  prerelease: true
                   files: | # 记得修改
                       LoveCards-v2.2.0.zip
                       LICENSE
