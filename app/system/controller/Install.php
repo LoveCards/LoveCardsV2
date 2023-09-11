@@ -11,7 +11,6 @@ use think\facade\Config;
 
 //类
 use app\common\Common;
-use app\api\common\Common as ApiCommon;
 
 class Install
 {
@@ -100,7 +99,7 @@ class Install
     //验证安装环境
     protected static function DataVerifyEnvironment()
     {
-        $IE = Common::systemVer()['InstallEnvironment'];
+        $IE = Common::mArrayGetLCVersionInfo()['InstallEnvironment'];
         $data = [
             'php' => [
                 'v' => phpversion(),
@@ -202,7 +201,7 @@ class Install
 
         //基础变量
         View::assign([
-            'systemVer' => Common::systemVer(),
+            'systemVer' => Common::mArrayGetLCVersionInfo(),
             'verifyEnvironment' => Install::DataVerifyEnvironment(),
             'viewTitle'  => '安装',
             'viewDescription' => false,
