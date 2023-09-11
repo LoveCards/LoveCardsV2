@@ -94,7 +94,7 @@
                                     <li>🗃️当前版本：<kbd>{$systemVer.VerS}[{$systemVer.Ver}]</kbd></li>
                                     <li>🆕最新版本：<a href="https://github.com/zhiguai/LoveCards/releases"><kbd
                                                 id="NewVerS">加载中...</kbd></a>
-                                                <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
+                                        <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
                                     </li>
                                 </ul>
                                 <ul>
@@ -135,7 +135,8 @@
                                                 <td id="verifyEnvironmentPhpV">{$verifyEnvironment.php.v}</td>
                                                 <td>[{$systemVer.InstallEnvironment.php.f},{$systemVer.InstallEnvironment.php.l})
                                                 </td>
-                                                <td id="verifyEnvironmentPhpS">{$verifyEnvironment.php.s ? '✔️可用' : '❌不可用'}
+                                                <td id="verifyEnvironmentPhpS">{$verifyEnvironment.php.s ? '✔️可用' :
+                                                    '❌不可用'}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -149,7 +150,8 @@
                                                 <td>PDO扩展</td>
                                                 <td></td>
                                                 <td></td>
-                                                <td id="verifyEnvironmentPdo_mysql">{$verifyEnvironment.pdo_mysql ? '✔️可用'
+                                                <td id="verifyEnvironmentPdo_mysql">{$verifyEnvironment.pdo_mysql ?
+                                                    '✔️可用'
                                                     : '❌不可用'}</td>
                                             </tr>
                                         </tbody>
@@ -223,13 +225,14 @@
         //主页信息
         const BaseFun = () => {
             //最新版本
-            var result = apiAjax0a('', 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest', 'get', false);
-            if (result['r'] != []) {
-                var data = result['r'];
-                $('#NewVerS').text(data['name']);
-            } else {
-                $('#NewVerS').text('前往查看');
-            }
+            GithubDateRelesesLatest().then(function (result) {
+                if (result != 'error') {
+                    $('#NewVerS').text(result['name']);
+                } else {
+                    $('#NewVerS').text('前往查看');
+                }
+            })
+
             $.ajax({ url: "https://ghps.cc/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md", type: 'GET', async: true }).then(function (data) {
                 $('#NewVerSVerLog').text(data);
             }).catch(function (error) {
