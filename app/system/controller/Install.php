@@ -2,15 +2,14 @@
 
 namespace app\system\controller;
 
-//TP类
 use think\facade\View;
 use think\facade\Request;
 use think\facade\Db;
 use think\facade\Config;
 
-
-//类
 use app\common\Common;
+use app\common\Export;
+use app\common\FrontEnd;
 
 class Install
 {
@@ -111,8 +110,9 @@ class Install
     }
 
     //api
-    public function apiVerifyEnvironment(){
-        return Common::create(Install::DataVerifyEnvironment(), '验证结果', 200);
+    public function apiVerifyEnvironment()
+    {
+        return Export::mObjectEasyCreate(Install::DataVerifyEnvironment(), '验证结果', 200);
     }
     public function apiSetDbConfig()
     {
@@ -155,35 +155,35 @@ class Install
         } catch (\Exception $e) {
             $result = Install::FunGetData($e);
             if ($result['Code'] == 1045) {
-                return Common::create([], '连接出错，请检查数据库信息是否存在错误', 403);
+                return Export::mObjectEasyCreate([], '连接出错，请检查数据库信息是否存在错误', 403);
             }
         }
         //信息无误写入配置文件
         if (!Install::FunUpdataDb($hostname, $database, $username, $password, $hostport)) {
-            return Common::create([], '配置文件写入失败', 403);
+            return Export::mObjectEasyCreate([], '配置文件写入失败', 403);
         }
         //写入数据库
         $result = Install::FunInsert('../data.sql');
         if ($result['state']) {
-            return Common::create([], '数据库导入成功', 200);
+            return Export::mObjectEasyCreate([], '数据库导入成功', 200);
         } else {
             if ($result['code'] == 1050) {
-                return Common::create([], '数据库貌似已经存在，是否跳过该步骤', 201);
+                return Export::mObjectEasyCreate([], '数据库貌似已经存在，是否跳过该步骤', 201);
             }
         }
 
-        return Common::create($result, '数据库配置出现未知错误', 500);
+        return Export::mObjectEasyCreate($result, '数据库配置出现未知错误', 500);
     }
     //生成记录
     public function apiSetInstallLock()
     {
         if (@fopen("../lock.txt", 'r')) {
-            return Common::create([], '安装记录已存在', 200);
+            return Export::mObjectEasyCreate([], '安装记录已存在', 200);
         } else {
             if (file_put_contents("../lock.txt", "LoveCards.cn")) {
-                return Common::create([], '安装记录已生成', 200);
+                return Export::mObjectEasyCreate([], '安装记录已生成', 200);
             } else {
-                return Common::create([], '安装记录生成失败，请手动添加lock.txt文件到根目录！', 500);
+                return Export::mObjectEasyCreate([], '安装记录生成失败，请手动添加lock.txt文件到根目录！', 500);
             }
         }
     }
@@ -195,7 +195,7 @@ class Install
         //安装检测
         @$file = fopen("../lock.txt", "r");
         if ($file) {
-            return Common::jumpUrl('/index/index', '检测到安装记录，如需重新安装请删除根目录[lock.txt]文件');
+            return FrontEnd::mObjectEasyFrontEndJumpUrl('/index/index', '检测到安装记录，如需重新安装请删除根目录[lock.txt]文件');
             exit;
         }
 
