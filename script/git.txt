@@ -1,0 +1,4 @@
+git tag -d v2.2.0
+git push main :v2.2.0
+
+git push --delete LoveCards v2.2.0
