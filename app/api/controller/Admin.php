@@ -82,7 +82,7 @@ class Admin
 
         $resultAdminData = $result->find();
         //验证ID是否存在
-        if ($resultAdminData) {
+        if (!$resultAdminData) {
             return Export::mObjectEasyCreate([], 'id不存在', 400);
         }
 
