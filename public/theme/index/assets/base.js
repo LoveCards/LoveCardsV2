@@ -34,65 +34,69 @@ function GetShareContent() {
     var ShareUrl = NowSharePageUrl + $('#dialog-share').val();
     return content = NowPageShareData['title'] + '\n' + NowPageShareData['content'] + '\n来自' + $('title').text() + '\n' + ShareUrl;
 }
+
 //初始化分享按钮
-$('.js-Shareurl-cardId').attr('class', 'mdui-icon iconfont mdui-float-right mdui-color-theme-accent css-caard-header-btn-round mdui-m-l-1 js-Shareurl-cardId');
-$('.js-Shareurl-cardId').attr('style', 'cursor:pointer;');
-$('.js-Shareurl-cardId').click(function () {
-    //新建弹窗对象
-    var dialogShare = new mdui.Dialog('#dialog-share');
-    // //更新分享弹窗CardID
-    $('#dialog-share').val($(this).attr('value'));
+const FunInitShareBtn = (t_Color) => {
+    $('.js-Shareurl-cardId').attr('class', 'mdui-icon iconfont mdui-float-right ' + t_Color + ' css-caard-header-btn-round mdui-m-l-1 js-Shareurl-cardId');
+    $('.js-Shareurl-cardId').attr('style', 'cursor:pointer;');
+    $('.js-Shareurl-cardId').click(function () {
+        //新建弹窗对象
+        var dialogShare = new mdui.Dialog('#dialog-share');
+        // //更新分享弹窗CardID
+        $('#dialog-share').val($(this).attr('value'));
 
-    //选择数据获取方式
-    if ($(this).attr('state') == 'card') {
-        //console.log($('#CardDataTitle').text());
-        //整理数据
-        var cardIdTitle = $('#CardDataTitle').text().trim();
-        var cardIdContent = $('#CardDataTag').text().trim() + '\n' + $('#CardDataContent').text().trim();
-    } else {
-        //取对象
-        var thisCardIdP2 = $(this).parent();
-        var thisCardIdP1 = $(this).parent().parent();
-        //整理数据
-        var cardIdTitle = '[' + thisCardIdP2[0]['innerText'].split("\n")[0] + ']-' + thisCardIdP2.next()[0]['innerText'];
-        var cardIdContent = thisCardIdP1.siblings().filter('.mdui-typo')[0]['innerText'];
-    }
+        //选择数据获取方式
+        if ($(this).attr('state') == 'card') {
+            //console.log($('#CardDataTitle').text());
+            //整理数据
+            var cardIdTitle = $('#CardDataTitle').text().trim();
+            var cardIdContent = $('#CardDataTag').text().trim() + '\n' + $('#CardDataContent').text().trim();
+        } else {
+            //取对象
+            var thisCardIdP2 = $(this).parent();
+            var thisCardIdP1 = $(this).parent().parent();
+            //整理数据
+            var cardIdTitle = '[' + thisCardIdP2[0]['innerText'].split("\n")[0] + ']-' + thisCardIdP2.next()[0]['innerText'];
+            var cardIdContent = thisCardIdP1.siblings().filter('.mdui-typo')[0]['innerText'];
+        }
 
-    //打包数据
-    NowPageShareData = { title: cardIdTitle, content: cardIdContent };//当前卡片数据
+        //打包数据
+        NowPageShareData = { title: cardIdTitle, content: cardIdContent };//当前卡片数据
 
-    //更新分享弹窗内容
-    $('#dialog-share').find('textarea').text(GetShareContent());
+        //更新分享弹窗内容
+        $('#dialog-share').find('textarea').text(GetShareContent());
 
-    //弹窗
-    dialogShare.open();
-});
+        //弹窗
+        dialogShare.open();
+    });
 
-//分享至微博
-$('.js-jumpurl-wb-cardId').click(function () {
-    var ShareUrl = 'https://service.weibo.com/share/share.php?url=' + NowSharePageUrl + $('#dialog-share').val() + '&title=' + encodeURI(NowPageShareData['title'] + '\n' + NowPageShareData['content'] + '\n来自' + $('title').text());
-    window.open(ShareUrl, '_blank');
-});
-// //分享至QQ
-// $('.js-jumpurl-qq-cardId').click(function () {
-// });
-// //分享至WX
-// $('.js-jumpurl-wx-cardId').click(function () {
-// });
-//复制分享内容
-$('.js-copyurl-cardId').click(function () {
-    //整理分享数据
-    var content = GetShareContent()
-    var state = copyText(content);
-    //console.log(state);
-    if (!state) {
-        //更新为无法复制弹窗/Content
-        $(this).attr('style', 'display:none;')
-        $('#dialog-share').find("textarea").parent().parent().attr('style', '');
-        $('#dialog-share').find("textarea").siblings("div").filter(".mdui-typo-caption-opacity").text('请手动复制分享内容');
-        $('#dialog-share').find("textarea").text(content);
-    }
-});
+    //分享至微博
+    $('.js-jumpurl-wb-cardId').click(function () {
+        var ShareUrl = 'https://service.weibo.com/share/share.php?url=' + NowSharePageUrl + $('#dialog-share').val() + '&title=' + encodeURI(NowPageShareData['title'] + '\n' + NowPageShareData['content'] + '\n来自' + $('title').text());
+        window.open(ShareUrl, '_blank');
+    });
+    // //分享至QQ
+    // $('.js-jumpurl-qq-cardId').click(function () {
+    // });
+    // //分享至WX
+    // $('.js-jumpurl-wx-cardId').click(function () {
+    // });
+    //复制分享内容
+    $('.js-copyurl-cardId').click(function () {
+        //整理分享数据
+        var content = GetShareContent()
+        var state = copyText(content);
+        //console.log(state);
+        if (!state) {
+            //更新为无法复制弹窗/Content
+            $(this).attr('style', 'display:none;')
+            $('#dialog-share').find("textarea").parent().parent().attr('style', '');
+            $('#dialog-share').find("textarea").siblings("div").filter(".mdui-typo-caption-opacity").text('请手动复制分享内容');
+            $('#dialog-share').find("textarea").text(content);
+        }
+    });
+}
+
 
 //点赞
 $('.js-Btn-Update-CardsGood').click(function () {

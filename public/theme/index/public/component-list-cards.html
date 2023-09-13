@@ -6,7 +6,7 @@
         <div class="mdui-p-t-2 mdui-p-x-2">
             {if $D['model'] == 0}
             {if $D['woName']}
-            <div class="css-caard-header-title mdui-text-color-theme">
+            <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                 {$D['woName']}的表白卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                 <i class="mdui-icon material-icons mdui-float-right">face</i>
@@ -16,7 +16,7 @@
                 <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
             </div>
             {else}
-            <div class="css-caard-header-title mdui-text-color-theme">
+            <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                 匿名的表白卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
             </div>
@@ -26,7 +26,7 @@
             {/if}
             {else}
             {if $D['woName']}
-            <div class="css-caard-header-title mdui-text-color-theme">
+            <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                 {$D['woName']}的交流卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                 <i class="mdui-icon material-icons mdui-float-right">face</i>
@@ -36,7 +36,7 @@
                 <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
             </div>
             {else}
-            <div class="css-caard-header-title mdui-text-color-theme">
+            <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                 匿名的交流卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
             </div>

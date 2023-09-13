@@ -4,7 +4,7 @@
 <div id="jsParameter" jsPageHierarchy=0 jsTabClass="0" class="mdui-container">
     <!-- 顶部按钮组件 -->
     <div class="mdui-p-t-2">
-        <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised"
+        <button class="mdui-btn mdui-btn-block mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-btn-raised"
             onclick="jumpUrl('/index/cards/add',0)">发布卡片</button>
     </div>
 
@@ -22,7 +22,7 @@
                     {if $D['model'] == 0}
                     <div class="mdui-p-t-2 mdui-p-x-2">
                         {if $D['woName']}
-                        <div class="css-caard-header-title mdui-text-color-theme">
+                        <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                             {$D['woName']}的表白卡
                             <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                             {if $D['top']}
@@ -34,7 +34,7 @@
                             <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
                         </div>
                         {else}
-                        <div class="css-caard-header-title mdui-text-color-theme">
+                        <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                             匿名的表白卡
                             <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                             {if $D['top']}
@@ -49,7 +49,7 @@
                     {else}
                     <div class="mdui-p-t-2 mdui-p-x-2">
                         {if $D['woName']}
-                        <div class="css-caard-header-title mdui-text-color-theme">
+                        <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                             {$D['woName']}的交流卡
                             <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                             {if $D['top']}
@@ -61,7 +61,7 @@
                             <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
                         </div>
                         {else}
-                        <div class="css-caard-header-title mdui-text-color-theme">
+                        <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                             匿名的交流卡
                             <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                             {if $D['top']}
