@@ -1,5 +1,6 @@
 <div class="mdui-fab-wrapper" id="exampleFab" mdui-fab="{trigger: 'hover'}">
-    <button class="mdui-fab mdui-ripple mdui-color-theme-accent">
+    <button
+        class="mdui-fab mdui-ripple mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
         <!-- 默认显示的图标 -->
         <i class="mdui-icon material-icons">add</i>
         <!-- 在拨号菜单开始打开时，平滑切换到该图标，若不需要切换图标，则可以省略该元素 -->
@@ -34,6 +35,7 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
 {/if}
+<script src="{$ThemeAssetsUrlPath}/base.js"></script>
 <script>
     /*
     *初始化导航栏样式
@@ -98,7 +100,13 @@
     $(function () {
         const LoadingImgSrc = '{$ThemeAssetsUrlPath}/image/loading.png'
         const ErrorImgSrc = '{$ThemeAssetsUrlPath}/image/error.png'
-        const FunEndLoad = (el) => { el.parent().parent().next().remove(); }
+        const FunEndLoad = (el) => {
+            var el = el.parent().parent().next();
+            if (el.attr('class') === 'css-cards-img-loading mdui-spinner') {
+                el.remove();
+            }
+            return;
+        }
 
         $("img").lazyload({
             threshold: 200,
@@ -129,6 +137,9 @@
 
     });
 
+    //初始化分享按钮
+    FunInitShareBtn('mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}');
+
     //瀑布流初始化
     function initMasonry() {
         var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');
@@ -142,5 +153,4 @@
     }
 
 </script>
-<script src="{$ThemeAssetsUrlPath}/base.js"></script>
 <script src="{__A-assets__}/public.js"></script>

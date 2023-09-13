@@ -53,7 +53,7 @@
                 </div>
                 <div class="mdui-col-xs-2 mdui-col-sm-1 mdui-text-center mdui-float-right">
                     <button id="requestSearch"
-                        class="mdui-btn mdui-btn-icon mdui-color-theme-accent mdui-ripple mdui-m-t-2">
+                        class="mdui-btn mdui-btn-icon mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-m-t-2">
                         <i class="mdui-icon material-icons">search</i>
                     </button>
                     <!-- <button type="button"

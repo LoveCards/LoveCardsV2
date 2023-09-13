@@ -19,22 +19,22 @@
         <div class="mdui-col-xs-10">
             {if $CardData.model == 0}
             {if $CardData['woName']}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$CardData['woName']} 的表白卡</div>
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">{$CardData['woName']} 的表白卡</div>
             {else}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的表白卡</div>
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">匿名 的表白卡</div>
             {/if}
             {else}
             {if $CardData['woName']}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme">{$CardData['woName']} 的交流卡</div>
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">{$CardData['woName']} 的交流卡</div>
             {else}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme">匿名 的交流卡</div>
+            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">匿名 的交流卡</div>
             {/if}
             {/if}
             <div class="mdui-typo-subheading-opacity">{$CardData['id']}# {$CardData['time']}</div>
         </div>
         <div class="mdui-col-xs-2">
             <button
-                class="js-jumpurl-BackUp mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-float-right">
+                class="js-jumpurl-BackUp mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-float-right">
                 <i class="mdui-icon material-icons">arrow_back</i>
             </button>
         </div>
@@ -43,7 +43,7 @@
     <!-- 卡片组件 -->
     {if $CardData.model == 0}
     <div class="mdui-p-t-2">
-        <div class="mdui-card mdui-color-theme-accent mdui-p-a-2">
+        <div class="mdui-card mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-p-a-2">
             <div class="mdui-typo-headline-opacity mdui-text-left">
                 {if $CardData['woName']}
                 {$CardData['woName']}
@@ -143,7 +143,7 @@
                 </div>
 
                 <div class="mdui-card-actions">
-                    <button id="btnAddComments" class="mdui-btn mdui-color-theme-accent mdui-float-right">
+                    <button id="btnAddComments" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-float-right">
                         提交
                     </button>
                 </div>
@@ -177,10 +177,10 @@
             <!-- 分页按钮组件 -->
             <div class="mdui-p-t-2 mdui-text-center">
                 <div style="display: none;">{$CardCommentsListEasyPagingComponent|raw}</div>
-                <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-accent">
+                <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
                     <i class="mdui-icon material-icons ">first_page</i>
                 </button>
-                <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-accent">
+                <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
                     <i class="mdui-icon material-icons">last_page</i>
                 </button>
             </div>

@@ -9,7 +9,7 @@
 
             <div class="mdui-p-b-2">
                 <button
-                    class="js-jumpurl-BackUp mdui-btn mdui-btn-block mdui-color-theme-accent mdui-ripple mdui-btn-raised">返
+                    class="js-jumpurl-BackUp mdui-btn mdui-btn-block mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-btn-raised">返
                     回</button>
             </div>
 
@@ -83,7 +83,7 @@
                             <!-- 图片容器 -->
                         </div>
                         <!-- 添加图片 -->
-                        <button class="mdui-btn mdui-btn-block mdui-text-color-theme-accent mdui-ripple"
+                        <button class="mdui-btn mdui-btn-block mdui-text-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple"
                             mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
                         <div class="mdui-dialog" id="dialogUploadImage">
                             <div class="mdui-dialog-title">上传图片</div>
@@ -98,7 +98,7 @@
                                     </div>
                                     <div class="mdui-col-xs-12 mdui-col-sm-2 mdui-text-center mdui-float-right">
                                         <label id="btnUploadImage"
-                                            class="mdui-m-y-2 mdui-btn mdui-color-theme-accent mdui-btn-block">
+                                            class="mdui-m-y-2 mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-btn-block">
                                             <span>上 传</span>
                                             <input id="dataUpdataImage" type="file" style="display: none;" />
                                         </label>
@@ -114,7 +114,7 @@
                 </div>
                 <div id="model" value="{$CardModel}" class="mdui-card-actions">
                     <button id="submitAdd"
-                        class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">提交</button>
+                        class="mdui-btn mdui-btn-raised mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-float-right">提交</button>
                 </div>
 
             </div>

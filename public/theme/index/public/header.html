@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.css">
     {/if}
     <link rel="stylesheet" href="{__A-assets__}/base.css" />
+    <!-- <link rel="stylesheet" href="{$ThemeAssetsUrlPath}/base.css" /> -->
     <script>
         var _paq = window._paq = window._paq || [];
         _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
@@ -46,12 +47,14 @@
 
     <!-- 顶栏 -->
     <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
-        <div class="mdui-toolbar mdui-color-theme">
+        <div
+            class="mdui-toolbar mdui-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
             <a href="#" class="mdui-typo-headline">{$SystemData['siteName']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
         </div>
-        <div class="css-tab mdui-tab mdui-tab-centered mdui-color-theme" mdui-tab>
+        <div class="css-tab mdui-tab mdui-tab-centered mdui-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}"
+            mdui-tab>
             <a href="#" onclick="jumpUrl('/',0)" class="mdui-ripple">推荐</a>
             <a id="jsTab1Class" href="#" onclick="jumpUrl('/index/Cards/index/model/1',0)" class="mdui-ripple">交流卡</a>
             <a id="jsTab2Class" href="#" onclick="jumpUrl('/index/Cards',0)" class="mdui-ripple">表白卡</a>
