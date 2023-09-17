@@ -16,13 +16,12 @@
 
 <p align="center">
   <a href="https://lovecards.cn">主页</a> •
-  <a href="http://test123.chizg.cn">演示站</a> •
+  <a href="https://forum.lovecards.cn">论坛</a> •
   <a href="https://jq.qq.com/?_wv=1027&k=QTRjFYyB">QQ群组</a> •
   <a href="https://github.com/zhiguai/LoveCards/releases">下载</a>
 </p>
 
-<img src="https://img1.imgtp.com/2023/05/21/G50Prq3T.png">
-<img src="https://img1.imgtp.com/2023/05/21/YSPANS28.png">
+<img src="https://img1.imgtp.com/2023/09/18/UyB65ww3.png">
 
 ## 🌟 亮点
 
@@ -36,6 +35,21 @@
 👁️‍🗨️ 卡片浏览次数统计  
 🚀 发行版开箱即用  
 🌈 ... ...
+
+## 👀 部分图示
+
+#### 后台总览
+<img src="https://img1.imgtp.com/2023/09/18/wJOgnEV3.jpeg">  
+
+#### 外观设置
+<img src="https://img1.imgtp.com/2023/09/18/qKfUP3lO.jpeg">
+
+#### 默认主题配色展示
+<div style="display: flex; justify-content: space-between;">
+    <img src="https://img1.imgtp.com/2023/09/18/Bri5vAWy.jpeg" style="width: 30%;" alt="Image 1">
+    <img src="https://img1.imgtp.com/2023/09/18/oPHWRrKy.jpeg" style="width: 30%;" alt="Image 2">
+    <img src="https://img1.imgtp.com/2023/09/18/XDdW1sZu.jpeg" style="width: 30%;" alt="Image 3">
+</div>
 
 ## 🛠️ 部署
 
@@ -62,9 +76,8 @@ mysql
 
 ## ⚠️ 注意
 
-请及时关注该仓库或加入 QQ 交流群获取更新通知  
-如有安装问题请搜索“TP6 程序宝塔部署教程”或加入 QQ 交流群咨询（请先学会如何正确提问）  
-项目官网<a href="https://lovecards.cn">lovecards.cn</a>
+更新通知可通过关注该仓库、关注[LoveCards论坛](https://forum.lovecards.cn)、加入[QQ交流群](https://jq.qq.com/?_wv=1027&k=QTRjFYyB)及时获取  
+> 目前该项目仅有**一人**长期维护与更新(能力有限🥵)，如果你也是一位开发者，🥰非常欢迎你加入到LC的生态以及核心程序的开发中来
 
 ## 👨‍💻 开发者看过来
 
