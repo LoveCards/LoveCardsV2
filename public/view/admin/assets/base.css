@@ -12,7 +12,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    border-radius: 3%
+    border-radius: 6.6666px;
 }
 
 /* 写卡页面样式 */
@@ -22,7 +22,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    border-radius: 3%
+    border-radius: 6.6666px;
 }
 
 .mdui-cardAdd-menu {
@@ -32,9 +32,27 @@
     z-index: 1;
 }
 
+/* 全局样式 */
+
+.mdui-btn:not(.mdui-btn-icon) {
+    border-radius: 6.6666px;
+}
+
+.mdui-dialog {
+    border-radius: 6.6666px;
+}
+
+.mdui-table-fluid {
+    border-radius: 6.6666px;
+}
+
+.mdui-collapse-item .mdui-list-item.mdui-ripple {
+    border-radius: 6.6666px !important;
+}
+
 /* 卡片样式 */
-.css-card {
-    border-radius: 3%
+.mdui-card {
+    border-radius: 6.6666px;
 }
 
 .css-cards-img {
@@ -42,7 +60,7 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    border-radius: 3%;
+    border-radius: 6.6666px;
     z-index: 2;
 }
 

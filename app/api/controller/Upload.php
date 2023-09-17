@@ -21,7 +21,7 @@ class Upload
         try {
             validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的
                 'fileSize' => 1024 * 1000 * $DefSetCardsImgSize, //允许文件大小
-                'fileExt'  => array('jpg', 'png'),  //文件后缀
+                'fileExt'  => array('jpg', 'png', 'gif'),  //文件后缀
                 //'fileMime' => array('jpg', 'png'),  //文件类型
             ]])->check(['file' => $file]); //对上传的$file进行验证
 
