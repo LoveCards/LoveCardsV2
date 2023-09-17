@@ -44,45 +44,45 @@
 
     <!-- 主体组件 -->
     <div class="mdui-table-fluid mdui-m-b-2">
+
         <table class="mdui-table mdui-typo">
-            <table class="mdui-table mdui-typo">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>用户名</th>
-                        <th>权限</th>
-                        <th class="mdui-table-col-numeric">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {volist name='CommonNowList' id='data'}
-                    <tr>
-                        <td>{$data.id}</td>
-                        <td>{$data.userName}</td>
-                        <td value="{$data.power}">
-                            <div class="mdui-chip">
-                                <span class="mdui-chip-title">
-                                    {switch $data.power}
-                                    {case 0}站长{/case}
-                                    {case 1}管理员{/case}
-                                    {default /}未知
-                                    {/switch}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
-                                <i class="mdui-icon material-icons">edit</i>
-                            </button>
-                            <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
-                                <i class="mdui-icon material-icons">delete</i>
-                            </button>
-                        </td>
-                    </tr>
-                    {/volist}
-                </tbody>
-            </table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>权限</th>
+                    <th class="mdui-table-col-numeric">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {volist name='CommonNowList' id='data'}
+                <tr>
+                    <td>{$data.id}</td>
+                    <td>{$data.userName}</td>
+                    <td value="{$data.power}">
+                        <div class="mdui-chip">
+                            <span class="mdui-chip-title">
+                                {switch $data.power}
+                                {case 0}站长{/case}
+                                {case 1}管理员{/case}
+                                {default /}未知
+                                {/switch}
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                            <i class="mdui-icon material-icons">edit</i>
+                        </button>
+                        <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                            <i class="mdui-icon material-icons">delete</i>
+                        </button>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
         </table>
+
     </div>
 
     <!-- 弹窗组件 -->
@@ -114,7 +114,7 @@
             <button class="mdui-btn mdui-ripple" id="btnEditUser" mdui-dialog-close>确定</button>
         </div>
     </div>
-    
+
     <!-- 分页按钮组件 -->
     {include file="public/component-easyPaging"}
 
