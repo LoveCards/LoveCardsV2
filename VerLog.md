@@ -17,7 +17,10 @@
 
 ## 开发日志
 
--   2023 年 9 月 17 日 (1.0.15)  
+-   2023 年 9 月 19 日 (1.0.15)  
+    --修改. yzh52521/think-mail依赖版本为v2，PHP支持版本范围扩大至[7.2.5,8.0.99)
+
+-   2023 年 9 月 18 日 (1.0.15)  
     --修改. admin/public/component-EasyPaging -> admin/public/component-easy-paging
 
 -   2023 年 9 月 17 日 (1.0.15)  
