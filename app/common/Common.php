@@ -36,7 +36,7 @@ class Common extends Facade
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
             'InstallEnvironment' => [
                 'php' => [
-                    'f' => '8.0.0',
+                    'f' => '7.2.5',
                     'l' => '8.0.99'
                 ],
                 'mysql' => [
