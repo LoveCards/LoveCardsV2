@@ -32,7 +32,7 @@ class Common extends Facade
             'Url' => '//lovecards.cn',
             'VerS' => '2.2.0',
             'Ver' => '1.0.15',
-            'GithubUrl' => '//github.com/zhiguai/CZ-LoveCards',
+            'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
             'InstallEnvironment' => [
                 'php' => [
