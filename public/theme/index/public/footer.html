@@ -140,6 +140,13 @@
     //初始化分享按钮
     FunInitShareBtn('mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}');
 
+    //当页面中不存在图片时直接加载瀑布流
+    if ($("img[data-original]").length <= 0) {
+        setTimeout(function () {
+            initMasonry()
+        }, 300);
+    }
+
     //瀑布流初始化
     function initMasonry() {
         var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');

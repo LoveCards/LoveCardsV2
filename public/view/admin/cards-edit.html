@@ -5,7 +5,7 @@
     <!-- 标题组件 -->
     <div class="mdui-row">
         <div class="mdui-col-xs-6">
-            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}-ID{$idCardData['id']}</h1>
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}-ID{$CardData['id']}</h1>
         </div>
         <div class="mdui-col-xs-6">
             <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
@@ -26,7 +26,7 @@
             <div class="mdui-dialog-title">选择标签</div>
             <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
                 <div class="mdui-row-xs-2 mdui-row-sm-4">
-                    {volist name="cardsTagData" id="data"}
+                    {volist name="CardsTagsList" id="data"}
                     <div class="mdui-col">
                         <label class="mdui-checkbox">
                             <input type="checkbox" value="{$data.id}" name="inputChooseTag" />
@@ -47,21 +47,21 @@
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">发布时间</label>
-                    <input class="mdui-textfield-input" type="text" value="{$idCardData['time']}" disabled />
+                    <input class="mdui-textfield-input" type="text" value="{$CardData['time']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">发布IP</label>
-                    <input class="mdui-textfield-input" type="text" value="{$idCardData['ip']}" disabled />
+                    <input class="mdui-textfield-input" type="text" value="{$CardData['ip']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-4 mdui-col-md-2">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">模型</label>
                     <select class="mdui-select" style="width: 100%;" id="model">
-                        <option value="0" {if $idCardData['model']==0}selected{/if}>0:表白卡</option>
-                        <option value="1" {if $idCardData['model']==1}selected{/if}>1:交流卡</option>
+                        <option value="0" {if $CardData['model']==0}selected{/if}>0:表白卡</option>
+                        <option value="1" {if $CardData['model']==1}selected{/if}>1:交流卡</option>
                     </select>
                 </div>
             </div>
@@ -69,8 +69,8 @@
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">置顶状态</label>
                     <select class="mdui-select" style="width: 100%;" id="top">
-                        <option value="0" {if $idCardData['top']==0}selected{/if}>关闭</option>
-                        <option value="1" {if $idCardData['top']==1}selected{/if}>置顶</option>
+                        <option value="0" {if $CardData['top']==0}selected{/if}>关闭</option>
+                        <option value="1" {if $CardData['top']==1}selected{/if}>置顶</option>
                     </select>
                 </div>
             </div>
@@ -78,21 +78,21 @@
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">封禁状态</label>
                     <select class="mdui-select" style="width: 100%;" id="status">
-                        <option value="0" {if $idCardData['status']==0}selected{/if}>正常</option>
-                        <option value="1" {if $idCardData['status']==1}selected{/if}>封禁</option>
+                        <option value="0" {if $CardData['status']==0}selected{/if}>正常</option>
+                        <option value="1" {if $CardData['status']==1}selected{/if}>封禁</option>
                     </select>
                 </div>
             </div>
             <div class="mdui-col-xs-6 mdui-col-md-3">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">点赞数</label>
-                    <input class="mdui-textfield-input" id="good" type="text" value="{$idCardData['good']}" disabled />
+                    <input class="mdui-textfield-input" id="good" type="text" value="{$CardData['good']}" disabled />
                 </div>
             </div>
             <div class="mdui-col-xs-6 mdui-col-md-3">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">浏览量</label>
-                    <input class="mdui-textfield-input" id="look" type="text" value="{$idCardData['look']}" disabled />
+                    <input class="mdui-textfield-input" id="look" type="text" value="{$CardData['look']}" disabled />
                 </div>
             </div>
         </div>
@@ -101,13 +101,13 @@
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">姓名</label>
-                    <input class="mdui-textfield-input" id="woName" type="text" value="{$idCardData['woName']}" />
+                    <input class="mdui-textfield-input" id="woName" type="text" value="{$CardData['woName']}" />
                 </div>
             </div>
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">联系方式</label>
-                    <input class="mdui-textfield-input" id="woContact" type="text" value="{$idCardData['woContact']}" />
+                    <input class="mdui-textfield-input" id="woContact" type="text" value="{$CardData['woContact']}" />
                 </div>
             </div>
         </div>
@@ -116,26 +116,26 @@
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">TA的姓名*</label>
-                    <input class="mdui-textfield-input" id="taName" type="text" value="{$idCardData['taName']}" />
+                    <input class="mdui-textfield-input" id="taName" type="text" value="{$CardData['taName']}" />
                 </div>
             </div>
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
                     <label class="mdui-textfield-label">TA的联系方式</label>
-                    <input class="mdui-textfield-input" id="taContact" type="text" value="{$idCardData['taContact']}" />
+                    <input class="mdui-textfield-input" id="taContact" type="text" value="{$CardData['taContact']}" />
                 </div>
             </div>
         </div>
 
         <div class="mdui-textfield">
             <label class="mdui-textfield-label">表白内容*</label>
-            <textarea class="mdui-textfield-input" id="content" rows="4">{$idCardData['content']}</textarea>
+            <textarea class="mdui-textfield-input" id="content" rows="4">{$CardData['content']}</textarea>
         </div>
 
         <div class="mdui-textfield">
             <div id="listImageUrl" class="mdui-row-xs-2 mdui-row-sm-3">
                 <!-- 图片容器 -->
-                {volist name='idImgData' id='data'}
+                {volist name='CardImgList' id='data'}
                 <div class="mdui-col mdui-p-b-1">
                     <div class="mdui-grid-tile">
                         <div class="css-cardsAdd-img">
@@ -190,7 +190,7 @@
 <script src="{__A-assets__}/cardsEdit.js"></script>
 <script>
     //初始化-Tag组件
-    InitialChooseTagAdd('{$idCardData["tag"]|raw}');
+    InitialChooseTagAdd('{$CardData["tag"]|raw}');
 
     $(function () {
         //按钮-请求-添加
@@ -205,7 +205,7 @@
 
             data = {
                 'uuid': $.cookie('uuid'),
-                'id': "{$idCardData['id']}",
+                'id': "{$CardData['id']}",
                 'top': $('#top').val(),
                 'status': $('#status').val(),
                 'model': $('#model').val(),

@@ -17,8 +17,16 @@
 
 ## 开发日志
 
+-   2023 年 9 月 19 日 (1.0.16)  
+    --修复. 默认主题当卡片列表中不存在图片时瀑布流加载失败的问题
+    --修复. public/view/admin/cards-edit 的变量更新
+    --修改. 默认主题的 lang="en" 改为 zh
+
+-   2023 年 9 月 19 日 (1.0.16)  
+    --修复. api/CardsCOmments 的 Export 路径
+
 -   2023 年 9 月 19 日 (1.0.15)  
-    --修改. yzh52521/think-mail依赖版本为v2，PHP支持版本范围扩大至[7.2.5,8.0.99)
+    --修改. yzh52521/think-mail 依赖版本为 v2，PHP 支持版本范围扩大至[7.2.5,8.0.99)
 
 -   2023 年 9 月 18 日 (1.0.15)  
     --修改. admin/public/component-EasyPaging -> admin/public/component-easy-paging
