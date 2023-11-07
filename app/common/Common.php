@@ -91,4 +91,13 @@ class Common extends Facade
         $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
         return $ip[$type];
     }
+
+    protected static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
+    {
+        return [
+            'status' => $status,
+            'msg' => $msg,
+            'data' => $data,
+        ];
+    }
 }

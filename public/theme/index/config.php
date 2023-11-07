@@ -26,7 +26,7 @@ $Config = [
         'ThemeDark' => [
             'Name' => '默认暗色开关',
             'Introduction' => '主题为默认暗色的开关',
-            'Default' => env('ThemeConfig.SelectThemeDark', 0),
+            'Default' => env('ThemeConfig.SelectThemeDark', 1),
             'Element' => [
                 0 => false,
                 1 => true
@@ -36,7 +36,7 @@ $Config = [
         'ThemePrimary' => [
             'Name' => '主题主色',
             'Introduction' => '颜色可参考<a href="https://www.mdui.org/docs/color" target="_blank">MDUI颜色与主题</a>',
-            'Default' => env('ThemeConfig.SelectThemePrimary', 0),
+            'Default' => env('ThemeConfig.SelectThemePrimary', 4),
             'Element' => [
                 0 => 'red',
                 1 => 'pink',
