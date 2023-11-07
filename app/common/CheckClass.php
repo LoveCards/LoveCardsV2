@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\middleware;
+namespace app\common;
 
 use app\common\Export;
 use app\common\BackEnd;
@@ -13,8 +13,9 @@ class CheckClass
 
     public function mObjectGetNowAdminAllData()
     {
+        $TDef_JwtData = request()->JwtData;
         //验证身份并返回数据
-        $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData();
+        $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid'])['data'];
         if (!empty($this->attrLDefAdminAllData[0])) {
             return Export::mObjectEasyCreate([], $this->attrLDefAdminAllData[1], $this->attrLDefAdminAllData[0]);
         }

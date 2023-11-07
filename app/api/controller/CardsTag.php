@@ -43,16 +43,6 @@ class CardsTag extends Common
             }
         }
 
-        // 返回结果
-        function FunResult($status, $msg, $id = '')
-        {
-            return [
-                'status' => $status,
-                'msg' => $msg,
-                'id' => $id
-            ];
-        }
-
         // 数据校验
         try {
             validate(TagValidate::class)
@@ -60,7 +50,7 @@ class CardsTag extends Common
                 ->check($Datas);
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
-            return FunResult(false, $validateerror);
+            return Common::mArrayEasyReturnStruct(false, $validateerror);
         }
 
         // 启动事务
@@ -80,7 +70,7 @@ class CardsTag extends Common
                 //获取Cards数据库对象
                 $DbResult = $DbResult->where('id', $id);
                 if (!$DbResult->find()) {
-                    return FunResult(false, 'ID不存在');
+                    return Common::mArrayEasyReturnStruct(false, 'ID不存在');
                 }
                 //写入并返回ID
                 $DbResult->update($DbData);
@@ -88,12 +78,12 @@ class CardsTag extends Common
 
             // 提交事务
             Db::commit();
-            return FunResult(true, '操作成功');
+            return Common::mArrayEasyReturnStruct(true, '操作成功');
         } catch (\Exception $e) {
             //dd($e);
             // 回滚事务
             Db::rollback();
-            return FunResult(false, '操作失败');
+            return Common::mArrayEasyReturnStruct(false, '操作失败');
         }
     }
 

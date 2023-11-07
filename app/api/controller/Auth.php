@@ -11,19 +11,10 @@ use app\api\validate\Admin as AdminValidate;
 
 use app\common\Export;
 use app\common\BackEnd;
+use jwt\Jwt;
 
 class Auth
 {
-
-    //中间件
-    protected $middleware = [
-        \app\api\middleware\AdminAuthCheck::class => [
-            'only' => [
-                'Logout'
-            ]
-        ],
-    ];
-
     //登入-POST
     public function Login()
     {
@@ -31,7 +22,7 @@ class Auth
         //人机二次验证
         $gt4 = new \geetest\gt4();
         if (!$gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
-            return Export::mObjectEasyCreate(['prompt' => '人机验证失败'], '添加失败', 500);
+            return Export::Create([], 500, '人机验证失败');
         }
 
         $userName = Request::param('userName');
@@ -48,7 +39,7 @@ class Auth
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $uservalidateerror = $e->getError();
-            return Export::mObjectEasyCreate($uservalidateerror, '登入失败', 401);
+            return Export::Create($uservalidateerror, 401, '登入失败');
         }
 
         //获取数据对象
@@ -57,35 +48,20 @@ class Auth
             ->where('password', sha1($password));
 
         //验证账号是否否存在
-        if (empty($result->find())) {
-            return Export::mObjectEasyCreate([], '用户名或密码错误', 401);
+        $tDef_UserData = $result->find();
+        if (empty($tDef_UserData)) {
+            return Export::Create([], 401, '用户名或密码错误');
         } else {
-            //整理数据
-            $uuid = BackEnd::mStringGenerateUUID();
-            //更新uuid
-            $result->update(['uuid' => $uuid]);
-            //整理返回数据
-            $data = [
-                'uuid' => $uuid
-            ];
+            $tDef_Token = Jwt::signToken(['aid' => $tDef_UserData['id']]);
             //返回数据
-            return Export::mObjectEasyCreate($data, '登录成功', 200);
+            return Export::Create(['token' => $tDef_Token], 200);
         }
     }
 
     //注销-POST
-    public function Logout(TypeRequest $tDef_Request)
+    public function Logout()
     {
         //获取数据对象
-        $result = Db::table('admin')
-            ->where('id', $tDef_Request->attrLDefAdminAllData['id']);
-
-        //整理数据
-        $uuid = Null;
-        //更新uuid
-        $result->update(['uuid' => $uuid]);
-
-        //返回数据
-        return Export::mObjectEasyCreate([], '注销成功', 200);
+        return Export::Create(null, 200);
     }
 }

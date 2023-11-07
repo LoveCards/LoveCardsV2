@@ -44,16 +44,6 @@ class CardsComments extends Common
             }
         }
 
-        // 返回结果
-        function FunResult($status, $msg, $id = '')
-        {
-            return [
-                'status' => $status,
-                'msg' => $msg,
-                'id' => $id
-            ];
-        }
-
         // 数据校验
         try {
             validate(CommentsValidate::class)
@@ -61,7 +51,7 @@ class CardsComments extends Common
                 ->check($Datas);
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
-            return FunResult(false, $validateerror);
+            return Common::mArrayEasyReturnStruct(false, $validateerror);
         }
 
         // 启动事务
@@ -75,7 +65,7 @@ class CardsComments extends Common
                 $DbData['time'] = $this->attrGReqTime;
                 $DbData['ip'] = $this->attrGReqIp;
                 if (!Db::table('cards')->where('id', $DbData['cid'])->find()) {
-                    return FunResult(false, 'CID不存在');
+                    return Common::mArrayEasyReturnStruct(false, 'CID不存在');
                 }
                 //默认状态ON/OFF:0/1
                 $DbData['status'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus');
@@ -87,7 +77,7 @@ class CardsComments extends Common
                 //获取Cards数据库对象
                 $DbResult = $DbResult->where('id', $id);
                 if (!$DbResult->find()) {
-                    return FunResult(false, 'ID不存在');
+                    return Common::mArrayEasyReturnStruct(false, 'ID不存在');
                 }
                 //写入并返回ID
                 $DbResult->update($DbData);
@@ -95,12 +85,12 @@ class CardsComments extends Common
 
             // 提交事务
             Db::commit();
-            return FunResult(true, '操作成功');
+            return Common::mArrayEasyReturnStruct(true, '操作成功');
         } catch (\Exception $e) {
             //dd($e);
             // 回滚事务
             Db::rollback();
-            return FunResult(false, '操作失败');
+            return Common::mArrayEasyReturnStruct(false, '操作失败');
         }
     }
 

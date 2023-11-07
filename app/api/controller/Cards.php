@@ -16,32 +16,6 @@ use app\common\BackEnd;
 
 class Cards extends Common
 {
-
-    //中间件
-    protected $middleware = [
-        \app\api\middleware\AdminAuthCheck::class => [
-            'only' => [
-                'Edit',
-                'Delet'
-            ]
-        ],
-        \app\api\middleware\AdminPowerCheck::class => [
-            'only' => [
-                'Setting'
-            ]
-        ],
-        \app\api\middleware\SessionDebounce::class => [
-            'only' => [
-                'Add'
-            ]
-        ],
-        \app\api\middleware\GeetestCheck::class => [
-            'only' => [
-                'Add'
-            ]
-        ],
-    ];
-
     //操作函数
     protected function CAndU($id, $data, $method)
     {
@@ -50,16 +24,6 @@ class Cards extends Common
             if ($v != '#') {
                 $Datas[$k] = $v;
             }
-        }
-
-        // 返回结果
-        function FunResult($status, $msg, $id = '')
-        {
-            return [
-                'status' => $status,
-                'msg' => $msg,
-                'id' => $id
-            ];
         }
 
         // 数据校验
@@ -73,7 +37,7 @@ class Cards extends Common
                         ->check($Datas);
                 } catch (ValidateException $e) {
                     $validateerror = $e->getError();
-                    return FunResult(false, $validateerror);
+                    return Common::mArrayEasyReturnStruct(false, $validateerror);
                 }
                 break;
                 //默认
@@ -84,7 +48,7 @@ class Cards extends Common
                         ->check($Datas);
                 } catch (ValidateException $e) {
                     $validateerror = $e->getError();
-                    return FunResult(false, $validateerror);
+                    return Common::mArrayEasyReturnStruct(false, $validateerror);
                 }
                 break;
         }
@@ -108,7 +72,7 @@ class Cards extends Common
                 //获取Cards数据库对象
                 $DbResult = Db::table('cards')->where('id', $id);
                 if (!$DbResult->find()) {
-                    return FunResult(false, 'ID不存在');
+                    return Common::mArrayEasyReturnStruct(false, 'ID不存在');
                 }
                 //写入并返回ID
                 $DbResult->update($DbData);
@@ -150,12 +114,12 @@ class Cards extends Common
 
             // 提交事务
             Db::commit();
-            return FunResult(true, '操作成功', $CardId);
+            return Common::mArrayEasyReturnStruct(true, '操作成功', $CardId);
         } catch (\Exception $e) {
             // 回滚事务
             dd($e);
             Db::rollback();
-            return FunResult(false, '操作失败');
+            return Common::mArrayEasyReturnStruct(false, '操作失败');
         }
     }
 

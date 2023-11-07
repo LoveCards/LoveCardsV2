@@ -6,34 +6,22 @@ use think\Facade;
 use think\facade\Session;
 use think\facade\Request;
 use think\facade\Db;
+use app\common\Common;
 
 class BackEnd extends Facade
 {
-    /**
-     * @description: 后端依API验证uuid并获取当前用户数据
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:57:00
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    protected static function mArrayGetNowAdminAllData()
+    protected static function mArrayGetNowAdminAllData($id)
     {
-        //整理数据
-        $uuid = Request::param('uuid');
-        if (empty($uuid)) {
-            return array(400, '缺少uuid');
-        }
         //查询数据
         $result = Db::table('admin')
-            ->where('uuid', $uuid)
+            ->where('id', $id)
             ->find();
         //判断数据是否存在
         if (empty($result)) {
-            return array(401, '当前uuid已失效请重新登入');
+            return Common::mArrayEasyReturnStruct('管理员不存在', false);
         } else {
             //返回用户数据
-            return $result;
+            return Common::mArrayEasyReturnStruct(null, true, $result);
         }
     }
 
