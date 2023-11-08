@@ -37,7 +37,7 @@ class Cards extends Common
                         ->check($Datas);
                 } catch (ValidateException $e) {
                     $validateerror = $e->getError();
-                    return Common::mArrayEasyReturnStruct(false, $validateerror);
+                    return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);
                 }
                 break;
                 //默认
@@ -48,7 +48,7 @@ class Cards extends Common
                         ->check($Datas);
                 } catch (ValidateException $e) {
                     $validateerror = $e->getError();
-                    return Common::mArrayEasyReturnStruct(false, $validateerror);
+                    return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);
                 }
                 break;
         }
@@ -72,7 +72,7 @@ class Cards extends Common
                 //获取Cards数据库对象
                 $DbResult = Db::table('cards')->where('id', $id);
                 if (!$DbResult->find()) {
-                    return Common::mArrayEasyReturnStruct(false, 'ID不存在');
+                    return Common::mArrayEasyReturnStruct('ID不存在', false);
                 }
                 //写入并返回ID
                 $DbResult->update($DbData);
@@ -114,12 +114,12 @@ class Cards extends Common
 
             // 提交事务
             Db::commit();
-            return Common::mArrayEasyReturnStruct(true, '操作成功', $CardId);
+            return Common::mArrayEasyReturnStruct('操作成功', true,  $CardId);
         } catch (\Exception $e) {
             // 回滚事务
             dd($e);
             Db::rollback();
-            return Common::mArrayEasyReturnStruct(false, '操作失败');
+            return Common::mArrayEasyReturnStruct('操作失败', false);
         }
     }
 
