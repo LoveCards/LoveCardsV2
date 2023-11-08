@@ -23,14 +23,28 @@ Route::group('', function () {
     Route::post('cards/add', 'Cards/Add');
     Route::post('cards/edit', 'Cards/Edit');
     Route::post('cards/delete', 'Cards/Delete');
+
+    Route::post('cardscomments/edit', 'CardsComments/Edit');
+    Route::post('cardscomments/delete', 'CardsComments/Delete');
+
+    Route::post('cardstag/add', 'CardsTag/Add');
+    Route::post('cardstag/edit', 'CardsTag/Edit');
+    Route::post('cardstag/delete', 'CardsTag/Delete');
 })->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);
 
 //超管鉴权
 Route::group('', function () {
     Route::post('cards/setting', 'Cards/Setting');
+
+    Route::post('system/site', 'System/Site');
+    Route::post('system/email', 'System/Email');
+    Route::post('system/template', 'System/template');
+    Route::post('system/templateset', 'System/TemplateSet');
+    Route::post('system/geetest', 'System/Geetest');
 })->middleware([JwtAuthCheck::class, AdminPowerCheck::class]);
 
 //防抖+极验鉴权
 Route::group('', function () {
     Route::post('cards/add', 'Cards/Add');
+    Route::post('cardscomments/add', 'CardsComments/Add');
 })->middleware([SessionDebounce::class, GeetestCheck::class]);

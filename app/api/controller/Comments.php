@@ -7,34 +7,13 @@ use think\facade\Request;
 use think\exception\ValidateException;
 use think\facade\Config;
 
-use app\api\validate\CardsComments as CommentsValidate;
+use app\api\validate\Comments as CommentsValidate;
 
 use app\common\Common;
 use app\common\Export;
 
-class CardsComments extends Common
+class Comments extends Common
 {
-
-    //中间件
-    protected $middleware = [
-        \app\api\middleware\AdminAuthCheck::class => [
-            'only' => [
-                'Edit',
-                'Delet'
-            ]
-        ],
-        \app\api\middleware\SessionDebounce::class => [
-            'only' => [
-                'Add'
-            ]
-        ],
-        \app\api\middleware\GeetestCheck::class => [
-            'only' => [
-                'Add'
-            ]
-        ],
-    ];
-
     protected function CAndU($id, $data, $method)
     {
         // 获取数据
@@ -51,14 +30,14 @@ class CardsComments extends Common
                 ->check($Datas);
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
-            return Common::mArrayEasyReturnStruct(false, $validateerror);
+            return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);
         }
 
         // 启动事务
         Db::startTrans();
         try {
             //获取数据库对象
-            $DbResult = Db::table('cards_comments');
+            $DbResult = Db::table('comments');
             $DbData = $Datas;
             // 方法选择
             if ($method == 'c') {
@@ -85,12 +64,12 @@ class CardsComments extends Common
 
             // 提交事务
             Db::commit();
-            return Common::mArrayEasyReturnStruct(true, '操作成功');
+            return Common::mArrayEasyReturnStruct('操作成功');
         } catch (\Exception $e) {
             //dd($e);
             // 回滚事务
             Db::rollback();
-            return Common::mArrayEasyReturnStruct(false, '操作失败');
+            return Common::mArrayEasyReturnStruct('操作失败', false);
         }
     }
 
@@ -139,7 +118,7 @@ class CardsComments extends Common
         }
 
         //获取数据库对象
-        $result = Db::table('cards_comments')->where('id', $id);
+        $result = Db::table('comments')->where('id', $id);
         if (!$result->find()) {
             return Export::mObjectEasyCreate([], 'id不存在', 400);
         }

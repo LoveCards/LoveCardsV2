@@ -123,7 +123,7 @@ class Admin
             return Export::Create(null, 400, '缺少id参数');
         }
 
-        if ($context->attrGReqNowAdminAllData['id'] == $id) {
+        if ($context['aid'] == $id) {
             return Export::Create(['您不能删除您自己的账户'], 400, '删除失败');
         }
         //获取数据库对象

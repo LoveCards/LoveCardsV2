@@ -15,9 +15,6 @@ use app\common\Common;
 class System
 {
 
-    //中间件
-    protected $middleware = [\app\api\middleware\AdminPowerCheck::class];
-
     //基本信息-POST
     public function Site()
     {
