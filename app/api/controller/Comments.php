@@ -8,7 +8,7 @@ use think\exception\ValidateException;
 use think\facade\Config;
 
 use app\api\validate\Comments as CommentsValidate;
-
+use app\common\App;
 use app\common\Common;
 use app\common\Export;
 
@@ -22,7 +22,6 @@ class Comments extends Common
                 $Datas[$k] = $v;
             }
         }
-
         // 数据校验
         try {
             validate(CommentsValidate::class)
@@ -43,20 +42,22 @@ class Comments extends Common
             if ($method == 'c') {
                 $DbData['time'] = $this->attrGReqTime;
                 $DbData['ip'] = $this->attrGReqIp;
-                if (!Db::table('cards')->where('id', $DbData['cid'])->find()) {
-                    return Common::mArrayEasyReturnStruct(false, 'CID不存在');
+                //校验AID与PID是否存在
+                $tRes_CheckAidAndPid = App::mArrayCheckAidAndPid($DbData['aid'], $DbData['pid']);
+                if (!$tRes_CheckAidAndPid['status']) {
+                    return Common::mArrayEasyReturnStruct($tRes_CheckAidAndPid['msg'], false);
                 }
                 //默认状态ON/OFF:0/1
                 $DbData['status'] = Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus');
                 //写入并返回ID
                 $Id = $DbResult->insertGetId($DbData);
                 //更新comments视图字段
-                Db::table('cards')->where('id', $DbData['cid'])->inc('comments')->update();
+                Db::table('cards')->where('id', $DbData['pid'])->inc('comments')->update();
             } else {
                 //获取Cards数据库对象
                 $DbResult = $DbResult->where('id', $id);
                 if (!$DbResult->find()) {
-                    return Common::mArrayEasyReturnStruct(false, 'ID不存在');
+                    return Common::mArrayEasyReturnStruct('ID不存在', false);
                 }
                 //写入并返回ID
                 $DbResult->update($DbData);
@@ -66,10 +67,9 @@ class Comments extends Common
             Db::commit();
             return Common::mArrayEasyReturnStruct('操作成功');
         } catch (\Exception $e) {
-            //dd($e);
             // 回滚事务
             Db::rollback();
-            return Common::mArrayEasyReturnStruct('操作失败', false);
+            return Common::mArrayEasyReturnStruct('操作失败', false, $e->getMessage());
         }
     }
 
@@ -77,19 +77,20 @@ class Comments extends Common
     public function Add()
     {
         $result = self::CAndU('', [
-            'cid' => Request::param('cid'),
+            'aid' => Request::param('aid'),
+            'pid' => Request::param('pid'),
             'content' => Request::param('content'),
             'name' => Request::param('name')
         ], 'c');
 
         if ($result['status']) {
             if (Config::get('lovecards.api.CardsComments.DefSetCardsCommentsStatus')) {
-                return Export::mObjectEasyCreate('', '添加成功,等待审核', 201);
+                return Export::Create(null, 201);
             } else {
-                return Export::mObjectEasyCreate('', '添加成功', 200);
+                return Export::Create(null, 200);
             }
         } else {
-            return Export::mObjectEasyCreate($result['msg'], '添加失败', 500);
+            return Export::Create($result['data'], 500, $result['msg']);
         }
     }
 
@@ -103,9 +104,9 @@ class Comments extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Export::mObjectEasyCreate('', '编辑成功', 200);
+            return Export::Create(null, 200);
         } else {
-            return Export::mObjectEasyCreate($result['msg'], '编辑失败', 500);
+            return Export::Create($result['data'], 500, $result['msg']);
         }
     }
 
@@ -114,17 +115,17 @@ class Comments extends Common
     {
         $id = Request::param('id');
         if (!$id) {
-            return Export::mObjectEasyCreate(['id' => '缺少参数'], '删除失败', 400);
+            return Export::Create(null, 400, 'id缺失');
         }
 
         //获取数据库对象
         $result = Db::table('comments')->where('id', $id);
         if (!$result->find()) {
-            return Export::mObjectEasyCreate([], 'id不存在', 400);
+            return Export::Create(null, 500, 'id不存在');
         }
         if (!$result->delete()) {
-            return Export::mObjectEasyCreate([], '删除失败', 400);
+            return Export::Create(null, 500, '删除失败');
         }
-        return Export::mObjectEasyCreate([], '删除成功', 200);
+        return Export::Create(null, 200);
     }
 }

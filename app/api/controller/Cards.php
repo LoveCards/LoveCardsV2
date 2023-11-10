@@ -117,9 +117,8 @@ class Cards extends Common
             return Common::mArrayEasyReturnStruct('操作成功', true,  $CardId);
         } catch (\Exception $e) {
             // 回滚事务
-            dd($e);
             Db::rollback();
-            return Common::mArrayEasyReturnStruct('操作失败', false);
+            return Common::mArrayEasyReturnStruct('操作失败', false,$e->getMessage());
         }
     }
 

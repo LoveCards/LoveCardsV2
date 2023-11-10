@@ -92,6 +92,7 @@ class Common extends Facade
         return $ip[$type];
     }
 
+    //格式化返回
     protected static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
     {
         return [
