@@ -15,7 +15,7 @@ class GeetestCheck
         //实现gt4鉴权
         $tDef_result = gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'));
         if (!$tDef_result) {
-            return Export::mObjectEasyCreate(['prompt' => '人机验证失败'], '添加失败', 500);
+            return Export::Create(null, 401, '人机验证失败');
         }
 
         return $tDef_next($tDef_Request);

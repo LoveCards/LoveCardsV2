@@ -24,8 +24,8 @@ Route::group('', function () {
     Route::post('cards/edit', 'Cards/Edit');
     Route::post('cards/delete', 'Cards/Delete');
 
-    Route::post('cardscomments/edit', 'CardsComments/Edit');
-    Route::post('cardscomments/delete', 'CardsComments/Delete');
+    Route::post('comments/edit', 'Comments/Edit');
+    Route::post('comments/delete', 'Comments/Delete');
 
     Route::post('cardstag/add', 'CardsTag/Add');
     Route::post('cardstag/edit', 'CardsTag/Edit');
@@ -46,5 +46,5 @@ Route::group('', function () {
 //防抖+极验鉴权
 Route::group('', function () {
     Route::post('cards/add', 'Cards/Add');
-    Route::post('cardscomments/add', 'CardsComments/Add');
+    Route::post('comments/add', 'Comments/Add');
 })->middleware([SessionDebounce::class, GeetestCheck::class]);
