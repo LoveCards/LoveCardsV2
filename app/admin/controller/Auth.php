@@ -30,6 +30,6 @@ class Auth extends BaseController
         ]);
 
         //输出模板
-        return View::fetch('/login');
+        return View::fetch('/app/auth/login');
     }
 }

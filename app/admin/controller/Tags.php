@@ -20,7 +20,7 @@ class Tags extends BaseController
     {
         //获取列表
         $tDef_CardsTagListMax = 12; //每页个数
-        $lDef_Result = Db::table('cards_tag')
+        $lDef_Result = Db::table('tags')
             ->paginate($tDef_CardsTagListMax, true);
 
         $tDef_CardsTagListEasyPagingComponent = $lDef_Result->render();
