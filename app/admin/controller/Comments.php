@@ -21,7 +21,7 @@ class Comments extends BaseController
     {
         //获取列表
         $tDef_CardsCommentsListMax = 12; //每页个数
-        $lDef_Result = Db::table('cards_comments')
+        $lDef_Result = Db::table('comments')
             ->order('cid', 'desc')
             ->paginate($tDef_CardsCommentsListMax, true);
 
