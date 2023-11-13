@@ -1,21 +1,21 @@
 <?php
 
-namespace app\admin\middleware;
+namespace app\api\middleware;
 
-use app\admin\middleware\CheckClass;
+use app\common\CheckClass;
 
 class AdminAuthCheck extends CheckClass
 {
-    public function handle($tDef_Request, \Closure $tDef_Next)
+    public function handle($tDef_Request, \Closure $tDef_next)
     {
         //实现Admin鉴权
-        $tDef_Result = $this->mObjectGetNowAdminAllData();
-        if ($tDef_Result) {
-            return $tDef_Result;
+        $tDef_result = $this->mObjectGetNowAdminAllData();
+        if ($tDef_result) {
+            return $tDef_result;
         }
         //传递当前管理员全部数据
-        $tDef_Request->attrLDefNowAdminAllData = $this->attrLDefNowAdminAllData[1];
+        $tDef_Request->NowAdminData = $this->attrLDefAdminAllData;
 
-        return $tDef_Next($tDef_Request);
+        return $tDef_next($tDef_Request);
     }
 }

@@ -11,15 +11,16 @@ use app\common\FrontEnd;
 
 use app\admin\BaseController;
 
-class Login extends BaseController
+class Auth extends BaseController
 {
 
-    //Index
-    public function Index(TypeRequest $tDef_Request)
+    //Login
+    public function Login(TypeRequest $tDef_Request)
     {
         //验证身份并返回数据
         $tDef_UserData = FrontEnd::mResultGetNowAdminAllData();
-        if ($tDef_UserData[0] == true) {
+        //dd($tDef_UserData);
+        if ($tDef_UserData['status'] == true) {
             return FrontEnd::mObjectEasyFrontEndJumpUrl('/admin/index', '请不要重复登入');
         }
 

@@ -10,6 +10,7 @@ use app\common\Common;
 
 class BackEnd extends Facade
 {
+    //取用户数据
     protected static function mArrayGetNowAdminAllData($id)
     {
         //查询数据

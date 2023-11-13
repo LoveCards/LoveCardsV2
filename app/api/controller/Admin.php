@@ -13,7 +13,7 @@ use app\common\Export;
 
 class Admin
 {
-    //添加用户-POST
+    //添加管理员-POST
     public function Add()
     {
         $context = request()->JwtData;
@@ -47,7 +47,7 @@ class Admin
         return Export::Create(null, 200, null, $context);
     }
 
-    //编辑用户-POST
+    //编辑管理员-POST
     public function Edit()
     {
         $context = request()->JwtData;
@@ -87,13 +87,13 @@ class Admin
             return Export::Create(null, 400, 'id不存在');
         }
 
-        //判断用户名是否修改
+        //判断管理员名是否修改
         if ($resultAdminData['userName'] != $userName) {
-            //判断新用户名是否已存在
+            //判断新管理员名是否已存在
             if (!Db::table('admin')->where('userName', $userName)->find()) {
                 $data['userName'] = $userName;
             } else {
-                return Export::Create(null, 400, '用户名已存在');
+                return Export::Create(null, 400, '管理员名已存在');
             }
         }
 
@@ -110,7 +110,7 @@ class Admin
         return Export::Create(null, 200, null, $context);
     }
 
-    //删除用户-POST
+    //删除管理员-POST
     public function Delete()
     {
         $context = request()->JwtData;

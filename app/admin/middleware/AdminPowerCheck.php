@@ -1,28 +1,27 @@
 <?php
 
-namespace app\admin\middleware;
+namespace app\api\middleware;
 
-use app\admin\middleware\CheckClass;
+use app\common\CheckClass;
 
 class AdminPowerCheck extends CheckClass
 {
-    public function handle($tDef_Request, \Closure $tDef_Next)
+    public function handle($tDef_Request, \Closure $var_t_def_next)
     {
         //实现Admin鉴权并返回Admin全部数据
-        $tdef_Result = $this->mObjectGetNowAdminAllData();
-        if ($tdef_Result) {
-            return $tdef_Result;
+        $var_t_def_result = $this->mObjectGetNowAdminAllData();
+        if ($var_t_def_result) {
+            return $var_t_def_result;
         }
         //传递当前管理员全部数据
-        $tDef_Request->attrLDefNowAdminAllData = $this->attrLDefNowAdminAllData[1];
-
+        $tDef_Request->NowAdminData = $this->attrLDefAdminAllData;
 
         //实现AdminPower鉴权
-        $tdef_Result = $this->mObjectEasyVerifyPower();
-        if ($tdef_Result) {
-            return $tdef_Result;
+        $var_t_def_result = $this->mObjectEasyVerifyPower();
+        if ($var_t_def_result) {
+            return $var_t_def_result;
         }
 
-        return $tDef_Next($tDef_Request);
+        return $var_t_def_next($tDef_Request);
     }
 }
