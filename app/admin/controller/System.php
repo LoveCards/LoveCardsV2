@@ -34,7 +34,7 @@ class System extends BaseController
         ]);
 
         //输出模板
-        return View::fetch('/system');
+        return View::fetch('/app/system/index');
     }
 
     //View

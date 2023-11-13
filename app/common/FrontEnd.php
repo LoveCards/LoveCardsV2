@@ -7,6 +7,10 @@ use think\facade\Db;
 use think\facade\Cookie;
 use think\facade\View;
 
+use app\common\CheckClass;
+
+use jwt\Jwt;
+
 class FrontEnd extends Facade
 {
 
@@ -38,21 +42,27 @@ class FrontEnd extends Facade
      */
     protected static function mResultGetNowAdminAllData()
     {
+        $TDef_JwtData = request()->JwtData;
         //整理数据
-        $uuid = Cookie::get('uuid');
-        if (empty($uuid)) {
-            return array(false, '请先登入');
+        $token = Cookie::get('admin_token');
+        if (empty($token)) {
+            return Common::mArrayEasyReturnStruct('请先登入', false);
         }
-        //查询数据
-        $result = Db::table('admin')
-            ->where('uuid', $uuid)
-            ->find();
+
+        //Jwt校验
+        $lDef_JwtCheckTokenResult = jwt::CheckToken($token);
+        if (!array_key_exists("aid", $lDef_JwtCheckTokenResult['data'])){
+            return Common::mArrayEasyReturnStruct($lDef_JwtCheckTokenResult['msg'], false);
+        }
+
+        //取用户数据
+        $lDef_GetNowAdminAllDataResult = BackEnd::mArrayGetNowAdminAllData($lDef_JwtCheckTokenResult['data']['aid']);
         //判断数据是否存在
-        if (empty($result)) {
-            return array(false, '当前uuid已失效请重新登入');
+        if ($lDef_GetNowAdminAllDataResult['status']) {
+            return Common::mArrayEasyReturnStruct($lDef_GetNowAdminAllDataResult['msg'], false);
         } else {
             //返回用户数据
-            return array(true, $result);
+            return Common::mArrayEasyReturnStruct(null, true, $lDef_GetNowAdminAllDataResult['data']);
         }
     }
 

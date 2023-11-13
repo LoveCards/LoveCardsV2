@@ -10,7 +10,7 @@ use app\common\FrontEnd;
 
 use app\admin\BaseController;
 
-class CardsComments extends BaseController
+class Comments extends BaseController
 {
 
     //中间件
