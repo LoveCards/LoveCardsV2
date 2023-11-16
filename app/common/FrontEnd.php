@@ -51,7 +51,7 @@ class FrontEnd extends Facade
 
         //Jwt校验
         $lDef_JwtCheckTokenResult = jwt::CheckToken($token);
-        if (!array_key_exists("aid", $lDef_JwtCheckTokenResult['data'])){
+        if (!$lDef_JwtCheckTokenResult['status']){
             return Common::mArrayEasyReturnStruct($lDef_JwtCheckTokenResult['msg'], false);
         }
 

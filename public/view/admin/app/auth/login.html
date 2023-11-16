@@ -11,8 +11,8 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 
     <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
-    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
-    <link rel="stylesheet" href="{__A-assets__}/base.css" />
+    <link rel="stylesheet" href="{__A-assets__}/lib/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/css/base.css" />
 </head>
 
 <body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-layout-light mdui-theme-accent-pink">
@@ -82,51 +82,31 @@
 
     <div style="margin-top: 140px">
     </div>
-    <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
-    <script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
-    <script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
-    <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
-    <script src="{__A-assets__}/base.js"></script>
-    <script src="{__A-assets__}/public.js"></script>
+    <script src="{__A-assets__}/lib/jquery-3.6.0/jquery.min.js"></script>
+    <script src="{__A-assets__}/lib/mdui-v1.0.2/js/mdui.min.js"></script>
+    <script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+    <script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+
     {if $SystemConfig.class.geetest.DefSetValidatesStatus == 1}
     <script src="https://static.geetest.com/v4/gt4.js"></script>
-    <script src="{__A-assets__}/gt4/base.js"></script>
     {/if}
-    <script>
-        $(function () {
-            //提交
-            FunLogin = (CaptchaData) => {
-                //是否存在验证参数
-                var data;
-                if (CaptchaData) { data = CaptchaData; }
 
-                var data = {
-                    ...data,//合并验证参数
-                    'userName': $('#userName').val(),
-                    'password': $('#password').val(),
-                };
-                //提交数据
-                result = apiAjax0(data, apiUrlAuthlogin, 'POST');
-                if (result) {
-                    //成功
-                    mdui.snackbar({
-                        message: '登入成功',
-                        position: 'left-top'
-                    });
-                    //附加功能
-                    $.cookie('uuid', result.data.uuid, { expires: 7, path: '/' });
-                    //跳转
-                    jumpUrl('/admin/index');
-                    return;
-                }
-            }
-            //验证
-            /*{if $SystemConfig.class.geetest.DefSetValidatesStatus == 1}*/
-            geetest4('#submitLogin', FunLogin, '{$SystemConfig.class.geetest.DefSetGeetestId}');
-            /*{else /}*/
-            $('#submitLogin').click(function () { FunLogin() });
-            /*{/if}*/
-        });
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.5.0/axios.min.js"></script>
+    <script src="{__A-assets__}/js/lovecards.js"></script>
+    <script src="/view/admin/app/auth/login.js"></script>
+    <script>
+        //实例化
+        let LoginEntity = new Login();
+
+        $(function () {
+            //设置方法
+            // LoginEntity.SetPostLoginHooks(() => {
+            //     console.log('验证自定义回调');
+            // });
+            //绑定方法
+            LoginEntity.BindLogin('submitLogin', 'userName', 'password');
+        })
     </script>
 </body>
 
