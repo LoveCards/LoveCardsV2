@@ -17,12 +17,12 @@ var apicardsEdit = '/api/cards/edit';//编辑卡片
 var apicardsDelete = '/api/cards/delete';//删除卡片
 var apicardsSetting = '/api/cards/setting';//模块设置
 
-var apiCardsTagAdd = '/api/CardsTag/add';//添加标签
-var apiCardsTagEdit = '/api/CardsTag/edit';//编辑标签
-var apiCardsTagDelete = '/api/CardsTag/delete';//删除标签
+var apiTagsAdd = '/api/CardsTag/add';//添加标签
+var apiTagsEdit = '/api/CardsTag/edit';//编辑标签
+var apiTagsDelete = '/api/CardsTag/delete';//删除标签
 
-var apiCardsCommentsEdit = '/api/CardsComments/edit';//编辑评论
-var apiCardsCommentsDelete = '/api/CardsComments/delete';//删除评论
+var apiCommentsEdit = '/api/CardsComments/edit';//编辑评论
+var apiCommentsDelete = '/api/CardsComments/delete';//删除评论
 
 //install
 var apiSystemInstallVerifyEnvironment = '/system/Install/apiVerifyEnvironment';//验证环境
