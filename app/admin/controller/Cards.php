@@ -43,7 +43,7 @@ class Cards extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '卡片管理'
         ]);
 
@@ -85,7 +85,7 @@ class Cards extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '编辑卡片'
         ]);
 
@@ -98,11 +98,11 @@ class Cards extends BaseController
     {
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '模块设置'
         ]);
 
         //输出模板
-        return View::fetch('/cards-setting');
+        return View::fetch($this->attrGReqView);
     }
 }

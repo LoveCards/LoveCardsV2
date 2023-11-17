@@ -14,7 +14,7 @@ class Admin extends BaseController
 {
 
     //中间件
-    protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
+    //protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
 
     //Index
     public function Index(TypeRequest $tDef_Request)
@@ -36,11 +36,11 @@ class Admin extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '账号管理'
         ]);
 
         //输出模板
-        return View::fetch('/admin');
+        return View::fetch($this->attrGReqView);
     }
 }

@@ -37,11 +37,11 @@ class Tags extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '标签管理'
         ]);
 
         //输出模板
-        return View::fetch('/cards-tag');
+        return View::fetch($this->attrGReqView);
     }
 }

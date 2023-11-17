@@ -39,11 +39,11 @@ class Comments extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '评论管理'
         ]);
 
         //输出模板
-        return View::fetch('/cards-comments');
+        return View::fetch($this->attrGReqView);
     }
 }

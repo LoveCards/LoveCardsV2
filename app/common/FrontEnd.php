@@ -44,14 +44,14 @@ class FrontEnd extends Facade
     {
         $TDef_JwtData = request()->JwtData;
         //整理数据
-        $token = Cookie::get('admin_token');
+        $token = Cookie::get('TOKEN');
         if (empty($token)) {
             return Common::mArrayEasyReturnStruct('请先登入', false);
         }
 
         //Jwt校验
         $lDef_JwtCheckTokenResult = jwt::CheckToken($token);
-        if (!$lDef_JwtCheckTokenResult['status']){
+        if (!$lDef_JwtCheckTokenResult['status']) {
             return Common::mArrayEasyReturnStruct($lDef_JwtCheckTokenResult['msg'], false);
         }
 
@@ -59,10 +59,10 @@ class FrontEnd extends Facade
         $lDef_GetNowAdminAllDataResult = BackEnd::mArrayGetNowAdminAllData($lDef_JwtCheckTokenResult['data']['aid']);
         //判断数据是否存在
         if ($lDef_GetNowAdminAllDataResult['status']) {
-            return Common::mArrayEasyReturnStruct($lDef_GetNowAdminAllDataResult['msg'], false);
-        } else {
             //返回用户数据
             return Common::mArrayEasyReturnStruct(null, true, $lDef_GetNowAdminAllDataResult['data']);
+        } else {
+            return Common::mArrayEasyReturnStruct($lDef_GetNowAdminAllDataResult['msg'], false);
         }
     }
 
