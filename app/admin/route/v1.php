@@ -12,6 +12,7 @@ Route::get('login', 'Auth/login');
 
 //管理鉴权
 Route::group('', function () {
+    Route::get('/', 'Index/index');
     Route::get('index', 'Index/index');
 })->middleware([AdminAuthCheck::class]);
 

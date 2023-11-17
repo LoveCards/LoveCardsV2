@@ -28,14 +28,14 @@ class BaseController extends Common
 
         $this->attrGReqTime = date('Y-m-d H:i:s');
         $this->attrGReqIp = $this->mStringGetIP();
-        $this->attrGReqView = '/app/' . request()->controller() . '/' . request()->action();
+        $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . request()->action();
 
         //公共模板变量
         View::assign([
             'LCVersionInfo' => $this->mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => $this->mArrayGetDbSystemData(), //系统配置信息
             'SystemConfig' => config::get('lovecards'),
-            'ControllerName' => request()->controller(),
+            'ControllerName' => strtolower(request()->controller()),
             'ActionName' => request()->action()
         ]);
     }

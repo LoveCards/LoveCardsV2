@@ -15,7 +15,7 @@ use UnexpectedValueException;
 use think\Facade;
 use think\facade\Config;
 use think\facade\Cache;
-use app\Common\common;
+use app\common\Common;
 
 class Jwt extends Facade
 {
@@ -58,26 +58,26 @@ class Jwt extends Facade
                 $request = self::RenewToken($token, $data);
                 if ($request['status'] == false) {
                     //刷新失败
-                    return common::mArrayEasyReturnStruct($request['msg'], false);
+                    return Common::mArrayEasyReturnStruct($request['msg'], false);
                 }
                 //刷新成功并返回新的token和data
                 $data['token'] = $request['data'];
-                return common::mArrayEasyReturnStruct(null, true, $data);
+                return Common::mArrayEasyReturnStruct(null, true, $data);
             }
 
-            return common::mArrayEasyReturnStruct(null, true, $data);
+            return Common::mArrayEasyReturnStruct(null, true, $data);
         } catch (SignatureInvalidException $e) {
             //签名不正确
-            return  common::mArrayEasyReturnStruct('签名不正确', false);
+            return  Common::mArrayEasyReturnStruct('签名不正确', false);
         } catch (BeforeValidException $e) {
             // 签名在某个时间点之后才能用
-            return common::mArrayEasyReturnStruct('token失效1', false);
+            return Common::mArrayEasyReturnStruct('token失效1', false);
         } catch (ExpiredException $e) {
             // token过期 校验payload的exp:data字段
-            return common::mArrayEasyReturnStruct('token失效0', false);
+            return Common::mArrayEasyReturnStruct('token失效0', false);
         } catch (UnexpectedValueException $e) {
             //其他错误
-            return common::mArrayEasyReturnStruct('未知错误:' . $e->getMessage(), false);
+            return Common::mArrayEasyReturnStruct('未知错误:' . $e->getMessage(), false);
         }
     }
 
@@ -90,10 +90,10 @@ class Jwt extends Facade
             //更新token
             $token = self::SignToken($data);
             //返回token
-            return common::mArrayEasyReturnStruct(null, true, $token);
+            return Common::mArrayEasyReturnStruct(null, true, $token);
         }
 
-        return common::mArrayEasyReturnStruct('token失效', false);
+        return Common::mArrayEasyReturnStruct('token失效', false);
     }
 
     //删除Token
@@ -102,6 +102,6 @@ class Jwt extends Facade
         if (Cache::has('token_' . $token)) {
             Cache::delete('token_' . $token);
         };
-        return common::mArrayEasyReturnStruct(null, true);
+        return Common::mArrayEasyReturnStruct(null, true);
     }
 }
