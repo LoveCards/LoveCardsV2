@@ -3,21 +3,17 @@
 use think\facade\Route;
 use think\facade\Request;
 
-use app\api\middleware\JwtAuthCheck;
-use app\api\middleware\JwtAuthLogout;
+use app\admin\middleware\JwtAuthCheck;
 
-use app\api\middleware\AdminPowerCheck;
-use app\api\middleware\AdminAuthCheck;
-
-use app\api\middleware\SessionDebounce;
-use app\api\middleware\GeetestCheck;
+use app\admin\middleware\AdminPowerCheck;
+use app\admin\middleware\AdminAuthCheck;
 
 Route::get('login', 'Auth/login');
 
 //管理鉴权
 Route::group('', function () {
-    Route::get('index', 'Admin/index');
-})->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);
+    Route::get('index', 'Index/index');
+})->middleware([AdminAuthCheck::class]);
 
 //超管鉴权
 Route::group('', function () {

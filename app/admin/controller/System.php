@@ -29,12 +29,12 @@ class System extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '系统设置'
         ]);
 
         //输出模板
-        return View::fetch('/app/system/index');
+        return View::fetch($this->attrGReqView);
     }
 
     //View
@@ -70,7 +70,7 @@ class System extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '外观设置',
             //模板配置列表
             'ThemeConfig' =>  $lDef_ThemeConfigList,
@@ -79,7 +79,7 @@ class System extends BaseController
         ]);
 
         //输出模板
-        return View::fetch('/system-view');
+        return View::fetch($this->attrGReqView);
     }
 
     //View-Set
@@ -103,13 +103,13 @@ class System extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '主题设置',
             //当前模板配置
             'TemplateConfig' => $tDef_NowThemeConfig
         ]);
 
         //输出模板
-        return View::fetch('/system-view-set');
+        return View::fetch($this->attrGReqView);
     }
 }

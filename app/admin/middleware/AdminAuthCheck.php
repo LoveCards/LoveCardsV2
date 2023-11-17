@@ -1,15 +1,16 @@
 <?php
 
-namespace app\api\middleware;
+namespace app\admin\middleware;
 
 use app\common\CheckClass;
+use app\common\FrontEnd;
 
 class AdminAuthCheck extends CheckClass
 {
     public function handle($tDef_Request, \Closure $tDef_next)
     {
         //实现Admin鉴权
-        $tDef_result = $this->mObjectGetNowAdminAllData();
+        $tDef_result = $this->mArrayGetNowAdminAllData();
         if ($tDef_result) {
             return $tDef_result;
         }
