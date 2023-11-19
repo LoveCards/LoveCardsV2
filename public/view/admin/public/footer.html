@@ -5,44 +5,55 @@
 <script src="{__A-assets__}/lib/mdui-v1.0.2/js/mdui.min.js"></script>
 <script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
 <script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/1.5.0/axios.min.js"></script>
 <script src="{__A-assets__}/js/lovecards.js"></script>
+<script src="{__A-assets__}/js/common.js"></script>
 {if $ViewActionJS}
 <!-- 对应页面类 -->
 <script src="/view/admin/app/{$SystemControllerName}/{$SystemActionName}.js"></script>
 {/if}
 <!-- 全局 -->
 <script>
-    //更新通知横幅
-    const FunUpdateNotice = () => {
-        GithubDateRelesesLatest().then(function (result) {
-            //console.log(parseInt('{$LCVersionInfo.VerS}') + 'p' + parseInt(result['tag_name'].slice(1)));
-            if (result != 'error') {
-                if ('{$LCVersionInfo.VerS}' < result['tag_name'].slice(1)) {
-                    $('#Component-UpdateNotice').attr('style', '');
-                    $('#Component-UpdateNotice').find("kbd.tag_name").text('v' + result['tag_name'].slice(1));
-                }
-            }
-        })
-    }; FunUpdateNotice();
-
+    let CommonEntity = new Common();
     $(function () {
-        $('#submitLogout').click(function () {
-            data = {
-                'uuid': $.cookie('uuid')
-            };
-            result = apiAjax0(data, apiUrlAuthlogout, 'POST');//提交数据
-            if (result) {
-                //成功
-                mdui.snackbar({
-                    message: '注销成功',
-                    position: 'left-top'
-                });
-                //附加功能
-                $.removeCookie('uuid', { path: '/' });
-                //跳转
-                jumpUrl('/admin/login');
-                return;
-            }
-        })
-    });
+        //CookieMsg处理
+        CommonEntity.CookieMsgHandling();
+        //绑定全局账户退出按钮
+        CommonEntity.BindLogout('submitLogout');
+    })
+
+
+    //更新通知横幅
+    // const FunUpdateNotice = () => {
+    //     GithubDateRelesesLatest().then(function (result) {
+    //         //console.log(parseInt('{$LCVersionInfo.VerS}') + 'p' + parseInt(result['tag_name'].slice(1)));
+    //         if (result != 'error') {
+    //             if ('{$LCVersionInfo.VerS}' < result['tag_name'].slice(1)) {
+    //                 $('#Component-UpdateNotice').attr('style', '');
+    //                 $('#Component-UpdateNotice').find("kbd.tag_name").text('v' + result['tag_name'].slice(1));
+    //             }
+    //         }
+    //     })
+    // }; FunUpdateNotice();
+
+    // $(function () {
+    //     $('#submitLogout').click(function () {
+    //         data = {
+    //             'uuid': $.cookie('uuid')
+    //         };
+    //         result = apiAjax0(data, apiUrlAuthlogout, 'POST');//提交数据
+    //         if (result) {
+    //             //成功
+    //             mdui.snackbar({
+    //                 message: '注销成功',
+    //                 position: 'left-top'
+    //             });
+    //             //附加功能
+    //             $.removeCookie('uuid', { path: '/' });
+    //             //跳转
+    //             jumpUrl('/admin/login');
+    //             return;
+    //         }
+    //     })
+    // });
 </script>

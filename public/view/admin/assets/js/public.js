@@ -294,17 +294,17 @@ $(function () {
     *提示msg
     */
     //读取
-    msg = $.cookie('msg');
-    //判断
-    if (msg != 'undefined' && msg != undefined) {
-        data = false;
-        mdui.snackbar({
-            message: msg,
-            position: 'left-top'
-        });
-        //重置
-        $.cookie('msg', 'undefined', { path: '/' });
-    }
+    // msg = $.cookie('msg');
+    // //判断
+    // if (msg != 'undefined' && msg != undefined) {
+    //     data = false;
+    //     mdui.snackbar({
+    //         message: msg,
+    //         position: 'left-top'
+    //     });
+    //     //重置
+    //     $.cookie('msg', 'undefined', { path: '/' });
+    // }
     //初始化-提示
     $('.js-mdui-Tooltip').each(function (index, domEle) {
         $(domEle).attr('mdui-tooltip', "{content:'" + $(domEle).val() + "'}")

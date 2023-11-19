@@ -5,8 +5,8 @@ class LoveCards {
 
         //基础
         const apiUrl = {
-            Authlogin: '/api/auth/login',//登入
-            Authlogout: '/api/auth/logout',//注销
+            AuthLogin: '/api/auth/login',//登入
+            AuthLogout: '/api/auth/logout',//注销
 
             AdminDelete: '/api/admin/delete',//删除用户
             AdminAdd: '/api/admin/add',//添加用户
@@ -41,8 +41,13 @@ class LoveCards {
             CaptchaStatus: 0
         };
 
+        const token = {
+            AdminTokenName: 'TOKEN'
+        };
+
         this.config.apiUrl = apiUrl;
         this.config.geetest4 = geetest4;
+        this.config.token = token;
 
         this.commonFunctions.snackbar = (message) => mdui.snackbar({ message: message, position: 'right-top' });
     }
@@ -53,13 +58,20 @@ class LoveCards {
 
     SetAdminToken = (token) => {
         if (token) {
-            this.SetCookie('TOKEN', token)
+            this.SetCookie(this.config.token.AdminTokenName, token)
         }
     }
 
+    DeleteAdminToken = () => {
+        if ($.removeCookie(this.config.token.AdminTokenName, { path: '/' })) {
+            return true;
+        }
+        return false;
+    }
+
     GetAdminToken = () => {
-        if ($.cookie('TOKEN')) {
-            return `Bearer ${$.cookie("TOKEN")}`;
+        if ($.cookie(this.config.token.AdminTokenName)) {
+            return `Bearer ${$.cookie(this.config.token.AdminTokenName)}`;
         }
         return false;
     }

@@ -2,7 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 
@@ -11,8 +10,6 @@ use app\admin\BaseController;
 
 class Index extends BaseController
 {
-    //中间件
-    //protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
 
     //Index
     public function Index()
