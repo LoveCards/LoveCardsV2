@@ -8,6 +8,7 @@ use think\facade\Config;
 
 use app\common\Common;
 use app\common\Theme;
+use app\common\File;
 
 class BaseController extends Common
 {
@@ -30,13 +31,21 @@ class BaseController extends Common
         $this->attrGReqIp = $this->mStringGetIP();
         $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . request()->action();
 
-        //公共模板变量
-        View::assign([
+        $lDef_AssignData = [
             'LCVersionInfo' => $this->mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => $this->mArrayGetDbSystemData(), //系统配置信息
             'SystemConfig' => config::get('lovecards'),
-            'ControllerName' => strtolower(request()->controller()),
-            'ActionName' => request()->action()
-        ]);
+            'SystemControllerName' => strtolower(request()->controller()),
+            'SystemActionName' => request()->action(),
+            'ViewActionJS' => false
+        ];
+
+        //JS文件校验引入
+        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/view/admin' . $this->attrGReqView . '.js') ?
+            $lDef_AssignData['ViewActionJS'] = true :
+            0;
+
+        //公共模板变量
+        View::assign($lDef_AssignData);
     }
 }

@@ -26,7 +26,7 @@ class Cards extends BaseController
     ];
 
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
 
         //获取列表
@@ -52,7 +52,7 @@ class Cards extends BaseController
     }
 
     //Edit
-    public function Edit(TypeRequest $tDef_request)
+    public function Edit()
     {
         //传入必要参数
         $tDef_Id = request()->param('id');
@@ -94,7 +94,7 @@ class Cards extends BaseController
     }
 
     //setting
-    public function Setting(TypeRequest $tDef_Request)
+    public function Setting()
     {
         //基础变量
         View::assign([

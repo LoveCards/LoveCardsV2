@@ -6,8 +6,10 @@
 <script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
 <script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
 <script src="{__A-assets__}/js/lovecards.js"></script>
+{if $ViewActionJS}
 <!-- 对应页面类 -->
-<script src="/view/admin/app/{$ControllerName}/{$ActionName}.js"></script>
+<script src="/view/admin/app/{$SystemControllerName}/{$SystemActionName}.js"></script>
+{/if}
 <!-- 全局 -->
 <script>
     //更新通知横幅

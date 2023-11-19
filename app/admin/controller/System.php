@@ -21,7 +21,7 @@ class System extends BaseController
     protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
 
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
@@ -38,7 +38,7 @@ class System extends BaseController
     }
 
     //View
-    public function View(TypeRequest $tDef_Request)
+    public function View()
     {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
@@ -83,7 +83,7 @@ class System extends BaseController
     }
 
     //View-Set
-    public function ViewSet(TypeRequest $tDef_Request)
+    public function ViewSet()
     {
         //取系统数据
         $systemData = array_column(Db::table('system')->select()->toArray(), 'value', 'name');

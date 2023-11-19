@@ -1,4 +1,11 @@
 <?php
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2023-11-15 15:24:11
+ * @LastEditTime: 2023-11-19 21:57:29
+ * @LastEditors: github.com/zhiguai
+ */
 
 namespace app\admin\controller;
 
@@ -16,7 +23,7 @@ class Tags extends BaseController
     protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
 
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
         //获取列表
         $tDef_CardsTagListMax = 12; //每页个数
