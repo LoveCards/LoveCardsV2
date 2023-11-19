@@ -16,7 +16,7 @@ class Updata extends BaseController
     protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
 
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
         //基础变量
         View::assign([

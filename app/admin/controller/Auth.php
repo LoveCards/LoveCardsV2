@@ -15,7 +15,7 @@ class Auth extends BaseController
 {
 
     //Login
-    public function Login(TypeRequest $tDef_Request)
+    public function Login()
     {
         //验证身份并返回数据
         $tDef_UserData = FrontEnd::mResultGetNowAdminAllData();

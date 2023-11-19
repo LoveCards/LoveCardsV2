@@ -13,11 +13,8 @@ use app\admin\BaseController;
 class Admin extends BaseController
 {
 
-    //中间件
-    //protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
-
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
         $tDef_AdminListMax = 5;
         $lDef_Result = Db::table('admin')

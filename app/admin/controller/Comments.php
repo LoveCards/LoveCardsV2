@@ -17,7 +17,7 @@ class Comments extends BaseController
     protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
 
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
         //获取列表
         $tDef_CardsCommentsListMax = 12; //每页个数
