@@ -1,15 +1,7 @@
 <?php
-/*
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2023-11-15 15:24:11
- * @LastEditTime: 2023-11-19 21:57:29
- * @LastEditors: github.com/zhiguai
- */
 
 namespace app\admin\controller;
 
-use think\Request as TypeRequest;
 use think\facade\View;
 use think\facade\Db;
 

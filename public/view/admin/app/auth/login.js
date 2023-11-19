@@ -42,7 +42,7 @@ class Login extends LoveCards {
         };
 
         //提交数据
-        return this.Axios('post', this.config.apiUrl.Authlogin, data).then((response) => {
+        return this.Axios('post', this.config.apiUrl.AuthLogin, data).then((response) => {
             // this.hooks.PostLogin?.then写法解释
             // this.hooks.PostLogin 存在并且包含属性 then
             // 这将在 this.hooks.PostLogin 存在并且 then 存在的情况下执行操作

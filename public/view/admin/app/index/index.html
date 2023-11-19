@@ -121,8 +121,21 @@
 
 </div>
 {include file="public/footer"}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.0/dist/chart.umd.min.js"></script>
+<script src="{__A-assets__}/lib/chart-4.2.0/chart.umd.min.js"></script>
 <script>
+
+    // //实例化
+    // let IndexEntity = new Index();
+
+    // $(function () {
+    //     //设置方法
+    //     // LoginEntity.SetPostLoginHooks(() => {
+    //     //     console.log('验证自定义回调');
+    //     // });
+    //     //绑定方法
+    //     IndexEntity.BindLogin('submitLogin', 'userName', 'password');
+    // })
+
     //图表数据传递
     var dataChart = JSON.parse('{$ViewChartJson|raw}');
     //整理图表数据
