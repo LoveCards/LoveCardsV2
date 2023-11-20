@@ -18,21 +18,21 @@ class Tags extends BaseController
     public function Index()
     {
         //获取列表
-        $tDef_CardsTagListMax = 12; //每页个数
+        $tDef_TagsListMax = 12; //每页个数
         $lDef_Result = Db::table('tags')
-            ->paginate($tDef_CardsTagListMax, true);
+            ->paginate($tDef_TagsListMax, true);
 
-        $tDef_CardsTagListEasyPagingComponent = $lDef_Result->render();
-        $lDef_CardsTagList = $lDef_Result->items();
+        $tDef_TagsListEasyPagingComponent = $lDef_Result->render();
+        $lDef_TagsList = $lDef_Result->items();
 
         View::assign([
-            'CardsTagList'  => $lDef_CardsTagList,
-            'CardsTagListEasyPagingComponent'  => $tDef_CardsTagListEasyPagingComponent,
-            'CardsTagListMax'  => $tDef_CardsTagListMax
+            'TagsList'  => $lDef_TagsList,
+            'TagsListEasyPagingComponent'  => $tDef_TagsListEasyPagingComponent,
+            'TagsListMax'  => $tDef_TagsListMax
         ]);
 
         //通用列表
-        FrontEnd::mObjectEasyAssignCommonNowList($lDef_CardsTagList,$tDef_CardsTagListEasyPagingComponent,$tDef_CardsTagListMax);
+        FrontEnd::mObjectEasyAssignCommonNowList($lDef_TagsList, $tDef_TagsListEasyPagingComponent, $tDef_TagsListMax);
 
         //基础变量
         View::assign([
