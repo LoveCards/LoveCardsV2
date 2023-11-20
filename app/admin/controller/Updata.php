@@ -12,9 +12,6 @@ use app\admin\BaseController;
 
 class Updata extends BaseController
 {
-    //中间件
-    protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
-
     //Index
     public function Index()
     {

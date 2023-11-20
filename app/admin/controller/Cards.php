@@ -48,7 +48,7 @@ class Cards extends BaseController
         ]);
 
         //输出模板
-        return View::fetch('/cards');
+        return View::fetch($this->attrGReqView);
     }
 
     //Edit
@@ -90,7 +90,7 @@ class Cards extends BaseController
         ]);
 
         //输出模板
-        return View::fetch('/cards-edit');
+        return View::fetch($this->attrGReqView);
     }
 
     //setting
