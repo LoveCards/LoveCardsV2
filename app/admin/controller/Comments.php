@@ -20,22 +20,22 @@ class Comments extends BaseController
     public function Index()
     {
         //获取列表
-        $tDef_CardsCommentsListMax = 12; //每页个数
+        $tDef_CommentsListMax = 12; //每页个数
         $lDef_Result = Db::table('comments')
-            ->order('cid', 'desc')
-            ->paginate($tDef_CardsCommentsListMax, true);
+            ->order('pid', 'desc')
+            ->paginate($tDef_CommentsListMax, true);
 
-        $tDef_CardsCommentsListEasyPagingComponent = $lDef_Result->render();
-        $lDef_CardsCommentsList = $lDef_Result->items();
+        $tDef_CommentsListEasyPagingComponent = $lDef_Result->render();
+        $lDef_CommentsList = $lDef_Result->items();
 
         View::assign([
-            'CardsCommentsList'  => $lDef_CardsCommentsList,
-            'CardsCommentsListEasyPagingComponent'  => $tDef_CardsCommentsListEasyPagingComponent,
-            'CardsCommentsListMax'  => $tDef_CardsCommentsListMax
+            'CommentsList'  => $lDef_CommentsList,
+            'CommentsListEasyPagingComponent'  => $tDef_CommentsListEasyPagingComponent,
+            'CommentsListMax'  => $tDef_CommentsListMax
         ]);
 
         //通用列表
-        FrontEnd::mObjectEasyAssignCommonNowList($lDef_CardsCommentsList, $tDef_CardsCommentsListEasyPagingComponent, $tDef_CardsCommentsListMax);
+        FrontEnd::mObjectEasyAssignCommonNowList($lDef_CommentsList, $tDef_CommentsListEasyPagingComponent, $tDef_CommentsListMax);
 
         //基础变量
         View::assign([

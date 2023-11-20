@@ -30,7 +30,7 @@ class Index extends LoveCards {
             });
         }
 
-        //渲染图标
+        //渲染图表
         this.RenderingLineChart(canvasId, chartLabels, chartDatasets);
     }
 

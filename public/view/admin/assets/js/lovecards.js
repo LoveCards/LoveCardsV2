@@ -3,7 +3,7 @@ class LoveCards {
         this.config = {};
         this.commonFunctions = {};
 
-        //基础
+        //接口
         const apiUrl = {
             AuthLogin: '/api/auth/login',//登入
             AuthLogout: '/api/auth/logout',//注销
@@ -36,14 +36,18 @@ class LoveCards {
             SystemInstallSetInstallLock: '/system/Install/apiSetInstallLock',//生成安装记录
         };
 
+        //极验配置
         const geetest4 = {
             CaptchaId: '145e5424cb89698be0c58a1060483735',
             CaptchaStatus: 0
         };
 
+        //token配置
         const token = {
             AdminTokenName: 'TOKEN'
         };
+
+        //lovecards配置
 
         this.config.apiUrl = apiUrl;
         this.config.geetest4 = geetest4;

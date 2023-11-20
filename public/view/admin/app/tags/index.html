@@ -31,45 +31,49 @@
     </div>
 
     <!-- 主体组件 -->
-    <div class="mdui-table-fluid mdui-m-b-2">
-        <table class="mdui-table mdui-typo">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>封禁状态</th>
-                    <th>标签名</th>
-                    <th>提示</th>
-                    <th class="mdui-table-col-numeric">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                {volist name='CommonNowList' id='data'}
-                <tr>
-                    <td>{$data.id}</td>
-                    <td value="{$data.status}">
-                        <div class="mdui-chip">
-                            {if $data.status == 0}
-                            <span class="mdui-chip-title">正常</span>
-                            {/if}
-                            {if $data.status == 1}
-                            <span class="mdui-chip-title">封禁</span>
-                            {/if}
-                        </div>
-                    </td>
-                    <td>{$data.name}</td>
-                    <td>{$data.tip}</td>
-                    <td>
-                        <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
-                            <i class="mdui-icon material-icons">edit</i>
-                        </button>
-                        <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
-                            <i class="mdui-icon material-icons">delete</i>
-                        </button>
-                    </td>
-                </tr>
-                {/volist}
-            </tbody>
-        </table>
+    <div class="mdui-card mdui-p-a-2">
+        <div class="mdui-table-fluid mdui-shadow-0 mdui-m-b-1">
+            <table class="mdui-table mdui-typo">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>封禁状态</th>
+                        <th>标签名</th>
+                        <th>提示</th>
+                        <th class="mdui-table-col-numeric">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name='CommonNowList' id='data'}
+                    <tr>
+                        <td>{$data.id}</td>
+                        <td value="{$data.status}">
+                            <div class="mdui-chip">
+                                {if $data.status == 0}
+                                <span class="mdui-chip-title">正常</span>
+                                {/if}
+                                {if $data.status == 1}
+                                <span class="mdui-chip-title">封禁</span>
+                                {/if}
+                            </div>
+                        </td>
+                        <td>{$data.name}</td>
+                        <td>{$data.tip}</td>
+                        <td>
+                            <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                                <i class="mdui-icon material-icons">edit</i>
+                            </button>
+                            <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">delete</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+        <!-- 分页按钮组件 -->
+        {include file="public/easyPaging"}
     </div>
 
     <!-- 弹窗组件 -->
@@ -101,9 +105,6 @@
             <button class="mdui-btn mdui-ripple" id="btnEditTag" mdui-dialog-close>确定</button>
         </div>
     </div>
-
-    <!-- 分页按钮组件 -->
-    {include file="public/easyPaging"}
 
 </div>
 {include file="public/footer"}
