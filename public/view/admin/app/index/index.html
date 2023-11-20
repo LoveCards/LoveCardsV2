@@ -14,7 +14,7 @@
             <div class="mdui-card">
                 <div class="mdui-p-a-2">
                     <div class="mdui-typo-subheading-opacity">趋势</div>
-                    <canvas id="myChart" width="400" height="121"></canvas>
+                    <canvas id="myChart"></canvas>
                 </div>
             </div>
         </div>
@@ -124,127 +124,81 @@
 <script src="{__A-assets__}/lib/chart-4.2.0/chart.umd.min.js"></script>
 <script>
 
-    // //实例化
-    // let IndexEntity = new Index();
+    //实例化
+    let IndexEntity = new Index();
 
-    // $(function () {
-    //     //设置方法
-    //     // LoginEntity.SetPostLoginHooks(() => {
-    //     //     console.log('验证自定义回调');
-    //     // });
-    //     //绑定方法
-    //     IndexEntity.BindLogin('submitLogin', 'userName', 'password');
-    // })
+    $(function () {
 
-    //图表数据传递
-    var dataChart = JSON.parse('{$ViewChartJson|raw}');
-    //整理图表数据
-    var chartLabelsDataX = new Array();
-    var chartLabelsDataY = new Array();
-    for (const key in dataChart[0][1]) {
-        //console.log(dataChart[0][1][key]);
-        chartLabelsDataX.push(dataChart[0][1][key]);
-    }
-    for (const i in dataChart) {
-        const nowArr = new Array();
-        for (const j in dataChart[i][0]) {
-            //console.log(dataChart[i][0][j]);
-            nowArr.push(dataChart[i][0][j]);
-        }
-        chartLabelsDataY.push(nowArr);
-    }
-    //生成图表
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: chartLabelsDataX,
-            datasets: [{
-                label: '卡片',
-                data: chartLabelsDataY[0],
-                backgroundColor: ['rgba(33,150,243,0.5)'],
-                borderColor: ['rgba(33,150,243,1)'],
-            }, {
-                label: '评论',
-                data: chartLabelsDataY[1],
-                backgroundColor: ['rgba(253,216,53,0.5)'],
-                borderColor: ['rgba(253,216,53,1)'],
-            }, {
-                label: '点赞',
-                data: chartLabelsDataY[2],
-                backgroundColor: ['rgba(229,57,35,0.5)'],
-                borderColor: ['rgba(229,57,35,1)'],
-            }]
-        },
-        options: {
-            borderWidth: 1
-        }
-    });
+        //图表数据传递
+        let chartJsonData = JSON.parse('{$ViewChartJson|raw}');
+        //绑定方法
+        IndexEntity.BindJsonLineChart('myChart', chartJsonData);
+    })
 
     //获取LCS-Notice
-    $(function () {
-        $.ajax({
-            url: 'https://server.lovecards.cn/apiv1/Notice',
-            type: 'GET',
-            async: true,
-            dataType: 'JSON',
-            //data: data,
+    // $(function () {
+    //     $.ajax({
+    //         url: 'https://server.lovecards.cn/apiv1/Notice',
+    //         type: 'GET',
+    //         async: true,
+    //         dataType: 'JSON',
+    //         //data: data,
 
-            // beforeSend: function () {//提交数据前执行判断，根据返回t/f决定是否发送
-            //     return true;
-            // },
+    //         // beforeSend: function () {//提交数据前执行判断，根据返回t/f决定是否发送
+    //         //     return true;
+    //         // },
 
-            success: function (result, status) {
-                if (result.ec == '200') {
-                    $('.js-notice-ul').children().remove();
-                    result.data.forEach(element => {
-                        $('.js-notice-ul').append(`
-                    <li class="css-list-item mdui-ripple" onclick=jumpUrl('https://127.0.0.1',0)>
-                        <div class="mdui-list-item-avatar">
-                            <img src="{__A-assets__}/img/lcl.png" />
-                        </div>
-                        <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">${element.title}</div>
-                            <div class="mdui-list-item-text">
-                                ${element.content}
-                            </div>
-                            <div class="mdui-list-item-text">
-                                #${element.id} ${element.date}
-                            </div>
-                        </div>
-                    </li>
-                    `)
-                    });
-                    return;
-                } else {
-                    //失败
-                    data = false;
-                    var arrData = result.data;
-                    var reuData = '';
-                    //整理二维数组
-                    for (let index in arrData) {
-                        reuData = reuData + arrData[index] + '&nbsp;';
-                    }
-                    //详细输出
-                    reuData = '<br>' + result.ec + '&nbsp;:&nbsp;' + reuData;
-                    mdui.snackbar({
-                        message: 'msg&nbsp;:&nbsp;' + result.msg + reuData,
-                        position: 'left-top'
-                    });
-                    return;
-                }
-            },
+    //         success: function (result, status) {
+    //             if (result.ec == '200') {
+    //                 $('.js-notice-ul').children().remove();
+    //                 result.data.forEach(element => {
+    //                     $('.js-notice-ul').append(`
+    //                 <li class="css-list-item mdui-ripple" onclick=jumpUrl('https://127.0.0.1',0)>
+    //                     <div class="mdui-list-item-avatar">
+    //                         <img src="{__A-assets__}/img/lcl.png" />
+    //                     </div>
+    //                     <div class="mdui-list-item-content">
+    //                         <div class="mdui-list-item-title">${element.title}</div>
+    //                         <div class="mdui-list-item-text">
+    //                             ${element.content}
+    //                         </div>
+    //                         <div class="mdui-list-item-text">
+    //                             #${element.id} ${element.date}
+    //                         </div>
+    //                     </div>
+    //                 </li>
+    //                 `)
+    //                 });
+    //                 return;
+    //             } else {
+    //                 //失败
+    //                 data = false;
+    //                 var arrData = result.data;
+    //                 var reuData = '';
+    //                 //整理二维数组
+    //                 for (let index in arrData) {
+    //                     reuData = reuData + arrData[index] + '&nbsp;';
+    //                 }
+    //                 //详细输出
+    //                 reuData = '<br>' + result.ec + '&nbsp;:&nbsp;' + reuData;
+    //                 mdui.snackbar({
+    //                     message: 'msg&nbsp;:&nbsp;' + result.msg + reuData,
+    //                     position: 'left-top'
+    //                 });
+    //                 return;
+    //             }
+    //         },
 
-            error: function () {
-                data = false;
-                mdui.snackbar({
-                    message: '4XX&nbsp;:&nbsp;未知错误，数据获取失败',
-                    position: 'left-top'
-                });
-                return;
-            }
-        })
-    })
+    //         error: function () {
+    //             data = false;
+    //             mdui.snackbar({
+    //                 message: '4XX&nbsp;:&nbsp;未知错误，数据获取失败',
+    //                 position: 'left-top'
+    //             });
+    //             return;
+    //         }
+    //     })
+    // })
 </script>
 </body>
 

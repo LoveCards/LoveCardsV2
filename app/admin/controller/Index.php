@@ -19,12 +19,12 @@ class Index extends BaseController
         {
             for ($i = 1; $i <= 6; $i++) {
                 $time = date('Y-m-d', strtotime('-' . $i . 'day'));
-                $arr[0][$i] = Db::table($key)->whereDay('time', $time)->count();
-                $arr[1][$i] = $time;
-                if ($i == 1) $arr[1][$i] = '昨日';
+                $arr['count'][$i] = Db::table($key)->whereDay('time', $time)->count();
+                $arr['date'][$i] = $time;
+                if ($i == 1) $arr['date'][$i] = '昨日';
             }
-            $arr[0] = Array_reverse($arr[0]);
-            $arr[1] = Array_reverse($arr[1]);
+            $arr['count'] = Array_reverse($arr['count']);
+            $arr['date'] = Array_reverse($arr['date']);
             return $arr;
         }
 
@@ -35,7 +35,21 @@ class Index extends BaseController
             'good' => Db::table('good')->count()
         ];
         //取图表数据
-        $tDef_ViewChartJson = [fArrayGetChartData('cards'), fArrayGetChartData('comments'), fArrayGetChartData('good')];
+        $tDef_ViewChartJson = [
+            [
+                'label' => '卡片',
+                'data' => fArrayGetChartData('cards'),
+            ],
+            [
+                'label' => '评论',
+                'data' => fArrayGetChartData('comments'),
+            ],
+            [
+                'label' => '点赞',
+                'data' => fArrayGetChartData('good')
+            ],
+        ];
+
         View::assign([
             'ViewDataCount' => $tDef_ViewDataCount,
             'ViewChartJson' => json_encode($tDef_ViewChartJson),

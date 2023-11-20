@@ -3,62 +3,62 @@ class Index extends LoveCards {
     constructor() {
         super();
         this.hooks = {};
+        this.chart = {}
     }
 
     //外部
-    BindLogin = (submitId, usernameId, passwordId) => {
+    BindJsonLineChart = (canvasId, jsonData) => {
         //绑定方法
-        if (this.config.geetest4.CaptchaStatus) {
-            this.Geetest4(submitId, (CaptchaData) => this.PostLogin(usernameId, passwordId, CaptchaData));
-        } else {
-            $('#' + submitId).click(function () { this.PostLogin(usernameId, passwordId) }.bind(this));
+
+        //格式化数据
+        let chartLabels = new Array();
+        let chartDatasets = new Array();
+
+        //取横坐标
+        for (const index in jsonData[0]['data']['date']) {
+            chartLabels.push(jsonData[0]['data']['date'][index]);
         }
-    }
-    SetPostLoginHooks = (intiHook, thanHook, catchJHook) => {
-        //设置方法
-        this.hooks.PostLogin = {};
-        this.hooks.PostLogin.inti = intiHook;
-        this.hooks.PostLogin.then = thanHook;
-        this.hooks.PostLogin.catch = catchJHook;
+        //取数据坐标
+        for (const index in jsonData) {
+            let nowData = new Array();
+            for (const countIndex in jsonData[index]['data']['count']) {
+                nowData.push(jsonData[index]['data']['count'][countIndex]);
+            }
+            chartDatasets.push({
+                'label': jsonData[index]['label'],
+                'data': nowData
+            });
+        }
+
+        //渲染图标
+        this.RenderingLineChart(canvasId, chartLabels, chartDatasets);
     }
 
     //内部
-    PostLogin = (usernameId, passwordId, CaptchaData) => {
-        if (this.hooks.PostLogin?.inti) {
-            //自定义回调函数
-            this.hooks.PostLogin.inti();
-        } else {
-            this.commonFunctions.snackbar('正在发起请求！');
-        }
-
-        //是否存在验证参数
-        var data;
-        if (CaptchaData) { data = CaptchaData; }
-
-        var data = {
-            ...data,//合并验证参数
-            'userName': $('#' + usernameId).val(),
-            'password': $('#' + passwordId).val(),
-        };
-
-        //提交数据
-        return this.Axios('post', this.config.apiUrl.AuthLogin, data).then((response) => {
-            // this.hooks.PostLogin?.then写法解释
-            // this.hooks.PostLogin 存在并且包含属性 then
-            // 这将在 this.hooks.PostLogin 存在并且 then 存在的情况下执行操作
-            if (this.hooks.PostLogin?.then) {
-                //自定义回调函数
-                this.hooks.PostLogin.then();
-            } else {
-                //默认回调函数
-                this.SetAdminToken(response.data.token);//设置Token
-                this.commonFunctions.snackbar('登入成功，正在跳转');
+    RenderingLineChart = (canvasId, chartLabels, chartDatasets) => {
+        let ColorArray = ['33,150,243', '253,216,53', '229,57,35']
+        chartDatasets.forEach((element, index) => {
+            if (index >= ColorArray.length) {
+                const R = Math.floor(Math.random() * (255)) + 1;
+                const G = Math.floor(Math.random() * (255)) + 1;
+                const B = Math.floor(Math.random() * (255)) + 1;
+                ColorArray[index] = R + ',' + G + ',' + B;
             }
-        }).catch((error) => {
-            if (this.hooks.PostLogin?.catch) {
-                this.hooks.PostLogin.catch();
-            } else {
-                this.AxiosErrorHandling(error);
+            if (element.backgroundColor == undefined) {
+                element.backgroundColor = ['rgba(' + ColorArray[index] + ',0.5)'];
+                element.borderColor = ['rgba(' + ColorArray[index] + ',1)'];
+            }
+        });
+        //绘制图表
+        var ctx = document.getElementById(canvasId).getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: chartLabels,
+                datasets: chartDatasets
+            },
+            options: {
+                borderWidth: 1
             }
         });
     }
