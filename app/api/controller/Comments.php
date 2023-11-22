@@ -24,9 +24,16 @@ class Comments extends Common
         }
         // 数据校验
         try {
-            validate(CommentsValidate::class)
-                ->batch(true)
-                ->check($Datas);
+            if ($method == 'u') {
+                validate(CommentsValidate::class)
+                    ->remove('aid', 'require')
+                    ->batch(true)
+                    ->check($Datas);
+            } else {
+                validate(CommentsValidate::class)
+                    ->batch(true)
+                    ->check($Datas);
+            }
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
             return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);

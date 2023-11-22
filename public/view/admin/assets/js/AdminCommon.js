@@ -1,4 +1,4 @@
-class Common extends LoveCards {
+class AdminCommon extends Base {
 
     constructor() {
         super();

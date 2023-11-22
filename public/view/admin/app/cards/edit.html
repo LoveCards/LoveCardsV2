@@ -26,7 +26,7 @@
             <div class="mdui-dialog-title">选择标签</div>
             <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
                 <div class="mdui-row-xs-2 mdui-row-sm-4">
-                    {volist name="CardsTagsList" id="data"}
+                    {volist name="TagsList" id="data"}
                     <div class="mdui-col">
                         <label class="mdui-checkbox">
                             <input type="checkbox" value="{$data.id}" name="inputChooseTag" />
@@ -187,7 +187,7 @@
 
 </div>
 {include file="public/footer"}
-<script src="{__A-assets__}/cardsEdit.js"></script>
+<script src="{__A-assets__}/js/cardsEdit.js"></script>
 <script>
     //初始化-Tag组件
     InitialChooseTagAdd('{$CardData["tag"]|raw}');

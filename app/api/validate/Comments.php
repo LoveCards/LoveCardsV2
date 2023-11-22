@@ -28,4 +28,5 @@ class Comments extends Validate
         'status.number' => '状态格式非法',
         'status.in'     => '状态不存在',
     ];
+
 }

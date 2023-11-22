@@ -100,25 +100,12 @@
 {include file="public/footer"}
 
 <script>
+
+    let IndexEntity = new Index();
+
     $(function (param) {
         //初始化-分页按钮
         pager();
-
-        //按钮-删除
-        $('.js-Btn-Delete').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $(this).parent().siblings('td:first').html()
-            };
-            var result = apiAjax0(data, apiCardsCommentsDelete, 'POST');
-            if (result) {
-                $(this).parent().html("已删除")
-                mdui.snackbar({
-                    message: '成功删除ID' + data['id'],
-                    position: 'left-top'
-                });
-            }
-        });
 
         //按钮-初始化-编辑
         $('.js-Btn-Edit').click(function () {
@@ -129,21 +116,17 @@
             $('#btnEditComments').val(thisObj.eq(0).html());
         });
 
-        //按钮-请求-编辑
-        $('#btnEditComments').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $('#btnEditComments').val(),
-                'name': $('#editCommentsDataName').val(),
-                'content': $('#editCommentsDataContent').val(),
-                'status': $('#editCommentsDataStatus').val()
-            };
-            var result = apiAjax0(data, apiCardsCommentsEdit, 'POST');
-            if (result) {
-                $.cookie('msg', '编辑成功', { path: '/' });
-                jumpUrl('', 100);
-            }
+
+        //按钮-删除
+        $('.js-Btn-Delete').click(function () {
+            const id = $(this).parent().siblings('td:first').html();
+            IndexEntity.PostDelete(id);
         });
+
+        //自定义钩子
+        IndexEntity.SetPostEditHooks();
+        //绑定编辑按钮
+        IndexEntity.BindPostEdit('btnEditComments', 'btnEditComments', 'editCommentsDataName', 'editCommentsDataContent', 'editCommentsDataStatus');
     })
 </script>
 </body>

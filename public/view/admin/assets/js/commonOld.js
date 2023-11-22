@@ -1,3 +1,41 @@
+const GithubDateRelesesLatest = () => {
+    return new Promise((resolve, reject) => {
+        const storedData = $.cookie('GithubDateRelesesLatest');
+        const currentTime = new Date().getTime();
+        const FunSetCookie = (data) => {
+            const result = { 'time': currentTime, 'data': data };
+            $.cookie('GithubDateRelesesLatest', JSON.stringify(result), { expires: 1, path: '/' });
+        }
+
+        if (storedData) {
+            var storedDataParse = JSON.parse(storedData);
+        }
+        if (!storedData || !storedDataParse.time || currentTime - storedDataParse.time >= 600000) {
+            // 如果没有存储数据或数据已过期（超过十分钟），则重新请求
+            $.ajax({
+                url: 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest',
+                method: 'GET',
+                success: function (data) {
+                    delete data.reactions;
+                    delete data.body;
+                    delete data.assets;
+                    // 请求成功，存储数据并返回
+                    FunSetCookie(data);
+                    resolve(data);
+                },
+                error: function () {
+                    // 请求失败，返回错误信息
+                    FunSetCookie('error');
+                    resolve('error');
+                }
+            });
+        } else {
+            // 如果数据未过期，直接返回存储的数据
+            resolve(storedDataParse.data);
+        }
+    })
+};
+
 var apiUrlUploadImage = '/api/upload/image'//图片上传
 
 //默认添加卡片上传图片个数
@@ -246,15 +284,6 @@ function pager() {
 }
 
 /*
-*跳转
-*/
-function jumpUrl(url, time = 600) {
-    setTimeout(function () {
-        window.location.replace(url);
-    }, time);
-}
-
-/*
 *当前URLGet参数获取decodeURI
 */
 function getUrlParam(name) {
@@ -262,7 +291,6 @@ function getUrlParam(name) {
     var r = decodeURI(window.location.search).substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
 }
-
 
 /**
  * 将文本内容复制到剪切板
@@ -288,25 +316,3 @@ function copyText(str) {
         return true;
     }
 }
-
-$(function () {
-    /*
-    *提示msg
-    */
-    //读取
-    // msg = $.cookie('msg');
-    // //判断
-    // if (msg != 'undefined' && msg != undefined) {
-    //     data = false;
-    //     mdui.snackbar({
-    //         message: msg,
-    //         position: 'left-top'
-    //     });
-    //     //重置
-    //     $.cookie('msg', 'undefined', { path: '/' });
-    // }
-    //初始化-提示
-    $('.js-mdui-Tooltip').each(function (index, domEle) {
-        $(domEle).attr('mdui-tooltip', "{content:'" + $(domEle).val() + "'}")
-    });
-});
