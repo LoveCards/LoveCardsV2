@@ -10,7 +10,7 @@ use app\admin\middleware\AdminAuthCheck;
 
 function fObjectEasyBindIndex($rule, $route)
 {
-    Route::get($rule, $route);
+    Route::get($rule . '$', $route);
     Route::get($rule . '/index', $route);
 }
 
@@ -18,10 +18,31 @@ Route::get('login', 'Auth/login');
 
 //管理鉴权
 Route::group('', function () {
-    fObjectEasyBindIndex('index', 'Index/index');
-    fObjectEasyBindIndex('updata', 'Updata/index');
+    fObjectEasyBindIndex('index', 'Index/Index');
+
+    fObjectEasyBindIndex('cards', 'Cards/Index');
+    Route::group('cards', function () {
+        Route::get('edit', 'Cards/Edit');
+    });
+
+    fObjectEasyBindIndex('tags', 'Tags/Index');
+
+    fObjectEasyBindIndex('comments', 'Comments/Index');
 })->middleware([AdminAuthCheck::class]);
 
 //超管鉴权
 Route::group('', function () {
-})->middleware([JwtAuthCheck::class, AdminPowerCheck::class]);
+    Route::group('cards', function () {
+        Route::get('setting', 'Cards/Setting');
+    });
+
+    fObjectEasyBindIndex('admin', 'Admin/Index');
+
+    fObjectEasyBindIndex('system', 'System/Index');
+    Route::group('system', function () {
+        Route::get('view', 'System/View');
+        Route::get('viewset', 'System/ViewSet');
+    });
+
+    fObjectEasyBindIndex('updata', 'Updata/Index');
+})->middleware([AdminPowerCheck::class]);
