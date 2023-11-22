@@ -110,25 +110,12 @@
 {include file="public/footer"}
 
 <script>
+
+    let IndexEntity = new Index();
+
     $(function () {
         //初始化-分页组件
         pager();
-
-        //按钮-删除
-        $('.js-Btn-Delete').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $(this).parent().siblings('td:first').html()
-            };
-            var result = apiAjax0(data, apiCardsTagDelete, 'POST');
-            if (result) {
-                $(this).parent().html("已删除");
-                mdui.snackbar({
-                    message: '成功删除ID' + data['id'],
-                    position: 'left-top'
-                });
-            }
-        });
 
         //按钮-初始化-编辑
         $('.js-Btn-Edit').click(function () {
@@ -139,35 +126,17 @@
             $('#btnEditTag').val(thisObj.eq(0).html());
         });
 
-        //按钮-请求-编辑
-        $('#btnEditTag').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $('#btnEditTag').val(),
-                'name': $('#editTagDataName').val(),
-                'tip': $('#editTagDataTip').val(),
-                'status': $('#editTagDataStatus').val()
-            };
-            var result = apiAjax0(data, apiCardsTagEdit, 'POST');
-            if (result) {
-                $.cookie('msg', '编辑成功', { path: '/' });
-                jumpUrl('', 100);
-            }
+
+        //按钮-删除
+        $('.js-Btn-Delete').click(function () {
+            const id = $(this).parent().siblings('td:first').html();
+            IndexEntity.PostDelete(id);
         });
 
-        //按钮-请求-添加
-        $('#btnAddTag').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'name': $('#addTagDataName').val(),
-                'tip': $('#addTagDataTip').val()
-            };
-            var result = apiAjax0(data, apiCardsTagAdd, 'POST');
-            if (result) {
-                $.cookie('msg', '添加成功', { path: '/' });
-                jumpUrl('', 100);
-            }
-        });
+        //绑定添加按钮
+        IndexEntity.BindPostAdd('btnAddTag', 'addTagDataName', 'addTagDataTip');
+        //绑定编辑按钮
+        IndexEntity.BindPostEdit('btnEditTag', 'btnEditTag', 'editTagDataName', 'editTagDataTip', 'editTagDataStatus');
     })
 
 </script>

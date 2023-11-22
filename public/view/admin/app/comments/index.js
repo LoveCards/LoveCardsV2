@@ -4,10 +4,18 @@ class Index extends Base {
         super();
         this.hooks = {};
         this.chart = {};
-        this.data = {};
     }
 
     //外部
+
+    /**
+     * 绑定编辑按钮
+     * @param {String} submitId 
+     * @param {String} idId 
+     * @param {String} nameId 
+     * @param {String} contentId 
+     * @param {String} statusId 
+     */
     BindPostEdit = (submitId, idId, nameId, contentId, statusId) => {
         $('#' + submitId).click(() => {
             const id = $('#' + idId).val();
@@ -17,7 +25,15 @@ class Index extends Base {
             this.PostEdit(id, name, content, status);
         })
     }
+
     //自定义钩子
+
+    /**
+     * 设置PostEdit方法初始、请求成功、请求失败的钩子
+     * @param {(Function|undefined)} intiHook 
+     * @param {(Function(response)|undefined)} thanHook 
+     * @param {(Function(error)|undefined)} catchJHook 
+     */
     SetPostEditHooks = (intiHook, thanHook, catchHook) => {
         //设置方法
         this.hooks.PostEdit = {};
@@ -25,6 +41,12 @@ class Index extends Base {
         this.hooks.PostEdit.then = thanHook;
         this.hooks.PostEdit.catch = catchHook;
     }
+    /**
+     * 设置PostDelete方法初始、请求成功、请求失败的钩子
+     * @param {(Function|undefined)} intiHook 
+     * @param {(Function(response)|undefined)} thanHook 
+     * @param {(Function(error)|undefined)} catchJHook 
+     */
     SetPostDeleteHooks = (intiHook, thanHook, catchHook) => {
         //设置方法
         this.hooks.PostDelete = {};
@@ -33,67 +55,40 @@ class Index extends Base {
         this.hooks.PostDelete.catch = catchHook;
     }
     //内部
-    PostEdit = (id, name, content, status) => {
-        if (this.hooks.PostEdit?.inti) {
-            //自定义回调函数
-            this.hooks.PostEdit.inti();
-        } else {
-            this.commonFunctions.snackbar('正在发起请求！');
-        }
 
+    /**
+     * 编辑评论
+     * @param {Number} id 
+     * @param {String} name 
+     * @param {String} content 
+     * @param {Number} status 
+     */
+    PostEdit = (id, name, content, status) => {
+        this.SetPostEditHooks(undefined, () => {
+            this.commonFunctions.snackbar('编辑成功');
+            this.JumpUrl('');
+        });
         var data = {
             'id': id,
             'name': name,
             'content': content,
             'status': status
         };
-
-        //提交数据
-        return this.Axios('post', this.config.apiUrl.CommentsEdit, data).then((response) => {
-            if (this.hooks.PostEdit?.then) {
-                //自定义回调函数
-                this.hooks.PostEdit.then();
-            } else {
-                //默认回调函数
-                this.commonFunctions.snackbar('修改成功');
-                this.JumpUrl('');
-            }
-        }).catch((error) => {
-            if (this.hooks.PostEdit?.catch) {
-                this.hooks.PostEdit.catch();
-            } else {
-                this.AxiosErrorHandling(error);
-            }
-        });
+        this.RequestApiUrl('post', 'CoomentsEdit', 'PostEdit', data);
     }
-    PostDelete = (id) => {
-        if (this.hooks.PostDelete?.inti) {
-            //自定义回调函数
-            this.hooks.PostDelete.inti();
-        } else {
-            this.commonFunctions.snackbar('正在发起请求！');
-        }
 
+    /**
+     * 删除评论
+     * @param {*} id 
+     */
+    PostDelete = (id) => {
+        this.SetPostEditHooks(undefined, () => {
+            this.commonFunctions.snackbar('删除成功');
+            this.JumpUrl('');
+        });
         var data = {
             'id': id
         };
-
-        //提交数据
-        return this.Axios('post', this.config.apiUrl.CommentsDelete, data).then((response) => {
-            if (this.hooks.PostDelete?.then) {
-                //自定义回调函数
-                this.hooks.PostDelete.then();
-            } else {
-                //默认回调函数
-                this.commonFunctions.snackbar('删除成功');
-                this.JumpUrl('');
-            }
-        }).catch((error) => {
-            if (this.hooks.PostDelete?.catch) {
-                this.hooks.PostDelete.catch();
-            } else {
-                this.AxiosErrorHandling(error);
-            }
-        });
+        this.RequestApiUrl('post', 'CoomentsDelete', 'PostDelete', data);
     }
 }

@@ -25,9 +25,16 @@ class Tags extends Common
 
         // 数据校验
         try {
-            validate(TagsValidate::class)
-                ->batch(true)
-                ->check($Datas);
+            if ($method == 'c') {
+                validate(TagsValidate::class)
+                    ->batch(true)
+                    ->check($Datas);
+            } else {
+                validate(TagsValidate::class)
+                    ->remove('aid', 'require')
+                    ->batch(true)
+                    ->check($Datas);
+            }
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
             return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);

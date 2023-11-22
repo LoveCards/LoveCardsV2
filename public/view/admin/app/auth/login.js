@@ -5,17 +5,41 @@ class Login extends Base {
         this.hooks = {};
     }
 
-    //外部
-    BindLogin = (submitId, usernameId, passwordId) => {
-        const username = $('#' + usernameId).val();
-        const password = $('#' + passwordId).val();
+    /**
+     * 绑定登入按钮以及输入框
+     * @param {String} submitId 
+     * @param {String} usernameId 
+     * @param {String} passwordId 
+     */
+    BindLogin = (submitId = undefined, usernameId = undefined, passwordId = undefined) => {
+
+        const getValue = () => {
+            return {
+                username: $('#' + usernameId).val(),
+                password: $('#' + passwordId).val()
+            }
+        }
+
         //绑定方法
         if (this.config.geetest4.CaptchaStatus) {
-            this.Geetest4(submitId, (CaptchaData) => this.PostLogin(username, password, CaptchaData));
+            this.Geetest4(submitId, (CaptchaData) => {
+                const value = getValue();
+                this.PostLogin(value.username, value.password, CaptchaData)
+            });
         } else {
-            $('#' + submitId).click(function () { this.PostLogin(username, password) }.bind(this));
+            $('#' + submitId).click(() => {
+                const value = getValue();
+                this.PostLogin(value.username, value.password)
+            });
         }
     }
+
+    /**
+     * 设置PostLogin方法初始、请求成功、请求失败的钩子
+     * @param {(Function|undefined)} intiHook 
+     * @param {(Function(response)|undefined)} thanHook 
+     * @param {(Function(error)|undefined)} catchJHook 
+     */
     SetPostLoginHooks = (intiHook, thanHook, catchJHook) => {
         //设置方法
         this.hooks.PostLogin = {};
@@ -24,14 +48,18 @@ class Login extends Base {
         this.hooks.PostLogin.catch = catchJHook;
     }
 
-    //内部
+    /**
+     * 发送登入请求
+     * @param {String} username 
+     * @param {String} password 
+     * @param {(Object|undefined)} CaptchaData 
+     */
     PostLogin = (username, password, CaptchaData) => {
-        if (this.hooks.PostLogin?.inti) {
-            //自定义回调函数
-            this.hooks.PostLogin.inti();
-        } else {
-            this.commonFunctions.snackbar('正在发起请求！');
-        }
+        this.SetPostLoginHooks(undefined, (response) => {
+            //默认回调函数
+            this.SetAdminToken(response.data.token);//设置Token
+            this.commonFunctions.snackbar('登入成功，正在跳转');
+        });
 
         //是否存在验证参数
         var data;
@@ -42,26 +70,6 @@ class Login extends Base {
             'userName': username,
             'password': password,
         };
-
-        //提交数据
-        return this.Axios('post', this.config.apiUrl.AuthLogin, data).then((response) => {
-            // this.hooks.PostLogin?.then写法解释
-            // this.hooks.PostLogin 存在并且包含属性 then
-            // 这将在 this.hooks.PostLogin 存在并且 then 存在的情况下执行操作
-            if (this.hooks.PostLogin?.then) {
-                //自定义回调函数
-                this.hooks.PostLogin.then();
-            } else {
-                //默认回调函数
-                this.SetAdminToken(response.data.token);//设置Token
-                this.commonFunctions.snackbar('登入成功，正在跳转');
-            }
-        }).catch((error) => {
-            if (this.hooks.PostLogin?.catch) {
-                this.hooks.PostLogin.catch();
-            } else {
-                this.AxiosErrorHandling(error);
-            }
-        });
+        this.RequestApiUrl('post', 'AuthLogin', 'PostLogin', data);
     }
 }
