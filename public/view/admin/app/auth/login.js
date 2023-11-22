@@ -1,4 +1,4 @@
-class Login extends LoveCards {
+class Login extends Base {
 
     constructor() {
         super();
@@ -7,11 +7,13 @@ class Login extends LoveCards {
 
     //外部
     BindLogin = (submitId, usernameId, passwordId) => {
+        const username = $('#' + usernameId).val();
+        const password = $('#' + passwordId).val();
         //绑定方法
         if (this.config.geetest4.CaptchaStatus) {
-            this.Geetest4(submitId, (CaptchaData) => this.PostLogin(usernameId, passwordId, CaptchaData));
+            this.Geetest4(submitId, (CaptchaData) => this.PostLogin(username, password, CaptchaData));
         } else {
-            $('#' + submitId).click(function () { this.PostLogin(usernameId, passwordId) }.bind(this));
+            $('#' + submitId).click(function () { this.PostLogin(username, password) }.bind(this));
         }
     }
     SetPostLoginHooks = (intiHook, thanHook, catchJHook) => {
@@ -23,7 +25,7 @@ class Login extends LoveCards {
     }
 
     //内部
-    PostLogin = (usernameId, passwordId, CaptchaData) => {
+    PostLogin = (username, password, CaptchaData) => {
         if (this.hooks.PostLogin?.inti) {
             //自定义回调函数
             this.hooks.PostLogin.inti();
@@ -37,8 +39,8 @@ class Login extends LoveCards {
 
         var data = {
             ...data,//合并验证参数
-            'userName': $('#' + usernameId).val(),
-            'password': $('#' + passwordId).val(),
+            'userName': username,
+            'password': password,
         };
 
         //提交数据

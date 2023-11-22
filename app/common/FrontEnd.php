@@ -120,14 +120,14 @@ class FrontEnd extends Facade
     {
         //获取并赋值CardsTag相关变量
         if ($lDef_AdminMethod) {
-            $lDef_Result = Db::table('cards_tag')->select()->toArray();
+            $lDef_Result = Db::table('tags')->select()->toArray();
         } else {
-            $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
+            $lDef_Result = Db::table('tags')->where('status', 0)->select()->toArray();
         }
 
         View::assign([
-            'CardsTagsListJson' => json_encode($lDef_Result),
-            'CardsTagsList' => $lDef_Result
+            'TagsListJson' => json_encode($lDef_Result),
+            'TagsList' => $lDef_Result
         ]);
     }
 }
