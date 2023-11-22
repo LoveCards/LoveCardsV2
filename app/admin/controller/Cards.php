@@ -14,17 +14,6 @@ use app\admin\BaseController;
 
 class Cards extends BaseController
 {
-
-    //中间件
-    protected $middleware = [
-        \app\admin\middleware\AdminAuthCheck::class => [
-            'only' => ['Index', 'Edit']
-        ],
-        \app\admin\middleware\AdminPowerCheck::class => [
-            'only' => ['Setting']
-        ]
-    ];
-
     //Index
     public function Index()
     {
