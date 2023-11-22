@@ -7,6 +7,12 @@ class Index extends Base {
     }
 
     //外部
+
+    /**
+     * 
+     * @param {String} canvasId 
+     * @param {JSON} jsonData //遇到问题请查询数据结构
+     */
     BindJsonLineChart = (canvasId, jsonData) => {
         //绑定方法
 
@@ -35,6 +41,13 @@ class Index extends Base {
     }
 
     //内部
+
+    /**
+     * 渲染图表
+     * @param {String} canvasId 
+     * @param {Array} chartLabels 
+     * @param {Array} chartDatasets 
+     */
     RenderingLineChart = (canvasId, chartLabels, chartDatasets) => {
         let ColorArray = ['33,150,243', '253,216,53', '229,57,35']
         chartDatasets.forEach((element, index) => {

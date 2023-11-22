@@ -1,4 +1,5 @@
 class Base {
+
     constructor() {
         this.config = {};
         this.commonFunctions = {};
@@ -47,44 +48,75 @@ class Base {
             AdminTokenName: 'TOKEN'
         };
 
-        //lovecards配置
+        //应用ID
+        const appId = {
+            Cards: 1,
+            Comment: 2
+        }
 
         this.config.apiUrl = apiUrl;
         this.config.geetest4 = geetest4;
         this.config.token = token;
+        this.config.appId = appId;
 
         this.commonFunctions.snackbar = (message) => mdui.snackbar({ message: message, position: 'right-top' });
     }
 
+    /**
+     * 延时跳转方法
+     * @param {String} url 
+     * @param {Number} time 
+     */
     JumpUrl = (url, time = 600) => {
         setTimeout(function () {
             window.location.replace(url);
         }, time);
     }
 
+    /**
+     * ID按钮绑定-延时跳转方法
+     * @param {String} elementId 
+     * @param {String} url 
+     * @param {Number} time 
+     */
     BindJumpUrl = (elementId, url, time) => {
         $('#' + elementId).click(() => {
             this.JumpUrl(url, time)
         });
     }
 
+    /**
+     * Cookie设置
+     * @param {String} key 
+     * @param {String} value 
+     * @param {Number} expires //def=7
+     * @param {String} path //def='/'
+     */
     SetCookie = (key, value, expires = 7, path = '/') => {
         $.cookie(key, value, { path: path, expires });
     }
 
+    /**
+     * 设置Admin Token Cookie
+     * @param {String} token 
+     */
     SetAdminToken = (token) => {
         if (token) {
             this.SetCookie(this.config.token.AdminTokenName, token)
         }
     }
-
+    /**
+     * 删除Admin Token Cookie
+     */
     DeleteAdminToken = () => {
         if ($.removeCookie(this.config.token.AdminTokenName, { path: '/' })) {
             return true;
         }
         return false;
     }
-
+    /**
+     * 读取Admin Token Cookie
+     */
     GetAdminToken = () => {
         if ($.cookie(this.config.token.AdminTokenName)) {
             return `Bearer ${$.cookie(this.config.token.AdminTokenName)}`;
@@ -92,7 +124,10 @@ class Base {
         return false;
     }
 
-    //错误处理
+    /**
+     * Axios通用error snackbar处理
+     * @param {Object} error 
+     */
     AxiosErrorHandling = (error) => {
         const responseError = error.response.data.error;
         var responseDetail = error.response.data.detail;
@@ -111,7 +146,11 @@ class Base {
         this.commonFunctions.snackbar(result);
     }
 
-    //通用极验校验接口
+    /**
+     * 通用极验校验接口
+     * @param {String} submitId 
+     * @param {Function} PostFunction 
+     */
     Geetest4 = (submitId, PostFunction) => {
         const button = $('#' + submitId);
         const CaptchaId = this.config.geetest4.CaptchaId;
@@ -141,7 +180,13 @@ class Base {
         });
     }
 
-    //通用请求接口
+    /**
+    * AXios封装加入拦截器
+    * @param {String} method //axios的method
+    * @param {String} url 
+    * @param {String} data 
+    * @returns {Promise}
+    */
     Axios = (method, url, data) => {
         // 添加请求拦截器
         axios.interceptors.request.use((config) => {
@@ -175,5 +220,41 @@ class Base {
             url: url,
             data: data
         });
-    };
+    }
+
+    /**
+     * ApiUrl通用请求接口
+     * @param {String} method //Axios的method
+     * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找
+     * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改
+     * @param {object} data //参数对象
+     * @returns {Promise}
+     */
+    RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey, data) => {
+        if (this.hooks[thisHooksKey]?.inti) {
+            //自定义回调函数
+            this.hooks[thisHooksKey].inti();
+        } else {
+            this.commonFunctions.snackbar(thisConfigApiUrlKey + '发起请求');
+        }
+
+        //提交数据
+        return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data).then((response) => {
+            if (this.hooks[thisHooksKey]?.then) {
+                //自定义回调函数
+                this.hooks[thisHooksKey].then(response);
+            } else {
+                //默认回调函数
+                this.commonFunctions.snackbar(thisConfigApiUrlKey + '请求成功');
+                //this.JumpUrl('');
+            }
+        }).catch((error) => {
+            if (this.hooks[thisHooksKey]?.catch) {
+                this.hooks[thisHooksKey].catch(error);
+            } else {
+                this.AxiosErrorHandling(error);
+            }
+        });
+    }
+
 }
