@@ -3,7 +3,6 @@ class Index extends Base {
     constructor() {
         super();
         this.hooks = {};
-        this.chart = {};
     }
 
     //外部方法

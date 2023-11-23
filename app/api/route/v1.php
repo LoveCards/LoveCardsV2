@@ -20,16 +20,15 @@ Route::group('', function () {
     Route::post('admin/edit', 'Admin/Edit');
     Route::post('admin/delete', 'Admin/Delete');
 
-    Route::post('cards/add', 'Cards/Add');
     Route::post('cards/edit', 'Cards/Edit');
     Route::post('cards/delete', 'Cards/Delete');
 
     Route::post('comments/edit', 'Comments/Edit');
     Route::post('comments/delete', 'Comments/Delete');
 
-    Route::post('cardstag/add', 'CardsTag/Add');
-    Route::post('cardstag/edit', 'CardsTag/Edit');
-    Route::post('cardstag/delete', 'CardsTag/Delete');
+    Route::post('tags/add', 'CardsTag/Add');
+    Route::post('tags/edit', 'CardsTag/Edit');
+    Route::post('tags/delete', 'CardsTag/Delete');
 })->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);
 
 //超管鉴权

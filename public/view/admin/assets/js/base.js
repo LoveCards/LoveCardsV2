@@ -19,10 +19,10 @@ class Base {
             SystemTemplateSet: '/api/system/TemplateSet',//主题配置
             SystemGeetest: '/api/system/geetest',//验证码设置
 
-            cardsAdd: '/api/cards/add',//添加卡片
-            cardsEdit: '/api/cards/edit',//编辑卡片
-            cardsDelete: '/api/cards/delete',//删除卡片
-            cardsSetting: '/api/cards/setting',//模块设置
+            CardsAdd: '/api/cards/add',//添加卡片
+            CardsEdit: '/api/cards/edit',//编辑卡片
+            CardsDelete: '/api/cards/delete',//删除卡片
+            CardsSetting: '/api/cards/setting',//模块设置
 
             TagsAdd: '/api/tags/add',//添加标签
             TagsEdit: '/api/tags/edit',//编辑标签
