@@ -121,7 +121,7 @@
 {include file="public/footer"}
 
 <script>
-    
+
     //实例化
     let IndexEntity = new Index();
 
@@ -131,18 +131,8 @@
 
         //按钮-删除
         $('.js-Btn-Delete').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $(this).parent().siblings('td:first').html()
-            };
-            var result = apiAjax0(data, apicardsDelete, 'POST');
-            if (result) {
-                $(this).parent().html("已删除");
-                mdui.snackbar({
-                    message: '成功删除ID' + data['id'],
-                    position: 'left-top'
-                });
-            }
+            const id = $(this).parent().siblings('td:first').html();
+            IndexEntity.PostDelete(id);
         });
     })
 </script>

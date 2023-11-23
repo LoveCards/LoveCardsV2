@@ -3,76 +3,42 @@ class Index extends Base {
     constructor() {
         super();
         this.hooks = {};
-        this.chart = {}
     }
 
     //外部
 
+    //自定义钩子
+
     /**
-     * 
-     * @param {String} canvasId 
-     * @param {JSON} jsonData //遇到问题请查询数据结构
-     */
-    BindJsonLineChart = (canvasId, jsonData) => {
-        //绑定方法
-
-        //格式化数据
-        let chartLabels = new Array();
-        let chartDatasets = new Array();
-
-        //取横坐标
-        for (const index in jsonData[0]['data']['date']) {
-            chartLabels.push(jsonData[0]['data']['date'][index]);
-        }
-        //取数据坐标
-        for (const index in jsonData) {
-            let nowData = new Array();
-            for (const countIndex in jsonData[index]['data']['count']) {
-                nowData.push(jsonData[index]['data']['count'][countIndex]);
-            }
-            chartDatasets.push({
-                'label': jsonData[index]['label'],
-                'data': nowData
-            });
-        }
-
-        //渲染图表
-        this.RenderingLineChart(canvasId, chartLabels, chartDatasets);
+    * 设置PostDelete方法初始、请求成功、请求失败的钩子
+    * @param {(Function|undefined)} intiHook 
+    * @param {(Function(response)|undefined)} thanHook 
+    * @param {(Function(error)|undefined)} catchJHook 
+    */
+    SetPostDeleteHooks = (intiHook = undefined, thanHook = undefined, catchHook = undefined) => {
+        //设置方法
+        this.hooks.PostDelete = {};
+        this.hooks.PostDelete.inti = intiHook;
+        this.hooks.PostDelete.then = thanHook;
+        this.hooks.PostDelete.catch = catchHook;
     }
+
 
     //内部
 
     /**
-     * 渲染图表
-     * @param {String} canvasId 
-     * @param {Array} chartLabels 
-     * @param {Array} chartDatasets 
+     * 删除卡片
+     * @param {*} id 
      */
-    RenderingLineChart = (canvasId, chartLabels, chartDatasets) => {
-        let ColorArray = ['33,150,243', '253,216,53', '229,57,35']
-        chartDatasets.forEach((element, index) => {
-            if (index >= ColorArray.length) {
-                const R = Math.floor(Math.random() * (255)) + 1;
-                const G = Math.floor(Math.random() * (255)) + 1;
-                const B = Math.floor(Math.random() * (255)) + 1;
-                ColorArray[index] = R + ',' + G + ',' + B;
-            }
-            if (element.backgroundColor == undefined) {
-                element.backgroundColor = ['rgba(' + ColorArray[index] + ',0.5)'];
-                element.borderColor = ['rgba(' + ColorArray[index] + ',1)'];
-            }
+    PostDelete = (id) => {
+        this.SetPostDeleteHooks(undefined, () => {
+            this.commonFunctions.snackbar('删除成功');
+            this.JumpUrl('');
         });
-        //绘制图表
-        var ctx = document.getElementById(canvasId).getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: chartLabels,
-                datasets: chartDatasets
-            },
-            options: {
-                borderWidth: 1
-            }
-        });
+        let data = {
+            'id': id
+        };
+
+        this.RequestApiUrl('post', 'CardsDelete', 'PostDelete', data);
     }
 }

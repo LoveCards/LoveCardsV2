@@ -13,12 +13,15 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
+use app\common\APP;
 
 class Cards extends Common
 {
     //操作函数
     protected function CAndU($id, $data, $method)
     {
+        $lDef_AppCardsID = APP::mArrayGetAppTableMapValue('cards')['data'];
+
         // 获取数据
         foreach ($data as $k => $v) {
             if ($v != '#') {
@@ -27,31 +30,25 @@ class Cards extends Common
         }
 
         // 数据校验
-        switch ((int)$Datas['model']) {
-                //
-            case 1:
-                try {
+        try {
+            switch ((int)$Datas['model']) {
+                case 1:
                     validate(CardsValidate::class)
                         ->batch(true)
                         ->remove('taName', 'require')
                         ->check($Datas);
-                } catch (ValidateException $e) {
-                    $validateerror = $e->getError();
-                    return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);
-                }
-                break;
-                //默认
-            default:
-                try {
+                    break;
+                default:
                     validate(CardsValidate::class)
                         ->batch(true)
                         ->check($Datas);
-                } catch (ValidateException $e) {
-                    $validateerror = $e->getError();
-                    return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);
-                }
-                break;
+                    break;
+            }
+        } catch (ValidateException $e) {
+            $validateerror = $e->getError();
+            return Common::mArrayEasyReturnStruct('格式错误', false, $validateerror);
         }
+
 
         // 启动事务
         Db::startTrans();
@@ -78,8 +75,8 @@ class Cards extends Common
                 $DbResult->update($DbData);
                 $CardId = $id;
                 //清理原始数据
-                Db::table('img')->where('pid', $id)->delete();
-                Db::table('cards_tag_map')->where('cid', $id)->delete();
+                Db::table('img')->where('aid', $lDef_AppCardsID)->where('pid', $id)->delete();
+                Db::table('tags_map')->where('aid', $lDef_AppCardsID)->where('pid', $id)->delete();
             }
 
             //写入img
@@ -87,7 +84,7 @@ class Cards extends Common
             if (!empty($img)) {
                 $JsonData = array();
                 foreach ($img as $key => $value) {
-                    $JsonData[$key]['aid'] = 1;
+                    $JsonData[$key]['aid'] = $lDef_AppCardsID;
                     $JsonData[$key]['pid'] = $CardId;
                     $JsonData[$key]['url'] = $value;
                     $JsonData[$key]['time'] = $this->attrGReqTime;
@@ -103,11 +100,12 @@ class Cards extends Common
                 //构建数据数组
                 $JsonData = array();
                 foreach ($tag as $key => $value) {
-                    $JsonData[$key]['cid'] = $CardId;
+                    $JsonData[$key]['aid'] = $lDef_AppCardsID;
+                    $JsonData[$key]['pid'] = $CardId;
                     $JsonData[$key]['tid'] = $value;
                     $JsonData[$key]['time'] = $this->attrGReqTime;
                 }
-                Db::table('cards_tag_map')->insertAll($JsonData);
+                Db::table('tags_map')->insertAll($JsonData);
                 //更新tag视图字段
                 $DbResult->where('id', $CardId)->update(['tag' => Json_encode($tag)]);
             }
@@ -118,7 +116,7 @@ class Cards extends Common
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            return Common::mArrayEasyReturnStruct('操作失败', false,$e->getMessage());
+            return Common::mArrayEasyReturnStruct('操作失败', false, $e->getMessage());
         }
     }
 
@@ -142,12 +140,12 @@ class Cards extends Common
 
         if ($result['status']) {
             if (Config::get('lovecards.api.Cards.DefSetCardsStatus')) {
-                return Export::mObjectEasyCreate('', '添加成功,等待审核', 201);
+                return Export::Create(null, 201); //添加成功,等待审核
             } else {
-                return Export::mObjectEasyCreate(['id' => $result['id']], '添加成功', 200);
+                return Export::Create(['id' => $result['data']], 200);
             }
         } else {
-            return Export::mObjectEasyCreate($result['msg'], '添加失败', 500);
+            return Export::Create($result['msg'], 500, '添加失败');
         }
     }
 
@@ -172,46 +170,46 @@ class Cards extends Common
         ], 'u');
 
         if ($result['status']) {
-            return Export::mObjectEasyCreate(['id' => $result['id']], '编辑成功', 200);
+            return Export::Create(['id' => $result['data']], 200);
         } else {
-            return Export::mObjectEasyCreate($result['msg'], '编辑失败', 500);
+            return Export::Create($result['msg'], 500, '编辑失败');
         }
     }
 
     //删除-POST
     public function Delete()
     {
-
+        $lDef_AppCardsID = APP::mArrayGetAppTableMapValue('cards')['data'];
         //获取数据
         $id = Request::param('id');
 
         //获取Cards数据库对象
         $result = Db::table('cards')->where('id', $id);
         if (!$result->find()) {
-            return Export::mObjectEasyCreate([], 'id不存在', 400);
+            return Export::Create(null, 400, 'id不存在');
         }
         $result->delete();
 
         //获取img数据库对象
-        $result = Db::table('img')->where('pid', $id);
+        $result = Db::table('img')->where('aid', $lDef_AppCardsID)->where('pid', $id);
         if ($result->find()) {
             $result->delete();
         }
 
         //获取tag数据库对象
-        $result = Db::table('cards_tag_map')->where('cid', $id);
+        $result = Db::table('tags_map')->where('aid', $lDef_AppCardsID)->where('pid', $id);
         if ($result->find()) {
             $result->delete();
         }
 
         //获取comments数据库对象
-        $result = Db::table('cards_comments')->where('cid', $id);
+        $result = Db::table('comments')->where('aid', $lDef_AppCardsID)->where('pid', $id);
         if ($result->find()) {
             $result->delete();
         }
 
         //返回数据
-        return Export::mObjectEasyCreate([], '删除成功', 200);
+        return Export::Create(null, 200);
     }
 
     //设置-POST
@@ -233,15 +231,15 @@ class Cards extends Common
                 ->check($data);
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
-            return Export::mObjectEasyCreate($validateerror, '修改失败', 400);
+            return Export::Create($validateerror, 400, '修改失败');
         }
 
         $result = BackEnd::mBoolCoverConfig('lovecards', $data, true);
 
         if ($result == true) {
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } else {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 
@@ -257,26 +255,26 @@ class Cards extends Common
         $resultCards = Db::table('cards')->where('id', $id);
         $resultCardsData = $resultCards->find();
         if (!$resultCardsData) {
-            return Export::mObjectEasyCreate([], 'id不存在', 400);
+            return Export::Create([], 400, 'id不存在');
         }
 
         //获取good数据库对象
         $resultGood = Db::table('good');
         if ($resultGood->where('pid', $id)->where('ip', $ip)->find()) {
-            return Export::mObjectEasyCreate(['tip' => '请勿重复点赞'], '点赞失败', 400);
+            return Export::Create(['tip' => '请勿重复点赞'], 400, '点赞失败');
         }
 
         //更新视图字段
         if (!$resultCards->inc('good')->update()) {
-            return Export::mObjectEasyCreate(['cards.good' => 'cards.good更新失败'], '点赞失败', 400);
+            return Export::Create(['cards.good' => 'cards.good更新失败'], 400, '点赞失败');
         };
 
         $data = ['aid' => '1', 'pid' => $id, 'ip' => $ip, 'time' => $time];
         if (!$resultGood->insert($data)) {
-            return Export::mObjectEasyCreate(['good' => 'good写入失败'], '点赞失败', 400);
+            return Export::Create(['good' => 'good写入失败'], 400, '点赞失败');
         };
 
         //返回数据
-        return Export::mObjectEasyCreate(['Num' => $resultCardsData['good'] + 1], '点赞成功', 200);
+        return Export::Create(['Num' => $resultCardsData['good'] + 1], 200, '点赞成功');
     }
 }
