@@ -20,7 +20,7 @@ class System
     {
         $siteUrl = Request::param('siteUrl');
         if (empty($siteUrl)) {
-            return Export::mObjectEasyCreate([], '站点域名不得为空', 400);
+            return Export::Create(null, 400, '站点域名不得为空');
         }
         $siteName = Request::param('siteName');
         $siteICPId = Request::param('siteICPId');
@@ -39,7 +39,7 @@ class System
         Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
 
         //返回数据
-        return Export::mObjectEasyCreate([], '更新成功', 200);
+        return Export::Create(null, 200);
     }
 
     //邮箱配置-POST
@@ -63,7 +63,7 @@ class System
         Db::table('system')->where('name', 'smtpSecure')->update(['value' => $smtpSecure]);
 
         //返回数据
-        return Export::mObjectEasyCreate([], '更新成功', 200);
+        return Export::Create(null, 200);
     }
 
     //主题设置-POST
@@ -74,15 +74,15 @@ class System
         $tDef_LCVersionInfo = Common::mArrayGetLCVersionInfo();
 
         if (!($tDef_LCVersionInfo['VerS'] >= $tReq_ThemeInfo['SysVersionL'] && $tDef_LCVersionInfo['VerS'] < $tReq_ThemeInfo['SysVersionR'])) {
-            return Export::mObjectEasyCreate([], '修改失败，该主题不适用当前版本', 400);
+            return Export::Create(null, 400, '修改失败，该主题不适用当前版本');
         }
 
         $tDef_Result = BackEnd::mBoolCoverConfig('lovecards', ['theme_directory' => $tReq_ThemeDirectoryName]);
 
         if ($tDef_Result == true) {
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } else {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 
@@ -101,7 +101,7 @@ class System
         if (!empty($lReq_ParamSelect)) {
             foreach ($lReq_ParamSelect as $key => $value) {
                 if (count($tDef_ThemeConfig['Select'][$key]['Element']) < $value) {
-                    return Export::mObjectEasyCreate([], '修改失败，Select存在非法元素', 400);
+                    return Export::Create('修改失败，Select存在非法元素', 400);
                 }
                 $lDef_ParamThemeConfig['Select' . $key] = $value;
             }
@@ -111,7 +111,7 @@ class System
         if (!empty($lReq_ParamText)) {
             foreach ($lReq_ParamText as $key => $value) {
                 if (empty($tDef_ThemeConfig['Text'][$key]['Name'])) {
-                    return Export::mObjectEasyCreate([], '修改失败，Text存在非法元素', 400);
+                    return Export::Create('修改失败，Text存在非法元素', 400);
                 }
                 $lDef_ParamThemeConfig['Text' . $key] = $value;
             }
@@ -121,9 +121,9 @@ class System
         $tDef_Result = Theme::mBoolCoverThemeConfig($tDef_ThemeDirectory, $lDef_ParamThemeConfig);
 
         if ($tDef_Result) {
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } else {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 
@@ -137,9 +137,9 @@ class System
             ];
             BackEnd::mBoolCoverConfig('lovecards', $data);
             BackEnd::mBoolCoverConfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } catch (\Throwable $th) {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 }

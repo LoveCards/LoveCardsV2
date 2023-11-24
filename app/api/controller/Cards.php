@@ -152,7 +152,6 @@ class Cards extends Common
     //编辑-POST
     public function Edit()
     {
-
         $result = self::CAndU(Request::param('id'), [
             'content' => Request::param('content'),
 
