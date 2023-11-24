@@ -1,9 +1,7 @@
-<div class="mdui-dialog" id="example-1" style="max-width: 450px;">
+<div class="mdui-dialog" id="example-1" style="max-width: 450px">
     <div class="mdui-dialog-title">登 入</div>
     <div class="mdui-dialog-content">
-        <div class="mdui-typo">
-            没有账号？前往<a href="#">注册</a>👉
-        </div>
+        <div class="mdui-typo">没有账号？前往<a href="#">注册</a>👉</div>
         <div class="mdui-textfield mdui-textfield-floating-label">
             <label class="mdui-textfield-label">用户名</label>
             <input class="mdui-textfield-input" type="text" />
@@ -13,7 +11,10 @@
             <input class="mdui-textfield-input" type="text" />
         </div>
         <div class="mdui-typo">
-            <div class="mdui-textfield mdui-textfield-floating-label" style="overflow: unset;">
+            <div
+                class="mdui-textfield mdui-textfield-floating-label"
+                style="overflow: unset"
+            >
                 <label class="mdui-checkbox">
                     <input type="checkbox" />
                     <i class="mdui-checkbox-icon"></i>
@@ -22,7 +23,9 @@
             </div>
         </div>
         <div class="mdui-float-right">
-            <button id="open" class="mdui-btn mdui-color-pink-accent">登 入</button>
+            <button id="open" class="mdui-btn mdui-color-pink-accent">
+                登 入
+            </button>
         </div>
     </div>
     <!-- <div class="mdui-dialog-actions">
@@ -33,18 +36,25 @@
 
 <div class="mdui-fab-wrapper" id="exampleFab" mdui-fab="{trigger: 'hover'}">
     <button
-        class="mdui-fab mdui-ripple mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+        class="mdui-fab mdui-ripple mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}"
+    >
         <!-- 默认显示的图标 -->
         <i class="mdui-icon material-icons">add</i>
         <!-- 在拨号菜单开始打开时，平滑切换到该图标，若不需要切换图标，则可以省略该元素 -->
         <i class="mdui-icon material-icons mdui-fab-opened">add</i>
     </button>
     <div class="mdui-fab-dial">
-        <button id="jsBtnThemeDark" value="{if $ThemeConfig.ThemeDark}true{else /}false{/if}"
-            class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-black">
+        <button
+            id="jsBtnThemeDark"
+            value="{if $ThemeConfig.ThemeDark}true{else /}false{/if}"
+            class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-black"
+        >
             <i class="mdui-icon material-icons">brightness_high</i>
         </button>
-        <button id="jsBtnGreen" class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-green">
+        <button
+            id="jsBtnGreen"
+            class="mdui-fab mdui-fab-mini mdui-ripple mdui-color-green"
+        >
             <i class="mdui-icon material-icons">create</i>
         </button>
     </div>
@@ -52,12 +62,12 @@
 
 <div class="mdui-p-y-5"></div>
 {if $ThemeConfig['ThemeLinkCDN']}
-<script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
-<script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
-<script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
-<script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
-<script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
-<script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
+<script src="{__A-assets__}/lib/jquery-3.6.0/jquery.min.js"></script>
+<script src="{__A-assets__}/lib/mdui-v1.0.2/js/mdui.min.js"></script>
+<script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+<script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+<script src="{__A-assets__}/lib/viewer-jquery-1.1.0/viewer.min.js"></script>
+<script src="{__A-assets__}/lib/clipboard-2.0.6/clipboard.min.js"></script>
 <script src="{$ThemeAssetsUrlPath}/masonry-4.2.2/masonry.pkgd.min.js"></script>
 {else /}
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
@@ -68,79 +78,89 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
 {/if}
+
+<script src="{__A-assets__}/js/Base.js"></script>
+<script src="{__A-assets__}/js/commonOld.js"></script>
+{if $ViewActionJS}
+<!-- 对应页面类 -->
+<script src="/view/admin/app/{$SystemControllerName}/{$SystemActionName}.js"></script>
+{/if}
+
 <script src="{$ThemeAssetsUrlPath}/base.js"></script>
+
 <script>
     /*
-    *初始化导航栏样式
-    */
-    var jsTabClass = $('#jsParameter').attr('jsTabClass');
-    $('#jsTab' + jsTabClass + 'Class').attr('class', 'mdui-tab-active');
+     *初始化导航栏样式
+     */
+    var jsTabClass = $("#jsParameter").attr("jsTabClass");
+    $("#jsTab" + jsTabClass + "Class").attr("class", "mdui-tab-active");
 
     /*
-    *主题控制
-    */
+     *主题控制
+     */
     const FunSetThemeDarkStyle = () => {
         //按钮和主体样式刷新
-        const Obj = $('#jsBtnThemeDark');
-        if (Obj.attr('value') == 'true') {
-            Obj.removeClass('mdui-color-black');
-            Obj.addClass('mdui-color-white');
-            Obj.children('i').html('brightness_high');
-            $('body').removeClass('mdui-theme-layout-white');
-            $('body').addClass('mdui-theme-layout-dark');
+        const Obj = $("#jsBtnThemeDark");
+        if (Obj.attr("value") == "true") {
+            Obj.removeClass("mdui-color-black");
+            Obj.addClass("mdui-color-white");
+            Obj.children("i").html("brightness_high");
+            $("body").removeClass("mdui-theme-layout-white");
+            $("body").addClass("mdui-theme-layout-dark");
         } else {
-            Obj.removeClass('mdui-color-white');
-            Obj.addClass('mdui-color-black');
-            Obj.children('i').html('brightness_low');
-            $('body').removeClass('mdui-theme-layout-dark');
-            $('body').addClass('mdui-theme-layout-white');
+            Obj.removeClass("mdui-color-white");
+            Obj.addClass("mdui-color-black");
+            Obj.children("i").html("brightness_low");
+            $("body").removeClass("mdui-theme-layout-dark");
+            $("body").addClass("mdui-theme-layout-white");
         }
     };
     const FunSetBtnThemeDarkValue = () => {
         //根据Cookie初始化主题
-        var cookieValue = $.cookie('ThemeDark');
-        if (cookieValue == undefined || cookieValue == '') {
-            cookieValue = $('#jsBtnThemeDark').attr('value');
-            $.cookie('ThemeDark', cookieValue, { expires: 7, path: '/' });
+        var cookieValue = $.cookie("ThemeDark");
+        if (cookieValue == undefined || cookieValue == "") {
+            cookieValue = $("#jsBtnThemeDark").attr("value");
+            $.cookie("ThemeDark", cookieValue, { expires: 7, path: "/" });
         }
-        if (cookieValue == 'true') {
-            $('#jsBtnThemeDark').attr('value', 'true');
+        if (cookieValue == "true") {
+            $("#jsBtnThemeDark").attr("value", "true");
             FunSetThemeDarkStyle();
         } else {
-            $('#jsBtnThemeDark').attr('value', 'false');
+            $("#jsBtnThemeDark").attr("value", "false");
             FunSetThemeDarkStyle();
         }
-    }; FunSetBtnThemeDarkValue();
+    };
+    FunSetBtnThemeDarkValue();
     const FunSetThemeDark = (Obj) => {
         //暗色设置
-        if (Obj.attr('value') == 'true') {
-            $.cookie('ThemeDark', 'false', { expires: 7, path: '/' });
-            Obj.attr('value', 'false');
+        if (Obj.attr("value") == "true") {
+            $.cookie("ThemeDark", "false", { expires: 7, path: "/" });
+            Obj.attr("value", "false");
             FunSetThemeDarkStyle();
         } else {
-            $.cookie('ThemeDark', 'true', { expires: 7, path: '/' });
-            Obj.attr('value', 'true');
+            $.cookie("ThemeDark", "true", { expires: 7, path: "/" });
+            Obj.attr("value", "true");
             FunSetThemeDarkStyle();
         }
-    }
-    $('#jsBtnThemeDark').click(function () {
+    };
+    $("#jsBtnThemeDark").click(function () {
         //绑定按钮
         FunSetThemeDark($(this));
     });
 
     /*
-    *渲染初始化
-    */
+     *渲染初始化
+     */
     $(function () {
-        const LoadingImgSrc = '{$ThemeAssetsUrlPath}/image/loading.png'
-        const ErrorImgSrc = '{$ThemeAssetsUrlPath}/image/error.png'
+        const LoadingImgSrc = "{$ThemeAssetsUrlPath}/image/loading.png";
+        const ErrorImgSrc = "{$ThemeAssetsUrlPath}/image/error.png";
         const FunEndLoad = (el) => {
             var el = el.parent().parent().next();
-            if (el.attr('class') === 'css-cards-img-loading mdui-spinner') {
+            if (el.attr("class") === "css-cards-img-loading mdui-spinner") {
                 el.remove();
             }
             return;
-        }
+        };
 
         $("img").lazyload({
             threshold: 200,
@@ -150,48 +170,50 @@
             appear: function () {
                 setTimeout(function () {
                     initMasonry();
-                }, 300)
+                }, 300);
             },
             load: function () {
                 // 图片加载完成后初始化瀑布流
                 initMasonry();
                 FunEndLoad($(this));
-            }
+            },
         });
 
         setTimeout(function () {
             $("img.js-jumpurl-cardId").each(function () {
                 //加载失败图片更新
-                if ($(this).attr('src') == LoadingImgSrc) {
+                if ($(this).attr("src") == LoadingImgSrc) {
                     FunEndLoad($(this));
-                    $(this).attr('src', ErrorImgSrc);
+                    $(this).attr("src", ErrorImgSrc);
                 }
             });
         }, 5000);
-
     });
 
     //初始化分享按钮
-    FunInitShareBtn('mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}');
+    FunInitShareBtn(
+        "mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}"
+    );
 
     //当页面中不存在图片时直接加载瀑布流
     if ($("img[data-original]").length <= 0) {
         setTimeout(function () {
-            initMasonry()
+            initMasonry();
         }, 300);
     }
 
     //瀑布流初始化
     function initMasonry() {
-        var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');
+        var elem = document.querySelector(
+            ".mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3"
+        );
         if (elem != null) {
             var msnry = new Masonry(elem, {
-                itemSelector: '.mdui-col',
-                columnWidth: '.mdui-col',
-                percentPosition: true
+                itemSelector: ".mdui-col",
+                columnWidth: ".mdui-col",
+                percentPosition: true,
             });
         }
     }
-
 </script>
 <script src="{__A-assets__}/public.js"></script>

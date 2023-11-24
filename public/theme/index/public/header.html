@@ -17,12 +17,12 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.css" rel="stylesheet">
     {else /}
-    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
-    <link rel="stylesheet" href="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.css">
+    <link rel="stylesheet" href="{__A-assets__}/lib/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/lib/viewer-jquery-1.1.0/viewer.min.css">
     {/if}
-    <link rel="stylesheet" href="{__A-assets__}/base.css" />
+    <link rel="stylesheet" href="{__A-assets__}/css/base.css" />
     <!-- <link rel="stylesheet" href="{$ThemeAssetsUrlPath}/base.css" /> -->
-    <script>
+    <!-- <script>
         var _paq = window._paq = window._paq || [];
         _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
         _paq.push(['trackPageView']);
@@ -34,7 +34,7 @@
             var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
             g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
         })();
-    </script>
+    </script> -->
     {$ThemeConfig.ThemeStatistics|raw}
 </head>
 
