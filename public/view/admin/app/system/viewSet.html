@@ -40,8 +40,8 @@
                 <div class="mdui-col-xs-12">
                     <div class="mdui-textfield">
                         <div class="mdui-textfield">
-                            <textarea class="mdui-textfield-input" rows="4"
-                                placeholder="{$D0['Name']}" id="{$key}">{$D0['Default']}</textarea>
+                            <textarea class="mdui-textfield-input" rows="4" placeholder="{$D0['Name']}"
+                                id="{$key}">{$D0['Default']}</textarea>
                             <div class="mdui-textfield-helper mdui-typo">{$D0['Introduction']|raw}</div>
                         </div>
                     </div>
@@ -63,12 +63,16 @@
 {include file="public/footer"}
 
 <script>
+
+    let ViewSetEntity = new ViewSet();
+
     $(function () {
+
         //提交
-        $('#submitSet').click(function () {
+        const getTemplateSetData = () => {
             //初始化参数
-            var SelectJson = {};
-            var TextJson = {};
+            let SelectJson = {};
+            let TextJson = {};
 
             //赋值
             $('.mdui-select').each(function () {
@@ -78,19 +82,14 @@
                 TextJson[$(this).attr('id')] = $(this).val();
             });
 
-            data = {
-                'uuid': $.cookie('uuid'),
+            return {
                 'select': JSON.stringify(SelectJson),
                 'text': JSON.stringify(TextJson),
             };
-            //提交数据
-            result = apiAjax0(data, apiSystemTemplateSet, 'POST');
-            if (result) {
-                //成功
-                $.cookie('msg', '设置成功', { path: '/' });
-                jumpUrl('', 100);
-                return;
-            }
+        }
+
+        $('#submitSet').click(() => {
+            ViewSetEntity.PostSystemTemplateSet(getTemplateSetData());
         })
     });
 </script>

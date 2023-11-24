@@ -124,24 +124,17 @@
 {include file="public/footer"}
 
 <script>
+
+    let IndexEntity = new Index();
+
     $(function () {
         //初始化-分页组件
         pager();
 
         //按钮-删除
         $('.js-Btn-Delete').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
-                'id': $(this).parent().siblings('td:first').html()
-            };
-            var result = apiAjax0(data, apiAdminDelete, 'POST');
-            if (result) {
-                $(this).parent().html("已删除");
-                mdui.snackbar({
-                    message: '成功删除ID' + data['id'],
-                    position: 'left-top'
-                });
-            }
+            const id = $(this).parent().siblings('td:first').html()
+            IndexEntity.PostDelete(id);
         });
 
         //按钮-初始化-编辑
@@ -152,35 +145,27 @@
             $('#btnEditUser').val(thisObj.eq(0).html());
         });
 
-        //按钮-请求-编辑
-        $('#btnEditUser').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
+        const getEditData = () => {
+            return {
                 'id': $('#btnEditUser').val(),
                 'userName': $('#editUserDataName').val(),
                 'password': $('#editUserDataPassword').val(),
                 'power': $('#editUserDataPower').val()
             };
-            var result = apiAjax0(data, apiAdminEdit, 'POST');
-            if (result) {
-                $.cookie('msg', '编辑成功', { path: '/' });
-                jumpUrl('', 100);
-            }
-        });
-
-        //按钮-请求-添加
-        $('#btnAddUser').click(function () {
-            var data = {
-                'uuid': $.cookie('uuid'),
+        }
+        const getAddData = () => {
+            return {
                 'userName': $('#addUserDataName').val(),
                 'password': $('#addUserDataPassword').val(),
                 'power': $('#addUserDataPower').val()
             };
-            var result = apiAjax0(data, apiAdminAdd, 'POST');
-            if (result) {
-                $.cookie('msg', '添加成功', { path: '/' });
-                jumpUrl('', 100);
-            }
+        }
+
+        $('#btnEditUser').click(() => {
+            IndexEntity.PostEdit(getEditData());
+        });
+        $('#btnAddUser').click(() => {
+            IndexEntity.PostAdd(getAddData());
         });
     })
 </script>

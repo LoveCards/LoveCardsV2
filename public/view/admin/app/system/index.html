@@ -109,20 +109,22 @@
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">验证模块状态</label>
                             <select class="mdui-select" style="width: 100%;" id="DefSetValidatesStatus">
-                                <option value="0" {if $SystemConfig.class.geetest.DefSetValidatesStatus==0}selected{/if}>
+                                <option value="0" {if
+                                    $SystemConfig.class.geetest.DefSetValidatesStatus==0}selected{/if}>
                                     关闭
                                 </option>
-                                <option value="1" {if $SystemConfig.class.geetest.DefSetValidatesStatus==1}selected{/if}>
+                                <option value="1" {if
+                                    $SystemConfig.class.geetest.DefSetValidatesStatus==1}selected{/if}>
                                     开启
                                 </option>
                             </select>
-                            
+
                         </div>
                     </div>
                     <div class="mdui-col-xs-12">
                         <div class="mdui-textfield">
-                        <div class="mdui-textfield-helper">请确认ID/Key可用再开启，直接开启验证将会导致无法登入后台</div>
-                    </div>
+                            <div class="mdui-textfield-helper">请确认ID/Key可用再开启，直接开启验证将会导致无法登入后台</div>
+                        </div>
                     </div>
 
                 </div>
@@ -216,11 +218,12 @@
 {include file="public/footer"}
 
 <script>
+
+    let IndexEntity = new Index();
+
     $(function () {
-        //提交example1-SystemSite
-        $('#submitSite').click(function () {
-            data = {
-                'uuid': $.cookie('uuid'),
+        const getSystemSiteData = () => {
+            return {
                 'siteUrl': $('#siteUrl').val(),
                 'siteName': $('#siteName').val(),
                 'siteTitle': $('#siteTitle').val(),
@@ -230,59 +233,49 @@
                 'password': $('#Password').val(),
                 'siteCopyright': $('#siteCopyright').val(),
             };
-            //提交数据
-            result = apiAjax0(data, apiSystemSite, 'POST');
-            if (result) {
-                //成功
-                mdui.snackbar({
-                    message: '更新成功',
-                    position: 'left-top'
-                });
-                return;
-            }
-        })
-        //提交example1-SystemGeetest
-        $('#submitGeetest').click(function () {
-            data = {
-                'uuid': $.cookie('uuid'),
+        }
+
+        const getSystemGeetestData = () => {
+            return {
                 'DefSetGeetestId': $('#DefSetGeetestId').val(),
                 'DefSetGeetestKey': $('#DefSetGeetestKey').val(),
                 'DefSetValidatesStatus': $('#DefSetValidatesStatus').val(),
             };
-            //提交数据
-            result = apiAjax0(data, apiSystemGeetest, 'POST');
-            if (result) {
-                //成功
-                mdui.snackbar({
-                    message: '更新成功',
-                    position: 'left-top'
-                });
-                return;
-            }
+        }
+
+        //提交example1-SystemSite
+        $('#submitSite').click(() => {
+            IndexEntity.PostSystemSite(getSystemSiteData());
         })
+
+        //提交example1-SystemGeetest
+        $('#submitGeetest').click(() => {
+            IndexEntity.PostSystemGeetest(getSystemGeetestData());
+        })
+
         //提交
-        $('#submitEmail').click(function () {
-            data = {
-                'uuid': $.cookie('uuid'),
-                'LCEAPI': $('#LCEAPI').val(),
-                'smtpHost': $('#smtpHost').val(),
-                'smtpPort': $('#smtpPort').val(),
-                'smtpSecure': $('#smtpSecure').val(),
-                'smtpUser': $('#smtpUser').val(),
-                'smtpPass': $('#smtpPass').val(),
-                'smtpName': $('#smtpName').val(),
-            };
-            //提交数据
-            result = apiAjax0(data, apiSystemEmail, 'POST');
-            if (result) {
-                //成功
-                mdui.snackbar({
-                    message: '更新成功',
-                    position: 'left-top'
-                });
-                return;
-            }
-        })
+        // $('#submitEmail').click(function () {
+        //     data = {
+        //         'uuid': $.cookie('uuid'),
+        //         'LCEAPI': $('#LCEAPI').val(),
+        //         'smtpHost': $('#smtpHost').val(),
+        //         'smtpPort': $('#smtpPort').val(),
+        //         'smtpSecure': $('#smtpSecure').val(),
+        //         'smtpUser': $('#smtpUser').val(),
+        //         'smtpPass': $('#smtpPass').val(),
+        //         'smtpName': $('#smtpName').val(),
+        //     };
+        //     //提交数据
+        //     result = apiAjax0(data, apiSystemEmail, 'POST');
+        //     if (result) {
+        //         //成功
+        //         mdui.snackbar({
+        //             message: '更新成功',
+        //             position: 'left-top'
+        //         });
+        //         return;
+        //     }
+        // })
     });
 </script>
 </body>

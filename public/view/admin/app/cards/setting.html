@@ -75,28 +75,19 @@
 {include file="public/footer"}
 
 <script>
+
+    //实例化
+    let SettingEntity = new Setting();
+
     $(function () {
-        //提交
-        $('#submitSite').click(function () {
-            data = {
-                'uuid': $.cookie('uuid'),
-                'DefSetCardsImgNum': $('#DefSetCardsImgNum').val(),
-                'DefSetCardsTagNum': $('#DefSetCardsTagNum').val(),
-                'DefSetCardsStatus': $('#DefSetCardsStatus').val(),
-                'DefSetCardsImgSize': $('#DefSetCardsImgSize').val(),
-                'DefSetCardsCommentsStatus': $('#DefSetCardsCommentsStatus').val()
-            };
-            //提交数据
-            result = apiAjax0(data, apicardsSetting, 'POST');
-            if (result) {
-                //成功
-                mdui.snackbar({
-                    message: '更新成功',
-                    position: 'left-top'
-                });
-                return;
-            }
-        })
+        SettingEntity.BindPostEdit(
+            'submitSite',
+            'DefSetCardsImgNum',
+            'DefSetCardsTagNum',
+            'DefSetCardsStatus',
+            'DefSetCardsImgSize',
+            'DefSetCardsCommentsStatus'
+        );
     });
 </script>
 </body>

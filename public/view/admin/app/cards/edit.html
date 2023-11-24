@@ -189,22 +189,24 @@
 {include file="public/footer"}
 <script src="{__A-assets__}/js/cardsEdit.js"></script>
 <script>
+
+    //实例化
+    let EditEntity = new Edit();
+
     //初始化-Tag组件
     InitialChooseTagAdd('{$CardData["tag"]|raw}');
 
     $(function () {
-        //按钮-请求-添加
-        $('#submitAdd').click(function () {
+        const getData = () => {
             //构建图片url数组并获取
-            var jsonImageUrl = [];
+            let jsonImageUrl = [];
             $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
                 jsonImageUrl.push($(this).attr('src'));
             });
-            img = JSON.stringify(jsonImageUrl);
-            tag = JSON.stringify(checkChooseTagId);
+            let img = JSON.stringify(jsonImageUrl);
+            let tag = JSON.stringify(checkChooseTagId);
 
-            data = {
-                'uuid': $.cookie('uuid'),
+            let data = {
                 'id': "{$CardData['id']}",
                 'top': $('#top').val(),
                 'status': $('#status').val(),
@@ -220,16 +222,13 @@
                 'tag': tag,
                 'img': img,
             };
-            var result = apiAjax0(data, apicardsEdit, 'POST');
-            if (result) {
-                mdui.snackbar({
-                    message: '编辑成功',
-                    position: 'left-top'
-                });
-                //jumpUrl('/index/cards/card/id/' + result.data.id);
-                return;
-            }
-        });
+            return data;
+        }
+
+        //绑定编辑按钮
+        $('#submitAdd').click(() => {
+            EditEntity.PostEdit(getData());
+        })
     });
 </script>
 </body>

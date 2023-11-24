@@ -43,8 +43,8 @@ class Cards extends Validate
         'good.number' => 'good格式非法',
         'comments.number' => 'comments格式非法',
 
-        'tag.JSON' => 'tag格式非法',
-        'img.JSON' => 'img格式非法',
+        'tag.JSON' => 'tag超过上限或格式非法',
+        'img.JSON' => 'img超过上限或格式非法',
 
         'model.in' => 'model格式非法',
         'top.in' => 'top格式非法',

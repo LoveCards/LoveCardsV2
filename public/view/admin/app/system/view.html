@@ -63,21 +63,13 @@
     {include file="public/footer"}
 
     <script>
+
+        let ViewEntity = new View();
+
         $(function () {
             //提交
             $('.submit-template').click(function () {
-                data = {
-                    'uuid': $.cookie('uuid'),
-                    'themeDirectory': $(this).val(),
-                };
-                //提交数据
-                result = apiAjax0(data, apiSystemTemplate, 'POST');
-                if (result) {
-                    //成功
-                    $.cookie('msg', '设置成功', { path: '/' });
-                    jumpUrl('', 100);
-                    return;
-                }
+                ViewEntity.PostSystemTemplate({ 'themeDirectory': $(this).val() });
             })
         });
     </script>
