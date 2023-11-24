@@ -8,6 +8,7 @@ use think\facade\Config;
 
 use app\common\Common;
 use app\common\Theme;
+use app\common\File;
 
 class BaseController extends Common
 {
@@ -37,9 +38,12 @@ class BaseController extends Common
     //基础参数
     var $attrGReqTime;
     var $attrGReqIp;
+    var $attrGReqView;
+
     //获取模板路径
     var $attrGDefNowThemeDirectoryPath;
     var $attrGDefNowThemeDirectoryName;
+
     function __construct()
     {
         //安装检测
@@ -54,6 +58,7 @@ class BaseController extends Common
         $this->attrGReqIp = $this->mStringGetIP();
         $this->attrGDefNowThemeDirectoryPath = Theme::mArrayGetThemeDirectory()['P'];
         $this->attrGDefNowThemeDirectoryName = Theme::mArrayGetThemeDirectory()['N'];
+        $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . request()->action();
 
         //主题dark模式支持
         $lRes_ThemeConfig = Theme::mResultGetThemeConfig($this->attrGDefNowThemeDirectoryName);
@@ -71,6 +76,11 @@ class BaseController extends Common
         //根据主题覆盖模板配置
         Theme::mObjectEasySetViewConfig($this->attrGDefNowThemeDirectoryName);
 
+        //JS文件校验引入
+        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/' . $this->attrGDefNowThemeDirectoryName . $this->attrGReqView . '.js') ?
+            $lDef_AssignData['ViewActionJS'] = true :
+            0;
+
         //公共模板变量
         View::assign([
             'ThemeAssetsUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName . '/assets', //模板路径
@@ -80,6 +90,7 @@ class BaseController extends Common
             'SystemConfig' => config::get('lovecards'),
             'ViewKeywords' => false,
             'ViewDescription' => false,
+            'ViewActionJS' => false
         ]);
     }
 

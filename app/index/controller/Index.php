@@ -44,7 +44,7 @@ class Index extends BaseController
         }
 
         //Tag列表
-        $var_l_def_result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
+        $var_l_def_result = Db::table('tags')->where('status', 0)->select()->toArray();
         View::assign([
             'CardsTagsListJson' => json_encode($var_l_def_result),
             'CardsTagsList' => $var_l_def_result
@@ -59,7 +59,7 @@ class Index extends BaseController
         ]);
 
         //输出模板
-        return View::fetch('/index');
+        return View::fetch($this->attrGReqView);
     }
 
     public function Error()
