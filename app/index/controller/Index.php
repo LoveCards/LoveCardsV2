@@ -64,10 +64,10 @@ class Index extends BaseController
 
     public function Error()
     {
-        $code = request()->param('code');
-
         //恢复view为系统配置
-        Theme::mObjectEasySetViewConfig('');
+        Theme::mObjectEasySetViewConfig(0);
+
+        $code = request()->param('code');
 
         //输出模板
         if ($code == 404) {
@@ -76,7 +76,7 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
-            return View::fetch('../error/404');
+            return View::fetch('error/404');
         } else {
             return redirect('/');
         }

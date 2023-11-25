@@ -81,13 +81,26 @@
 
 <script src="{__A-assets__}/js/Base.js"></script>
 <script src="{__A-assets__}/js/commonOld.js"></script>
+<script src="{$ThemeAssetsUrlPath}/Common.js"></script>
 {if $ViewActionJS}
 <!-- 对应页面类 -->
-<script src="/view/admin/app/{$SystemControllerName}/{$SystemActionName}.js"></script>
+<script src="{$ThemeUrlPath}/app/{$SystemControllerName}/{$SystemActionName}.js"></script>
 {/if}
+<!-- 全局 -->
+<script>
+    //实例化通用类
+    let CommonEntity = new Common();
+
+    //通用跳转
+    const jumpUrl = (url, time) => CommonEntity.JumpUrl(url, time);
+
+    $(function () {
+        //CookieMsg处理
+        CommonEntity.CookieMsgHandling();
+    });
+</script>
 
 <script src="{$ThemeAssetsUrlPath}/base.js"></script>
-
 <script>
     /*
      *初始化导航栏样式
@@ -216,4 +229,5 @@
         }
     }
 </script>
-<script src="{__A-assets__}/public.js"></script>
+
+<div style="margin-top: 140px"></div>

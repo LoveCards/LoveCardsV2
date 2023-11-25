@@ -3,4 +3,4 @@
 use think\facade\Route;
 
 //404
-Route::rule('/404', '/index/index/error')->append(['code' => 404]);
+Route::rule('/404', '/index/Index/error')->append(['code' => 404]);
