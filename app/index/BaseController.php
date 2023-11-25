@@ -9,6 +9,7 @@ use think\facade\Config;
 use app\common\Common;
 use app\common\Theme;
 use app\common\File;
+use app\common\App;
 
 class BaseController extends Common
 {
@@ -39,6 +40,7 @@ class BaseController extends Common
     var $attrGReqTime;
     var $attrGReqIp;
     var $attrGReqView;
+    var $attrGReqAppId;
 
     //获取模板路径
     var $attrGDefNowThemeDirectoryPath;
@@ -59,6 +61,9 @@ class BaseController extends Common
         $this->attrGDefNowThemeDirectoryPath = Theme::mArrayGetThemeDirectory()['P'];
         $this->attrGDefNowThemeDirectoryName = Theme::mArrayGetThemeDirectory()['N'];
         $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . request()->action();
+        $this->attrGReqAppId = [
+            'cards' => App::mArrayGetAppTableMapValue('cards')['data']
+        ];
 
         //主题dark模式支持
         $lRes_ThemeConfig = Theme::mResultGetThemeConfig($this->attrGDefNowThemeDirectoryName);
@@ -83,6 +88,7 @@ class BaseController extends Common
 
         //公共模板变量
         View::assign([
+            'ThemeUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName, //模板路径
             'ThemeAssetsUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName . '/assets', //模板路径
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
@@ -107,7 +113,7 @@ class BaseController extends Common
     protected function mObjectEasyGetAndAssignCardsTags()
     {
         //获取并赋值CardsTag相关变量
-        $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
+        $lDef_Result = Db::table('tags')->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->select()->toArray();
         View::assign([
             'CardsTagsListJson' => json_encode($lDef_Result),
             'CardsTagsList' => $lDef_Result

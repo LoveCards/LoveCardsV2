@@ -47,7 +47,7 @@ class Cards extends BaseController
         ]);
 
         //输出模板
-        return Theme::mObjectEasyViewFetch('/cards');
+        return View::fetch($this->attrGReqView);
     }
 
     // 卡片详情
@@ -80,14 +80,14 @@ class Cards extends BaseController
         }
 
         // 获取图片数据
-        $tDef_ImgData = Db::table('img')->where('aid', 1)->where('pid', $lDef_CardData['id'])->select()->toArray();
+        $tDef_ImgData = Db::table('img')->where('aid', $this->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
 
         // 获取 Tag 数据
         $this->mObjectEasyGetAndAssignCardsTags();
 
         // 获取评论列表
         $tDef_CommentsListMax = 6; // 每页个数
-        $lDef_Result = Db::table('cards_comments')->where('cid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
+        $lDef_Result = Db::table('comments')->where('aid', $this->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
             ->paginate($tDef_CommentsListMax, true);
         $tDef_CommentsListEasyPagingComponent = $lDef_Result->render();
         $tDef_CommentsList = $lDef_Result->items();
@@ -116,7 +116,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch('/card');
+        return View::fetch($this->attrGReqView);
     }
 
     // 添加卡片
@@ -127,7 +127,7 @@ class Cards extends BaseController
         View::assign('CardModel', $tReq_ParamModel);
 
         // 取 Tag 数据
-        $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
+        $lDef_Result = Db::table('tags')->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->select()->toArray();
         $tDef_CardsTagData = $lDef_Result;
         View::assign([
             'CardsTagsListJson' => json_encode($tDef_CardsTagData),
@@ -140,7 +140,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch('/cards-add');
+        return View::fetch($this->attrGReqView);
     }
 
 
@@ -178,7 +178,7 @@ class Cards extends BaseController
 
             // 组合 Good 状态到 $tListData 列表
             foreach ($lDef_CardsList as &$card) {
-                $tResultGood = Db::table('good')->where('aid', 1)->where('ip', $this->attrGReqIp);
+                $tResultGood = Db::table('good')->where('aid', $this->attrGReqAppId['cards'])->where('ip', $this->attrGReqIp);
                 // 查找对应封面
                 if ($tResultGood->where('pid', $card['id'])->findOrEmpty() == []) {
                     // 未点赞
@@ -196,7 +196,7 @@ class Cards extends BaseController
         }
 
         // 取 Tag 数据
-        $lDef_Result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
+        $lDef_Result = Db::table('tags')->where('status', 0)->select()->toArray();
         View::assign([
             'CardsTagsListJson' => json_encode($lDef_Result),
             'CardsTagsList' => $lDef_Result
@@ -214,7 +214,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch('/cards-search');
+        return View::fetch($this->attrGReqView);
     }
 
     // TAG集合
@@ -227,16 +227,16 @@ class Cards extends BaseController
         if (!$tReq_TagIdValue) {
             return FrontEnd::mObjectEasyFrontEndJumpUrl('/index/Cards/search', '请输入Tag');
         }
-        $tReq_TagId = Db::table('cards_tag')->where('id', $tReq_TagIdValue)->findOrEmpty();
+        $tReq_TagId = Db::table('tags')->where('id', $tReq_TagIdValue)->findOrEmpty();
         if (!$tReq_TagId) {
             return FrontEnd::mObjectEasyFrontEndJumpUrl('/index/Cards/search', 'Tag已被删除或不存在');
         }
 
         $tDef_ViewTitle = '关于' . $tReq_TagId['name'] . '的卡片合集';
 
-        // 取 cards_tag_map 列表
+        // 取 tags_map 列表
         $tDef_CardsListMax = 12; // 每页个数
-        $lDef_Result = Db::table('cards_tag_map')->alias('CTM')
+        $lDef_Result = Db::table('tags_map')->alias('CTM')
             ->join('cards CARD', 'CTM.cid = CARD.id')
             ->field(self::G_Def_DbCardsCommonField)
             ->leftJoin('good GOOD', self::G_Def_DbCardsCommonJoin . "'$this->attrGReqIp'")
@@ -256,6 +256,6 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return Theme::mObjectEasyViewFetch('/cards-tag');
+        return View::fetch($this->attrGReqView);
     }
 }
