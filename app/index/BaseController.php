@@ -81,23 +81,27 @@ class BaseController extends Common
         //根据主题覆盖模板配置
         Theme::mObjectEasySetViewConfig($this->attrGDefNowThemeDirectoryName);
 
-        //JS文件校验引入
-        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/' . $this->attrGDefNowThemeDirectoryName . $this->attrGReqView . '.js') ?
-            $lDef_AssignData['ViewActionJS'] = true :
-            0;
-
-        //公共模板变量
-        View::assign([
+        $lDef_AssignData = [
             'ThemeUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName, //模板路径
             'ThemeAssetsUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName . '/assets', //模板路径
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
             'SystemConfig' => config::get('lovecards'),
+            'SystemControllerName' => strtolower(request()->controller()),//当前控制器名称
+            'SystemActionName' => request()->action(),//当前方法名
             'ViewKeywords' => false,
             'ViewDescription' => false,
             'ViewActionJS' => false
-        ]);
+        ];
+
+        //JS文件校验引入
+        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/theme/' . $this->attrGDefNowThemeDirectoryName . $this->attrGReqView . '.js') ?
+            $lDef_AssignData['ViewActionJS'] = true :
+            0;
+
+        //公共模板变量
+        View::assign($lDef_AssignData);
     }
 
     protected function mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
