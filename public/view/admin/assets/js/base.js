@@ -130,18 +130,21 @@ class Base {
      */
     AxiosErrorHandling = (error) => {
         const responseError = error.response.data.error;
-        var responseDetail = error.response.data.detail;
-        var result = responseError;
+        let responseDetail = error.response.data.detail;
+        let result = responseError;
         //如果存在提示也渲染出来
         if (responseDetail?.length !== 0) {
             result = responseError + ':';
             //转键值数组报错为无序数组
-            if (Object.keys(responseDetail).length > 0) {
+            if (Object.keys(responseDetail).length > 0 && typeof(responseDetail) != 'string') {
                 responseDetail = Object.values(responseDetail);
+                responseDetail.forEach(element => {
+                    result += ' ' + element;
+                });
+            }else{
+                result += ' ' + responseDetail;
             }
-            responseDetail.forEach(element => {
-                result += ' ' + element;
-            });
+
         }
         this.commonFunctions.snackbar(result);
     }

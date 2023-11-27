@@ -83,7 +83,8 @@
                             <!-- 图片容器 -->
                         </div>
                         <!-- 添加图片 -->
-                        <button class="mdui-btn mdui-btn-block mdui-text-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple"
+                        <button
+                            class="mdui-btn mdui-btn-block mdui-text-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple"
                             mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
                         <div class="mdui-dialog" id="dialogUploadImage">
                             <div class="mdui-dialog-title">上传图片</div>
@@ -124,29 +125,26 @@
 </div>
 
 {include file="public/footer"}
-<script src="{__A-assets__}/cardsEdit.js"></script>
+<script src="{__A-assets__}/js/cardsEdit.js"></script>
 {if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 <script src="{__A-assets__}/gt4/base.js"></script>
 {/if}
 <script>
+
+    let AddEntity = new Add();
+
     $(function () {
         //提交
-        const FunResultAdd = (CaptchaData) => {
-            //是否存在验证参数
-            var data;
-            if (CaptchaData) { data = CaptchaData; }
-
+        const getCardsAddValue = () => {
             //构建图片url数组并获取
             var jsonImageUrl = [];
             $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
                 jsonImageUrl.push($(this).attr('src'));
             });
             img = JSON.stringify(jsonImageUrl);
-            tag = JSON.stringify(checkChooseTagId);
-
+            tag = JSON.stringify(checkChooseTagId);//全局变量在cardsEdit.js中 待优化
             data = {
-                ...data,//合并验证参数
                 'content': $('#content').val(),
                 'woName': $('#woName').val(),
                 'taName': $('#taName').val(),
@@ -156,26 +154,17 @@
                 'tag': tag,
                 'img': img,
             };
-            var result = apiAjax0a(data, apiUrlCardsAdd, 'POST');
-            if (result['r']['ec'] == 200) {
-                mdui.snackbar({
-                    message: '添加成功',
-                    position: 'left-top'
-                });
-                jumpUrl('/index/cards/card/id/' + result.r.data.id);
-                return;
-            } else if (result['r']['ec'] == 201) {
-                jumpUrl('/index');
-                return;
-            }
+            return data;
         }
 
-        //验证
-        /*{if  $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}*/
-        geetest4('#submitAdd', FunResultAdd, '{$SystemConfig.class.geetest.DefSetGeetestId}');
-        /*{else /}*/
-        $('#submitAdd').click(function () { FunResultAdd() });
-        /*{/if}*/
+        //设置钩子
+        AddEntity.SetPostCardsAddHooks(undefined, (response) => {
+            //默认回调函数
+            this.commonFunctions.snackbar('添加成功，正在跳转');
+        });
+
+        //绑定按钮
+        AddEntity.BindPostCardsAdd('submitAdd', getCardsAddValue);
 
         //悬浮按钮
         $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
