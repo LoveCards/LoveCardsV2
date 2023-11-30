@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2023-11-27 09:48:39
+ * @LastEditTime: 2023-11-28 15:21:22
+ * @LastEditors: github.com/zhiguai
+ */
 class Add extends Base {
     constructor() {
         super();
@@ -60,6 +67,6 @@ class Add extends Base {
             'tag': resData.tag,
             'img': resData.img,
         };
-        this.RequestApiUrl('post', 'CardsAdd', 'PostCards', data);
+        this.RequestApiUrl('post', 'CardsAdd', 'PostCardsAdd', data);
     }
 }

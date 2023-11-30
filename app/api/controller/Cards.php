@@ -254,26 +254,26 @@ class Cards extends Common
         $resultCards = Db::table('cards')->where('id', $id);
         $resultCardsData = $resultCards->find();
         if (!$resultCardsData) {
-            return Export::Create([], 400, 'id不存在');
+            return Export::Create(null, 400, 'id不存在');
         }
 
         //获取good数据库对象
         $resultGood = Db::table('good');
         if ($resultGood->where('pid', $id)->where('ip', $ip)->find()) {
-            return Export::Create(['tip' => '请勿重复点赞'], 400, '点赞失败');
+            return Export::Create(['请勿重复点赞'], 400, '点赞失败');
         }
 
         //更新视图字段
         if (!$resultCards->inc('good')->update()) {
-            return Export::Create(['cards.good' => 'cards.good更新失败'], 400, '点赞失败');
+            return Export::Create(['cards.good更新失败'], 400, '点赞失败');
         };
 
         $data = ['aid' => '1', 'pid' => $id, 'ip' => $ip, 'time' => $time];
         if (!$resultGood->insert($data)) {
-            return Export::Create(['good' => 'good写入失败'], 400, '点赞失败');
+            return Export::Create(['good写入失败'], 400, '点赞失败');
         };
 
         //返回数据
-        return Export::Create(['Num' => $resultCardsData['good'] + 1], 200, '点赞成功');
+        return Export::Create([$resultCardsData['good'] + 1], 200);
     }
 }
