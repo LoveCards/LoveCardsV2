@@ -23,6 +23,7 @@ class Base {
             CardsEdit: '/api/cards/edit',//编辑卡片
             CardsDelete: '/api/cards/delete',//删除卡片
             CardsSetting: '/api/cards/setting',//模块设置
+            CardsGood: 'api/cards/good',//点赞
 
             TagsAdd: '/api/tags/add',//添加标签
             TagsEdit: '/api/tags/edit',//编辑标签
@@ -136,12 +137,12 @@ class Base {
         if (responseDetail?.length !== 0) {
             result = responseError + ':';
             //转键值数组报错为无序数组
-            if (Object.keys(responseDetail).length > 0 && typeof(responseDetail) != 'string') {
+            if (Object.keys(responseDetail).length > 0 && typeof (responseDetail) != 'string') {
                 responseDetail = Object.values(responseDetail);
                 responseDetail.forEach(element => {
                     result += ' ' + element;
                 });
-            }else{
+            } else {
                 result += ' ' + responseDetail;
             }
 
@@ -230,7 +231,7 @@ class Base {
      * @param {String} method //Axios的method
      * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找
      * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改
-     * @param {object} data //参数对象
+     * @param {Object} data //参数对象
      * @returns {Promise}
      */
     RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey, data) => {
