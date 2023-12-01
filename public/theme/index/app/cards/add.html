@@ -160,7 +160,8 @@
         //设置钩子
         AddEntity.SetPostCardsAddHooks(undefined, (response) => {
             //默认回调函数
-            this.commonFunctions.snackbar('添加成功，正在跳转');
+            AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
+            console.log(response);
         });
 
         //绑定按钮
