@@ -29,6 +29,7 @@ class Base {
             TagsEdit: '/api/tags/edit',//编辑标签
             TagsDelete: '/api/tags/delete',//删除标签
 
+            CommentsAdd: '/api/comments/add',//编辑评论
             CommentsEdit: '/api/comments/edit',//编辑评论
             CommentsDelete: '/api/comments/delete',//删除评论
 
@@ -130,6 +131,11 @@ class Base {
      * @param {Object} error 
      */
     AxiosErrorHandling = (error) => {
+        if (!(error.response?.data)) {
+            console.log('非请求错误，请检查代码！')
+            console.log(error);
+            return;
+        }
         const responseError = error.response.data.error;
         let responseDetail = error.response.data.detail;
         let result = responseError;
@@ -224,6 +230,26 @@ class Base {
             url: url,
             data: data
         });
+    }
+
+    /**
+     * RequestApiUrl设置Hooks
+     * @param {Object:{inti:Function,then:Function,catch:Function}} hooks 
+     * @param {Boolean} defultStatus
+     * @param {String} thisHooksKey 
+     */
+    SetRequestApiUrl = (hooks, defultStatus, thisHooksKey) => {
+        this.hooks[thisHooksKey] = {};
+        if (hooks?.inti) {
+            this.hooks[thisHooksKey].inti = hooks.inti;
+        }
+        if (hooks?.then) {
+            this.hooks[thisHooksKey].then = hooks.then;
+        }
+        if (hooks?.catch) {
+            this.hooks[thisHooksKey].catch = hooks.catch;
+        }
+        this.hooks[thisHooksKey].defultStatus = defultStatus;
     }
 
     /**

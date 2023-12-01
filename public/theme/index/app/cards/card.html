@@ -19,15 +19,23 @@
         <div class="mdui-col-xs-10">
             {if $CardData.model == 0}
             {if $CardData['woName']}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">{$CardData['woName']} 的表白卡</div>
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                {$CardData['woName']} 的表白卡</div>
             {else}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">匿名 的表白卡</div>
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                匿名 的表白卡</div>
             {/if}
             {else}
             {if $CardData['woName']}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">{$CardData['woName']} 的交流卡</div>
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                {$CardData['woName']} 的交流卡</div>
             {else}
-            <div class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">匿名 的交流卡</div>
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                匿名 的交流卡</div>
             {/if}
             {/if}
             <div class="mdui-typo-subheading-opacity">{$CardData['id']}# {$CardData['time']}</div>
@@ -43,7 +51,8 @@
     <!-- 卡片组件 -->
     {if $CardData.model == 0}
     <div class="mdui-p-t-2">
-        <div class="mdui-card mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-p-a-2">
+        <div
+            class="mdui-card mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-p-a-2">
             <div class="mdui-typo-headline-opacity mdui-text-left">
                 {if $CardData['woName']}
                 {$CardData['woName']}
@@ -143,7 +152,8 @@
                 </div>
 
                 <div class="mdui-card-actions">
-                    <button id="btnAddComments" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-float-right">
+                    <button id="btnAddComments"
+                        class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-float-right">
                         提交
                     </button>
                 </div>
@@ -177,10 +187,12 @@
             <!-- 分页按钮组件 -->
             <div class="mdui-p-t-2 mdui-text-center">
                 <div style="display: none;">{$CardCommentsListEasyPagingComponent|raw}</div>
-                <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+                <button id="pageFirst" type="button"
+                    class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
                     <i class="mdui-icon material-icons ">first_page</i>
                 </button>
-                <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+                <button id="pageLast" type="button"
+                    class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
                     <i class="mdui-icon material-icons">last_page</i>
                 </button>
             </div>
@@ -203,9 +215,11 @@
 {include file="public/footer"}
 {if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
-<script src="{__A-assets__}/gt4/base.js"></script>
 {/if}
 <script>
+
+    let CardEntity = new Card();
+
     $(function () {
         //初始化-分页组件
         pager();
@@ -216,34 +230,7 @@
             url: 'src'
         });
 
-        //请求-按钮-评论
-        const FunAddComments = (CaptchaData) => {
-            //是否存在验证参数
-            var data;
-            if (CaptchaData) { data = CaptchaData; }
-
-            var data = {
-                ...data,//合并验证参数
-                'cid': '{$CardData.id}',
-                'name': $('#addCommentsDataName').val(),
-                'content': $('#addCommentsDataContent').val(),
-            };
-            //提交数据
-            var result = apiAjax0(data, apiUrlCardsCommentsAdd, 'POST');
-            if (result) {
-                //附加功能
-                $.cookie('msg', '评论成功', { path: '/' });//写入提示
-                //刷新页面
-                jumpUrl('', 100);
-            }
-        };
-
-        //验证
-        /*{if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}*/
-        geetest4('#btnAddComments', FunAddComments, '{$SystemConfig.class.geetest.DefSetGeetestId}');
-        /*{else /}*/
-        $('#btnAddComments').click(function () { FunAddComments() });
-        /*{/if}*/
+        CardEntity.BindPostCommentsAdd('btnAddComments', Number('{$CardData.id}'), 'addCommentsDataName', 'addCommentsDataContent');
 
         //悬浮按钮
         $('#jsBtnGreen').click(function () {

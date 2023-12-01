@@ -99,27 +99,6 @@ const FunInitShareBtn = (t_Color) => {
 
 
 //点赞
-// $('.js-Btn-Update-CardsGood').click(function () {
-//     if ($(this).val() == 'false') {
-//         return;
-//     }
-//     data = {
-//         'id': $(this).val(),
-//     };
-//     //提交数据
-//     var result = apiAjax0(data, apiUrlCardsGood, 'POST');
-//     if (result) {
-//         //成功
-//         mdui.snackbar({
-//             message: '点赞成功',
-//             position: 'left-top'
-//         });
-//         $(this).attr('class', 'css-card-actions-good-1 mdui-btn mdui-float-right');
-//         $(this).val(false);
-//         $(this).html('<i class="mdui-icon material-icons">favorite</i>点赞' + result.data.Num);
-//         return;
-//     }
-// });
 
 //历史路由记录
 const historyUrl = () => {
