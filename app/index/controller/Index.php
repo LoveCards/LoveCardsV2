@@ -5,9 +5,11 @@ namespace app\index\controller;
 use think\facade\View;
 use think\facade\Db;
 
+use app\common\File;
 use app\common\Common;
 use app\common\Theme;
 use app\index\BaseController;
+use think\facade\Request;
 
 class Index extends BaseController
 {
@@ -60,6 +62,34 @@ class Index extends BaseController
 
         //输出模板
         return View::fetch($this->attrGReqView);
+    }
+
+    public function Customize()
+    {
+        //基础变量
+        View::assign([
+            'ViewTitle'  => '自定义页面',
+        ]);
+
+        //模拟
+        $tDef_ControllerName = Request::param('Controller');
+        Request::param('Action') ? $tDef_ActionName = Request::param('Action') : $tDef_ActionName = 'index';
+
+        $tDef_ViewControllerPath = dirname(dirname(dirname(dirname(__FILE__)))) . '/public/theme/' . $this->attrGDefNowThemeDirectoryName . '/app/' . $tDef_ControllerName . '/' . $tDef_ActionName;
+
+        //dd(File::read_file($tDef_ViewControllerPath . '.html'));
+        //不存在跳转404
+        if (!File::read_file($tDef_ViewControllerPath . '.html')) {
+            return redirect('/index/404');
+        };
+
+        //覆盖
+        if (File::read_file($tDef_ViewControllerPath . '.js')) {
+            $lDef_AssignData['ViewActionJS'] = true;
+        };
+
+        //输出模板
+        return View::fetch('app' . '/' . $tDef_ControllerName . '/' . $tDef_ActionName);
     }
 
     public function Error()
