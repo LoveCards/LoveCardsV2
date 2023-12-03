@@ -60,7 +60,10 @@ class BaseController extends Common
         $this->attrGReqIp = $this->mStringGetIP();
         $this->attrGDefNowThemeDirectoryPath = Theme::mArrayGetThemeDirectory()['P'];
         $this->attrGDefNowThemeDirectoryName = Theme::mArrayGetThemeDirectory()['N'];
-        $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . request()->action();
+        $this->attrGReqView = [
+            'html' => '/app/' . strtolower(request()->controller()) . '/' . request()->action(),
+            'js' => '/app/' . strtolower(request()->controller()) . '/' . ucfirst(request()->action()),
+        ];
         $this->attrGReqAppId = [
             'cards' => App::mArrayGetAppTableMapValue('cards')['data']
         ];
@@ -88,16 +91,16 @@ class BaseController extends Common
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
             'SystemConfig' => config::get('lovecards'),
-            'SystemControllerName' => strtolower(request()->controller()),//当前控制器名称
-            'SystemActionName' => request()->action(),//当前方法名
+            'SystemControllerName' => strtolower(request()->controller()), //当前控制器名称
+            'SystemActionName' => request()->action(), //当前方法名
             'ViewKeywords' => false,
             'ViewDescription' => false,
             'ViewActionJS' => false
         ];
 
         //JS文件校验引入
-        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/theme/' . $this->attrGDefNowThemeDirectoryName . $this->attrGReqView . '.js') ?
-            $lDef_AssignData['ViewActionJS'] = true :
+        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/theme/' . $this->attrGDefNowThemeDirectoryName . $this->attrGReqView['js'] . '.js') ?
+            $lDef_AssignData['ViewActionJS'] = $this->attrGReqView['js'] :
             0;
 
         //公共模板变量

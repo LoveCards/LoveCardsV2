@@ -47,7 +47,7 @@ class Cards extends BaseController
         ]);
 
         //输出模板
-        return View::fetch($this->attrGReqView);
+        return View::fetch($this->attrGReqView['html']);
     }
 
     // 卡片详情
@@ -116,7 +116,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGReqView);
+        return View::fetch($this->attrGReqView['html']);
     }
 
     // 添加卡片
@@ -140,7 +140,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGReqView);
+        return View::fetch($this->attrGReqView['html']);
     }
 
 
@@ -214,7 +214,7 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGReqView);
+        return View::fetch($this->attrGReqView['html']);
     }
 
     // TAG集合
@@ -256,6 +256,6 @@ class Cards extends BaseController
         ]);
 
         // 输出模板
-        return View::fetch($this->attrGReqView);
+        return View::fetch($this->attrGReqView['html']);
     }
 }
