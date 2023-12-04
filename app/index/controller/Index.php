@@ -61,7 +61,7 @@ class Index extends BaseController
         ]);
 
         //输出模板
-        return View::fetch($this->attrGReqView);
+        return View::fetch($this->attrGReqView['html']);
     }
 
     public function Customize()
