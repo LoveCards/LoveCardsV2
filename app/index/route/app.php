@@ -5,6 +5,9 @@ use think\facade\Route;
 //404
 Route::rule('/404', '/index/Index/error')->append(['code' => 404]);
 
+Route::rule('/index$', '/Index/index');
+Route::rule('/index/index', '/Index/index');
+
 Route::rule('/cards$', '/Cards/index');
 Route::rule('/cards/index', '/Cards/index');
 Route::rule('/cards/card', '/Cards/card');

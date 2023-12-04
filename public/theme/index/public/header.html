@@ -43,7 +43,7 @@
             mdui-theme-primary-{$ThemeConfig.ThemePrimary} 
             mdui-theme-accent-{$ThemeConfig.ThemeAccent} 
             {if $ThemeConfig.ThemeDark} mdui-theme-layout-dark{/if}
-            ">
+">
 
     <!-- 顶栏 -->
     <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
@@ -57,9 +57,31 @@
                 <i class="mdui-icon material-icons">color_lens</i>
             </span> -->
 
-            <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-dialog="{target: '#example-1'}">
+            <!-- <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
                 <i class="mdui-icon material-icons">account_circle</i>
+            </span> -->
+
+            <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
+                mdui-menu="{target: '#MenuComponent-HeaderAvatar',covered:false}">
+                <div style="margin: 6.6666%;">
+                    <img class="mdui-img-fluid mdui-img-circle"
+                        src="https://img.touxiangwu.com/zb_users/upload/2023/10/202310111697013402663164.jpg" />
+                </div>
             </span>
+            <ul id="MenuComponent-HeaderAvatar" class="mdui-menu">
+                <li class="mdui-menu-item">
+                    <a href="javascript:;" class="mdui-ripple">
+                        <i class="mdui-menu-item-icon mdui-icon material-icons">home</i>个人中心
+                    </a>
+                </li>
+                <!-- <li class="mdui-divider"></li> -->
+                <li class="mdui-menu-item">
+                    <a href="javascript:;" class="mdui-ripple">
+                        <i class="mdui-menu-item-icon mdui-icon material-icons">directions_run</i>退 出
+                    </a>
+                </li>
+            </ul>
+            
         </div>
         <div class="css-tab mdui-tab mdui-tab-centered mdui-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}"
             mdui-tab>
