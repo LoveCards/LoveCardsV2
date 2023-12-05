@@ -1,0 +1,129 @@
+{include file="public/userHeader" ViewTitle="用户首页"}
+
+<div class="mdui-p-t-4"></div>
+
+<!-- 页体 -->
+<div class="mdui-container">
+    <div class="mdui-row">
+        <div class="mdui-hidden-sm-down mdui-col-md-3">
+            <div class="mdui-card">
+                <div class="mdui-p-a-2">
+                    <div class="mdui-typo-title-opacity">
+                        导航
+                    </div>
+                    <ul class="mdui-list" mdui-collapse="{accordion: true}">
+
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon mdui-icon material-icons">home</i>
+                            <div class="mdui-list-item-content">Home</div>
+                        </li>
+
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
+                            <div class="mdui-list-item-content">Dashboard</div>
+                        </li>
+
+                        <li class="mdui-collapse-item mdui-collapse-item-open">
+                            <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                                <i class="mdui-list-item-icon mdui-icon material-icons">people</i>
+                                <div class="mdui-list-item-content">Audience</div>
+                                <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                            </div>
+                            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                                <li class="mdui-list-item mdui-ripple">Overview</li>
+                                <li class="mdui-list-item mdui-ripple">Language</li>
+                                <li class="mdui-list-item mdui-ripple">Location</li>
+                                <li class="mdui-list-item mdui-ripple">New vs Returning</li>
+                            </ul>
+                        </li>
+
+                        <li class="mdui-collapse-item">
+                            <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                                <i class="mdui-list-item-icon mdui-icon material-icons">device_hub</i>
+                                <div class="mdui-list-item-content">Acquisition</div>
+                                <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                            </div>
+                            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                                <li class="mdui-list-item mdui-ripple">Overview</li>
+                                <li class="mdui-list-item mdui-ripple">All Traffic</li>
+                                <li class="mdui-list-item mdui-ripple">Direct Traffic</li>
+                                <li class="mdui-list-item mdui-ripple">Search Overview</li>
+                            </ul>
+                        </li>
+
+                        <li class="mdui-collapse-item">
+                            <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                                <i class="mdui-list-item-icon mdui-icon material-icons">touch_app</i>
+                                <div class="mdui-list-item-content">Behavior</div>
+                                <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                            </div>
+                            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                                <li class="mdui-list-item mdui-ripple">Overview</li>
+                                <li class="mdui-list-item mdui-ripple">All Pages</li>
+                                <li class="mdui-list-item mdui-ripple">Landing Pages</li>
+                                <li class="mdui-list-item mdui-ripple">Exit Pages</li>
+                            </ul>
+                        </li>
+
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon mdui-icon material-icons">shopping_cart</i>
+                            <div class="mdui-list-item-content">Ecommerce</div>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="mdui-col-xs-12 mdui-col-md-9">
+            <div class="mdui-card">
+                <div class="mdui-p-a-2">
+                    <div class="mdui-typo-title-opacity">
+                        内容
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="app">
+    <!-- <div v-for="item in items">
+        <div class="mdui-card">
+            <div class="mdui-card-media">
+                <img src="card.jpg" />
+                <div class="mdui-card-media-covered">
+                    <div class="mdui-card-primary">
+                        <div class="mdui-card-primary-title">{{ item.message }}</div>
+                        <div class="mdui-card-primary-subtitle">Subtitle</div>
+                    </div>
+                    <div class="mdui-card-actions">
+                        <button class="mdui-btn mdui-ripple mdui-ripple-white">action 1</button>
+                        <button class="mdui-btn mdui-ripple mdui-ripple-white">action 2</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+{include file="public/userFooter"}
+
+<script>
+    // const { createApp, ref } = Vue
+
+    // createApp({
+    //     setup() {
+    //         const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+    //         return {
+    //             items
+    //         }
+    //     }
+    // }).mount('#app')
+</script>
+
+</body>
+
+</html>

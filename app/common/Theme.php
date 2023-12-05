@@ -84,7 +84,7 @@ class Theme extends Facade
     {
         $path = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $TemplateDirectory . '/config.php';
         if (is_file($path)) {
-            include $path;
+            $Config = include $path;
             $require = array();
             if ($Original) {
                 $require = $Config;
