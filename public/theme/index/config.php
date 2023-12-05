@@ -1,5 +1,5 @@
 <?php
-$Config = [
+return [
     //选择格式配置
     'Select' => [
         //推荐页面公告卡开关
@@ -143,5 +143,17 @@ $Config = [
             'Introduction' => '支持HTML代码，请勿插入来源不明的JS代码',
             'Default' => env('ThemeConfig.TextThemeNotifyContent', '%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0LoveCardsV2%E7%9A%84%E9%A2%86%E5%9F%9F%EF%BC%8C%E5%9C%A8%E8%BF%99%E9%87%8C%E6%82%A8%E5%8F%AF%E4%BB%A5%E7%95%85%E6%89%80%E6%AC%B2%E8%A8%80%EF%BC%81')
         ],
+    ],
+
+    //鉴权
+    'AuthPage' => [],
+
+    //分配数据
+    'AssignData' => [
+        //页面
+        'index/index' => [
+            'CardsTagsListJson',
+            'CardsTagsList'
+        ]
     ]
 ];
