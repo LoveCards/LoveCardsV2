@@ -107,13 +107,20 @@ class BaseController extends Common
         View::assign($lDef_AssignData);
     }
 
-    protected function mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
+
+
+
+
+
+    protected function mObjectEasyAssignCards($lDef_ListName, $lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
     {
         //赋值Cards相关变量;
         View::assign([
-            'CardsList'  => $lDef_CardsList,
-            'CardsListEasyPagingComponent'  => $tDef_CardsListEasyPagingComponent,
-            'CardsListMax'  => $tDef_CardsListMax
+            $lDef_ListName => [
+                'CardsList'  => $lDef_CardsList,
+                'CardsListEasyPagingComponent'  => $tDef_CardsListEasyPagingComponent,
+                'CardsListMax'  => $tDef_CardsListMax
+            ]
         ]);
     }
 
