@@ -21,15 +21,16 @@ class Users extends Model
     // 设置字段信息
     protected $schema = [
         'id' => 'int',
-        'number' => 'int',
-        'username' => 'string',
-        'status' => 'string',
-        'password' => 'string',
-        'phone' => 'string',
-        'email' => 'string',
+        'number' => 'varchar(32)',
+        'avatar' => 'varchar(255)',
+        'email' => 'varchar(320)',
+        'phone' => 'varchar(32)',
+        'username' => 'varchar(255)',
+        'password' => 'varchar(255)',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'status' => 'int(11)',
     ];
 
     // 默认排除字段
@@ -55,20 +56,30 @@ class Users extends Model
             ->find();
 
         if (!$result) {
-            return Common::FunctionOutput('用户不存在', false);
+            return Common::mArrayEasyReturnStruct('用户不存在', false);
         }
 
         // 验证密码是否匹配
         if (!password_verify($password, $result['password'])) {
-            return Common::FunctionOutput('密码不匹配', false, $result->toArray());
+            return Common::mArrayEasyReturnStruct('密码不匹配', false, $result->toArray());
         }
 
         // 密码匹配，返回用户信息
-        return Common::FunctionOutput(null, true, $result->toArray());
+        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
     }
 
-    //注册
-    public static function Register($number, $username, $email, $phone, $password): array
+    /**
+     * 添加用户
+     *
+     * @param string $number
+     * @param string $username
+     * @param string $email
+     * @param string $phone
+     * @param string $password
+     * @param int $status
+     * @return array
+     */
+    public static function Register($number, $username, $email, $phone, $password, $status = 0): array
     {
         if ($password != '') {
             if ($email != '') {
@@ -77,68 +88,73 @@ class Users extends Model
                 $result = self::where('phone', $phone)->find();
             }
             if ($result) {
-                return Common::FunctionOutput('邮箱或手机号已存在', false);
+                return Common::mArrayEasyReturnStruct('邮箱或手机号已存在', false);
             } else {
                 $data = array(
                     'number' => $number,
                     'username' => $username,
                     'email' => $email,
                     'phone' => $phone,
+                    'status' => $status,
                 );
             }
         } else {
-            return Common::FunctionOutput('密码不得为空', false);
+            return Common::mArrayEasyReturnStruct('密码不得为空', false);
         }
 
         $data['password'] = password_hash($password, PASSWORD_DEFAULT);
         $result = self::create($data);
 
         if (!$result) {
-            return Common::FunctionOutput('数据插入失败', false);
+            return Common::mArrayEasyReturnStruct('数据插入失败', false);
         }
 
-        return Common::FunctionOutput(null, true, $result->id);
+        return Common::mArrayEasyReturnStruct(null, true, $result->id);
     }
 
-    //读取列表
+    /**
+     * 读取用户列表
+     *
+     * @return void
+     */
     public static function Index()
     {
         $result = self::select();
         if ($result) {
-            return Common::FunctionOutput(null, true, $result->toArray());
+            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
-        return Common::FunctionOutput('列表查询失败', false);
+        return Common::mArrayEasyReturnStruct('列表查询失败', false);
     }
 
-    //读取指定行
+    /**
+     * 读取指定ID行
+     *
+     * @param int $id
+     * @return void
+     */
     public static function Get($id)
     {
         $withoutField = self::$withoutField;
         $withoutField[] = 'password';
         $result = self::where('id', $id)->withoutField($withoutField)->find();
         if ($result) {
-            return Common::FunctionOutput(null, true, $result);
+            return Common::mArrayEasyReturnStruct(null, true, $result);
         }
-        return Common::FunctionOutput('项目查询失败', false);
+        return Common::mArrayEasyReturnStruct('项目查询失败', false);
     }
 
-    //覆盖行
-    public static function Put($id, $data)
-    {
-        $result = self::update($id, $data);
-        if ($result) {
-            return Common::FunctionOutput(null, true, $result);
-        }
-        return Common::FunctionOutput('项目更新失败', false);
-    }
-
-    //删除行
+    /**
+     * 删除指定ID行
+     *
+     * @param int $id
+     * @return void
+     */
     public static function Del($id)
     {
         $result = self::delete($id);
         if ($result) {
-            return Common::FunctionOutput(null, true, $result);
+            return Common::mArrayEasyReturnStruct(null, true, $result);
         }
-        return Common::FunctionOutput('项目删除失败', false);
+        return Common::mArrayEasyReturnStruct('项目删除失败', false);
     }
 }
