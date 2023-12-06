@@ -92,7 +92,14 @@ class Common extends Facade
         return $ip[$type];
     }
 
-    //格式化返回
+    /**
+     * 格式化返回
+     *
+     * @param string|null $msg
+     * @param boolean $status
+     * @param object $data
+     * @return array
+     */
     protected static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
     {
         return [
@@ -100,5 +107,33 @@ class Common extends Facade
             'msg' => $msg,
             'data' => $data,
         ];
+    }
+
+
+    /**
+     * 验证字符串是邮箱还是手机号
+     *
+     * @param string $input
+     * @return boolean|string
+     */
+    protected static function  mBoolEasyIsPhoneNumberOrEmail($input): string
+    {
+        // 去除字符串首尾的空格
+        $input = trim($input);
+
+        // 使用正则表达式检查是否是手机号
+        $phoneNumberPattern = '/^\d{11}$/';
+        if (preg_match($phoneNumberPattern, $input)) {
+            return 'phone';
+        }
+
+        // 使用正则表达式检查是否是邮箱
+        $emailPattern = '/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/';
+        if (preg_match($emailPattern, $input)) {
+            return 'email';
+        }
+
+        // 如果都不匹配，则返回未知
+        return 'other';
     }
 }

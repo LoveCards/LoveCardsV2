@@ -31,8 +31,8 @@ class Users extends Validate
     protected $message  =   [
         'status.require' => '状态不得为空',
 
-        'account.require' => '账户不得为空',
-        'account.unique' => '账户已存在',
+        'number.require' => '账号不得为空',
+        'number.unique' => '账号已存在',
 
         'email.require' => '邮箱不得为空',
         'email.email' => '邮箱格式不正确',
