@@ -23,7 +23,7 @@ class Base {
             CardsEdit: '/api/cards/edit',//编辑卡片
             CardsDelete: '/api/cards/delete',//删除卡片
             CardsSetting: '/api/cards/setting',//模块设置
-            CardsGood: 'api/cards/good',//点赞
+            CardsGood: '/api/cards/good',//点赞
 
             TagsAdd: '/api/tags/add',//添加标签
             TagsEdit: '/api/tags/edit',//编辑标签
