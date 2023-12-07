@@ -146,14 +146,33 @@ return [
     ],
 
     //鉴权
-    'AuthPage' => [],
+    'PageAuth' => [],
 
     //分配数据
-    'AssignData' => [
+    'PageAssignData' => [
         //页面
         'index/index' => [
-            'CardsTagsListJson',
-            'CardsTagsList'
+            'HotCardList',
+            'TagList',
+        ],
+        'cards/index' => [
+            'CommonCardList',
+            'TagList',
+        ],
+        'cards/search' => [
+            'SearchCardList',
+            'TagList',
+        ],
+        'cards/tag' => [
+            'TagCardList',
+            'TagList',
+        ],
+        'cards/card' => [
+            'Card',
+            'TagList',
+        ],
+        'cards/add' => [
+            'TagList',
         ]
     ]
 ];

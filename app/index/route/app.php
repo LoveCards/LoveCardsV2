@@ -15,6 +15,6 @@ Route::rule('/404', '/index/Index/error')->append(['code' => 404]);
 // Route::rule('/cards/add', '/Cards/add');
 // Route::rule('/cards/tag', '/Cards/tag');
 
-//自定义模板
+//路由拦截
 Route::get('/[:Controller]/[:Action]', '/index/Index/Customize');
 

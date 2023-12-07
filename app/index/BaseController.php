@@ -40,11 +40,8 @@ class BaseController extends Common
     var $attrGReqTime;
     var $attrGReqIp;
     var $attrGReqView;
+    var $attrGReqContext;
     var $attrGReqAppId;
-
-    //获取模板路径
-    var $attrGDefNowThemeDirectoryPath;
-    var $attrGDefNowThemeDirectoryName;
 
     function __construct()
     {
@@ -58,18 +55,22 @@ class BaseController extends Common
         //基础变量
         $this->attrGReqTime = date('Y-m-d H:i:s');
         $this->attrGReqIp = $this->mStringGetIP();
-        $this->attrGDefNowThemeDirectoryPath = Theme::mArrayGetThemeDirectory()['P'];
-        $this->attrGDefNowThemeDirectoryName = Theme::mArrayGetThemeDirectory()['N'];
         $this->attrGReqView = [
-            'html' => '/app/' . strtolower(request()->controller()) . '/' . request()->action(),
-            'js' => '/app/' . strtolower(request()->controller()) . '/' . ucfirst(request()->action()),
+            'Theme' => [
+                'DirectoryPath' => Theme::mArrayGetThemeDirectory()['P'],
+                'DirectoryName' => Theme::mArrayGetThemeDirectory()['N']
+            ]
         ];
         $this->attrGReqAppId = [
             'cards' => App::mArrayGetAppTableMapValue('cards')['data']
         ];
 
+        //获取主题配置
+        $lRes_ThemeConfig = Theme::mResultGetThemeConfig($this->attrGReqView['Theme']['DirectoryName']);
+        //获取主题原配置
+        $this->attrGReqView['Theme']['Config'] = Theme::mResultGetThemeConfig($this->attrGReqView['Theme']['DirectoryName'], true);
+
         //主题dark模式支持
-        $lRes_ThemeConfig = Theme::mResultGetThemeConfig($this->attrGDefNowThemeDirectoryName);
         //dd(cookie('ThemeDark'));
         if (array_key_exists('ThemeDark', $lRes_ThemeConfig)) {
             if (cookie('ThemeDark') != null) {
@@ -82,55 +83,50 @@ class BaseController extends Common
         }
 
         //根据主题覆盖模板配置
-        Theme::mObjectEasySetViewConfig($this->attrGDefNowThemeDirectoryName);
+        Theme::mObjectEasySetViewConfig($this->attrGReqView['Theme']['DirectoryName']);
 
         $lDef_AssignData = [
-            'ThemeUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName, //模板路径
-            'ThemeAssetsUrlPath' => '/theme/' . $this->attrGDefNowThemeDirectoryName . '/assets', //模板路径
+            'ThemeUrlPath' => '/theme/' . $this->attrGReqView['Theme']['DirectoryName'], //模板路径
+            'ThemeAssetsUrlPath' => '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/assets', //模板路径
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
+
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
+
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
             'SystemConfig' => config::get('lovecards'),
             'SystemControllerName' => strtolower(request()->controller()), //当前控制器名称
             'SystemActionName' => request()->action(), //当前方法名
+
             'ViewKeywords' => false,
             'ViewDescription' => false,
             'ViewActionJS' => false
         ];
-
-        //JS文件校验引入
-        File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/theme/' . $this->attrGDefNowThemeDirectoryName . $this->attrGReqView['js'] . '.js') ?
-            $lDef_AssignData['ViewActionJS'] = $this->attrGReqView['js'] :
-            0;
-
         //公共模板变量
         View::assign($lDef_AssignData);
     }
 
-
-
-
-
-
-    protected function mObjectEasyAssignCards($lDef_ListName, $lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
+    protected function mArrayEasyGetAssignCardList($lDef_ListName, $lDef_CardList, $tDef_CardListEasyPagingComponent = null, $tDef_CardListMax = null)
     {
+        $tDef_CardListEasyPagingComponent != null ?
+            $lDef_ArrayData['CardListEasyPagingComponent'] = $tDef_CardListEasyPagingComponent :
+            $lDef_ArrayData['CardListEasyPagingComponent'] = null;
+
+        $tDef_CardListMax != null ? $lDef_ArrayData['CardListMax'] = $tDef_CardListMax :
+            $lDef_ArrayData['CardListMax'] = null;
+
+        $lDef_ArrayData['CardList'] = $lDef_CardList;
+
         //赋值Cards相关变量;
-        View::assign([
-            $lDef_ListName => [
-                'CardsList'  => $lDef_CardsList,
-                'CardsListEasyPagingComponent'  => $tDef_CardsListEasyPagingComponent,
-                'CardsListMax'  => $tDef_CardsListMax
-            ]
-        ]);
+        return $lDef_ArrayData;
     }
 
-    protected function mObjectEasyGetAndAssignCardsTags()
+    protected function mArrayEasyGetAssignCardTagList()
     {
         //获取并赋值CardsTag相关变量
         $lDef_Result = Db::table('tags')->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->select()->toArray();
-        View::assign([
+        return [
             'CardsTagsListJson' => json_encode($lDef_Result),
             'CardsTagsList' => $lDef_Result
-        ]);
+        ];
     }
 }

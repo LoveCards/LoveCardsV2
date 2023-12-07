@@ -42,7 +42,7 @@ Route::group('', function () {
     Route::post('system/geetest', 'System/Geetest');
 })->middleware([JwtAuthCheck::class, AdminPowerCheck::class]);
 
-//防抖+极验鉴权
+//防抖+极验鉴权(内置开关)
 Route::group('', function () {
     Route::post('cards/add', 'Cards/Add');
     Route::post('comments/add', 'Comments/Add');

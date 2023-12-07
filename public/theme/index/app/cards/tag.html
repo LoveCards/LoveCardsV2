@@ -7,7 +7,7 @@
         <div class="mdui-typo-headline-opacity">
             关于
             <div class="mdui-chip">
-                <span class="mdui-chip-title">{$ViewTagName}</span>
+                <span class="mdui-chip-title">{$TagCardList.ViewTagName}</span>
             </div> 的合集
         </div>
     </div>
@@ -17,7 +17,7 @@
 
         <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
             <!-- 卡片循环 -->
-            {include file="public/cardsList"}
+            {include file="public/cardsList" CardList="TagCardList"}
             <!-- 分享弹窗 -->
             {include file="public/share"}
 
