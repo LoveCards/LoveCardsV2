@@ -17,10 +17,6 @@ class Index extends BaseController
 {
     public function Customize()
     {
-        //基础变量
-        View::assign([
-            'ViewTitle'  => '自定义页面',
-        ]);
         //模拟
         Request::param('Controller') ? $tDef_ControllerName = Request::param('Controller') : $tDef_ControllerName = 'index';
         Request::param('Action') ? $tDef_ActionName = Request::param('Action') : $tDef_ActionName = 'index';
@@ -32,10 +28,10 @@ class Index extends BaseController
         };
         //覆盖
         if (File::read_file($tDef_ViewControllerPath . '.js')) {
-            $lDef_AssignData['ViewActionJS'] = true;
+            $this->attrGReqAssignArray['ViewActionJS'] = '/app/' . lcfirst($tDef_ControllerName) . '/' . $tDef_ActionName;
         };
 
-        //加载主题变量
+        //加载主题指定方法 变量
         function test($tDef_ControllerName, $tDef_ActionName, $lDef_ThemeConfig)
         {
             $lDef_ResultArray = [];
@@ -77,7 +73,9 @@ class Index extends BaseController
             }
         }
 
-        // dd(View::engine());
+        //基础变量
+        $this->attrGReqAssignArray['ViewTitle']  = '自定义页面';
+        View::assign($this->attrGReqAssignArray);
 
         //输出模板
         return View::fetch('app' . '/' . $tDef_ControllerName . '/' . $tDef_ActionName);

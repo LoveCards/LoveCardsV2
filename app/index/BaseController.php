@@ -42,6 +42,7 @@ class BaseController extends Common
     var $attrGReqView;
     var $attrGReqContext;
     var $attrGReqAppId;
+    var $attrGReqAssignArray;
 
     function __construct()
     {
@@ -85,7 +86,8 @@ class BaseController extends Common
         //根据主题覆盖模板配置
         Theme::mObjectEasySetViewConfig($this->attrGReqView['Theme']['DirectoryName']);
 
-        $lDef_AssignData = [
+        //公共模板变量
+        $this->attrGReqAssignArray = [
             'ThemeUrlPath' => '/theme/' . $this->attrGReqView['Theme']['DirectoryName'], //模板路径
             'ThemeAssetsUrlPath' => '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/assets', //模板路径
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
@@ -101,8 +103,6 @@ class BaseController extends Common
             'ViewDescription' => false,
             'ViewActionJS' => false
         ];
-        //公共模板变量
-        View::assign($lDef_AssignData);
     }
 
     protected function mArrayEasyGetAssignCardList($lDef_ListName, $lDef_CardList, $tDef_CardListEasyPagingComponent = null, $tDef_CardListMax = null)
