@@ -26,26 +26,41 @@ class File extends Facade
         return true;
     }
 
-
-    /*
-		@function  		读取文件内容
-		
-		@var:$filename  文件名
-			
-		@return:   		文件内容
-	*/
-
-    protected static function read_file($filename)
+    /**
+     * 读取文件内容
+     *
+     * @param string $filename 
+     * @param boolean $ignoreCase 忽略大小写
+     * @return string
+     */
+    protected static function read_file($filename, $ignoreCase = false): string
     {
         $content = '';
-        if (function_exists('file_get_contents')) {
-            @$content = file_get_contents($filename);
+
+        if (!$ignoreCase) {
+            if (function_exists('file_get_contents')) {
+                @$content = file_get_contents($filename);
+            } else {
+                if (@$fp = fopen($filename, 'r')) {
+                    @$content = fread($fp, filesize($filename));
+                    @fclose($fp);
+                }
+            }
         } else {
-            if (@$fp = fopen($filename, 'r')) {
-                @$content = fread($fp, filesize($filename));
-                @fclose($fp);
+            $fileList = glob($filename, GLOB_NOCHECK);
+            if ($fileList !== false && count($fileList) > 0) {
+                $filename = $fileList[0];
+                if (function_exists('file_get_contents')) {
+                    @$content = file_get_contents($filename);
+                } else {
+                    if (@$fp = fopen($filename, 'r')) {
+                        @$content = fread($fp, filesize($filename));
+                        @fclose($fp);
+                    }
+                }
             }
         }
+
         return $content;
     }
 
