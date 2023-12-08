@@ -16,5 +16,5 @@ Route::rule('/404', '/index/Index/error')->append(['code' => 404]);
 // Route::rule('/cards/tag', '/Cards/tag');
 
 //路由拦截
-Route::get('/[:Controller]/[:Action]', '/index/Index/Customize');
+Route::get('/[:Level]', '/index/Index/Customize');
 
