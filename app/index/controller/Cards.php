@@ -226,6 +226,7 @@ class Cards extends BaseController
     {
         // 整理参数
         $tReq_ParamId = Request::param('id');
+        //dd($tReq_ParamId);
 
         $tDef_CommentsMax = 6; // 每页个数
         $tDef_ListName = 'Card';
@@ -256,6 +257,12 @@ class Cards extends BaseController
                 ->paginate($tDef_CommentsMax, true);
             $tDef_CommentsEasyPagingComponent = $lDef_Result->render();
             $tDef_Comments = $lDef_Result->items();
+        } else {
+            $tDef_CommentsEasyPagingComponent = [];
+            $tDef_Comments = [];
+            $tDef_CommentsMax = [];
+            $lDef_CardData = [];
+            $tDef_ImgData = [];
         }
 
         // 分配变量
@@ -265,8 +272,8 @@ class Cards extends BaseController
         $lDef_AssignData['CardData'] =  $lDef_CardData;
         $lDef_AssignData['CardImgList'] = $tDef_ImgData;
 
-        !$lDef_CardData['woName'] ? $lDef_CardData['woName'] = '匿名' : 0;
         if ($lDef_CardData) {
+            !$lDef_CardData['woName'] ? $lDef_CardData['woName'] = '匿名' : 0;
             $lDef_AssignData['ViewTitle'] =  $lDef_CardData['woName'] . '的卡片';
             $lDef_AssignData['ViewDescription'] =  $lDef_CardData['woName'] . '表白' .  $lDef_CardData['woName'] . '说' .  $lDef_CardData['content'];
             $lDef_AssignData['ViewKeywords'] =  $lDef_CardData['woName'] . ',' .  $lDef_CardData['taName'] . ',LoveCards,表白卡';
