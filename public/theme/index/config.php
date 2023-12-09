@@ -151,27 +151,27 @@ return [
     //分配数据
     'PageAssignData' => [
         //页面
-        'index/index' => [
+        '/index/index' => [
             'HotCardList',
             'TagList',
         ],
-        'cards/index' => [
+        '/cards/index' => [
             'CommonCardList',
             'TagList',
         ],
-        'cards/search' => [
+        '/cards/search' => [
             'SearchCardList',
             'TagList',
         ],
-        'cards/tag' => [
+        '/cards/tag' => [
             'TagCardList',
             'TagList',
         ],
-        'cards/card' => [
+        '/cards/card' => [
             'Card',
             'TagList',
         ],
-        'cards/add' => [
+        '/cards/add' => [
             'TagList',
         ]
     ]

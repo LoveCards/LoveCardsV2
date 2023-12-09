@@ -1,16 +1,19 @@
 {include file="public/header" ViewTitle="$ViewTitle"}
 
+{if $Card.CardData != []}
 <!-- 页体 -->
 <div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $Card.CardData.model == 0}2{else}1{/if}" class="mdui-container">
 
     <div class="mdui-row mdui-p-t-2">
         <div style="display: none;" id="CardDataTitle">
             {if $Card.CardData.model == 0}
-            {if $Card.CardData['woName']}[{$Card.CardData['woName']} 的表白卡]-{$Card.CardData['woName']} 表白 {$Card.CardData['taName']}
+            {if $Card.CardData['woName']}[{$Card.CardData['woName']} 的表白卡]-{$Card.CardData['woName']} 表白
+            {$Card.CardData['taName']}
             {else}[匿名 的表白卡]-对 {$Card.CardData['taName']} 说
             {/if}
             {else}
-            {if $Card.CardData['woName']}[{$Card.CardData['woName']} 的交流卡]-{$Card.CardData['woName']} 对 {$Card.CardData['taName']} 说
+            {if $Card.CardData['woName']}[{$Card.CardData['woName']} 的交流卡]-{$Card.CardData['woName']} 对
+            {$Card.CardData['taName']} 说
             {else}[匿名 的交流卡]-对 {$Card.CardData['taName']} 说
             {/if}
             {/if}
@@ -211,7 +214,6 @@
 
 </div>
 
-{include file="public/footer"}
 {if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 {/if}
