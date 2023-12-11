@@ -1,6 +1,6 @@
 <?php
 
-namespace app\index\controller;
+namespace app\index\method;
 
 use think\facade\View;
 use think\facade\Db;

@@ -41,7 +41,7 @@ class UserAuth
      * Account检查类型
      *
      * @param string $account
-     * @return array
+     * @return array|string
      */
     protected function mArrayEasyCheckAccountType($account, $defult = ''): array
     {
@@ -83,7 +83,7 @@ class UserAuth
         $code = Request::param('code');
 
         //判断是手机号还是邮箱
-        $account = $this->mArrayEasyCheckAccountType($account);
+        $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //验证器
         try {
@@ -91,9 +91,9 @@ class UserAuth
                 ->scene('login')
                 ->remove(['email', 'username'])
                 ->check([
-                    'phone'  => $account['phone'],
-                    'email' => $account['email'],
-                    'username' => $account['username'],
+                    'phone'  => $accountArray['phone'],
+                    'email' => $accountArray['email'],
+                    'username' => $accountArray['username'],
                     'password' => $password,
                 ]);
         } catch (ValidateException $e) {
@@ -133,15 +133,20 @@ class UserAuth
         $number = $this->generateNumber();
 
         //判断是手机号还是邮箱
-        $account = $this->mArrayEasyCheckAccountType($account);
+        $accountArray = $this->mArrayEasyCheckAccountType($account);
+
+        //验证码校验
+        if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
+            return Export::Create(['验证码错误'], 401, '注册失败');
+        };
 
         //验证器
         try {
             validate(UsersValidate::class)
                 ->scene('register')
                 ->check([
-                    'phone'  => $account['phone'],
-                    'email' => $account['email'],
+                    'phone'  => $accountArray['phone'],
+                    'email' => $accountArray['email'],
                     'username' => $username,
                     'password' => $password,
                 ]);
@@ -149,11 +154,6 @@ class UserAuth
             // 验证失败 输出错误信息
             return Export::Create([$e->getError()], 401, '注册失败');
         }
-
-        //验证码校验
-        if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
-            return Export::Create(['验证码错误'], 401, '注册失败');
-        };
 
         //写入数据
         $result = $userModel->Register($number, $username, $account['email'], $account['phone'], $password);

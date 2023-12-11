@@ -67,7 +67,7 @@ class CheckClass
     /**
      * 权限校验 失败返回重定向对象
      *
-     * @return void|object
+     * @return void($this->attrLDefAdminAllData)|object
      */
     public function mArrayEasyVerifyPower()
     {
