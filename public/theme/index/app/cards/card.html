@@ -1,6 +1,5 @@
 {include file="public/header" ViewTitle="$Card.ViewTitle"}
 
-{if $Card.CardData != []}
 <!-- 页体 -->
 <div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $Card.CardData.model == 0}2{else}1{/if}" class="mdui-container">
 
@@ -214,6 +213,7 @@
 
 </div>
 
+{include file="public/footer"}
 {if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
 {/if}

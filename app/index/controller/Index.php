@@ -21,7 +21,7 @@ class Index extends BaseController
      * 从访问URL中提取出可能的AppPath
      *
      * @param string $tDef_AppPath 主题的APP路径
-     * @return array
+     * @return array 返回所有可能路径，从最短到最长无序排列
      */
     protected function mArrayEasyGetUrlAppPath($tDef_AppPath): array
     {
@@ -67,7 +67,7 @@ class Index extends BaseController
      * 从配置数组中匹配方法与鉴权
      * @param string $tDef_AppPath
      * @param array $lDef_ThemeConfig
-     * @return array
+     * @return array ['PageAuth', 'PageAssignData']
      */
     protected function mArrayMatchThemeAppConfig($tDef_AppPath, $lDef_ThemeConfig): array
     {
@@ -110,6 +110,8 @@ class Index extends BaseController
         return $lDef_ResultArray;
     }
 
+
+
     public function Customize()
     {
 
@@ -122,18 +124,22 @@ class Index extends BaseController
         // 获取主题匹配JS路径
         $lDef_PageJsPath = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app' . $tDef_AppPath;
         if (File::read_file($lDef_PageJsPath . '.js', true)) {
-            $this->attrGReqAssignArray['ViewActionJS'] = '/app/' . strtolower($lDef_PageJsPath);
+            $this->attrGReqAssignArray['ViewActionJS'] = '/app' . $tDef_AppPath;
         };
+        //dd($tDef_AppPath);
 
-        //dd($tDef_AppPath);
         //加载app指定方法 变量
-        //dd($tDef_AppPath);
         $tDef_AppConfigArray = $this->mArrayMatchThemeAppConfig($tDef_AppPath, $this->attrGReqView['Theme']['Config']);
-        //dd($tDef_);
         if ($tDef_AppConfigArray['PageAssignData']) {
-            foreach ($tDef_AppConfigArray['PageAssignData'] as $key => $value) {
-                $test = new Cards;
-                $test->$value();
+            foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
+                $tDef_NewExample = new Cards;
+                $tDef_NewExample->$value();
+            }
+        }
+        if ($tDef_AppConfigArray['PageAuth']) {
+            foreach ($tDef_AppConfigArray['PageAuth'] as $value) {
+                $tDef_NewExample = new Cards;
+                $tDef_NewExample->$value();
             }
         }
 

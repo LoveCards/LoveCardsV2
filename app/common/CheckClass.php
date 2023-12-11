@@ -1,5 +1,5 @@
 <?php
-
+//该类仅供中间件使用
 namespace app\common;
 
 use app\common\Common;
@@ -16,25 +16,42 @@ class CheckClass
     var $attrLDefAdminAllData;
 
     //API使用
+
+    /**
+     * 从JwtAuthCheck的中间件中取出Jwt解码用户数据
+     * 通过解码出的AID查询admin_id行的数据
+     *
+     * @return void|object 
+     */
     public function mObjectGetNowAdminAllData()
     {
         $TDef_JwtData = request()->JwtData;
         //验证身份并返回数据
         $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid'])['data'];
-        if (!empty($this->attrLDefAdminAllData[0])) {
-            return Export::mObjectEasyCreate([], $this->attrLDefAdminAllData[1], $this->attrLDefAdminAllData[0]);
+        if (!$this->attrLDefAdminAllData['status']) {
+            return Export::Create(null, 401, $this->attrLDefAdminAllData['msg']);
         }
     }
 
+    /**
+     * 权限校验 失败返回API对象
+     *
+     * @return void|object
+     */
     public function mObjectEasyVerifyPower()
     {
         //权限验证
         if ($this->attrLDefAdminAllData['power'] != 0) {
-            return Export::mObjectEasyCreate(['power' => 1], '权限不足', 401);
+            return Export::Create(['power' => 1], 401, '权限不足');
         }
     }
 
-    //后端渲染使用
+    /**
+     * 从Cookie中取出Token
+     * 验证失败并返回重定向对象
+     *
+     * @return void|object
+     */
     public function mArrayGetNowAdminAllData()
     {
         //通过Cookie的TOKEN验证身份并返回数据
@@ -47,6 +64,11 @@ class CheckClass
         $this->attrLDefAdminAllData = $TDef_AdminAllData['data'];
     }
 
+    /**
+     * 权限校验 失败返回重定向对象
+     *
+     * @return void|object
+     */
     public function mArrayEasyVerifyPower()
     {
         //权限验证
