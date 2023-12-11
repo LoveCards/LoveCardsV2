@@ -86,7 +86,7 @@ class Cards extends BaseController
         View::assign([
             $tDef_ListName => array_merge(
                 $this->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardLists),
-                ['ViewTitle' => '卡片墙']
+                ['ViewTitle' => '热门']
             )
         ]);
     }
