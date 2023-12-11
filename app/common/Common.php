@@ -98,7 +98,7 @@ class Common extends Facade
      * @param string|null $msg
      * @param boolean $status
      * @param object $data
-     * @return array
+     * @return array ['status','msg','data']
      */
     protected static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
     {
