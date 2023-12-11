@@ -11,6 +11,8 @@ use app\common\CheckClass;
 
 use jwt\Jwt;
 
+use app\api\model\Users as UsersModel;
+
 class FrontEnd extends Facade
 {
 
@@ -33,7 +35,7 @@ class FrontEnd extends Facade
     }
 
     /**
-     * @description: 前端依Coockie验证uuid并获取当前用户数据
+     * @description: 前端依Coockie验证token并获取当前用户数据
      * @return {*}
      * @Author: github.com/zhiguai
      * @Date: 2022-12-29 18:56:45
@@ -42,7 +44,7 @@ class FrontEnd extends Facade
      */
     protected static function mResultGetNowAdminAllData()
     {
-        $TDef_JwtData = request()->JwtData;
+        //$TDef_JwtData = request()->JwtData;
         //整理数据
         $token = Cookie::get('TOKEN');
         if (empty($token)) {
@@ -63,6 +65,36 @@ class FrontEnd extends Facade
             return Common::mArrayEasyReturnStruct(null, true, $lDef_GetNowAdminAllDataResult['data']);
         } else {
             return Common::mArrayEasyReturnStruct($lDef_GetNowAdminAllDataResult['msg'], false);
+        }
+    }
+
+    /**
+     * @description: 前端依Coockie验证token并获取当前用户数据
+     * @return {*}
+     */
+    protected static function mResultGetNowUserAllData()
+    {
+        //$TDef_JwtData = request()->JwtData;
+        //整理数据
+        $token = Cookie::get('UTOKEN');
+        if (empty($token)) {
+            return Common::mArrayEasyReturnStruct('请先登入', false);
+        }
+
+        //Jwt校验
+        $lDef_JwtCheckTokenResult = jwt::CheckToken($token);
+        if (!$lDef_JwtCheckTokenResult['status']) {
+            return Common::mArrayEasyReturnStruct($lDef_JwtCheckTokenResult['msg'], false);
+        }
+
+        //取用户数据
+        $lDef_GetNowUserAllDataResult = UsersModel::Get($lDef_JwtCheckTokenResult['data']['uid']);
+        //判断数据是否存在
+        if ($lDef_GetNowUserAllDataResult['status']) {
+            //返回用户数据
+            return Common::mArrayEasyReturnStruct(null, true, $lDef_GetNowUserAllDataResult['data']);
+        } else {
+            return Common::mArrayEasyReturnStruct($lDef_GetNowUserAllDataResult['msg'], false);
         }
     }
 

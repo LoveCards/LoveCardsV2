@@ -21,16 +21,16 @@ class Users extends Model
     // 设置字段信息
     protected $schema = [
         'id' => 'int',
-        'number' => 'varchar(32)',
-        'avatar' => 'varchar(255)',
-        'email' => 'varchar(320)',
-        'phone' => 'varchar(32)',
-        'username' => 'varchar(255)',
-        'password' => 'varchar(255)',
+        'number' => 'string',
+        'avatar' => 'string',
+        'email' => 'string',
+        'phone' => 'string',
+        'username' => 'string',
+        'password' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
-        'status' => 'int(11)',
+        'status' => 'int',
     ];
 
     // 默认排除字段
@@ -49,7 +49,7 @@ class Users extends Model
      */
     public static function Login($account, $password): array
     {
-        // 尝试使用用户名、电子邮件或电话号码查询用户
+        // 尝试使用用户名、电子邮件或电话号码查询用
         $result = self::where('username', $account)
             ->whereOr('email', $account)
             ->whereOr('phone', $account)
