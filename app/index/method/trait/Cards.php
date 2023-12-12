@@ -9,7 +9,7 @@ use think\facade\Config;
 
 use app\common\BackEnd;
 use app\common\FrontEnd;
-use app\common\Theme;
+use app\common\Common;
 use app\index\BaseController;
 
 trait Cards
@@ -37,7 +37,7 @@ trait Cards
         $lDef_CardList = $lDef_Result->items();
 
         //分配变量
-        View::assign([
+        return Common::mArrayEasyReturnStruct(null,true,[
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
@@ -85,7 +85,7 @@ trait Cards
         }
 
         //分配变量
-        View::assign([
+        return Common::mArrayEasyReturnStruct(null,true,[
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardLists),
                 ['ViewTitle' => '热门']
@@ -150,7 +150,7 @@ trait Cards
         }
 
         // 分配变量
-        View::assign([
+        return Common::mArrayEasyReturnStruct(null,true,[
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
@@ -201,7 +201,7 @@ trait Cards
         }
 
         // 分配变量
-        View::assign([
+        return Common::mArrayEasyReturnStruct(null,true,[
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
@@ -219,7 +219,7 @@ trait Cards
         $tReq_ParamModel = Request::param('model');
         // 查询数据
         View::assign($BaseController->mArrayEasyGetAssignCardTagList());
-        View::assign([
+        return Common::mArrayEasyReturnStruct(null,true,[
             'TagList' => [
                 'CardModel' => $tReq_ParamModel
             ]
@@ -288,7 +288,7 @@ trait Cards
             $lDef_AssignData['ViewDescription'] =  '卡片详情';
             $lDef_AssignData['ViewKeywords'] =  '卡片详情,LoveCards,表白卡';
         }
-        View::assign([
+        return Common::mArrayEasyReturnStruct(null,true,[
             $tDef_ListName => $lDef_AssignData
         ]);
     }

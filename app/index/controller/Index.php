@@ -39,7 +39,10 @@ class Index extends BaseController
         if ($tDef_AppConfigArray['PageAssignData']) {
             foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
                 // $tDef_NewExample = new CardsMethod;
-                IndexFacade::$value();
+                $tDef_Result = IndexFacade::$value();
+                if ($tDef_Result['status']) {
+                    View::assign($tDef_Result['data']);
+                }
             }
         }
 
