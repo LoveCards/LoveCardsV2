@@ -1,18 +1,9 @@
 <?php
 
-namespace app\index\utils;
-
-use think\facade\View;
-use think\facade\Db;
+namespace app\index\method;
 
 use app\common\File;
-use app\common\Common;
-use app\common\Theme;
-use app\index\BaseController;
 use think\facade\Request;
-
-use app\index\method\Cards;
-use app\index\utils\Auth;
 
 class Base
 {
@@ -22,7 +13,7 @@ class Base
      * @param string $tDef_AppPath 主题的APP路径
      * @return array 返回所有可能路径，从最短到最长无序排列
      */
-    public function mArrayEasyGetUrlAppPath($tDef_AppPath): array
+    public static function mArrayEasyGetUrlAppPath($tDef_AppPath): array
     {
         // 修剪根路径
         $lDef_Url = preg_replace('#' . Request::rootUrl() . '#', '', Request::baseUrl(), 1);
@@ -68,7 +59,7 @@ class Base
      * @param array $lDef_ThemeConfig
      * @return array ['PageAuth', 'PageAssignData']
      */
-    public function mArrayMatchThemeAppConfig($tDef_AppPath, $lDef_ThemeConfig): array
+    public static function mArrayMatchThemeAppConfig($tDef_AppPath, $lDef_ThemeConfig): array
     {
         $lDef_ResultArray = [];
         $tDef_AppPath = strtolower($tDef_AppPath);

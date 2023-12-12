@@ -146,7 +146,11 @@ return [
     ],
 
     //鉴权
-    'PageAuth' => [],
+    'PageAuth' => [
+        '/user/' => [
+            'CookieUtokenCheck'
+        ]
+    ],
 
     //分配数据
     'PageAssignData' => [
