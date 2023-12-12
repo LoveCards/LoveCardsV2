@@ -4,11 +4,11 @@ namespace app\index\method;
 
 use think\Facade;
 
-//Cards门面
-class CardsFacade extends Facade
+//门面
+class IndexFacade extends Facade
 {
     protected static function getFacadeClass()
     {
-        return 'app\index\method\Cards';
+        return 'app\index\method\Index';
     }
 }

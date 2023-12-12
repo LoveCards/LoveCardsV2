@@ -26,7 +26,7 @@ class FrontEnd extends Facade
      * @param {*} $url
      * @param {*} $msg
      */
-    protected static function mObjectEasyFrontEndJumpUrl($url, $msg = 'undefined')
+    public static function mObjectEasyFrontEndJumpUrl($url, $msg = 'undefined')
     {
         // 写人Msg信息
         Cookie::forever('msg', $msg);
@@ -42,7 +42,7 @@ class FrontEnd extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function mResultGetNowAdminAllData()
+    public static function mResultGetNowAdminAllData()
     {
         //$TDef_JwtData = request()->JwtData;
         //整理数据
@@ -70,9 +70,9 @@ class FrontEnd extends Facade
 
     /**
      * @description: 前端依Coockie验证token并获取当前用户数据
-     * @return {*}
+     * @return array[status,msg,data=>object|null]
      */
-    protected static function mResultGetNowUserAllData()
+    public static function mResultGetNowUserAllData()
     {
         //$TDef_JwtData = request()->JwtData;
         //整理数据
@@ -109,7 +109,7 @@ class FrontEnd extends Facade
      * @param {*} $tDef_CommonNowListEasyPagingComponent
      * @param {*} $tDef_CommonNowListMax
      */
-    protected static function mObjectEasyAssignCommonNowList($lDef_CommonNowList, $tDef_CommonNowListEasyPagingComponent, $tDef_CommonNowListMax)
+    public static function mObjectEasyAssignCommonNowList($lDef_CommonNowList, $tDef_CommonNowListEasyPagingComponent, $tDef_CommonNowListMax)
     {
         View::assign([
             'CommonNowList'  => $lDef_CommonNowList,
@@ -129,7 +129,7 @@ class FrontEnd extends Facade
      * @param {*} $tDef_CardsListEasyPagingComponent
      * @param {*} $tDef_CardsListMax
      */
-    protected static function mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
+    public static function mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
     {
         //赋值Cards相关变量;
         View::assign([
@@ -148,7 +148,7 @@ class FrontEnd extends Facade
      * @LastEditors: github.com/zhiguai
      * @param {*} $lDef_AdminMethod
      */
-    protected static function mObjectEasyGetAndAssignCardsTags($lDef_AdminMethod = false)
+    public static function mObjectEasyGetAndAssignCardsTags($lDef_AdminMethod = false)
     {
         //获取并赋值CardsTag相关变量
         if ($lDef_AdminMethod) {

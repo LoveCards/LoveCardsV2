@@ -5,7 +5,7 @@ namespace app\index\method;
 use app\common\File;
 use think\facade\Request;
 
-class Base
+trait Base
 {
     /**
      * 从访问URL中提取出可能的AppPath

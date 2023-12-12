@@ -4,7 +4,7 @@ namespace app\index\method;
 
 use app\common\FrontEnd;
 
-class Auth
+trait Auth
 {
     /**
      * 通过Cookie的TOKEN验证身份并返回数据
