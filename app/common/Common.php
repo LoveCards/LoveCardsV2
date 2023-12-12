@@ -63,13 +63,10 @@ class Common extends Facade
 
 
     /**
-     * @description: 获取IP
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:56:28
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $type
+     * 获取IP
+     *
+     * @param integer $type
+     * @return string
      */
     public static function mStringGetIP($type = 0): string
     {
@@ -98,7 +95,7 @@ class Common extends Facade
      * @param string|null $msg
      * @param boolean $status
      * @param object $data
-     * @return array['status','msg','data'=>*]
+     * @return array['status','msg','data':*]
      */
     public static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
     {

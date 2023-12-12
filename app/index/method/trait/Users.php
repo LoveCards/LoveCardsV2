@@ -11,15 +11,19 @@ trait Users
     /**
      * 个人信息获取
      *
-     * @return array['status','msg','data'=>object]
+     * @return array['status','msg','data':array=>['MyInfo':array]]
      */
     public static function MyInfo()
     {
         $tDef_UserAllData = FrontEnd::mResultGetNowUserAllData();
         if ($tDef_UserAllData['status']) {
-            return Common::mArrayEasyReturnStruct(null, true, $tDef_UserAllData['data']);
+            return Common::mArrayEasyReturnStruct(null, true, [
+                'MyInfo' => $tDef_UserAllData['data'],
+            ]);
         }
         $tDef_EmptyData = UsersModel::Get(0);
-        return Common::mArrayEasyReturnStruct($tDef_UserAllData['msg'], false, $tDef_EmptyData);
+        return Common::mArrayEasyReturnStruct($tDef_UserAllData['msg'], false, [
+            'MyInfo' => $tDef_EmptyData['data'],
+        ]);
     }
 }
