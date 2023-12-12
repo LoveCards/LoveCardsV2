@@ -3,47 +3,46 @@
 namespace app\index\controller;
 
 use think\facade\View;
-use think\facade\Db;
 
 use app\common\File;
-use app\common\Common;
 use app\common\Theme;
 use app\index\BaseController;
 
-use app\index\utils\BaseFacade;
-use app\index\method\Cards;
-use app\index\utils\Auth;
+use app\index\method\Base as BaseMethod;
+use app\index\method\Auth as AuthMethod;
+use app\index\method\Cards as CardsMethod;
+use app\index\method\CardsFacade;
 
 class Index extends BaseController
 {
     public function Customize()
     {
-        dd(Auth::JwtCheck());
         //基础变量
         //$this->attrGReqAssignArray['ViewTitle']  = '自定义页面';
 
         // 页面路径
-        $tDef_AppPathArray = BaseFacade::mArrayEasyGetUrlAppPath('/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app');
+        $tDef_AppPathArray = BaseMethod::mArrayEasyGetUrlAppPath('/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app');
         $tDef_AppPath = end($tDef_AppPathArray);
         // 获取主题匹配JS路径
         $lDef_PageJsPath = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app' . $tDef_AppPath;
         if (File::read_file($lDef_PageJsPath . '.js', true)) {
             $this->attrGReqAssignArray['ViewActionJS'] = '/app' . $tDef_AppPath;
         };
-        //dd($tDef_AppPath);
 
-        //加载app指定方法 变量
-        $tDef_AppConfigArray = BaseFacade::mArrayMatchThemeAppConfig($tDef_AppPath, $this->attrGReqView['Theme']['Config']);
-        if ($tDef_AppConfigArray['PageAssignData']) {
-            foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
-                $tDef_NewExample = new Cards;
-                $tDef_NewExample->$value();
-            }
-        }
+        //加载app指定数据方法与鉴权方法
+        $tDef_AppConfigArray = BaseMethod::mArrayMatchThemeAppConfig($tDef_AppPath, $this->attrGReqView['Theme']['Config']);
         if ($tDef_AppConfigArray['PageAuth']) {
             foreach ($tDef_AppConfigArray['PageAuth'] as $value) {
-                $tDef_NewExample = new Cards;
-                $tDef_NewExample->$value();
+                $tDef_Result = AuthMethod::$value();
+                if ($tDef_Result) {
+                    return $tDef_Result;
+                }
+            }
+        }
+        if ($tDef_AppConfigArray['PageAssignData']) {
+            foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
+                // $tDef_NewExample = new CardsMethod;
+                CardsFacade::$value();
             }
         }
 
