@@ -105,7 +105,7 @@ class BaseController extends Common
         ];
     }
 
-    protected function mArrayEasyGetAssignCardList($lDef_ListName, $lDef_CardList, $tDef_CardListEasyPagingComponent = null, $tDef_CardListMax = null)
+    public function mArrayEasyGetAssignCardList($lDef_ListName, $lDef_CardList, $tDef_CardListEasyPagingComponent = null, $tDef_CardListMax = null)
     {
         $tDef_CardListEasyPagingComponent != null ?
             $lDef_ArrayData['CardListEasyPagingComponent'] = $tDef_CardListEasyPagingComponent :
@@ -120,7 +120,7 @@ class BaseController extends Common
         return $lDef_ArrayData;
     }
 
-    protected function mArrayEasyGetAssignCardTagList()
+    public function mArrayEasyGetAssignCardTagList()
     {
         //获取并赋值CardsTag相关变量
         $lDef_Result = Db::table('tags')->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->select()->toArray();

@@ -12,11 +12,12 @@ use app\common\FrontEnd;
 use app\common\Theme;
 use app\index\BaseController;
 
-class Cards extends BaseController
+trait Cards
 {
     //通用卡片查询
     public function CommonCardList()
     {
+        $BaseController = new BaseController;
         //整理参数
         $tReq_ParamModel = Request::param('model');
         $tReq_ParamModel == 0 ? $tReq_ParamModel = 0 : $tReq_ParamModel = 1;
@@ -26,8 +27,8 @@ class Cards extends BaseController
 
         //查询数据
         $lDef_Result = Db::table('cards')->alias('CARD')
-            ->field(self::G_Def_DbCardsCommonField)
-            ->leftJoin('good GOOD', self::G_Def_DbCardsCommonJoin . "'$this->attrGReqIp'")
+            ->field($BaseController::G_Def_DbCardsCommonField)
+            ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.status', 0)
             ->where('CARD.model', $tReq_ParamModel)
             ->order('CARD.id', 'desc')
@@ -38,7 +39,7 @@ class Cards extends BaseController
         //分配变量
         View::assign([
             $tDef_ListName => array_merge(
-                $this->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
+                $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
                     'CardsModel' => $tReq_ParamModel,
                     'ViewTitle'  => '卡片墙',
@@ -50,6 +51,7 @@ class Cards extends BaseController
     // 推荐列表
     public function HotCardList()
     {
+        $BaseController = new BaseController;
         //整理参数
         define("CONST_G_TOP_LISTS_MAX", 32); //置顶卡片列表最大个数
         define("CONST_G_HOT_LISTS_MAX", 8); //热门卡片列表最大个数
@@ -71,7 +73,7 @@ class Cards extends BaseController
         $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
         //取Good状态合并到CardList数据
         for ($i = 0; $i < sizeof($lDef_CardLists); $i++) {
-            $lDef_Result = Db::table('good')->where('aid', 1)->where('ip', $this->attrGReqIp);
+            $lDef_Result = Db::table('good')->where('aid', 1)->where('ip', $BaseController->attrGReqIp);
             //查找对应封面
             if ($lDef_Result->where('pid', $lDef_CardLists[$i]['id'])->findOrEmpty() == []) {
                 //未点赞
@@ -85,7 +87,7 @@ class Cards extends BaseController
         //分配变量
         View::assign([
             $tDef_ListName => array_merge(
-                $this->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardLists),
+                $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardLists),
                 ['ViewTitle' => '热门']
             )
         ]);
@@ -94,6 +96,7 @@ class Cards extends BaseController
     // 搜索列表
     public function SearchCardList()
     {
+        $BaseController = new BaseController;
         // 整理参数
         $tReq_ParamSearchStatus = Request::param('search');
         $tReq_ParamModel = Request::param('model');
@@ -129,7 +132,7 @@ class Cards extends BaseController
 
             // 组合 Good 状态到 $tListData 列表
             foreach ($lDef_CardList as &$card) {
-                $tResultGood = Db::table('good')->where('aid', $this->attrGReqAppId['cards'])->where('ip', $this->attrGReqIp);
+                $tResultGood = Db::table('good')->where('aid', $BaseController->attrGReqAppId['cards'])->where('ip', $BaseController->attrGReqIp);
                 // 查找对应封面
                 if ($tResultGood->where('pid', $card['id'])->findOrEmpty() == []) {
                     // 未点赞
@@ -149,7 +152,7 @@ class Cards extends BaseController
         // 分配变量
         View::assign([
             $tDef_ListName => array_merge(
-                $this->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
+                $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
                     'ViewTitle'  => $tDef_ViewTitle,
                 ]
@@ -160,6 +163,7 @@ class Cards extends BaseController
     // TAG合集列表
     public function TagCardList()
     {
+        $BaseController = new BaseController;
         // 整理参数
         $tReq_TagIdValue = Request::param('value');
 
@@ -175,12 +179,12 @@ class Cards extends BaseController
             $lDef_CardList = [];
             $tDef_CardListMax = [];
         } else {
-            $tReq_TagId = Db::table('tags')->where('id', $tReq_TagIdValue)->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->findOrEmpty();
+            $tReq_TagId = Db::table('tags')->where('id', $tReq_TagIdValue)->where('aid', $BaseController->attrGReqAppId['cards'])->where('status', 0)->findOrEmpty();
             if ($tReq_TagId) {
                 $lDef_Result = Db::table('tags_map')->alias('CTM')
                     ->join('cards CARD', 'CTM.pid = CARD.id')
-                    ->field(self::G_Def_DbCardsCommonField)
-                    ->leftJoin('good GOOD', self::G_Def_DbCardsCommonJoin . "'$this->attrGReqIp'")
+                    ->field($BaseController::G_Def_DbCardsCommonField)
+                    ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
                     ->where('CTM.tid', $tReq_TagIdValue)
                     ->order('CARD.id', 'desc')
                     ->paginate($tDef_CardListMax, true);
@@ -199,7 +203,7 @@ class Cards extends BaseController
         // 分配变量
         View::assign([
             $tDef_ListName => array_merge(
-                $this->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
+                $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
                     'ViewTitle' => $tDef_ViewTitle,
                     'ViewTagName' => $tReq_TagId['name']
@@ -211,9 +215,10 @@ class Cards extends BaseController
     // TAG列表
     public function TagList()
     {
+        $BaseController = new BaseController;
         $tReq_ParamModel = Request::param('model');
         // 查询数据
-        View::assign($this->mArrayEasyGetAssignCardTagList());
+        View::assign($BaseController->mArrayEasyGetAssignCardTagList());
         View::assign([
             'TagList' => [
                 'CardModel' => $tReq_ParamModel
@@ -224,6 +229,7 @@ class Cards extends BaseController
     // 卡片详情
     public function Card()
     {
+        $BaseController = new BaseController;
         // 整理参数
         $tReq_ParamId = Request::param('id');
         //dd($tReq_ParamId);
@@ -233,8 +239,8 @@ class Cards extends BaseController
 
         // 查询数据
         $lDef_CardData = Db::table('cards')->alias('CARD')
-            ->field(self::G_Def_DbCardsCommonField)
-            ->leftJoin('good GOOD', self::G_Def_DbCardsCommonJoin . "'$this->attrGReqIp'")
+            ->field($BaseController::G_Def_DbCardsCommonField)
+            ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.id', $tReq_ParamId)
             ->where('CARD.status', 0)
             ->findOrEmpty();
@@ -251,9 +257,9 @@ class Cards extends BaseController
                 $lDef_CardData['look'] = $lDef_CardData['look'] + 1;
             }
             // 获取图片数据
-            $tDef_ImgData = Db::table('img')->where('aid', $this->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
+            $tDef_ImgData = Db::table('img')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
             // 获取评论列表
-            $lDef_Result = Db::table('comments')->where('aid', $this->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
+            $lDef_Result = Db::table('comments')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
                 ->paginate($tDef_CommentsMax, true);
             $tDef_CommentsEasyPagingComponent = $lDef_Result->render();
             $tDef_Comments = $lDef_Result->items();

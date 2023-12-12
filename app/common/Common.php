@@ -25,7 +25,7 @@ class Common extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function mArrayGetLCVersionInfo()
+    public static function mArrayGetLCVersionInfo()
     {
         return [
             'Name' => 'LoveCards',
@@ -55,7 +55,7 @@ class Common extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function mArrayGetDbSystemData()
+    public static function mArrayGetDbSystemData()
     {
         $result = Db::table('system')->select()->toArray();
         return array_column($result, 'value', 'name');
@@ -71,7 +71,7 @@ class Common extends Facade
      * @LastEditors: github.com/zhiguai
      * @param {*} $type
      */
-    protected static function mStringGetIP($type = 0): string
+    public static function mStringGetIP($type = 0): string
     {
         $type       =  $type ? 1 : 0;
         static $ip  =   NULL;
@@ -98,9 +98,9 @@ class Common extends Facade
      * @param string|null $msg
      * @param boolean $status
      * @param object $data
-     * @return array ['status','msg','data']
+     * @return array['status','msg','data'=>*]
      */
-    protected static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
+    public static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
     {
         return [
             'status' => $status,
@@ -116,7 +116,7 @@ class Common extends Facade
      * @param string $input
      * @return boolean|string
      */
-    protected static function  mBoolEasyIsPhoneNumberOrEmail($input): string
+    public static function  mBoolEasyIsPhoneNumberOrEmail($input): string
     {
         // 去除字符串首尾的空格
         $input = trim($input);

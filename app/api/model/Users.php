@@ -130,17 +130,17 @@ class Users extends Model
      * 读取指定ID行
      *
      * @param int $id
-     * @return void
+     * @return array['status','msg','data'=>object]
      */
     public static function Get($id)
     {
         $withoutField = self::$withoutField;
         $withoutField[] = 'password';
-        $result = self::where('id', $id)->withoutField($withoutField)->find();
+        $result = self::where('id', $id)->withoutField($withoutField)->findOrEmpty();
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result);
         }
-        return Common::mArrayEasyReturnStruct('项目查询失败', false);
+        return Common::mArrayEasyReturnStruct('项目查询失败', false, $result);
     }
 
     /**
