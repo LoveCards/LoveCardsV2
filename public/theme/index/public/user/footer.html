@@ -7,14 +7,27 @@
 <script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
 <script src="{__A-assets__}/lib/axios-1.5.0/axios.min.js"></script>
 <script src="{__A-assets__}/js/Base.js"></script>
-<script src="{__A-assets__}/js/AdminCommon.js"></script>
-<script src="{__A-assets__}/js/commonOld.js"></script>
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="{$ThemeAssetsUrlPath}/Common.js"></script>
+
+<!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> -->
+
 {if $ViewActionJS}
 <!-- 对应页面类 -->
-<script src="/view/admin/app/{$SystemControllerName}/{$SystemActionName}.js"></script>
+<script src="{$ThemeUrlPath}{$ViewActionJS}.js"></script>
 {/if}
 <!-- 全局 -->
 <script>
+    //实例化通用类
+    let CommonEntity = new Common();
 
+    //通用跳转
+    const JumpUrl = (url, time) => CommonEntity.JumpUrl(url, time);
+
+    $(function () {
+        //CookieMsg处理
+        CommonEntity.CookieMsgHandling();
+
+        //内置类绑定注销
+        CommonEntity.BindLogout('Logout');
+    });
 </script>

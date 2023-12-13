@@ -54,6 +54,10 @@
     border-radius: 6.6666px !important;
 }
 
+.mdui-list .mdui-list-item.mdui-ripple{
+    border-radius: 6.6666px !important;
+}
+
 /* 卡片样式 */
 .mdui-card {
     border-radius: 6.6666px;

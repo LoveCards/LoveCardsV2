@@ -38,12 +38,8 @@
                 mdui-drawer="{target: '#main-drawer', swipe: true}">
                 <i class="mdui-icon material-icons">menu</i>
             </span>
-            <a href="#" class="mdui-typo-headline">LoveCards</a>
+            <a href="#" class="mdui-typo-headline">{$SystemData['siteName']}</a>
             <div class="mdui-toolbar-spacer"></div>
-
-            <div class="mdui-typo">
-                <kbd>用户名</kbd>
-            </div>
 
         </div>
     </header>
@@ -54,55 +50,17 @@
             <div class="mdui-collapse-item ">
                 <a href="/admin/index">
                     <div class="mdui-list-item mdui-ripple">
-                        <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
-                        <div class="mdui-list-item-content">总览</div>
+                        <i class="mdui-list-item-icon mdui-icon material-icons">account_circle</i>
+                        <div class="mdui-list-item-content">个人资料</div>
                     </div>
                 </a>
             </div>
-            <div class="mdui-collapse-item">
-                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
-                    <i class="mdui-list-item-icon mdui-icon material-icons">extension</i>
-                    <div class="mdui-list-item-content">基础模块</div>
-                    <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/Cards" class="mdui-list-item mdui-ripple">卡片模块</a>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/Comments" class="mdui-list-item mdui-ripple">评论模块</a>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/Tags" class="mdui-list-item mdui-ripple">标签模块</a>
-                </div>
-            </div>
-
-
-            <div class="mdui-collapse-item">
-                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
-                    <i class="mdui-list-item-icon mdui-icon material-icons">settings</i>
-                    <div class="mdui-list-item-content">系统模块</div>
-                    <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/System" class="mdui-list-item mdui-ripple">系统设置</a>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/System/view" class="mdui-list-item mdui-ripple">外观设置</a>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/Admin" class="mdui-list-item mdui-ripple">账号管理</a>
-                </div>
-                <div class="mdui-collapse-item-body mdui-list">
-                    <a href="/admin/Updata" class="mdui-list-item mdui-ripple">系统更新</a>
-                </div>
-            </div>
-
 
             <div class="mdui-divider"></div>
 
             <div class="mdui-collapse-item">
                 <a href="/index">
-                    <div class="mdui-list-item mdui-ripple mdui-color-theme-accent">
+                    <div class="mdui-list-item mdui-ripple">
                         <i class="mdui-list-item-icon mdui-icon material-icons">home</i>
                         <div class="mdui-list-item-content">返回站点</div>
                     </div>
@@ -110,7 +68,7 @@
             </div>
 
             <div class="mdui-collapse-item">
-                <div id="submitLogout" class="mdui-list-item mdui-ripple">
+                <div id="Logout" class="mdui-list-item mdui-ripple">
                     <i class="mdui-list-item-icon mdui-icon material-icons">arrow_back</i>
                     <div class="mdui-list-item-content">退出登入</div>
                 </div>

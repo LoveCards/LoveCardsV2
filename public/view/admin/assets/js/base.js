@@ -1,13 +1,32 @@
+/**
+ * @typedef {Object} TokenConfig
+ * @property {string} AdminTokenName - Admin token name
+ * @property {string} UserTokenName - User token name
+ *
+ * @typedef {Object} RequestHooks
+ * @property {Function} inti - 初始化
+ * @property {Function} then - 成功回调
+ * @property {Function} catch - 失败回调
+ */
 class Base {
 
     constructor() {
         this.config = {};
         this.commonFunctions = {};
 
+        //钩子
+        const hooks = {};
+
         //接口
         const apiUrl = {
             AuthLogin: '/api/auth/login',//登入
             AuthLogout: '/api/auth/logout',//注销
+
+            UserAuthLogin: '/api/userauth/login',//登入
+            UserAuthLogout: '/api/userauth/logout',//注销
+            UserAuthRegister: '/api/userauth/register',//注册
+            UserAuthMsgCaptcha: '/api/userauth/captcha',//验证码
+            UserAuthCheck: 'api/userauth/check',//TOKEN校验
 
             AdminDelete: '/api/admin/delete',//删除用户
             AdminAdd: '/api/admin/add',//添加用户
@@ -45,9 +64,10 @@ class Base {
             CaptchaStatus: 0
         };
 
-        //token配置
+        //Token配置
         const token = {
-            AdminTokenName: 'TOKEN'
+            AdminTokenName: 'TOKEN',
+            UserTokenName: 'UTOKEN'
         };
 
         //应用ID
@@ -99,29 +119,34 @@ class Base {
     }
 
     /**
-     * 设置Admin Token Cookie
+     * 设置Token Cookie
      * @param {String} token 
+     * @param {TokenConfig} tokenName 
      */
-    SetAdminToken = (token) => {
+    SetToken = (token, tokenName) => {
         if (token) {
-            this.SetCookie(this.config.token.AdminTokenName, token)
+            this.SetCookie(this.config.token[tokenName], token)
         }
     }
     /**
-     * 删除Admin Token Cookie
+     * 删除Token Cookie
+     * @param {TokenConfig} tokenName 
+     * @returns 
      */
-    DeleteAdminToken = () => {
-        if ($.removeCookie(this.config.token.AdminTokenName, { path: '/' })) {
+    DeleteToken = (tokenName) => {
+        if ($.removeCookie(this.config.token[tokenName], { path: '/' })) {
             return true;
         }
         return false;
     }
     /**
-     * 读取Admin Token Cookie
+     * 获取Token Cookie
+     * @param {TokenConfig} tokenName 
+     * @returns 
      */
-    GetAdminToken = () => {
-        if ($.cookie(this.config.token.AdminTokenName)) {
-            return `Bearer ${$.cookie(this.config.token.AdminTokenName)}`;
+    GetToken = (tokenName) => {
+        if ($.cookie(this.config.token[tokenName])) {
+            return `Bearer ${$.cookie(this.config.token[tokenName])}`;
         }
         return false;
     }
@@ -200,10 +225,10 @@ class Base {
     Axios = (method, url, data) => {
         // 添加请求拦截器
         axios.interceptors.request.use((config) => {
-            //插入token
-            const token = this.GetAdminToken();
-            if (token) {
-                config.headers["Authorization"] = token;
+            //载入钩子
+            if (this.hooks.Axios?.request) {
+                //自定义回调函数
+                this.hooks.Axios.request(config);
             }
 
             return config;
@@ -214,10 +239,10 @@ class Base {
 
         // 添加响应拦截器
         axios.interceptors.response.use((response) => {
-            //刷新Token
-            const token = response.headers["token"];
-            this.SetAdminToken(token);
-
+            if (this.hooks.Axios?.response) {
+                //自定义回调函数
+                this.hooks.Axios.response(response);
+            }
             return response;
         }, (error) => {
             console.log('响应拦截器报错');
@@ -234,11 +259,11 @@ class Base {
 
     /**
      * RequestApiUrl设置Hooks
-     * @param {Object:{inti:Function,then:Function,catch:Function}} hooks 
+     * @param {RequestHooks} hooks 
      * @param {Boolean} defultStatus
      * @param {String} thisHooksKey 
      */
-    SetRequestApiUrl = (hooks, defultStatus, thisHooksKey) => {
+    SetRequestApiUrlHooks = (hooks, defultStatus, thisHooksKey) => {
         this.hooks[thisHooksKey] = {};
         if (hooks?.inti) {
             this.hooks[thisHooksKey].inti = hooks.inti;
@@ -258,14 +283,46 @@ class Base {
      * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找
      * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改
      * @param {Object} data //参数对象
+     * @param {TokenConfig} tokenName //参数对象
+     * 
      * @returns {Promise}
      */
-    RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey, data) => {
+    RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey, data, tokenName = 'UserTokenName') => {
         if (this.hooks[thisHooksKey]?.inti) {
             //自定义回调函数
             this.hooks[thisHooksKey].inti();
         } else {
             this.commonFunctions.snackbar(thisConfigApiUrlKey + '发起请求');
+        }
+
+        //设置Axios钩子
+        this.hooks.Axios = {
+            /**
+             * 请求拦截器钩子
+             * @param {*} config 
+             * @returns 
+             */
+            request: (config) => {
+                //插入token
+                const token = this.GetToken(tokenName);
+                if (token) {
+                    config.headers["Authorization"] = token;
+                }
+                return config;
+            },
+            /**
+             * 响应拦截器钩子
+             * @param {*} response 
+             * @returns 
+             */
+            response: (response) => {
+                //刷新Token
+                const token = response.headers["token"];
+                if (token) {
+                    this.SetToken(tokenName);
+                }
+                return response;
+            }
         }
 
         //提交数据
