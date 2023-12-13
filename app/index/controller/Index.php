@@ -40,15 +40,13 @@ class Index extends BaseController
             foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
                 // $tDef_NewExample = new CardsMethod;
                 $tDef_Result = IndexFacade::$value();
-                if ($tDef_Result['status']) {
-                    View::assign($tDef_Result['data']);
-                }
+                View::assign($tDef_Result['data']);
             }
         }
 
         //分配变量
         View::assign($this->attrGReqAssignArray);
-
+        //dd(View::engine());
         //输出模板
         return View::fetch('app' . $tDef_AppPath);
     }

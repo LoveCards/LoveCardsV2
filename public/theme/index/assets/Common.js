@@ -55,71 +55,113 @@ class Common extends Base {
         });
     }
 
-    //退出账户
-    // BindLogout = (submitId) => {
-    //     //绑定方法
-    //     $('#' + submitId).click(function () { this.PostLogout() }.bind(this));
-    // }
+    /**
+     * 登入绑定
+     * @param {String} submitId 
+     * @param {String} accountId 
+     * @param {String} passwordId 
+     */
+    BindLogin = (submitId, accountId, passwordId) => {
+        //默认回调函数设置
+        if (this.hooks.PostLogin?.defultStatus == undefined || this.hooks.PostLogin?.defultStatus == true) {
+            this.SetHooksPostLogin({
+                then: (response) => {
+                    //默认回调函数
+                    this.SetToken(response.data.token, 'UserTokenName');//设置Token
+                    this.commonFunctions.snackbar('登入成功，正在跳转');
+                }
+            }, true);
+        }
 
-    // SetPostLogoutHooks = (intiHook, thenHook, catchJHook) => {
-    //     //设置方法
-    //     this.hooks.PostLogout = {};
-    //     this.hooks.PostLogout.inti = intiHook;
-    //     this.hooks.PostLogout.then = thenHook;
-    //     this.hooks.PostLogout.catch = catchJHook;
-    // }
+        //绑定方法
+        $('#' + submitId).click(function () {
+            const data = {
+                'account': $('#' + accountId).val(),
+                'password': $('#' + passwordId).val()
+            }
+            this.PostLogin(data);
+        }.bind(this));
+    }
 
     /**
-     * 设置PostCardsGood钩子
-     * @param {Object:{inti:Function,then:Function,catch:Function}} hooks 
+     * 退出绑定
+     */
+    BindLogout = (submitId) => {
+        //默认回调函数设置
+        if (this.hooks.PostLogout?.defultStatus == undefined || this.hooks.PostLogout?.defultStatus == true) {
+            this.SetHooksPostLogout({
+                then: (response) => {
+                    this.DeleteToken('UserTokenName');//清除Token
+                    this.commonFunctions.snackbar('退出成功，正在跳转');
+                }
+            }, true);
+        }
+        //绑定方法
+        $('#' + submitId).click(function () { this.PostLogout() }.bind(this));
+    }
+
+    /**
+     * 设置PostLoginHooks钩子
+     * @param {RequestHooks} hooks 
      * @param {Boolean} defultStatus 默认为False
      * @param {String} thisHooksKey 
      */
-    SetPostCardsGoodHooks = (hooks, defultStatus = false, thisHooksKey = 'CardsGood') => {
-        this.SetRequestApiUrl(hooks, defultStatus, thisHooksKey);
+    SetHooksPostLogin = (hooks, defultStatus = false, thisHooksKey = 'PostLogin') => {
+        this.SetRequestApiUrlHooks(hooks, defultStatus, thisHooksKey);
     }
 
-    //登出请求
-    // PostLogout = () => {
-    //     if (this.hooks.PostLogout?.inti) {
-    //         //自定义回调函数
-    //         this.hooks.PostLogout.inti();
-    //     } else {
-    //         this.commonFunctions.snackbar('正在发起请求！');
-    //     }
+    /**
+     * 设置PostLogoutHooks钩子
+     * @param {RequestHooks} hooks 
+     * @param {Boolean} defultStatus 默认为False
+     * @param {String} thisHooksKey 
+     */
+    SetHooksPostLogout = (hooks, defultStatus = false, thisHooksKey = 'PostLogout') => {
+        this.SetRequestApiUrlHooks(hooks, defultStatus, thisHooksKey);
+    }
 
-    //     var data = {};
+    /**
+     * 设置PostCardsGood钩子
+     * @param {RequestHooks} hooks 
+     * @param {Boolean} defultStatus 默认为False
+     * @param {String} thisHooksKey 
+     */
+    SetHooksPostCardsGood = (hooks, defultStatus = false, thisHooksKey = 'CardsGood') => {
+        this.SetRequestApiUrlHooks(hooks, defultStatus, thisHooksKey);
+    }
 
-    //     //提交数据
-    //     return this.Axios('post', this.config.apiUrl.AuthLogout, data).then((response) => {
-    //         // this.hooks.PostLogout?.then写法解释
-    //         // this.hooks.PostLogout 存在并且包含属性 then
-    //         // 这将在 this.hooks.PostLogout 存在并且 then 存在的情况下执行操作
-    //         if (this.hooks.PostLogout?.then) {
-    //             //自定义回调函数
-    //             this.hooks.PostLogout.then();
-    //         } else {
-    //             //默认回调函数
-    //             this.DeleteAdminToken();//清除Token
-    //             this.commonFunctions.snackbar('退出成功，正在跳转');
-    //         }
-    //     }).catch((error) => {
-    //         if (this.hooks.PostLogout?.catch) {
-    //             this.hooks.PostLogout.catch();
-    //         } else {
-    //             this.AxiosErrorHandling(error);
-    //         }
-    //     });
-    // }
+    /**
+     * 注销请求
+     */
+    PostLogout = () => {
+        var data = {};
+
+        //提交数据
+        this.RequestApiUrl('post', 'UserAuthLogout', 'PostLogout', data, 'UserTokenName');
+    }
+
+    /**
+     * 登入请求
+     * @param {*} resData 
+     * @returns 
+     */
+    PostLogin = (resData) => {
+        var data = {
+            'account': resData.account,
+            'password': resData.password
+        };
+        this.RequestApiUrl('post', 'UserAuthLogin', 'PostLogin', data, 'UserTokenName');
+    }
+
     /**
      * 点赞请求
-     * @param {Object:{id:Number}} resData 
+     * @param {Object} resData {id:Number}
      */
     PostCardsGood = (resData) => {
         var data = {
             'id': resData.id,
         };
-        this.RequestApiUrl('post', 'CardsGood', 'CardsGood', data);
+        this.RequestApiUrl('post', 'CardsGood', 'CardsGood', data, 'UserTokenName');
     }
 
 }

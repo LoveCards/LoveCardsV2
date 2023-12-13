@@ -158,25 +158,34 @@ return [
         '/index/index' => [
             'HotCardList',
             'TagList',
+            'MyInfo',
+        ],
+        '/user/' => [
+            'MyInfo',
         ],
         '/cards/index' => [
             'CommonCardList',
             'TagList',
+            'MyInfo',
         ],
         '/cards/search' => [
             'SearchCardList',
             'TagList',
+            'MyInfo',
         ],
         '/cards/tag' => [
             'TagCardList',
             'TagList',
+            'MyInfo',
         ],
         '/cards/card' => [
             'Card',
             'TagList',
+            'MyInfo',
         ],
         '/cards/add' => [
             'TagList',
+            'MyInfo',
         ]
     ]
 ];
