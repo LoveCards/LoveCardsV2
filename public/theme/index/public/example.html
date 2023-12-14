@@ -33,18 +33,18 @@
         <div class="mdui-typo">已有帐号？前往<a href="#" onclick="ExampleLogin.open()">登入</a>👉</div>
         <div class="mdui-textfield mdui-textfield-floating-label">
             <label class="mdui-textfield-label">邮箱/手机号</label>
-            <input class="mdui-textfield-input" type="text" />
+            <input id="registerAccount" class="mdui-textfield-input" type="text" />
         </div>
         <div class="mdui-row">
             <div class="mdui-col-xs-8">
                 <div class="mdui-textfield mdui-textfield-floating-label">
                     <label class="mdui-textfield-label">验证码</label>
-                    <input class="mdui-textfield-input" type="text" />
+                    <input id="registerCode" class="mdui-textfield-input" type="text" />
                 </div>
             </div>
             <div class="mdui-col-xs-4">
                 <div class="mdui-valign">
-                    <button style="margin-top: 42px; width: 100%;" class="mdui-btn mdui-color-pink-accent">
+                    <button id="SendMsgCaptcha" style="margin-top: 42px; width: 100%;" class="mdui-btn mdui-color-pink-accent">
                         发送验证码
                     </button>
                 </div>
@@ -52,11 +52,11 @@
         </div>
         <div class="mdui-textfield mdui-textfield-floating-label">
             <label class="mdui-textfield-label">密码</label>
-            <input class="mdui-textfield-input" type="text" />
+            <input id="registerPassword" class="mdui-textfield-input" type="text" />
         </div>
         <div class="mdui-textfield mdui-textfield-floating-label">
             <label class="mdui-textfield-label">重复密码</label>
-            <input class="mdui-textfield-input" type="text" />
+            <input id="registerRepassword" class="mdui-textfield-input" type="text" />
         </div>
         <div class="mdui-typo">
             <div class="mdui-textfield mdui-textfield-floating-label" style="overflow: unset">

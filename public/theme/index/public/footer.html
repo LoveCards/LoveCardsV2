@@ -67,6 +67,12 @@
 
         //内置类绑定登入
         CommonEntity.BindLogin('Login', 'loginAccount', 'loginPassword');
+        //内置类绑定注册
+        CommonEntity.BindRegister('Register', 'registerAccount', 'registerPassword', 'registerRepassword', 'registerCode');
+        //内置类绑定验证码
+        CommonEntity.BindSendMsgCaptcha('SendMsgCaptcha', 'registerAccount',
+            '<button style="margin-top: 42px; width: 100%;" class="mdui-btn mdui-color-pink-accent" disabled>冷却中</button>'
+        );
         //内置类绑定注销
         CommonEntity.BindLogout('Logout');
         //内置类绑定点赞方法
