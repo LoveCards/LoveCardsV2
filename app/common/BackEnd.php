@@ -16,7 +16,7 @@ class BackEnd extends Facade
      * @param int $id
      * @return array
      */
-    protected static function mArrayGetNowAdminAllData($id)
+    public static function mArrayGetNowAdminAllData($id)
     {
         //查询数据
         $result = Db::table('admin')
@@ -25,10 +25,9 @@ class BackEnd extends Facade
         //判断数据是否存在
         if (empty($result)) {
             return Common::mArrayEasyReturnStruct('管理员不存在', false);
-        } else {
-            //返回用户数据
-            return Common::mArrayEasyReturnStruct(null, true, $result);
-        }
+        } else
+        //返回用户数据
+        return Common::mArrayEasyReturnStruct(null, true, $result);
     }
 
     /**
@@ -39,7 +38,7 @@ class BackEnd extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function mStringGenerateUUID()
+    public static function mStringGenerateUUID()
     {
         $charid = md5(uniqid(mt_rand(), true));
         $hyphen = chr(45); // "-"
@@ -63,7 +62,7 @@ class BackEnd extends Facade
      * @param {*} $filename
      * @param {*} $data
      */
-    protected static function mBoolCoverConfig($filename, $data, $free = false, $env = 'lovecards'): bool
+    public static function mBoolCoverConfig($filename, $data, $free = false, $env = 'lovecards'): bool
     {
         $filename = '../config/' . $filename . '.php';
         $str_file = file_get_contents($filename);
@@ -109,7 +108,7 @@ class BackEnd extends Facade
      * @param {*} $setName
      * @param {*} $time
      */
-    protected static function mRemindEasyDebounce($setName, $time = 6)
+    public static function mRemindEasyDebounce($setName, $time = 6)
     {
         if (strtotime(date("Y-m-d H:i:s")) > strtotime(Session::get($setName))) {
             //符合要求

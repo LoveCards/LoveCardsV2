@@ -29,6 +29,8 @@ Route::group('', function () {
     Route::post('tags/add', 'CardsTag/Add');
     Route::post('tags/edit', 'CardsTag/Edit');
     Route::post('tags/delete', 'CardsTag/Delete');
+
+    Route::get('users/index', 'Users/Index');
 })->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);
 
 //超管鉴权

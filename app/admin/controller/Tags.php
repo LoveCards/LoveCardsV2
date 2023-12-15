@@ -11,9 +11,6 @@ use app\admin\BaseController;
 
 class Tags extends BaseController
 {
-    //中间件
-    //protected $middleware = [\app\admin\middleware\AdminAuthCheck::class];
-
     //Index
     public function Index()
     {

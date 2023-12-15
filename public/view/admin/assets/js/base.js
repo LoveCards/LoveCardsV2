@@ -13,14 +13,16 @@ class Base {
     constructor() {
         this.config = {};
         this.commonFunctions = {};
-
-        //钩子
-        const hooks = {};
+        this.hooks = {};
 
         //接口
         const apiUrl = {
             AuthLogin: '/api/auth/login',//登入
             AuthLogout: '/api/auth/logout',//注销
+
+            AdminDelete: '/api/admin/delete',//删除管理员
+            AdminAdd: '/api/admin/add',//添加管理员
+            AdminEdit: '/api/admin/edit',//添加管理员
 
             UserAuthLogin: '/api/userauth/login',//登入
             UserAuthLogout: '/api/userauth/logout',//注销
@@ -28,9 +30,10 @@ class Base {
             UserAuthMsgCaptcha: '/api/userauth/captcha',//验证码
             UserAuthCheck: 'api/userauth/check',//TOKEN校验
 
-            AdminDelete: '/api/admin/delete',//删除用户
-            AdminAdd: '/api/admin/add',//添加用户
-            AdminEdit: '/api/admin/edit',//添加用户
+            UsersIndex: '/api/users/index',//列出用户
+            UsersDelete: '/api/users/delete',//删除用户
+            UsersAdd: '/api/users/add',//添加用户
+            UsersEdit: '/api/users/edit',//添加用户
 
             SystemSite: '/api/system/site',//系统设置
             SystemEmail: '/api/system/email',//系统邮箱设置
@@ -80,6 +83,7 @@ class Base {
         this.config.geetest4 = geetest4;
         this.config.token = token;
         this.config.appId = appId;
+        //this.hooks.undefined = {};
 
         this.commonFunctions.snackbar = (message) => mdui.snackbar({ message: message, position: 'right-top' });
     }
@@ -101,11 +105,11 @@ class Base {
      * @param {String} url 
      * @param {Number} time 
      */
-    BindJumpUrl = (elementId, url, time) => {
-        $('#' + elementId).click(() => {
-            this.JumpUrl(url, time)
-        });
-    }
+    // BindJumpUrl = (elementId, url, time) => {
+    //     $('#' + elementId).click(() => {
+    //         this.JumpUrl(url, time)
+    //     });
+    // }
 
     /**
      * Cookie设置
@@ -280,19 +284,21 @@ class Base {
     /**
      * ApiUrl通用请求接口
      * @param {String} method //Axios的method
-     * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找
+     * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找 当为undefined时将不再是Hooks模式而返回原始Promise
      * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改
      * @param {Object} data //参数对象
      * @param {TokenConfig} tokenName //参数对象
      * 
      * @returns {Promise}
      */
-    RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey, data, tokenName = 'UserTokenName') => {
-        if (this.hooks[thisHooksKey]?.inti) {
-            //自定义回调函数
-            this.hooks[thisHooksKey].inti();
-        } else {
-            this.commonFunctions.snackbar(thisConfigApiUrlKey + '发起请求');
+    RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey = undefined, data = {}, tokenName = 'AdminTokenName') => {
+        if (thisHooksKey != undefined) {
+            if (this.hooks[thisHooksKey]?.inti) {
+                //自定义回调函数
+                this.hooks[thisHooksKey].inti();
+            } else {
+                this.commonFunctions.snackbar(thisConfigApiUrlKey + '发起请求');
+            }
         }
 
         //设置Axios钩子
@@ -326,22 +332,25 @@ class Base {
         }
 
         //提交数据
-        return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data).then((response) => {
-            if (this.hooks[thisHooksKey]?.then) {
-                //自定义回调函数
-                this.hooks[thisHooksKey].then(response);
-            } else {
-                //默认回调函数
-                this.commonFunctions.snackbar(thisConfigApiUrlKey + '请求成功');
-                //this.JumpUrl('');
-            }
-        }).catch((error) => {
-            if (this.hooks[thisHooksKey]?.catch) {
-                this.hooks[thisHooksKey].catch(error);
-            } else {
-                this.AxiosErrorHandling(error);
-            }
-        });
+        if (thisHooksKey != undefined) {
+            return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data).then((response) => {
+                if (this.hooks[thisHooksKey]?.then) {
+                    //自定义回调函数
+                    this.hooks[thisHooksKey].then(response);
+                } else {
+                    //默认回调函数
+                    this.commonFunctions.snackbar(thisConfigApiUrlKey + '请求成功');
+                    //this.JumpUrl('');
+                }
+            }).catch((error) => {
+                if (this.hooks[thisHooksKey]?.catch) {
+                    this.hooks[thisHooksKey].catch(error);
+                } else {
+                    this.AxiosErrorHandling(error);
+                }
+            });
+        }
+        return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data);
     }
 
 }

@@ -117,9 +117,12 @@ class Users extends Model
      *
      * @return void
      */
-    public static function Index()
+    public static function Index($paginte)
     {
-        $result = self::select();
+        $result = self::withoutField('password')->paginate([
+            'list_rows' => $paginte['list_rows'],
+            'page' => $paginte['page'],
+        ]);
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
