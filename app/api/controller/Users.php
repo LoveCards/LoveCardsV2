@@ -7,13 +7,36 @@ use think\facade\Request;
 use think\exception\ValidateException;
 use think\facade\Db;
 
-use app\api\validate\User as UserValidate;
+use app\api\model\Users as UsersModel;
+use app\api\validate\Users as UsersValidate;
 
 use app\common\Export;
 
-class User
+class Users
 {
-    //添加管理员-POST
+    //查询
+    public function Index()
+    {
+        $context = request()->JwtData;
+
+        if (Request::param('page') == null) {
+            $lDef_Paginte['page'] = 0;
+        } else {
+            $lDef_Paginte['page'] = Request::param('page');
+        }
+
+        if (Request::param('list_rows') == null) {
+            $lDef_Paginte['list_rows'] = 2;
+        } else {
+            $lDef_Paginte['list_rows'] = Request::param('list_rows') > 100 ? 100 : Request::param('list_rows');
+        }
+
+        $lDef_Result = UsersModel::Index($lDef_Paginte);
+
+        return Export::Create($lDef_Result['data'], 200, null, $context);
+    }
+
+    //添加-POST
     public function Add()
     {
         $context = request()->JwtData;
@@ -47,7 +70,7 @@ class User
         return Export::Create(null, 200, null, $context);
     }
 
-    //编辑管理员-POST
+    //编辑-POST
     public function Edit()
     {
         $context = request()->JwtData;
@@ -87,13 +110,13 @@ class User
             return Export::Create(null, 400, 'id不存在');
         }
 
-        //判断管理员名是否修改
+        //判断名是否修改
         if ($resultUserData['userName'] != $userName) {
-            //判断新管理员名是否已存在
+            //判断新名是否已存在
             if (!Db::table('admin')->where('userName', $userName)->find()) {
                 $data['userName'] = $userName;
             } else {
-                return Export::Create(null, 400, '管理员名已存在');
+                return Export::Create(null, 400, '名已存在');
             }
         }
 
@@ -110,7 +133,7 @@ class User
         return Export::Create(null, 200, null, $context);
     }
 
-    //删除管理员-POST
+    //删除-POST
     public function Delete()
     {
         $context = request()->JwtData;

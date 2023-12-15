@@ -57,7 +57,7 @@ class Login extends Base {
     PostLogin = (username, password, CaptchaData) => {
         this.SetPostLoginHooks(undefined, (response) => {
             //默认回调函数
-            this.SetAdminToken(response.data.token);//设置Token
+            this.SetToken(response.data.token,'AdminTokenName');//设置Token
             this.commonFunctions.snackbar('登入成功，正在跳转');
         });
 

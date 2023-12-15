@@ -18,12 +18,15 @@ Route::get('login', 'Auth/login');
 
 //管理鉴权
 Route::group('', function () {
+    Route::get('$', 'Index/Index');
     fObjectEasyBindIndex('index', 'Index/Index');
 
     fObjectEasyBindIndex('cards', 'Cards/Index');
     Route::group('cards', function () {
         Route::get('edit', 'Cards/Edit');
     });
+
+    fObjectEasyBindIndex('users', 'Users/Index');
 
     fObjectEasyBindIndex('tags', 'Tags/Index');
 

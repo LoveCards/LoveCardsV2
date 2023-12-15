@@ -156,13 +156,13 @@ class UserAuth
         }
 
         //写入数据
-        $result = $userModel->Register($number, $username, $account['email'], $account['phone'], $password);
+        $result = $userModel->Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
         if ($result['status'] == false) {
             return Export::Create([$result['msg']], 401, '注册失败');
         }
 
         $user_id = $result['data'];
-        $result = Jwt::signToken(['user_id' => $user_id]);
+        $result = Jwt::signToken(['uid' => $user_id]);
 
         //清除验证码
         Code::DeleteCaptcha($account, 'Auth');

@@ -8,7 +8,7 @@ use think\Response;
 class Export extends Facade
 {
 
-    protected static function setHeader($object, $context = null)
+    public static function setHeader($object, $context = null)
     {
         $data = array(
             'Access-Control-Allow-Credentials' => 'true',
@@ -39,7 +39,7 @@ class Export extends Facade
      * @param {int} $code
      * @param {string} $type
      */
-    protected static function Create($data, int $code = 200, string $error = null, $context = null, string $type = 'json'): Response
+    public static function Create($data, int $code = 200, string $error = null, $context = null, string $type = 'json'): Response
     {
         if ($error != null) {
             $response = self::setHeader(Response::create(['error' => $error, 'detail' => $data], $type)->code($code), $context);
@@ -67,7 +67,7 @@ class Export extends Facade
      * @param {int} $code
      * @param {string} $type
      */
-    protected static function mObjectEasyCreate($data, string $msg = '', int $code = 200, string $type = 'json'): Response
+    public static function mObjectEasyCreate($data, string $msg = '', int $code = 200, string $type = 'json'): Response
     {
         $result = [
             //状态码

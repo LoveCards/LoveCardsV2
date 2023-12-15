@@ -27,10 +27,12 @@ class CheckClass
     {
         $TDef_JwtData = request()->JwtData;
         //验证身份并返回数据
-        $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid'])['data'];
+        $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid']);
+
         if (!$this->attrLDefAdminAllData['status']) {
             return Export::Create(null, 401, $this->attrLDefAdminAllData['msg']);
         }
+        $this->attrLDefAdminAllData = $this->attrLDefAdminAllData['data'];
     }
 
     /**
