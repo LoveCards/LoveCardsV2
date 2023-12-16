@@ -73,7 +73,7 @@
                         <td>{{item.created_at}}</td>
                         <td>{{item.status}}</td>
                         <td>
-                            <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                            <button @click="putUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
                                 <i class="mdui-icon material-icons">edit</i>
                             </button>
                             <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
@@ -138,6 +138,11 @@
             }).catch((err) => {
                 console.log(err);
             });
+        },
+        methods: {
+            putUser: (data) => {
+                console.log(data);
+            }
         }
     }).mount('#app');
 </script>

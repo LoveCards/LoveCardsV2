@@ -130,6 +130,24 @@ class Users extends Model
     }
 
     /**
+     * 更新指定ID行
+     *
+     * @param int $id
+     * @param array $data
+     * @return void
+     */
+    public static function Patch($id, $data)
+    {
+        try {
+            $result = self::update($data, ['id' => $id]);
+            return Common::mArrayEasyReturnStruct(null, true, $result);
+        } catch (\Throwable $th) {
+            return Common::mArrayEasyReturnStruct('更新失败', false, $th);
+        }
+
+    }
+
+    /**
      * 读取指定ID行
      *
      * @param int $id
@@ -143,7 +161,7 @@ class Users extends Model
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result);
         }
-        return Common::mArrayEasyReturnStruct('项目查询失败', false, $result);
+        return Common::mArrayEasyReturnStruct('查询失败', false, $result);
     }
 
     /**
@@ -158,6 +176,6 @@ class Users extends Model
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result);
         }
-        return Common::mArrayEasyReturnStruct('项目删除失败', false);
+        return Common::mArrayEasyReturnStruct('删除失败', false);
     }
 }
