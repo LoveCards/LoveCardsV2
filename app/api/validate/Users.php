@@ -24,12 +24,13 @@ class Users extends Validate
         'phone' => 'mobile|unique:users',
         'username' => 'length:3,12|alphaDash|unique:users',
         'password' => 'length:5,36|password',
-        //'status' => '',
+        'status' => 'number',
     ];
 
     //定义错误信息
     protected $message  =   [
         'status.require' => '状态不得为空',
+        'status.number' => '状态格式错误',
 
         'number.require' => '账号不得为空',
         'number.unique' => '账号已存在',
@@ -50,9 +51,10 @@ class Users extends Validate
         'password.require' => '密码不得为空',
         'password.length'     => '密码超出范围(5-36)',
         'password.password' => '密码只能为大写、小写、数字或特殊字符',
+
     ];
 
-    //验证场景-登入
+    //登入场景
     protected function sceneLogin()
     {
         return $this->only(['email', 'phone', 'username', 'password'])
@@ -64,6 +66,11 @@ class Users extends Validate
     protected function sceneRegister()
     {
         return $this->only(['email', 'phone', 'username', 'password'])
-        ->append('require');
+            ->append('require');
+    }
+    //编辑场景
+    protected function sceneEdit()
+    {
+        return $this->only(['email', 'phone', 'username', 'password', 'status']);
     }
 }
