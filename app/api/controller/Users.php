@@ -71,7 +71,7 @@ class Users
     // }
 
     //编辑-PUT
-    public function Edit()
+    public function Patch()
     {
         $context = request()->JwtData;
 
@@ -89,7 +89,8 @@ class Users
 
         //验证修改参数是否合法
         try {
-            validate(UsersValidate::class)->batch(true)
+            validate(UsersValidate::class)
+                ->batch(true)
                 ->scene('edit')
                 ->check($lDef_ParamData);
         } catch (ValidateException $e) {
@@ -102,6 +103,7 @@ class Users
         if ($lDef_ParamData['password']) {
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
+
         $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null, $context);

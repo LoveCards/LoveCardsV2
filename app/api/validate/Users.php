@@ -20,6 +20,7 @@ class Users extends Validate
 
     //定义验证规则
     protected $rule =   [
+        'id' => 'number',
         'email' => 'email|unique:users',
         'phone' => 'mobile|unique:users',
         'username' => 'length:3,12|alphaDash|unique:users',
@@ -29,6 +30,9 @@ class Users extends Validate
 
     //定义错误信息
     protected $message  =   [
+        'id.require' => 'id不得为空',
+        'id.number' => 'id格式错误',
+
         'status.require' => '状态不得为空',
         'status.number' => '状态格式错误',
 
@@ -71,6 +75,7 @@ class Users extends Validate
     //编辑场景
     protected function sceneEdit()
     {
-        return $this->only(['email', 'phone', 'username', 'password', 'status']);
+        return $this->only(['id', 'email', 'phone', 'username', 'password', 'status'])
+            ->append('id', 'require');
     }
 }
