@@ -5,6 +5,7 @@ namespace app\common;
 use think\Facade;
 use think\facade\Db;
 
+
 class Common extends Facade
 {
 
@@ -95,7 +96,7 @@ class Common extends Facade
      * @param string|null $msg
      * @param boolean $status
      * @param object $data
-     * @return array['status','msg','data':*]
+     * @return array ['status','msg','data':*]
      */
     public static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
     {

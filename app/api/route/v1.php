@@ -14,6 +14,11 @@ use app\api\middleware\GeetestCheck;
 
 Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 
+//用户登入鉴权
+Route::group('', function () {
+    Route::post('upload/user-images', 'upload/UserImages');
+})->middleware([JwtAuthCheck::class]);
+
 //登入鉴权
 Route::group('', function () {
     Route::post('admin/add', 'Admin/Add');
@@ -31,6 +36,9 @@ Route::group('', function () {
     Route::post('tags/delete', 'CardsTag/Delete');
 
     Route::get('users/index', 'Users/Index');
+    Route::patch('users/patch', 'Users/Patch');
+
+    Route::post('upload/user-images', 'upload/UserImages');
 })->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);
 
 //超管鉴权

@@ -144,7 +144,6 @@ class Users extends Model
         } catch (\Throwable $th) {
             return Common::mArrayEasyReturnStruct('更新失败', false, $th);
         }
-
     }
 
     /**

@@ -33,7 +33,7 @@ class Base {
             UsersIndex: '/api/users/index',//列出用户
             UsersDelete: '/api/users/delete',//删除用户
             UsersAdd: '/api/users/add',//添加用户
-            UsersEdit: '/api/users/edit',//添加用户
+            UsersPatch: '/api/users/patch',//添加用户
 
             SystemSite: '/api/system/site',//系统设置
             SystemEmail: '/api/system/email',//系统邮箱设置
@@ -284,14 +284,17 @@ class Base {
     /**
      * ApiUrl通用请求接口
      * @param {String} method //Axios的method
-     * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找 当为undefined时将不再是Hooks模式而返回原始Promise
-     * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改
+     * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找
+     * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改 当为undefined时将不再是Hooks模式而返回原始Promise
      * @param {Object} data //参数对象
      * @param {TokenConfig} tokenName //参数对象
      * 
      * @returns {Promise}
      */
     RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey = undefined, data = {}, tokenName = 'AdminTokenName') => {
+        if (!this.config.apiUrl[thisConfigApiUrlKey]) {
+            return Promise.reject('注意：' + thisConfigApiUrlKey + '不存在于this.config.apiUrl');
+        }
         if (thisHooksKey != undefined) {
             if (this.hooks[thisHooksKey]?.inti) {
                 //自定义回调函数

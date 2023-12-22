@@ -1,6 +1,6 @@
 {include file="public/header"}
 <!-- 页体 -->
-<div class="mdui-container">
+<div id="app" class="mdui-container">
 
     <!-- 标题组件 -->
     <div class="mdui-row">
@@ -45,7 +45,7 @@
     </div>
 
     <!-- 主体组件 -->
-    <div id="app" class="mdui-card mdui-p-a-2">
+    <div class="mdui-card mdui-p-a-2">
         <div class="mdui-table-fluid mdui-shadow-0 mdui-m-b-1">
 
             <table class="mdui-table mdui-typo">
@@ -63,7 +63,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in test">
+                    <tr v-for="item in UsersIndex">
                         <td>{{item.id}}</td>
                         <td>{{item.avater}}</td>
                         <td>{{item.number}}</td>
@@ -73,7 +73,11 @@
                         <td>{{item.created_at}}</td>
                         <td>{{item.status}}</td>
                         <td>
-                            <button @click="putUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                            <!-- <button @click="putUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                                <i class="mdui-icon material-icons">edit</i>
+                            </button> -->
+                            <button @click="editUser(item)"
+                                class="js-Btn-Edit mdui-btn mdui-btn-icon">
                                 <i class="mdui-icon material-icons">edit</i>
                             </button>
                             <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
@@ -89,63 +93,10 @@
     </div>
 
     <!-- 弹窗组件 -->
-    <div class="mdui-dialog" id="dialogedit">
-        <div class="mdui-dialog-title">编辑用户</div>
-        <div class="mdui-row mdui-p-x-4">
-            <div class="mdui-row">
-                <div class="mdui-col-xs-9 mdui-col-md-10">
-                    <div class="mdui-textfield">
-                        <label class="mdui-textfield-label">用户名</label>
-                        <input class="mdui-textfield-input" id="editUserDataName" type="text" />
-                    </div>
-                </div>
-                <div class="mdui-col-xs-3 mdui-col-md-2">
-                    <label class="mdui-textfield-label mdui-m-t-2">权限</label>
-                    <select class="mdui-select" id="editUserDataPower" style="width: 100%;">
-                        <option value="0">站长</option>
-                        <option value="1">管理员</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mdui-textfield">
-                <label class="mdui-textfield-label">密码</label>
-                <input class="mdui-textfield-input" id="editUserDataPassword" type="password" placeholder="不填默认不修改" />
-            </div>
-        </div>
-
-        <div class="mdui-dialog-actions">
-            <button class="mdui-btn mdui-ripple" id="btnEditUser" mdui-dialog-close>确定</button>
-        </div>
-    </div>
-
+    <component-edit-user v-model:enter-user-obj="EditUser" v-model:show-status="EditShow"></component-edit-user>
 
 </div>
 {include file="public/footer"}
-
-<script>
-    const { createApp } = Vue;
-    const BaseEntity = new Base();
-
-    const app = createApp({
-        data() {
-            return {
-                test: null // 初始化为 null 或者其他默认值
-            }
-        },
-        created() {
-            BaseEntity.RequestApiUrl('get', 'UsersIndex').then((result) => {
-                this.test = result.data.data;
-            }).catch((err) => {
-                console.log(err);
-            });
-        },
-        methods: {
-            putUser: (data) => {
-                console.log(data);
-            }
-        }
-    }).mount('#app');
-</script>
 </body>
 
 </html>
