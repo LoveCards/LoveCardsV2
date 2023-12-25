@@ -26,7 +26,7 @@ class Users
         }
 
         if (Request::param('list_rows') == null) {
-            $lDef_Paginte['list_rows'] = 2;
+            $lDef_Paginte['list_rows'] = 12;
         } else {
             $lDef_Paginte['list_rows'] = Request::param('list_rows') > 100 ? 100 : Request::param('list_rows');
         }
@@ -117,29 +117,19 @@ class Users
     //删除-DELETE
     public function Delete()
     {
-        $context = request()->JwtData;
+        // $context = request()->JwtData;
 
-        //传入必要参数
-        $id = Request::param('id');
+        // //传入必要参数
+        // $id = Request::param('id');
 
-        //验证ID是否正常传入
-        if (empty($id)) {
-            return Export::Create(null, 400, '缺少id参数');
-        }
+        // //验证ID是否正常传入
+        // if (empty($id)) {
+        //     return Export::Create(null, 400, '缺少id参数');
+        // }
 
-        if ($context['aid'] == $id) {
-            return Export::Create(['您不能删除您自己的账户'], 400, '删除失败');
-        }
-        //获取数据库对象
-        $result = Db::table('admin')->where('id', $id);
+        // UsersModel::Del()
 
-        $resultUserData = $result->find();
-        //验证ID是否存在
-        if (!$resultUserData) {
-            return Export::Create(null, 400, 'id不存在');
-        }
-
-        $result->delete();
-        return Export::Create(null, 200, null, $context);
+        // $result->delete();
+        // return Export::Create(null, 200, null, $context);
     }
 }

@@ -15,6 +15,7 @@ class App extends Facade
     protected static function mArrayGetAppTableIdMap(): array
     {
         return [
+            0 => 'users',
             1 => 'cards',
             2 => 'comments',
         ];

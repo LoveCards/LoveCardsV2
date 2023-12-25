@@ -35,6 +35,8 @@ class Base {
             UsersAdd: '/api/users/add',//添加用户
             UsersPatch: '/api/users/patch',//添加用户
 
+            UploadUserImages: '/api/upload/user-images',//用户图片上传
+
             SystemSite: '/api/system/site',//系统设置
             SystemEmail: '/api/system/email',//系统邮箱设置
             SystemTemplate: '/api/system/template',//主题设置
@@ -223,10 +225,11 @@ class Base {
     * AXios封装加入拦截器
     * @param {String} method //axios的method
     * @param {String} url 
-    * @param {String} data 
+    * @param {Object} data 
+    * @param {Object} headers
     * @returns {Promise}
     */
-    Axios = (method, url, data) => {
+    Axios = (method, url, data, headers = {}) => {
         // 添加请求拦截器
         axios.interceptors.request.use((config) => {
             //载入钩子
@@ -253,12 +256,20 @@ class Base {
             return Promise.reject(error);
         });
 
-        // 执行
-        return axios({
+        let ReqObj = {
             method: method,
             url: url,
-            data: data
-        });
+            headers: headers
+        };
+
+        if (method.toLowerCase() != 'get') {
+            ReqObj.data = data;
+        } else {
+            ReqObj.params = data;
+        }
+
+        // 执行
+        return axios(ReqObj);
     }
 
     /**
@@ -285,21 +296,33 @@ class Base {
      * ApiUrl通用请求接口
      * @param {String} method //Axios的method
      * @param {String} thisConfigApiUrlKey //this.config.apiUrl中查找
-     * @param {String} thisHooksKey //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改 当为undefined时将不再是Hooks模式而返回原始Promise
-     * @param {Object} data //参数对象
+     * @param {String|RequestHooks} thisHooksKey 
+     * //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改 
+     * //当传入RequestHooks时将以最高级替换其他方式传入方法
+     * //当为undefined时将不再是Hooks模式而返回原始Promise 
+     * @param {Object} data //参数对象 可传入请求头 将自动分离 ReqHeaders
      * @param {TokenConfig} tokenName //参数对象
      * 
      * @returns {Promise}
      */
     RequestApiUrl = (method, thisConfigApiUrlKey, thisHooksKey = undefined, data = {}, tokenName = 'AdminTokenName') => {
+        //判断Url是否存在
         if (!this.config.apiUrl[thisConfigApiUrlKey]) {
             return Promise.reject('注意：' + thisConfigApiUrlKey + '不存在于this.config.apiUrl');
         }
+
+        //设置初始化方法 AI优化逻辑
         if (thisHooksKey != undefined) {
-            if (this.hooks[thisHooksKey]?.inti) {
-                //自定义回调函数
+            const isObject = typeof thisHooksKey === 'object' && thisHooksKey !== null;
+
+            if (isObject && thisHooksKey.inti) {
+                // 自定义回调函数
+                thisHooksKey.inti();
+            } else if (this.hooks[thisHooksKey]?.inti) {
+                // 自定义回调函数
                 this.hooks[thisHooksKey].inti();
             } else {
+                // 默认回调函数
                 this.commonFunctions.snackbar(thisConfigApiUrlKey + '发起请求');
             }
         }
@@ -334,26 +357,40 @@ class Base {
             }
         }
 
-        //提交数据
+        //设置请求头
+        let Headers = {};
+        if (data?.ReqHeaders) {
+            Headers = data.ReqHeaders;
+            delete data.ReqHeaders;
+        }
+
+        //返回请Axios请求方法 AI优化逻辑
         if (thisHooksKey != undefined) {
-            return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data).then((response) => {
-                if (this.hooks[thisHooksKey]?.then) {
-                    //自定义回调函数
-                    this.hooks[thisHooksKey].then(response);
+            const axiosPromise = this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data, Headers);
+
+            axiosPromise.then((response) => {
+                const thenCallback = thisHooksKey?.then || this.hooks[thisHooksKey]?.then;
+                if (thenCallback) {
+                    thenCallback(response);
                 } else {
-                    //默认回调函数
                     this.commonFunctions.snackbar(thisConfigApiUrlKey + '请求成功');
-                    //this.JumpUrl('');
+                    // this.JumpUrl('');
                 }
             }).catch((error) => {
-                if (this.hooks[thisHooksKey]?.catch) {
-                    this.hooks[thisHooksKey].catch(error);
+                const catchCallback = thisHooksKey?.catch || this.hooks[thisHooksKey]?.catch;
+                if (catchCallback) {
+                    catchCallback(error);
                 } else {
                     this.AxiosErrorHandling(error);
                 }
             });
+
+            return axiosPromise;
         }
-        return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data);
+
+
+        //返回原始请求方法
+        return this.Axios(method, this.config.apiUrl[thisConfigApiUrlKey], data, Headers);
     }
 
 }
