@@ -63,9 +63,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in UsersIndex">
+                    <tr v-for="item in UsersIndex.data">
                         <td>{{item.id}}</td>
-                        <td>{{item.avater}}</td>
+                        <td>
+                            <img class="mdui-img-fluid mdui-img-circle" v-bind:src="item.avatar ? item.avatar : '/view/admin/assets/img/avatar.png'">
+                        </td>
                         <td>{{item.number}}</td>
                         <td>{{item.username}}</td>
                         <td>{{item.email}}</td>
@@ -73,12 +75,8 @@
                         <td>{{item.created_at}}</td>
                         <td>{{item.status}}</td>
                         <td>
-                            <!-- <button @click="putUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
-                                <i class="mdui-icon material-icons">edit</i>
-                            </button> -->
-                            <button @click="editUser(item)"
-                                class="js-Btn-Edit mdui-btn mdui-btn-icon">
-                                <i class="mdui-icon material-icons">edit</i>
+                            <button @click=" editUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon">
+                            <i class="mdui-icon material-icons">edit</i>
                             </button>
                             <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
                                 <i class="mdui-icon material-icons">delete</i>
@@ -90,6 +88,17 @@
 
         </div>
         <!-- 分页按钮组件 -->
+        <div class="mdui-float-right">
+            <button type="button" class="mdui-btn mdui-color-theme-accent mdui-btn-dense"
+                v-if="UsersIndex.current_page != 1" @click="prevPage">
+                <i class="mdui-icon material-icons">first_page</i>
+            </button>
+            <span class="mdui-p-x-1"></span>
+            <button type="button" class="mdui-btn mdui-color-theme-accent mdui-btn-dense"
+                v-if="UsersIndex.current_page != UsersIndex.last_page" @click="nextPage">
+                <i class="mdui-icon material-icons">last_page</i>
+            </button>
+        </div>
     </div>
 
     <!-- 弹窗组件 -->
@@ -97,6 +106,7 @@
 
 </div>
 {include file="public/footer"}
+<script type="module" src="/view/admin/app/{$SystemControllerName}/VueIndex.js"></script>
 </body>
 
 </html>

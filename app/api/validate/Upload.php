@@ -20,7 +20,7 @@ class Upload extends Validate
         $lDef_ImageSize[0] != '' ? $lDef_ImageSize = $lDef_ImageSize[0] : $lDef_ImageSize = 2;
         $lDef_ImageExt = CommonBase::conf()->mArraySearchConfigKey('UserImageExt');
         $lDef_ImageExt[0] != '' ? $lDef_ImageExt = $lDef_ImageExt[0] : $lDef_ImageExt = 'jpg,png,gif';
-        $this->rule['file'] = 'fileSize:' . (1024 * 1000 * $lDef_ImageSize) . '|fileExt:' . $lDef_ImageExt;
+        $this->rule['file'] = $this->rule['file'] . '|fileSize:' . (1024 * 1000 * $lDef_ImageSize) . '|fileExt:' . $lDef_ImageExt;
     }
 
     //定义验证规则
@@ -46,7 +46,7 @@ class Upload extends Validate
         'url.require' => 'url不得为空',
         //'url.number' => 'url格式错误',
 
-        'file.require' => 'url不得为空',
+        'file.require' => '图片不得为空',
         'file.fileSize' => '图片超出上传限制',
         'file.fileExt' => '图片格式错误',
     ];
@@ -59,6 +59,6 @@ class Upload extends Validate
 
     public function sceneCheckUpload()
     {
-        return $this->only(['aid', 'pid', 'file']);
+        return $this->only(['aid', 'uid', 'pid', 'file'])->remove('uid', 'require');
     }
 }

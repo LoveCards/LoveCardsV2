@@ -1,7 +1,6 @@
-const { createApp } = Vue;
 const BaseEntity = new Base();
 
-const ComponentEditUser = {
+const DialogEditUser = {
     props: {
         enterUserObj: Object,
         showStatus: Boolean
@@ -50,6 +49,7 @@ const ComponentEditUser = {
     methods: {
         //提交方法
         putUser() {
+
             function removeCommonProperties(obj1, obj2) {
                 //比对原始对象去除空属性与相同属性
                 const result = { ...obj1 };
@@ -61,23 +61,58 @@ const ComponentEditUser = {
                 return result;
             }
             let result = removeCommonProperties(this.outUserObj, this.enterUserObj);
+            if (Object.keys(result).length == 0) {
+                BaseEntity.commonFunctions.snackbar('请修改后提交');
+                return;
+            }
+
             result = { ...result, id: this.enterUserObj.id };
             BaseEntity.RequestApiUrl('patch', 'UsersPatch', undefined, result).then((result) => {
                 this.$emit('update:showStatus', false);
+                BaseEntity.commonFunctions.snackbar('编辑成功');
+                this.$parent.getUsersIndex(this.$parent.UsersIndex.current_page);
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
-                //console.log(err);
             });
-        }
-
+        },
+        chooseFile() {
+            this.$refs.fileInput.click();
+        },
+        handleFileUpload(event) {
+            const file = event.target.files[0];
+            this.uploadUserImages(file);
+        },
+        uploadUserImages(file) {
+            let data = {
+                file: file,
+                aid: 0, //用户应用ID
+                pid: 0, //临时条目ID
+                uid: this.enterUserObj.id,
+                ReqHeaders: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+            BaseEntity.RequestApiUrl('Post', 'UploadUserImages', {
+                inti: () => {
+                    BaseEntity.commonFunctions.snackbar('正在上传');
+                },
+                then: () => {
+                    BaseEntity.commonFunctions.snackbar('上传成功，提交后保存');
+                }
+            }, data).then((result) => {
+                console.log(result);
+                this.outUserObj.avatar = result.data;
+            })
+        },
     },
     template: `
     <div class="mdui-dialog" id="dialog">
         <div class="mdui-dialog-title">编辑用户</div>
         <div class="mdui-dialog-content">
             <div class="mdui-row">
-                <div class="mdui-center mdui-img-circle mdui-ripple mdui-btn-raised" style="height: 180px; max-width: 180px; position: relative;">
-                    <img class="mdui-img-fluid" src="https://s3.bmp.ovh/imgs/2023/12/20/006e9f8cb0adb3fd.png" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                <input type="file" ref="fileInput" style="display: none;" @change="handleFileUpload" />
+                <div class="mdui-center mdui-img-circle mdui-ripple mdui-btn-raised" style="height: 180px; max-width: 180px; position: relative;" @click="chooseFile">
+                    <img class="mdui-img-fluid" v-bind:src="outUserObj.avatar ? outUserObj.avatar : '/view/admin/assets/img/avatar.png' " style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
                     <i class="mdui-icon material-icons" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255, 255, 255, 0.5); font-size: 32px;">photo_camera</i>
                 </div>
                 <div class="mdui-col-xs-12 mdui-col-md-6">
@@ -129,33 +164,4 @@ const ComponentEditUser = {
     `,
 };
 
-const app = createApp({
-    data() {
-        return {
-            UsersIndex: null,
-            EditUser: null,
-            EditShow: false,
-        };
-    },
-    created() {
-        this.getUsersIndex();
-    },
-    methods: {
-        getUsersIndex: function () {
-            BaseEntity.RequestApiUrl('get', 'UsersIndex').then((result) => {
-                this.UsersIndex = result.data.data;
-            }).catch((err) => {
-                console.log(err);
-            });
-        },
-        editUser: function (userData) {
-            console.log(userData);
-            // 在调用editUser方法时，通过v-model更新EditShow属性，触发弹窗显示
-            this.EditShow = true;
-            this.EditUser = userData;
-        }
-    },
-    components: {
-        'component-edit-user': ComponentEditUser,
-    }
-}).mount('#app');
+export default DialogEditUser;

@@ -49,6 +49,7 @@ class Upload
             'file' => request()->file('file'),
             'aid' => Request::param('aid'),
             'pid' => Request::param('pid'),
+            'uid' => Request::param('uid'),
         ];
 
         //校验参数
@@ -61,20 +62,21 @@ class Upload
         }
 
         //保存图片
-        $lDef_Result = Filesystem::disk('public')->putFile('image', $lReq_ParmasArray['file']); //保存文件名
+        $lDef_Result = Filesystem::disk('public')->putFile('image', $lReq_ParmasArray['file']);
         if (!$lDef_Result) {
             return Export::Create('保存文件失败', 500, '上传失败', $context);
         }
 
         //创建数据
-        $lReq_ParmasArray['uid'] = $context['uid'];
+        if (!isset($context['aid'])) {
+            $lReq_ParmasArray['uid'] = $context['uid'];
+        }
         $lReq_ParmasArray['url'] =  $lDef_Result;
         $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
         if (!$lDef_CreatData) {
             //待完善-回滚操作，删除文件
             return Export::Create('数据创建失败', 500, '上传失败', $context);
         }
-
-        return Export::Create($lDef_Result, 200, '上传成功', $context);
+        return Export::Create('/storage/' . $lDef_Result, 200, null, $context);
     }
 }
