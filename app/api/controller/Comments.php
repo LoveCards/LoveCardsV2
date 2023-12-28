@@ -83,9 +83,12 @@ class Comments extends Common
     //添加-POST
     public function Add()
     {
+        $context = request()->JwtData;
+
         $result = self::CAndU('', [
             'aid' => Request::param('aid'),
             'pid' => Request::param('pid'),
+            'uid' => $context['uid'],
             'content' => Request::param('content'),
             'name' => Request::param('name')
         ], 'c');
@@ -105,6 +108,7 @@ class Comments extends Common
     public function Edit()
     {
         $result = self::CAndU(Request::param('id'), [
+            'uid' => Request::param('uid'),
             'content' => Request::param('content'),
             'name' => Request::param('name'),
             'status' => Request::param('status')

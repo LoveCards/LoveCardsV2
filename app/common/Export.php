@@ -42,6 +42,7 @@ class Export extends Facade
     public static function Create($data, int $code = 200, string $error = null, $context = null, string $type = 'json'): Response
     {
         if ($error != null) {
+            $data ?: $data = [];
             $response = self::setHeader(Response::create(['error' => $error, 'detail' => $data], $type)->code($code), $context);
         } else {
             if ($data != null) {

@@ -18,6 +18,8 @@ Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 Route::group('', function () {
     Route::post('upload/user-images', 'upload/UserImages');
     Route::post('cards/add', 'cards/Add');
+    Route::post('comments/add', 'comments/Add');
+    Route::post('cards/good', 'cards/Good');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权
