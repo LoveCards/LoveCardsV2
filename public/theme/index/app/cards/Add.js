@@ -60,6 +60,6 @@ class Add extends Base {
             'tag': resData.tag,
             'img': resData.img,
         };
-        this.RequestApiUrl('post', 'CardsAdd', 'PostCardsAdd', data);
+        this.RequestApiUrl('post', 'CardsAdd', 'PostCardsAdd', data, 'UserTokenName');
     }
 }

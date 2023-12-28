@@ -160,10 +160,10 @@
         }
 
         //设置钩子
-        AddEntity.SetPostCardsAddHooks(undefined, (response) => {
+        AddEntity.SetPostCardsAddHooks(()=>{}, (response) => {
             //默认回调函数
             AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
-            console.log(response);
+            AddEntity.JumpUrl('/index/cards/card/id/' + response.data.id);
         });
 
         //绑定按钮

@@ -33,6 +33,7 @@ class Edit extends Base {
         });
         var data = {
             'id': editData.id,
+            'uid': editData.uid,
             'top': editData.top,
             'status': editData.status,
             'model': editData.model,

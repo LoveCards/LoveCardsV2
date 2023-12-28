@@ -46,6 +46,12 @@
         <div class="mdui-row">
             <div class="mdui-col-xs-12 mdui-col-md-6">
                 <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">UID</label>
+                    <input class="mdui-textfield-input" type="text" value="{$CardData['uid']}" id="uid" disabled />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
                     <label class="mdui-textfield-label">发布时间</label>
                     <input class="mdui-textfield-input" type="text" value="{$CardData['time']}" disabled />
                 </div>
@@ -208,6 +214,7 @@
 
             let data = {
                 'id': "{$CardData['id']}",
+                'uid': $('#uid').val(),
                 'top': $('#top').val(),
                 'status': $('#status').val(),
                 'model': $('#model').val(),

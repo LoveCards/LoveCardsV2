@@ -17,6 +17,7 @@ Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 //用户登入鉴权
 Route::group('', function () {
     Route::post('upload/user-images', 'upload/UserImages');
+    Route::post('cards/add', 'cards/Add');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权
@@ -31,9 +32,9 @@ Route::group('', function () {
     Route::post('comments/edit', 'Comments/Edit');
     Route::post('comments/delete', 'Comments/Delete');
 
-    Route::post('tags/add', 'CardsTag/Add');
-    Route::post('tags/edit', 'CardsTag/Edit');
-    Route::post('tags/delete', 'CardsTag/Delete');
+    Route::post('tags/add', 'Tags/Add');
+    Route::post('tags/edit', 'Tags/Edit');
+    Route::post('tags/delete', 'Tags/Delete');
 
     Route::get('users/index', 'Users/Index');
     Route::patch('users/patch', 'Users/Patch');
