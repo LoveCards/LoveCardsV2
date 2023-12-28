@@ -9,6 +9,7 @@ class Cards extends Validate
 {
     //定义验证规则
     protected $rule =   [
+        'uid' => 'number',
         'content' => 'require',
 
         'woName' => 'chsDash|max:36',
@@ -29,6 +30,7 @@ class Cards extends Validate
 
     //定义错误信息
     protected $message  =   [
+        'uid.number' => 'uid格式非法',
         'content.require' => 'content不得为空',
 
         'woName.chsDash' => 'woName只能是汉字、字母、数字和下划线_及破折号-',

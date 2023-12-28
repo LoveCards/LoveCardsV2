@@ -10,6 +10,8 @@ use think\facade\Config;
 use app\api\validate\Cards as CardsValidate;
 use app\api\validate\CardsSetting as CardsValidateSetting;
 
+use app\api\model\Images as ImagesModel;
+
 use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
@@ -75,7 +77,8 @@ class Cards extends Common
                 $DbResult->update($DbData);
                 $CardId = $id;
                 //清理原始数据
-                Db::table('img')->where('aid', $lDef_AppCardsID)->where('pid', $id)->delete();
+                //ImagesModel::destroy(ImagesModel::where('aid', $lDef_AppCardsID)->where('pid', $id)->column('id'));
+                Db::table('images')->where('aid', $lDef_AppCardsID)->where('pid', $id)->delete();
                 Db::table('tags_map')->where('aid', $lDef_AppCardsID)->where('pid', $id)->delete();
             }
 
@@ -84,12 +87,13 @@ class Cards extends Common
             if (!empty($img)) {
                 $JsonData = array();
                 foreach ($img as $key => $value) {
+                    $JsonData[$key]['uid'] = $Datas['uid'];
                     $JsonData[$key]['aid'] = $lDef_AppCardsID;
                     $JsonData[$key]['pid'] = $CardId;
                     $JsonData[$key]['url'] = $value;
-                    $JsonData[$key]['time'] = $this->attrGReqTime;
                 }
-                Db::table('img')->insertAll($JsonData);
+                $ImagesModel = new ImagesModel;
+                $ImagesModel->saveAll($JsonData);
                 //更新img视图字段
                 $DbResult->where('id', $CardId)->update(['img' => $img[0]]);
             }
@@ -103,7 +107,6 @@ class Cards extends Common
                     $JsonData[$key]['aid'] = $lDef_AppCardsID;
                     $JsonData[$key]['pid'] = $CardId;
                     $JsonData[$key]['tid'] = $value;
-                    $JsonData[$key]['time'] = $this->attrGReqTime;
                 }
                 Db::table('tags_map')->insertAll($JsonData);
                 //更新tag视图字段
@@ -123,7 +126,10 @@ class Cards extends Common
     //添加-POST
     public function Add()
     {
+        $context = request()->JwtData;
+
         $result = self::CAndU('', [
+            'uid' => $context['uid'],
             'content' => Request::param('content'),
 
             'woName' => Request::param('woName'),
@@ -145,14 +151,17 @@ class Cards extends Common
                 return Export::Create(['id' => $result['data']], 200);
             }
         } else {
-            return Export::Create($result['msg'], 500, '添加失败');
+            return Export::Create($result['data'], 500, $result['msg']);
         }
     }
 
     //编辑-POST
     public function Edit()
     {
+        $context = request()->JwtData;
+
         $result = self::CAndU(Request::param('id'), [
+            'uid' => Request::param('uid'),
             'content' => Request::param('content'),
 
             'woName' => Request::param('woName'),
@@ -171,7 +180,7 @@ class Cards extends Common
         if ($result['status']) {
             return Export::Create(['id' => $result['data']], 200);
         } else {
-            return Export::Create($result['msg'], 500, '编辑失败');
+            return Export::Create($result['data'], 500, '编辑失败');
         }
     }
 
@@ -190,7 +199,7 @@ class Cards extends Common
         $result->delete();
 
         //获取img数据库对象
-        $result = Db::table('img')->where('aid', $lDef_AppCardsID)->where('pid', $id);
+        $result = Db::table('images')->where('aid', $lDef_AppCardsID)->where('pid', $id);
         if ($result->find()) {
             $result->delete();
         }

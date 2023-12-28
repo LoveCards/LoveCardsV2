@@ -11,6 +11,7 @@ use app\common\Common;
 use app\common\FrontEnd;
 
 use app\admin\BaseController;
+use app\api\model\Images as ImagesModel;
 
 class Cards extends BaseController
 {
@@ -63,7 +64,7 @@ class Cards extends BaseController
         //判断是否存在图片并获取图集
         if ($tDef_CardData['img']) {
             //获取IMG数据
-            $lDef_Result = Db::table('img')->where('pid', $tDef_Id)->select()->toArray();
+            $lDef_Result = ImagesModel::where('pid', $tDef_Id)->select()->toArray();
             View::assign('CardImgList', $lDef_Result);
         } else {
             View::assign('CardImgList', false);

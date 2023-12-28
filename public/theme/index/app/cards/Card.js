@@ -13,7 +13,7 @@ class Card extends Base {
      * @param {Number} aid 
      */
     BindPostCommentsAdd = (submitId = undefined, pid, commentsNameId, commentsContentId, aid = 1) => {
-
+        
         const getValue = () => {
             const name = $('#' + commentsNameId).val();
             const content = $('#' + commentsContentId).val();
@@ -28,7 +28,8 @@ class Card extends Base {
         if (this.hooks.CommentsAdd?.defultStatus == undefined || this.hooks.CommentsAdd?.defultStatus == true) {
             this.SetPostCommentsAddHooks({
                 then: (response) => {
-                    console.log('提交成功刷新页面');
+                    window.location.reload();
+                    //console.log('提交成功刷新页面');
                 }
             }, true);
         }
@@ -52,8 +53,8 @@ class Card extends Base {
      * @param {Boolean} defultStatus 默认为False
      * @param {String} thisHooksKey 
      */
-    SetPostCommentsAddHooks = (hooks, defultStatus = false, thisHooksKey = 'CommentsAdd') => {
-        this.SetRequestApiUrl(hooks, defultStatus, thisHooksKey);
+    SetPostCommentsAddHooks = (hooks, defultStatus = false, thisHooksKey = 'PostCommentsAdd') => {
+        this.SetRequestApiUrlHooks(hooks, defultStatus, thisHooksKey);
     }
 
     /**
