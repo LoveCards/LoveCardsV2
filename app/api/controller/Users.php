@@ -117,19 +117,20 @@ class Users
     //删除-DELETE
     public function Delete()
     {
-        // $context = request()->JwtData;
+        $context = request()->JwtData;
 
-        // //传入必要参数
-        // $id = Request::param('id');
+        //传入必要参数
+        $id = Request::param('id');
 
-        // //验证ID是否正常传入
-        // if (empty($id)) {
-        //     return Export::Create(null, 400, '缺少id参数');
-        // }
+        //验证ID是否正常传入
+        if (empty($id)) {
+            return Export::Create(null, 400, '缺少id参数');
+        }
 
-        // UsersModel::Del()
-
-        // $result->delete();
-        // return Export::Create(null, 200, null, $context);
+        $tDef_Result = UsersModel::Del($id);
+        if ($tDef_Result['status']) {
+            return Export::Create(null, 200, null, $context);
+        }
+        return Export::Create(null, 500, $tDef_Result['msg'], $context);
     }
 }

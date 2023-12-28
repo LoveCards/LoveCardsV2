@@ -37,6 +37,7 @@ Route::group('', function () {
 
     Route::get('users/index', 'Users/Index');
     Route::patch('users/patch', 'Users/Patch');
+    Route::delete('users/delete', 'Users/Delete');
 
     Route::post('upload/user-images', 'upload/UserImages');
 })->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);

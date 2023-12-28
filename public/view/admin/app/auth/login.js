@@ -40,13 +40,13 @@ class Login extends Base {
      * @param {(Function(response)|undefined)} thanHook 
      * @param {(Function(error)|undefined)} catchJHook 
      */
-    SetPostLoginHooks = (intiHook, thanHook, catchJHook) => {
-        //设置方法
-        this.hooks.PostLogin = {};
-        this.hooks.PostLogin.inti = intiHook;
-        this.hooks.PostLogin.then = thanHook;
-        this.hooks.PostLogin.catch = catchJHook;
-    }
+    // SetPostLoginHooks = (intiHook, thanHook, catchJHook) => {
+    //     //设置方法
+    //     this.hooks.PostLogin = {};
+    //     this.hooks.PostLogin.inti = intiHook;
+    //     this.hooks.PostLogin.then = thanHook;
+    //     this.hooks.PostLogin.catch = catchJHook;
+    // }
 
     /**
      * 发送登入请求
@@ -55,12 +55,6 @@ class Login extends Base {
      * @param {(Object|undefined)} CaptchaData 
      */
     PostLogin = (username, password, CaptchaData) => {
-        this.SetPostLoginHooks(undefined, (response) => {
-            //默认回调函数
-            this.SetToken(response.data.token,'AdminTokenName');//设置Token
-            this.commonFunctions.snackbar('登入成功，正在跳转');
-        });
-
         //是否存在验证参数
         var data;
         if (CaptchaData) { data = CaptchaData; }
@@ -70,6 +64,15 @@ class Login extends Base {
             'userName': username,
             'password': password,
         };
-        this.RequestApiUrl('post', 'AuthLogin', 'PostLogin', data);
+        this.RequestApiUrl('post', 'AuthLogin', {
+            inti: () => {
+                this.commonFunctions.snackbar('登入请求中');
+            },
+            then: (response) => {
+                this.SetToken(response.data.token, 'AdminTokenName');//设置Token
+                this.commonFunctions.snackbar('登入成功，正在跳转');
+                location.reload();
+            }
+        }, data);
     }
 }

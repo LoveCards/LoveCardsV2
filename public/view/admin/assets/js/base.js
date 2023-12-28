@@ -275,7 +275,7 @@ class Base {
     /**
      * RequestApiUrl设置Hooks
      * @param {RequestHooks} hooks 
-     * @param {Boolean} defultStatus
+     * @param {Boolean} defultStatus //标记状态当.defultStatus 为True时则为默认钩子设置
      * @param {String} thisHooksKey 
      */
     SetRequestApiUrlHooks = (hooks, defultStatus, thisHooksKey) => {

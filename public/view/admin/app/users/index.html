@@ -10,8 +10,8 @@
         </div>
 
         <div class="mdui-col-xs-6">
-            <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
-                mdui-dialog="{target: '#dialogAdd'}">添加用户</button>
+            <!-- <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
+                mdui-dialog="{target: '#dialogAdd'}">添加用户</button> -->
             <!-- 弹窗组件 -->
             <div class="mdui-dialog" id="dialogAdd">
                 <div class="mdui-dialog-title">添加用户</div>
@@ -66,7 +66,8 @@
                     <tr v-for="item in UsersIndex.data">
                         <td>{{item.id}}</td>
                         <td>
-                            <img class="mdui-img-fluid mdui-img-circle" v-bind:src="item.avatar ? item.avatar : '/view/admin/assets/img/avatar.png'">
+                            <img class="mdui-img-fluid mdui-img-circle"
+                                v-bind:src="item.avatar ? item.avatar : '/view/admin/assets/img/avatar.png'">
                         </td>
                         <td>{{item.number}}</td>
                         <td>{{item.username}}</td>
@@ -75,10 +76,10 @@
                         <td>{{item.created_at}}</td>
                         <td>{{item.status}}</td>
                         <td>
-                            <button @click=" editUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon">
-                            <i class="mdui-icon material-icons">edit</i>
+                            <button @click="editUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">edit</i>
                             </button>
-                            <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                            <button @click="deleteUser(item.id)" class="js-Btn-Delete mdui-btn mdui-btn-icon">
                                 <i class="mdui-icon material-icons">delete</i>
                             </button>
                         </td>

@@ -7,6 +7,7 @@ use think\facade\Db;
 use think\facade\Request;
 use think\facade\Config;
 
+use app\api\model\Images as ImagesModel;
 use app\common\BackEnd;
 use app\common\FrontEnd;
 use app\common\Common;
@@ -257,7 +258,7 @@ trait Cards
                 $lDef_CardData['look'] = $lDef_CardData['look'] + 1;
             }
             // 获取图片数据
-            $tDef_ImgData = Db::table('img')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
+            $tDef_ImgData = ImagesModel::where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
             // 获取评论列表
             $lDef_Result = Db::table('comments')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
                 ->paginate($tDef_CommentsMax, true);

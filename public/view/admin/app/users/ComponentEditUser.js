@@ -47,9 +47,7 @@ const DialogEditUser = {
         this.dialogObj = new mdui.Dialog('#dialog');
     },
     methods: {
-        //提交方法
         putUser() {
-
             function removeCommonProperties(obj1, obj2) {
                 //比对原始对象去除空属性与相同属性
                 const result = { ...obj1 };
