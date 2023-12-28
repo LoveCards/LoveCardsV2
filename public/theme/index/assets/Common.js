@@ -45,6 +45,7 @@ class Common extends Base {
             if (self.hooks.CardsGood?.defultStatus == undefined || self.hooks.CardsGood?.defultStatus == true) {
                 //自定义回调函数
                 self.SetHooksPostCardsGood({
+                    inti: () => {},
                     then: (response) => {
                         submit.css('display', 'none');
                         submit.after(newHtml(response.data[0]));
@@ -65,10 +66,12 @@ class Common extends Base {
         //默认回调函数设置
         if (this.hooks.PostLogin?.defultStatus == undefined || this.hooks.PostLogin?.defultStatus == true) {
             this.SetHooksPostLogin({
+                inti: () => {},
                 then: (response) => {
                     //默认回调函数
                     this.SetToken(response.data.token, 'UserTokenName');//设置Token
                     this.commonFunctions.snackbar('登入成功，正在跳转');
+                    window.location.reload();
                 }
             }, true);
         }
@@ -94,6 +97,7 @@ class Common extends Base {
         //默认回调函数设置
         if (this.hooks.PostRegister?.defultStatus == undefined || this.hooks.PostRegister?.defultStatus == true) {
             this.SetHooksPostRegister({
+                inti: () => {},
                 then: (response) => {
                     //默认回调函数
                     this.SetToken(response.data.token, 'UserTokenName');//设置Token
@@ -172,9 +176,11 @@ class Common extends Base {
         //默认回调函数设置
         if (this.hooks.PostLogout?.defultStatus == undefined || this.hooks.PostLogout?.defultStatus == true) {
             this.SetHooksPostLogout({
+                inti: () => {},
                 then: (response) => {
                     this.DeleteToken('UserTokenName');//清除Token
                     this.commonFunctions.snackbar('退出成功，正在跳转');
+                    window.location.reload();
                 }
             }, true);
         }

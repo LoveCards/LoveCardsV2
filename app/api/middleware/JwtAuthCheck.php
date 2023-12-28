@@ -24,10 +24,10 @@ class JwtAuthCheck
                 $tDef_Request->JwtData = $data['data'];
             } else {
                 //jwt校验不通过
-                return Export::Create($data['msg'], 401, 'Token未通过校验');
+                return Export::Create($data['msg'], 401, '登入失效，请重新登入');//Token未通过校验
             }
         } else {
-            return Export::Create(null, 401, 'Token不存在');
+            return Export::Create(null, 401, '请先登入');//Token不存在
         }
 
         return $tDef_next($tDef_Request);

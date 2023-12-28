@@ -158,8 +158,6 @@ class Cards extends Common
     //编辑-POST
     public function Edit()
     {
-        $context = request()->JwtData;
-
         $result = self::CAndU(Request::param('id'), [
             'uid' => Request::param('uid'),
             'content' => Request::param('content'),
@@ -254,6 +252,8 @@ class Cards extends Common
     //点赞-POST
     public function Good()
     {
+        $context = request()->JwtData;
+
         //获取数据
         $id = Request::param('id');
         $ip = $this->attrGReqIp;
@@ -277,12 +277,18 @@ class Cards extends Common
             return Export::Create(['cards.good更新失败'], 400, '点赞失败');
         };
 
-        $data = ['aid' => '1', 'pid' => $id, 'ip' => $ip, 'time' => $time];
+        $data = [
+            'aid' => '1',
+            'pid' => $id,
+            'uid' => $context['uid'],
+            'ip' => $ip,
+            'time' => $time
+        ];
         if (!$resultGood->insert($data)) {
             return Export::Create(['good写入失败'], 400, '点赞失败');
         };
 
         //返回数据
-        return Export::Create([$resultCardsData['good'] + 1], 200);
+        return Export::Create([$resultCardsData['good'] + 1], 200, null, $context);
     }
 }
