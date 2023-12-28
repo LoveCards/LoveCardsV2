@@ -171,7 +171,7 @@ class Users extends Model
      */
     public static function Del($id)
     {
-        $result = self::delete($id);
+        $result = self::destroy($id);
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result);
         }

@@ -14,6 +14,18 @@ const app = createApp({
         this.getUsersIndex();
     },
     methods: {
+        /**
+         * 删除ID
+         * @param {*} id 
+         */
+        deleteUser(id) {
+            BaseEntity.RequestApiUrl('Delete', 'UsersDelete', undefined, { id: id }).then((result) => {
+                BaseEntity.commonFunctions.snackbar('删除成功');
+                this.getUsersIndex(this.UsersIndex.current_page);
+            }).catch((err) => {
+                BaseEntity.AxiosErrorHandling(err);
+            });
+        },
         nextPage: function () {
             this.getUsersIndex(this.UsersIndex.current_page + 1);
         },
