@@ -20,6 +20,7 @@ class Index extends BaseController
         // 页面路径
         $tDef_AppPathArray = IndexFacade::mArrayEasyGetUrlAppPath('/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app');
         $tDef_AppPath = end($tDef_AppPathArray);
+        //dd($tDef_AppPathArray);
         // 获取主题匹配JS路径
         $lDef_PageJsPath = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app' . $tDef_AppPath;
         if (File::read_file($lDef_PageJsPath . '.js', true)) {

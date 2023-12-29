@@ -13,6 +13,7 @@ use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
 
 Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
+Route::post('userauth/login', 'UserAuth/Login');
 
 //用户登入鉴权
 Route::group('', function () {
