@@ -9,9 +9,9 @@ use think\exception\ValidateException;
 use app\api\model\Users as UsersModel;
 use app\api\validate\Users as UsersValidate;
 
-use app\Common\Common;
-use app\Common\Export;
-use app\Common\BackEnd;
+use app\common\Common;
+use app\common\Export;
+use app\common\BackEnd;
 use jwt\Jwt;
 use email\Email;
 use captcha\Code;

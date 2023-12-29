@@ -18,6 +18,7 @@ trait Base
         // 修剪根路径
         $lDef_Url = preg_replace('#' . Request::rootUrl() . '#', '', Request::baseUrl(), 1);
         $lDef_Parts = explode('/', $lDef_Url);
+
         //检查数组长度异常直接弹出
         if (count($lDef_Parts) >= 100) {
             return [];
@@ -29,7 +30,8 @@ trait Base
         foreach ($lDef_Parts as $tDef_Key => $tDef_Part) {
             //略过0位置
             if ($tDef_Key) {
-                $lDef_PartialUrl .= '/' . $tDef_Part;
+                //路径仅支持小写匹配
+                $lDef_PartialUrl .= '/' . strtolower($tDef_Part);
             }
             //echo $lDef_PartialUrl . '   ';
             // 验证html文件路径是否存在

@@ -29,8 +29,8 @@ class BaseController extends Common
 
         $this->attrGReqTime = date('Y-m-d H:i:s');
         $this->attrGReqIp = $this->mStringGetIP();
-        $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . request()->action();
-
+        $this->attrGReqView = '/app/' . strtolower(request()->controller()) . '/' . strtolower(request()->action());
+        
         $lDef_AssignData = [
             'LCVersionInfo' => $this->mArrayGetLCVersionInfo(), //程序版本信息
             'SystemData' => $this->mArrayGetDbSystemData(), //系统配置信息
@@ -42,7 +42,7 @@ class BaseController extends Common
 
         //JS文件校验引入
         File::read_file(dirname(dirname(dirname(__FILE__))) . '/public/view/admin' . $this->attrGReqView . '.js') ?
-            $lDef_AssignData['ViewActionJS'] = true :
+            $lDef_AssignData['ViewActionJS'] = $this->attrGReqView . '.js' :
             0;
 
         //公共模板变量
