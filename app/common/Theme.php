@@ -63,10 +63,11 @@ class Theme extends Facade
         }
 
         //写入并返回结果
-        if (!file_put_contents($fileName, $str_file)) {
-            return false;
-        } else {
+        try {
+            file_put_contents($fileName, $str_file);
             return true;
+        } catch (\Throwable $th) {
+            return false;
         }
     }
 
