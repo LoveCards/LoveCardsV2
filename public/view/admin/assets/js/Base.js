@@ -317,10 +317,10 @@ class Base {
 
             if (isObject && thisHooksKey.inti) {
                 // 自定义回调函数
-                thisHooksKey.inti();
+                thisHooksKey.inti(data);
             } else if (this.hooks[thisHooksKey]?.inti) {
                 // 自定义回调函数
-                this.hooks[thisHooksKey].inti();
+                this.hooks[thisHooksKey].inti(data);
             } else {
                 // 默认回调函数
                 this.commonFunctions.snackbar(thisConfigApiUrlKey + '发起请求');

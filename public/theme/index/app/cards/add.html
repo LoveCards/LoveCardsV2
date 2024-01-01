@@ -8,8 +8,7 @@
         <div class="mdui-col-md-6 mdui-col-offset-md-3">
 
             <div class="mdui-p-b-2">
-                <button
-                    class="js-jumpurl-BackUp
+                <button class="js-jumpurl-BackUp
                     mdui-btn mdui-btn-block
                     mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}
                     mdui-ripple mdui-btn-raised">返 回</button>
@@ -160,7 +159,7 @@
         }
 
         //设置钩子
-        AddEntity.SetPostCardsAddHooks(()=>{}, (response) => {
+        AddEntity.SetPostCardsAddHooks(() => { }, (response) => {
             //默认回调函数
             AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
             AddEntity.JumpUrl('/index/cards/card/id/' + response.data.id);

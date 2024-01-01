@@ -66,9 +66,9 @@
         CommonEntity.CookieMsgHandling();
 
         //内置类绑定登入
-        CommonEntity.BindLogin('Login', 'loginAccount', 'loginPassword');
+        CommonEntity.BindLogin('Login', 'loginAccount', 'loginPassword', 'loginRememberMe');
         //内置类绑定注册
-        CommonEntity.BindRegister('Register', 'registerAccount', 'registerPassword', 'registerRepassword', 'registerCode');
+        CommonEntity.BindRegister('Register', 'registerAccount', 'registerPassword', 'registerRepassword', 'registerCode', 'registerRememberMe');
         //内置类绑定验证码
         CommonEntity.BindSendMsgCaptcha('SendMsgCaptcha', 'registerAccount',
             '<button style="margin-top: 42px; width: 100%;" class="mdui-btn mdui-color-pink-accent" disabled>冷却中</button>'

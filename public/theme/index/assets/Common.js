@@ -45,7 +45,7 @@ class Common extends Base {
             if (self.hooks.CardsGood?.defultStatus == undefined || self.hooks.CardsGood?.defultStatus == true) {
                 //自定义回调函数
                 self.SetHooksPostCardsGood({
-                    inti: () => {},
+                    inti: () => { },
                     then: (response) => {
                         submit.css('display', 'none');
                         submit.after(newHtml(response.data[0]));
@@ -62,11 +62,13 @@ class Common extends Base {
      * @param {String} accountId 账户输入框
      * @param {String} passwordId 密码输入框
      */
-    BindLogin = (submitId, accountId, passwordId) => {
+    BindLogin = (submitId, accountId, passwordId, remberMeId) => {
         //默认回调函数设置
         if (this.hooks.PostLogin?.defultStatus == undefined || this.hooks.PostLogin?.defultStatus == true) {
             this.SetHooksPostLogin({
-                inti: () => {},
+                inti: (data) => {
+                    //处理数据
+                },
                 then: (response) => {
                     //默认回调函数
                     this.SetToken(response.data.token, 'UserTokenName');//设置Token
@@ -82,6 +84,15 @@ class Common extends Base {
                 'account': $('#' + accountId).val(),
                 'password': $('#' + passwordId).val()
             }
+            let rememberMe = $('#' + remberMeId).prop('checked');
+            if (!rememberMe) {
+                this.commonFunctions.snackbar('请同意隐私政策');
+                return;
+            }
+            if (data.account == '' || data.password == '') {
+                this.commonFunctions.snackbar('账号或密码不能为空');
+                return;
+            }
             this.PostLogin(data);
         }.bind(this));
     }
@@ -93,11 +104,11 @@ class Common extends Base {
      * @param {String} repasswordId 重复密码输入框
      * @param {String} codeId 验证码输入框
      */
-    BindRegister = (submitId, accountId, passwordId, repasswordId, codeId) => {
+    BindRegister = (submitId, accountId, passwordId, repasswordId, codeId, remberMeId) => {
         //默认回调函数设置
         if (this.hooks.PostRegister?.defultStatus == undefined || this.hooks.PostRegister?.defultStatus == true) {
             this.SetHooksPostRegister({
-                inti: () => {},
+                inti: () => { },
                 then: (response) => {
                     //默认回调函数
                     this.SetToken(response.data.token, 'UserTokenName');//设置Token
@@ -113,6 +124,11 @@ class Common extends Base {
                 'password': $('#' + passwordId).val(),
                 'repassword': $('#' + repasswordId).val(),
                 'code': $('#' + codeId).val()
+            }
+            let rememberMe = $('#' + remberMeId).prop('checked');
+            if (!rememberMe) {
+                this.commonFunctions.snackbar('请同意隐私政策');
+                return;
             }
             if (data['repassword'] != data['password']) {
                 this.commonFunctions.snackbar('两次密码不一致');
@@ -176,7 +192,7 @@ class Common extends Base {
         //默认回调函数设置
         if (this.hooks.PostLogout?.defultStatus == undefined || this.hooks.PostLogout?.defultStatus == true) {
             this.SetHooksPostLogout({
-                inti: () => {},
+                inti: () => { },
                 then: (response) => {
                     this.DeleteToken('UserTokenName');//清除Token
                     this.commonFunctions.snackbar('退出成功，正在跳转');
