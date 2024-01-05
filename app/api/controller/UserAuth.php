@@ -181,11 +181,15 @@ class UserAuth
             $data = Code::CreateCaptcha($account, 'Auth', 300);
             $code = $data['data'];
             //发送邮件
-            $result = Email::SendCaptcha($code, $account);
+            try {
+                $result = Email::SendCaptcha($code, $account);
+            } catch (\Exception $e) {
+                return Export::Create(['邮件模块发生错误'], 500, '发送失败');
+            }
             if ($result['status']) {
                 return Export::Create(null, 200);
             } else {
-                return Export::Create([$result['msg']], 401, '发送失败');
+                return Export::Create([$result['msg']], 500, '发送失败');
             }
         } else {
             return Export::Create(['目前仅支持邮箱验证'], 500, '发送失败');
