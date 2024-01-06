@@ -15,7 +15,7 @@ use app\api\model\Images as ImagesModel;
 use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
-use app\common\APP;
+use app\common\App;
 
 class Cards extends Common
 {

@@ -20,7 +20,7 @@ class Auth
     {
 
         //人机二次验证
-        $gt4 = new \geetest\gt4();
+        $gt4 = new \geetest\Gt4();
         if (!$gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'))) {
             return Export::Create([], 500, '人机验证失败');
         }
