@@ -1,5 +1,8 @@
 <?php
 return [
+    'System' => [
+        'VisitorMode' => env('master.SystemVisitorMode', false),
+    ],
     'Upload' => [
         //最大上传图片大小 单位:M
         'UserImageSize' => env('master.UploadUserImageSize', 2),

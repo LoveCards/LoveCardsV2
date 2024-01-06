@@ -2,10 +2,9 @@
 
 namespace app\common;
 
-use think\Facade;
 use think\facade\Config as ThinkConfig;
 
-class Config extends Facade
+class Config
 {
     private $attrTConfigFileName;
 
