@@ -66,7 +66,7 @@
                     <tr v-for="item in UsersIndex.data">
                         <td>{{item.id}}</td>
                         <td>
-                            <img class="mdui-img-fluid mdui-img-circle"
+                            <img style="max-height: 40px;" class="mdui-img-fluid mdui-img-circle"
                                 v-bind:src="item.avatar ? item.avatar : '/view/admin/assets/img/avatar.png'">
                         </td>
                         <td>{{item.number}}</td>
