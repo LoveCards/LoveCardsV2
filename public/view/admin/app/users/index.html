@@ -74,7 +74,7 @@
                         <td>{{item.email}}</td>
                         <td>{{item.phone}}</td>
                         <td>{{item.created_at}}</td>
-                        <td>{{item.status}}</td>
+                        <td>{{item.status?'封禁':'正常'}}</td>
                         <td>
                             <button @click="editUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon">
                                 <i class="mdui-icon material-icons">edit</i>
