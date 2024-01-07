@@ -23,7 +23,7 @@ class Users extends Validate
         'id' => 'number',
         'email' => 'email|unique:users',
         'phone' => 'mobile|unique:users',
-        'username' => 'length:3,12|alphaDash|unique:users',
+        'username' => 'length:3,12|chsDash|unique:users',
         'password' => 'length:5,36|password',
         'status' => 'number',
     ];
@@ -50,7 +50,7 @@ class Users extends Validate
         'username.require' => '用户名不得为空',
         'username.length'     => '用户名超出范围(3-12)',
         'username.unique' => '用户名已存在',
-        'username.alphaDash' => '用户名只能为字母、数字下划线及破折号',
+        'username.chsDash' => '用户名只能为汉字、字母、数字下划线及破折号',
 
         'password.require' => '密码不得为空',
         'password.length'     => '密码超出范围(5-36)',

@@ -28,13 +28,14 @@ class Base {
             UserAuthLogout: '/api/userauth/logout',//注销
             UserAuthRegister: '/api/userauth/register',//注册
             UserAuthMsgCaptcha: '/api/userauth/captcha',//验证码
-            UserAuthCheck: 'api/userauth/check',//TOKEN校验
+            UserAuthCheck: '/api/userauth/check',//TOKEN校验
 
             UsersIndex: '/api/users/index',//列出用户
             UsersDelete: '/api/users/delete',//删除用户
             UsersAdd: '/api/users/add',//添加用户
             UsersPatch: '/api/users/patch',//添加用户
 
+            UserInfo: '/api/user',//用户-RF
             UploadUserImages: '/api/upload/user-images',//用户图片上传
 
             SystemSite: '/api/system/site',//系统设置
