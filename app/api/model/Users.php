@@ -147,15 +147,17 @@ class Users extends Model
     }
 
     /**
-     * 读取指定ID行
+     * Undocumented function
      *
      * @param int $id
+     * @param array $without
      * @return array['status','msg','data'=>object]
      */
-    public static function Get($id)
+    public static function Get($id, $without = [])
     {
         $withoutField = self::$withoutField;
         $withoutField[] = 'password';
+        $withoutField = array_merge($withoutField, $without);
         $result = self::where('id', $id)->withoutField($withoutField)->findOrEmpty();
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result);

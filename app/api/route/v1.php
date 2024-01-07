@@ -14,16 +14,23 @@ use app\api\middleware\GeetestCheck;
 
 Route::post('userauth/login', 'UserAuth/Login');
 Route::post('userauth/logout', 'UserAuth/Logout');
+Route::post('userauth/register', 'UserAuth/Register');
 Route::post('userauth/captcha', 'UserAuth/Captcha');
 
 Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 
-//用户登入鉴权
+//用户登入鉴权-支持游客
 Route::group('', function () {
-    Route::post('upload/user-images', 'upload/UserImages');
     Route::post('cards/add', 'cards/Add');
     Route::post('comments/add', 'comments/Add');
     Route::post('cards/good', 'cards/Good');
+})->middleware([JwtAuthCheck::class]);
+
+//用户登入鉴权
+Route::group('', function () {
+    Route::post('upload/user-images', 'upload/UserImages');
+    Route::patch('user', 'user/Patch');
+    Route::get('user', 'user/Get');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权
