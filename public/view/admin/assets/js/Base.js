@@ -36,6 +36,7 @@ class Base {
             UsersPatch: '/api/users/patch',//添加用户
 
             UserInfo: '/api/user',//用户-RF
+            UserPassword: '/api/user/password',//设置密码
             UploadUserImages: '/api/upload/user-images',//用户图片上传
 
             SystemSite: '/api/system/site',//系统设置
