@@ -41,7 +41,13 @@ class Index extends BaseController
             foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
                 // $tDef_NewExample = new CardsMethod;
                 $tDef_Result = IndexFacade::$value();
-                View::assign($tDef_Result['data']);
+                if (is_array($tDef_Result)) {
+                    //返回为标准格式
+                    View::assign($tDef_Result['data']);
+                }else{
+                    //返回对象直接执行
+                    return $tDef_Result;
+                }
             }
         }
 

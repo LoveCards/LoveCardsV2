@@ -115,7 +115,7 @@ trait Cards
 
             // 验证Value
             if (!$tReq_ParamSearchValue) {
-                return FrontEnd::mObjectEasyFrontEndJumpUrl('/index/Cards/search', '请输入要搜索内容');
+                return FrontEnd::mObjectEasyFrontEndJumpUrl('./search', '请输入要搜索内容');
             }
 
             if ($tReq_ParamModel != 'false') {
