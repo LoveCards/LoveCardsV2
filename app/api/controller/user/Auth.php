@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\user;
 
 use think\Request as TypeRequest;
 use think\facade\Request;
@@ -16,7 +16,7 @@ use jwt\Jwt;
 use email\Email;
 use captcha\Code;
 
-class UserAuth
+class Auth
 {
     /**
      * 生成账号

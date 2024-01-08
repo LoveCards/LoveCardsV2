@@ -12,10 +12,10 @@ use app\api\middleware\AdminAuthCheck;
 use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
 
-Route::post('userauth/login', 'UserAuth/Login');
-Route::post('userauth/logout', 'UserAuth/Logout');
-Route::post('userauth/register', 'UserAuth/Register');
-Route::post('userauth/captcha', 'UserAuth/Captcha');
+Route::post('user/auth/login', 'user.Auth/Login');
+Route::post('user/auth/logout', 'user.Auth/Logout');
+Route::post('user/auth/register', 'user.Auth/Register');
+Route::post('user/auth/captcha', 'user.Auth/Captcha');
 
 Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 
@@ -29,8 +29,8 @@ Route::group('', function () {
 //用户登入鉴权
 Route::group('', function () {
     Route::post('upload/user-images', 'upload/UserImages');
-    Route::patch('user', 'user/Patch');
-    Route::get('user', 'user/Get');
+    Route::patch('user', 'user.info/Patch');
+    Route::get('user', 'user.info/Get');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权

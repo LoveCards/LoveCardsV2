@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\user;
 
 use think\Request as TypeRequest;
 use think\facade\Request;
@@ -12,7 +12,7 @@ use app\api\validate\Users as UsersValidate;
 
 use app\common\Export;
 
-class User
+class Info
 {
     //获取资料-GET
     public function Get()

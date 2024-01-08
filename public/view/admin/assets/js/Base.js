@@ -24,11 +24,11 @@ class Base {
             AdminAdd: '/api/admin/add',//添加管理员
             AdminEdit: '/api/admin/edit',//添加管理员
 
-            UserAuthLogin: '/api/userauth/login',//登入
-            UserAuthLogout: '/api/userauth/logout',//注销
-            UserAuthRegister: '/api/userauth/register',//注册
-            UserAuthMsgCaptcha: '/api/userauth/captcha',//验证码
-            UserAuthCheck: '/api/userauth/check',//TOKEN校验
+            UserAuthLogin: '/api/user/auth/login',//登入
+            UserAuthLogout: '/api/user/auth/logout',//注销
+            UserAuthRegister: '/api/user/auth/register',//注册
+            UserAuthMsgCaptcha: '/api/user/auth/captcha',//验证码
+            UserAuthCheck: '/api/user/auth/check',//TOKEN校验
 
             UsersIndex: '/api/users/index',//列出用户
             UsersDelete: '/api/users/delete',//删除用户
