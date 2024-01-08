@@ -1,0 +1,80 @@
+<div class="mdui-card">
+    <div class="mdui-p-a-2">
+        <div class="mdui-typo-title-opacity">
+            个人资料
+        </div>
+        <div class="mdui-row mdui-m-y-1">
+            <input type="file" ref="fileInput" style="display: none;" @change="handleFileUpload" />
+            <div class="mdui-center mdui-img-circle mdui-ripple mdui-btn-raised"
+                style="height: 180px; max-width: 180px; position: relative;" @click="chooseFile">
+                <img class="mdui-img-fluid"
+                    v-bind:src="userInfo.avatar ? userInfo.avatar : '/view/admin/assets/img/avatar.png' "
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                <i class="mdui-icon material-icons"
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255, 255, 255, 0.5); font-size: 32px;">photo_camera</i>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield mdui-textfield-disabled">
+                    <label class="mdui-textfield-label">账号</label>
+                    <input class="mdui-textfield-input" type="text" v-model="userInfo.number" disabled="true" />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">用户名</label>
+                    <input class="mdui-textfield-input" type="text" v-model="userInfo.username" />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield mdui-textfield-disabled">
+                    <label class="mdui-textfield-label">Email</label>
+                    <input class="mdui-textfield-input" type="email" v-model="userInfo.email" disabled="true" />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield mdui-textfield-disabled">
+                    <label class="mdui-textfield-label">手机号</label>
+                    <input class="mdui-textfield-input" type="text" v-model="userInfo.phone" disabled="true" />
+                </div>
+            </div>
+        </div>
+        <div class="mdui-m-t-4 mdui-text-right">
+            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent"
+                @click="patchUserInfo()">保存</button>
+        </div>
+    </div>
+</div>
+<div class="mdui-card mdui-m-t-2">
+    <div class="mdui-p-a-2">
+        <div class="mdui-typo-title-opacity">
+            修改邮箱
+        </div>
+        <div class="mdui-m-y-1">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">新的邮箱</label>
+                <input v-model="email.newEmail" class="mdui-textfield-input" type="text" />
+            </div>
+            <div class="mdui-row">
+                <div class="mdui-col-xs-8">
+                    <div class="mdui-textfield mdui-textfield-floating-label">
+                        <label class="mdui-textfield-label">验证码</label>
+                        <input id="registerCode" class="mdui-textfield-input" type="text" />
+                    </div>
+                </div>
+                <div class="mdui-col-xs-4">
+                    <div class="mdui-valign">
+                        <button :disabled="sendMsgBtn.disabled" @click="getUserEmailCaptcha()"
+                            style="margin-top: 42px; width: 100%;"
+                            class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-pink-accent">
+                            {{sendMsgBtn.countdown != 60?sendMsgBtn.showText:'验证码'}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-m-t-4 mdui-text-right">
+                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent"
+                    @click="postUserEmail()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,7 +4,16 @@ const MyInfo = {
     data() {
         return {
             copyUserInfo: {},
-            userInfo: {}
+            userInfo: {},
+            email: {
+                newEmail: '',
+                captcha: ''
+            },
+            sendMsgBtn: {
+                disabled: false,
+                countdown: 60,
+                showText: '',
+            }
         }
     },
     created() {
@@ -12,10 +21,56 @@ const MyInfo = {
         mdui.mutation();
     },
     methods: {
+        startCountdown() {
+            const countdown = this.sendMsgBtn.countdown;
+            let timer = setInterval(() => {
+                if (this.sendMsgBtn.countdown > 0) {
+                    this.sendMsgBtn.countdown--;
+                    this.sendMsgBtn.showText = '剩余' + this.sendMsgBtn.countdown + '秒';
+                } else {
+                    // 倒计时结束后的处理逻辑
+                    clearInterval(timer);
+                    this.sendMsgBtn = {
+                        disabled: false,
+                        countdown: countdown,
+                        showText: '',
+                    }
+                }
+            }, 1000); // 每秒更新一次
+        },
+        postUserEmail() {
+            BaseEntity.RequestApiUrl('Post', 'UserEmail', {
+                inti: () => { },
+                then: () => {
+                    BaseEntity.commonFunctions.snackbar('修改成功');
+                },
+                catch: (err) => {
+                    BaseEntity.AxiosErrorHandling(err);
+                }
+            }, { 'email': this.email.newEmail, 'captcha': this.email.captcha }, 'UserTokenName');
+        },
+        getUserEmailCaptcha() {
+            if (!this.sendMsgBtn.disabled) {
+                BaseEntity.RequestApiUrl('Post', 'UserEmailCaptcha', {
+                    inti: () => {
+                        BaseEntity.commonFunctions.snackbar('正在发送请稍后');
+                        this.sendMsgBtn.disabled = true;
+                    },
+                    then: () => {
+                        BaseEntity.commonFunctions.snackbar('发送成功，请注意查收');
+                        this.startCountdown();
+                    },
+                    catch: (err) => {
+                        BaseEntity.AxiosErrorHandling(err);
+                        this.sendMsgBtn.disabled = false;
+                    }
+                }, { 'email': this.email.newEmail }, 'UserTokenName');
+            }
+        },
         getUserInfo() {
             BaseEntity.RequestApiUrl('get', 'UserInfo', undefined, [], 'UserTokenName').then((result) => {
-                this.userInfo = { ...result.data};
-                this.copyUserInfo = { ...result.data};
+                this.userInfo = { ...result.data };
+                this.copyUserInfo = { ...result.data };
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
             });
@@ -74,6 +129,10 @@ const MyInfo = {
             })
         },
     },
+    // beforeDestroy() {
+    //     // 在组件销毁前清除定时器，防止内存泄漏
+    //     clearInterval(this.timer);
+    // },
     template: `
     <div class="mdui-card">
         <div class="mdui-p-a-2">
@@ -116,8 +175,41 @@ const MyInfo = {
                 </div>
             </div>
             <div class="mdui-m-t-4 mdui-text-right">
-                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" @click="patchUserInfo()">保存</button>
-                <div>
+                <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent"
+                    @click="patchUserInfo()">保存</button>
+            </div>
+        </div>
+    </div>
+    <div class="mdui-card mdui-m-t-2">
+        <div class="mdui-p-a-2">
+            <div class="mdui-typo-title-opacity">
+                修改邮箱
+            </div>
+            <div class="mdui-m-y-1">
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">新的邮箱</label>
+                    <input v-model="email.newEmail" class="mdui-textfield-input" type="text" />
+                </div>
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-8">
+                        <div class="mdui-textfield mdui-textfield-floating-label">
+                            <label class="mdui-textfield-label">验证码</label>
+                            <input id="registerCode" class="mdui-textfield-input" type="text" />
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-4">
+                        <div class="mdui-valign">
+                            <button :disabled="sendMsgBtn.disabled" @click="getUserEmailCaptcha()"
+                                style="margin-top: 42px; width: 100%;"
+                                class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-pink-accent">
+                                {{sendMsgBtn.countdown != 60?sendMsgBtn.showText:'验证码'}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-m-t-4 mdui-text-right">
+                    <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent"
+                        @click="postUserEmail()">保存</button>
                 </div>
             </div>
         </div>

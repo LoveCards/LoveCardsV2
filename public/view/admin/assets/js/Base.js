@@ -37,6 +37,8 @@ class Base {
 
             UserInfo: '/api/user',//用户-RF
             UserPassword: '/api/user/password',//设置密码
+            UserEmail: '/api/user/email',//修改邮箱
+            UserEmailCaptcha: '/api/user/email-captcha',//获取修改邮箱验证码
             UploadUserImages: '/api/upload/user-images',//用户图片上传
 
             SystemSite: '/api/system/site',//系统设置
@@ -302,6 +304,7 @@ class Base {
      * //当前子类的this.Hooks中查找 可通过当前子类提供的设置方法去更改 
      * //当传入RequestHooks时将以最高级替换其他方式传入方法
      * //当为undefined时将不再是Hooks模式而返回原始Promise 
+     * //当使用RequestHooks传入时将激活内部的Promise默认方法
      * @param {Object} data //参数对象 可传入请求头 将自动分离 ReqHeaders
      * @param {TokenConfig} tokenName //参数对象
      * 
