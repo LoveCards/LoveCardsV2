@@ -43,6 +43,7 @@ const MyInfo = {
                 inti: () => { },
                 then: () => {
                     BaseEntity.commonFunctions.snackbar('修改成功');
+                    this.getUserInfo();
                 },
                 catch: (err) => {
                     BaseEntity.AxiosErrorHandling(err);
@@ -194,7 +195,7 @@ const MyInfo = {
                     <div class="mdui-col-xs-8">
                         <div class="mdui-textfield mdui-textfield-floating-label">
                             <label class="mdui-textfield-label">验证码</label>
-                            <input id="registerCode" class="mdui-textfield-input" type="text" />
+                            <input v-model="email.captcha" class="mdui-textfield-input" type="text" />
                         </div>
                     </div>
                     <div class="mdui-col-xs-4">

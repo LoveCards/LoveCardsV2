@@ -27,6 +27,7 @@ trait Base
         // 预估路径
         $lDef_TrimmedParts = [];
         $lDef_PartialUrl = '';
+        $lDef_TrimmedPartsEndKey = 0;
         foreach ($lDef_Parts as $tDef_Key => $tDef_Part) {
             //略过0位置
             if ($tDef_Key) {
@@ -34,21 +35,41 @@ trait Base
                 $lDef_PartialUrl .= '/' . strtolower($tDef_Part);
             }
             //echo $lDef_PartialUrl . '   ';
-            // 验证html文件路径是否存在
-            if (File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath . $lDef_PartialUrl . '.html')) {
-                //防止与上层自动绑定Index验证通过路径重复
-                if (!isset($lDef_TrimmedParts[$tDef_Key - 1]) || $lDef_TrimmedParts[$tDef_Key - 1] != $lDef_PartialUrl) {
-                    $lDef_TrimmedParts[] = $lDef_PartialUrl;
-                }
+            //判断是否为目录
+            if (substr($lDef_PartialUrl, -1) === '/') {
+                // 若为目录直接验证index文件路径是否存在
+                if (File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath . $lDef_PartialUrl . 'index.html')) {
+                    $tDef_NewPartialUrl = $lDef_PartialUrl . 'index';
+                    //dd($lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1]);
+                    //防止与上层自动绑定Index验证通过路径重复
+                    if (!isset($lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1]) || $lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1] != $tDef_NewPartialUrl) {
+                        $lDef_TrimmedParts[] = $tDef_NewPartialUrl;
+                        $lDef_TrimmedPartsEndKey++;
+                    }
+                };
             } else {
-                //当匹配失败将尝试绑定Index再次验证文件
-                if ($lDef_PartialUrl != '/' && File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath . $lDef_PartialUrl . '/index' . '.html')) {
-                    $lDef_TrimmedParts[] = $lDef_PartialUrl . '/index';
-                }
-            };
+                // 验证html文件路径是否存在
+                if (File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath . $lDef_PartialUrl . '.html')) {
+                    //防止与上层自动绑定Index验证通过路径重复
+                    if (!isset($lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1]) || $lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1] != $lDef_PartialUrl) {
+                        $lDef_TrimmedParts[] = $lDef_PartialUrl;
+                        $lDef_TrimmedPartsEndKey++;
+                    }
+                } else {
+                    //当匹配失败将尝试绑定Index再次验证文件
+                    if ($lDef_PartialUrl != '/' && File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath . $lDef_PartialUrl . '/index.html')) {
+                        $tDef_NewPartialUrl = $lDef_PartialUrl . '/index';
+                        //防止与上层自动绑定Index验证通过路径重复
+                        if (!isset($lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1]) || $lDef_TrimmedParts[$lDef_TrimmedPartsEndKey - 1] != $tDef_NewPartialUrl) {
+                            $lDef_TrimmedParts[] = $tDef_NewPartialUrl;
+                            $lDef_TrimmedPartsEndKey++;
+                        }
+                    }
+                };
+            }
         }
         //当都不存在时尝试绑定Index/index
-        if (count($lDef_TrimmedParts) == 0 && File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath .  '/index/index' . '.html')) {
+        if (count($lDef_TrimmedParts) == 0 && File::read_file($_SERVER['DOCUMENT_ROOT'] . $tDef_AppPath .  '/index/index.html')) {
             $lDef_TrimmedParts[] = '/index/index';
         }
 
