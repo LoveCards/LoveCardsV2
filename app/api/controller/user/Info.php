@@ -28,7 +28,7 @@ class Info
         return Export::Create(null, 500, $tDef_Result['msg'], $context);
     }
 
-    //编辑资料-PUT
+    //编辑资料-Patch
     public function Patch()
     {
         $context = request()->JwtData;
@@ -57,6 +57,45 @@ class Info
         if ($lDef_ParamData['password']) {
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
+
+        $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        if ($tDef_Result['status']) {
+            return Export::Create(null, 200, null, $context);
+        }
+
+        //错误返回
+        $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
+        return Export::Create(null, 500, $lDef_ErrorMsg, $context);
+    }
+
+    //修改密码-Post
+    public function PostPassword()
+    {
+        $context = request()->JwtData;
+
+        //传入必要参数
+        $lDef_ParamData = [
+            'id' => $context['uid'],
+            'password' => Request::param('password'),
+        ];
+
+        if (!$lDef_ParamData['password']) {
+            return Export::Create(['密码不可为空'], 400, '编辑失败');
+        }
+
+        //验证修改参数是否合法
+        try {
+            validate(UsersValidate::class)
+                ->batch(true)
+                ->scene('edit')
+                ->check($lDef_ParamData);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $uservalidateerror = $e->getError();
+            return Export::Create($uservalidateerror, 400, '编辑失败');
+        }
+
+        $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
 
         $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {

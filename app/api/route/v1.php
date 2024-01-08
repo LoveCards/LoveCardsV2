@@ -29,6 +29,7 @@ Route::group('', function () {
 //用户登入鉴权
 Route::group('', function () {
     Route::post('upload/user-images', 'upload/UserImages');
+    Route::post('user/password', 'user.info/PostPassword');
     Route::patch('user', 'user.info/Patch');
     Route::get('user', 'user.info/Get');
 })->middleware([JwtAuthCheck::class]);

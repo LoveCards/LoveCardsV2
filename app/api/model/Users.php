@@ -43,14 +43,14 @@ class Users extends Model
     /**
      * 用户登录验证函数
      *
-     * @param string $account 用户名、电子邮件或电话号码
+     * @param string $account 账号、电子邮件或电话号码
      * @param string $password 密码
      * @return array 登录成功返回用户信息数组，失败返回false
      */
     public static function Login($account, $password): array
     {
-        // 尝试使用用户名、电子邮件或电话号码查询用
-        $result = self::where('username', $account)
+        // 尝试使用账号、电子邮件或电话号码查询用
+        $result = self::where('number', $account)
             ->whereOr('email', $account)
             ->whereOr('phone', $account)
             ->find();

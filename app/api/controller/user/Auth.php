@@ -39,7 +39,7 @@ class Auth
 
     /**
      * Account检查类型
-     *
+     * 校验是否为邮箱手机号或账号
      * @param string $account
      * @return array|string
      */
@@ -51,19 +51,19 @@ class Auth
             return [
                 'phone' => $account,
                 'email' => $defult,
-                'username' => $defult,
+                'number' => $defult,
             ];
         } else if ($tDef_Result == 'email') {
             return [
                 'phone' => $defult,
                 'email' => $account,
-                'username' => $defult,
+                'number' => $defult,
             ];
         } else {
             return [
                 'phone' => $defult,
                 'email' => $defult,
-                'username' => $account,
+                'number' => $account,
             ];
         };
     }
@@ -89,11 +89,11 @@ class Auth
         try {
             validate(UsersValidate::class)
                 ->scene('login')
-                ->remove(['email', 'username'])
+                ->remove(['email', 'number'])
                 ->check([
                     'phone'  => $accountArray['phone'],
                     'email' => $accountArray['email'],
-                    'username' => $accountArray['username'],
+                    // 'number' => $accountArray['number'],
                     'password' => $password,
                 ]);
         } catch (ValidateException $e) {
