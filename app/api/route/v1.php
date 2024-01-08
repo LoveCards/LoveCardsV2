@@ -30,6 +30,9 @@ Route::group('', function () {
 Route::group('', function () {
     Route::post('upload/user-images', 'upload/UserImages');
     Route::post('user/password', 'user.info/PostPassword');
+    Route::post('user/email', 'user.info/PostEmail');
+    Route::post('user/email-captcha', 'user.info/PostBindEmailCaptcha');
+
     Route::patch('user', 'user.info/Patch');
     Route::get('user', 'user.info/Get');
 })->middleware([JwtAuthCheck::class]);
