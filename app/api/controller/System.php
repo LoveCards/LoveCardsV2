@@ -11,6 +11,7 @@ use app\common\Export;
 use app\common\BackEnd;
 use app\common\Theme;
 use app\common\Common;
+use app\common\ConfigFacade;
 
 class System
 {
@@ -42,28 +43,60 @@ class System
         return Export::Create(null, 200);
     }
 
-    //邮箱配置-POST
+    //邮箱配置-Get
+    public function GetEmail()
+    {
+        $lDef_Result = Config::get('mail');
+        return Export::Create($lDef_Result, 200);
+    }
+
+    //邮箱配置-PATCH
     public function Email()
     {
-        $LCEAPI = Request::param('LCEAPI');
-        $smtpUser = Request::param('smtpUser');
-        $smtpHost = Request::param('smtpHost');
-        $smtpPort = Request::param('smtpPort');
-        $smtpPass = Request::param('smtpPass');
-        $smtpName = Request::param('smtpName');
-        $smtpSecure = Request::param('smtpSecure');
+        $lReq_Params = [
+            'driver' => Request::param('driver'),
+            'host' => Request::param('host'),
+            'port' => Request::param('port'),
+            'addr' => Request::param('addr'),
+            'pass' => Request::param('pass'),
+            'name' => Request::param('name'),
+            'security' => Request::param('security')
+        ];
+
+        $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+        //更新数据
+        $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params);
+
+        if ($tDef_Result) {
+            return Export::Create(null, 200);
+        }
+        return Export::Create(null, 500, '设置失败');
+    }
+
+    //获取其他配置-Get
+    public function GetOther()
+    {
+        $lDef_Result = ConfigFacade::mArrayGetMasterConfig();
+        return Export::Create($lDef_Result, 200);
+    }
+
+    //其他配置-PATCH
+    public function Other()
+    {
+        $lReq_Params = [
+            'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
+            'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
+            'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
+        ];
+        $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
 
         //更新数据
-        Db::table('system')->where('name', 'LCEAPI')->update(['value' => $LCEAPI]);
-        Db::table('system')->where('name', 'smtpUser')->update(['value' => $smtpUser]);
-        Db::table('system')->where('name', 'smtpHost')->update(['value' => $smtpHost]);
-        Db::table('system')->where('name', 'smtpPort')->update(['value' => $smtpPort]);
-        Db::table('system')->where('name', 'smtpPass')->update(['value' => $smtpPass]);
-        Db::table('system')->where('name', 'smtpName')->update(['value' => $smtpName]);
-        Db::table('system')->where('name', 'smtpSecure')->update(['value' => $smtpSecure]);
+        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
-        //返回数据
-        return Export::Create(null, 200);
+        if ($tDef_Result) {
+            return Export::Create(null, 200);
+        }
+        return Export::Create(null, 500, '设置失败');
     }
 
     //主题设置-POST

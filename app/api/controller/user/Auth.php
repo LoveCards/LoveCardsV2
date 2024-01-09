@@ -71,8 +71,7 @@ class Auth
     //token校验
     public function Check()
     {
-        $context = request()->JwtData;
-        return Export::Create(null, 200, null, $context);
+        return Export::Create(null, 200, null);
     }
 
     //登入-POST

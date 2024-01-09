@@ -58,13 +58,13 @@ class Upload
                 ->scene('CheckUpload')
                 ->check($lReq_ParmasArray);
         } catch (\Exception $e) {
-            return Export::Create($e->getMessage(), 500, '上传失败', $context);
+            return Export::Create($e->getMessage(), 500, '上传失败');
         }
 
         //保存图片
         $lDef_Result = Filesystem::disk('public')->putFile('image', $lReq_ParmasArray['file']);
         if (!$lDef_Result) {
-            return Export::Create('保存文件失败', 500, '上传失败', $context);
+            return Export::Create('保存文件失败', 500, '上传失败');
         }
 
         //创建数据
@@ -75,8 +75,8 @@ class Upload
         $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
         if (!$lDef_CreatData) {
             //待完善-回滚操作，删除文件
-            return Export::Create('数据创建失败', 500, '上传失败', $context);
+            return Export::Create('数据创建失败', 500, '上传失败');
         }
-        return Export::Create('/storage/' . $lDef_Result, 200, null, $context);
+        return Export::Create('/storage/' . $lDef_Result, 200, null);
     }
 }

@@ -2,11 +2,9 @@
 
 namespace app\common;
 
-use think\Facade;
 use think\facade\Db;
 
-
-class Common extends Facade
+class Common
 {
 
     //基础参数
@@ -133,5 +131,22 @@ class Common extends Facade
 
         // 如果都不匹配，则返回未知
         return 'other';
+    }
+
+    /**
+     * 去除数组中的空对
+     *
+     * @param array $array
+     * @return array
+     */
+    public static function mArrayEasyRemoveEmptyValues($array = [])
+    {
+        // 使用 array_filter 函数过滤数组，只保留非空值的键值对
+        $filteredArray = array_filter($array, function ($value) {
+            // 这里排除空值（null 或者空字符串）
+            return $value !== null && $value !== '';
+        });
+
+        return $filteredArray;
     }
 }

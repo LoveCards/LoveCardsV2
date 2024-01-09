@@ -17,8 +17,6 @@ class Users
     //查询-GET
     public function Index()
     {
-        $context = request()->JwtData;
-
         if (Request::param('page') == null) {
             $lDef_Paginte['page'] = 0;
         } else {
@@ -33,7 +31,7 @@ class Users
 
         $lDef_Result = UsersModel::Index($lDef_Paginte);
 
-        return Export::Create($lDef_Result['data'], 200, null, $context);
+        return Export::Create($lDef_Result['data'], 200, null);
     }
 
     //添加-POST
@@ -67,14 +65,12 @@ class Users
     //     //写入库
     //     $result->save($data);
     //     //返回数据
-    //     return Export::Create(null, 200, null, $context);
+    //     return Export::Create(null, 200, null);
     // }
 
     //编辑-PUT
     public function Patch()
     {
-        $context = request()->JwtData;
-
         //传入必要参数
         $lDef_ParamData = [
             'id' => Request::param('id'),
@@ -106,18 +102,17 @@ class Users
 
         $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {
-            return Export::Create(null, 200, null, $context);
+            return Export::Create(null, 200, null);
         }
 
         //错误返回
         $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
-        return Export::Create(null, 500, $lDef_ErrorMsg, $context);
+        return Export::Create(null, 500, $lDef_ErrorMsg);
     }
 
     //删除-DELETE
     public function Delete()
     {
-        $context = request()->JwtData;
 
         //传入必要参数
         $id = Request::param('id');
@@ -129,8 +124,8 @@ class Users
 
         $tDef_Result = UsersModel::Del($id);
         if ($tDef_Result['status']) {
-            return Export::Create(null, 200, null, $context);
+            return Export::Create(null, 200, null);
         }
-        return Export::Create(null, 500, $tDef_Result['msg'], $context);
+        return Export::Create(null, 500, $tDef_Result['msg']);
     }
 }

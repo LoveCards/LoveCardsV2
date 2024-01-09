@@ -289,6 +289,6 @@ class Cards extends Common
         };
 
         //返回数据
-        return Export::Create([$resultCardsData['good'] + 1], 200, null, $context);
+        return Export::Create([$resultCardsData['good'] + 1], 200, null);
     }
 }

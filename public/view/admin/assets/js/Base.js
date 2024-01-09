@@ -41,8 +41,9 @@ class Base {
             UserEmailCaptcha: '/api/user/email-captcha',//获取修改邮箱验证码
             UploadUserImages: '/api/upload/user-images',//用户图片上传
 
-            SystemSite: '/api/system/site',//系统设置
+            SystemSite: '/api/system/site',//基本信息设置
             SystemEmail: '/api/system/email',//系统邮箱设置
+            SystemOther: '/api/system/other',//系统其他设置
             SystemTemplate: '/api/system/template',//主题设置
             SystemTemplateSet: '/api/system/TemplateSet',//主题配置
             SystemGeetest: '/api/system/geetest',//验证码设置

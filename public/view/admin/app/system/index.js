@@ -7,33 +7,6 @@ class Index extends Base {
 
     //自定义钩子
 
-    /**
-     * 设置PostSystemSite方法初始、请求成功、请求失败的钩子
-     * @param {(Function|undefined)} intiHook 
-     * @param {(Function(response)|undefined)} thanHook 
-     * @param {(Function(error)|undefined)} catchJHook 
-     */
-    SetPostSystemSiteHooks = (intiHook, thanHook, catchHook) => {
-        //设置方法
-        this.hooks.PostSystemSite = {};
-        this.hooks.PostSystemSite.inti = intiHook;
-        this.hooks.PostSystemSite.then = thanHook;
-        this.hooks.PostSystemSite.catch = catchHook;
-    }
-    /**
-     * 设置PostSystemGeetest方法初始、请求成功、请求失败的钩子
-     * @param {(Function|undefined)} intiHook 
-     * @param {(Function(response)|undefined)} thanHook 
-     * @param {(Function(error)|undefined)} catchJHook 
-     */
-    SetPostSystemGeetestHooks = (intiHook, thanHook, catchHook) => {
-        //设置方法
-        this.hooks.PostSystemGeetest = {};
-        this.hooks.PostSystemGeetest.inti = intiHook;
-        this.hooks.PostSystemGeetest.then = thanHook;
-        this.hooks.PostSystemGeetest.catch = catchHook;
-    }
-
     //内部
 
     /**
@@ -73,4 +46,61 @@ class Index extends Base {
         this.RequestApiUrl('post', 'SystemGeetest', 'PostSystemGeetest', data);
     }
 
+    /**
+     * 设置邮箱
+     * @param {Object} editData 
+     */
+    PostSystemEmail = (editData) => {
+        const data = {
+            'driver': editData.driver,
+            'security': editData.security,
+            'host': editData.host,
+            'port': editData.port,
+            'addr': editData.addr,
+            'pass': editData.pass,
+            'name': editData.name,
+        };
+        this.RequestApiUrl('post', 'SystemEmail', {
+            inti: () => { },
+            then: () => {
+                this.commonFunctions.snackbar('编辑成功')
+            }
+        }, data);
+    }
+
+    /**
+     * 显示配置
+     * @returns 
+     */
+    GetSystemEmail = () => {
+        //this.SetPostSystemEmailHooks(undefined);
+        return this.RequestApiUrl('get', 'SystemEmail');
+    }
+
+    /**
+     * 设置邮箱
+     * @param {Object} editData 
+     */
+    PostSystemOther = (editData) => {
+        const data = {
+            'VisitorMode': editData.VisitorMode,
+            'UserImageSize': editData.UserImageSize,
+            'UserImageExt': editData.UserImageExt,
+        };
+        this.RequestApiUrl('post', 'SystemOther', {
+            inti: () => { },
+            then: () => {
+                this.commonFunctions.snackbar('编辑成功')
+            }
+        }, data);
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    GetSystemOther = () => {
+        //this.SetPostSystemOtherHooks(undefined);
+        return this.RequestApiUrl('get', 'SystemOther');
+    }
 }

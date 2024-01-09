@@ -39,8 +39,9 @@ class Export extends Facade
      * @param {int} $code
      * @param {string} $type
      */
-    public static function Create($data, int $code = 200, string $error = null, $context = null, string $type = 'json'): Response
+    public static function Create($data, int $code = 200, string $error = null, string $type = 'json'): Response
     {
+        $context = request()->JwtData;
         if ($error != null) {
             $data ?: $data = [];
             $response = self::setHeader(Response::create(['error' => $error, 'detail' => $data], $type)->code($code), $context);
