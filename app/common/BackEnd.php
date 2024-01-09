@@ -26,8 +26,8 @@ class BackEnd extends Facade
         if (empty($result)) {
             return Common::mArrayEasyReturnStruct('管理员不存在', false);
         } else
-        //返回用户数据
-        return Common::mArrayEasyReturnStruct(null, true, $result);
+            //返回用户数据
+            return Common::mArrayEasyReturnStruct(null, true, $result);
     }
 
     /**
@@ -53,17 +53,19 @@ class BackEnd extends Facade
     }
 
     /**
-     * @description: 编辑配置文件
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:16:37
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $filename
-     * @param {*} $data
+     * 编辑配置文件
+     *
+     * @param string $filename
+     * @param array $data
+     * @param boolean $free
+     * @param string $env
+     * @return boolean
      */
-    public static function mBoolCoverConfig($filename, $data, $free = false, $env = 'lovecards'): bool
+    public static function mBoolCoverConfig($filename = '', $data = [], $free = false, $env = ''): bool
     {
+        if (!$env) {
+            $env = $filename;
+        }
         $filename = '../config/' . $filename . '.php';
         $str_file = file_get_contents($filename);
 

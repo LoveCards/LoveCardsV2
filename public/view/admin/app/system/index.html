@@ -16,13 +16,10 @@
         <div class="mdui-tab" mdui-tab>
             <a href="#example1-SystemSite" class="mdui-ripple">基本信息</a>
             <a href="#example1-SystemGeetest" class="mdui-ripple">极验配置</a>
-            <!-- 
-            <a href="#example1-tab2" class="mdui-ripple">邮箱配置</a>
-            <a href="#example1-tab3" class="mdui-ripple">站点管理</a>
-             -->
+            <a href="#example1-SystemEmail" class="mdui-ripple">邮箱配置</a>
+            <a href="#example1-SystemOther" class="mdui-ripple">其他设置</a>
         </div>
         <div class="mdui-p-a-2">
-            <!-- example1-SystemSite -->
             <div id="example1-SystemSite">
                 <div class="mdui-row">
                     <div class="mdui-col-xs-12 mdui-col-md-6">
@@ -85,7 +82,6 @@
                     </div>
                 </div>
             </div>
-            <!-- example1-SystemGeetest -->
             <div id="example1-SystemGeetest">
                 <div class="mdui-row">
 
@@ -141,59 +137,77 @@
                     </div>
                 </div>
             </div>
-            <!-- 
-            <div id="example1-tab2">
+            <div id="example1-SystemEmail">
                 <div class="mdui-row">
-                    
-                    <div class="mdui-col-xs-12">
-                        <div class="mdui-textfield">
-                            <label class="mdui-textfield-label">LCEAPI</label>
-                            <input class="mdui-textfield-input" type="text" id="LCEAPI" value="{$LCEAPI}" placeholder="lovecards.cn"
-                                maxlength="">
-                        </div>
-                    </div>
 
                     <div class="mdui-col-xs-12 mdui-col-md-6">
                         <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">邮件驱动</label>
+                            <select class="mdui-select" style="width: 100%;" id="smtpDriver">
+                                <option value="smtp">
+                                    smtp
+                                </option>
+                                <option value="sendmail">
+                                    sendmail
+                                </option>
+                                <option value="mail">
+                                    mail
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">加密方式</label>
+                            <select class="mdui-select" style="width: 100%;" id="smtpSecurity">
+                                <option value="null">
+                                    null
+                                </option>
+                                <option value="ssl">
+                                    ssl
+                                </option>
+                                <option value="tls">
+                                    tls
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
                             <label class="mdui-textfield-label">SMTPHost</label>
-                            <input class="mdui-textfield-input" type="text" id="smtpHost" value="{$smtpHost}" placeholder="lovecards.cn"
-                                maxlength="">
+                            <input class="mdui-textfield-input" type="text" id="smtpHost" value=""
+                                placeholder="lovecards.cn" maxlength="">
                         </div>
                     </div>
                     <div class="mdui-col-xs-12 mdui-col-md-6">
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">SMTPPort</label>
-                            <input class="mdui-textfield-input" type="text" id="smtpPort" value="{$smtpPort}" placeholder="25"
+                            <input class="mdui-textfield-input" type="text" id="smtpPort" value="" placeholder="25"
                                 maxlength="">
                         </div>
                     </div>
                     <div class="mdui-col-xs-12 mdui-col-md-6">
                         <div class="mdui-textfield">
-                            <label class="mdui-textfield-label">验证方式</label>
-                            <input class="mdui-textfield-input" type="text" id="smtpSecure" value="{$smtpSecure}" placeholder="TLS/ssl"
-                                maxlength="">
-                        </div>
-                    </div>
-                    <div class="mdui-col-xs-12 mdui-col-md-6">
-                        <div class="mdui-textfield">
-                            <label class="mdui-textfield-label">SMTP用户名</label>
-                            <input class="mdui-textfield-input" type="text" id="smtpUser" value="{$smtpUser}" placeholder="LoveCards"
-                                maxlength="">
+                            <label class="mdui-textfield-label">SMTP邮箱地址</label>
+                            <input class="mdui-textfield-input" type="text" id="smtpAddr" value=""
+                                placeholder="LoveCards" maxlength="">
                         </div>
                     </div>
                     <div class="mdui-col-xs-12 mdui-col-md-6">
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">SMTP密码</label>
-                            <input class="mdui-textfield-input" type="text" id="smtpPass" value="{$smtpPass}" placeholder="LoveCards"
-                                maxlength="">
+                            <input class="mdui-textfield-input" type="text" id="smtpPass" value=""
+                                placeholder="LoveCards" maxlength="">
                         </div>
                     </div>
 
                     <div class="mdui-col-xs-12 mdui-col-md-6">
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">发件人昵称</label>
-                            <input class="mdui-textfield-input" type="text" id="smtpName" value="{$smtpName}" placeholder="LoveCards邮局"
-                                maxlength="">
+                            <input class="mdui-textfield-input" type="text" id="smtpName" value=""
+                                placeholder="LoveCards邮局" maxlength="">
                         </div>
                     </div>
 
@@ -206,10 +220,47 @@
                     </div>
                 </div>
             </div>
-            <div id="example1-tab3">
+            <div id="example1-SystemOther">
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">游客模式</label>
+                            <select class="mdui-select" style="width: 100%;" id="VisitorMode">
+                                <option value="true">
+                                    开启
+                                </option>
+                                <option value="false">
+                                    关闭
+                                </option>
+                            </select>
 
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">上传图片大小</label>
+                            <input class="mdui-textfield-input" type="text" id="UserImageSize" value=""
+                                placeholder="lovecards.cn" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">图片格式限制</label>
+                            <input class="mdui-textfield-input" type="text" id="UserImageExt" value=""
+                                placeholder="lovecards.cn" maxlength="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12">
+                        <button id="submitOther"
+                            class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+                    </div>
+                </div>
             </div>
-            -->
         </div>
 
     </div>
@@ -222,6 +273,28 @@
     let IndexEntity = new Index();
 
     $(function () {
+        const Show = () => {
+            IndexEntity.GetSystemEmail().then((result) => {
+                const data = result.data;
+                $('#smtpDriver').val(data.driver);
+                $('#smtpSecurity').val(data.security);
+                $('#smtpHost').val(data.host);
+                $('#smtpPort').val(data.port);
+                $('#smtpAddr').val(data.addr);
+                $('#smtpUser').val(data.user);
+                $('#smtpPass').val(data.pass);
+                $('#smtpName').val(data.name);
+            });
+
+            IndexEntity.GetSystemOther().then((result) => {
+                const data = result.data;
+                $('#VisitorMode').val(String(data.System.VisitorMode));
+                $('#UserImageSize').val(data.Upload.UserImageSize);
+                $('#UserImageExt').val(data.Upload.UserImageExt);
+            });
+
+        }; Show();
+
         const getSystemSiteData = () => {
             return {
                 'siteUrl': $('#siteUrl').val(),
@@ -243,6 +316,27 @@
             };
         }
 
+        const getSystemEmail = () => {
+            return {
+                'driver': $('#smtpDriver').val(),
+                'security': $('#smtpSecurity').val(),
+                'host': $('#smtpHost').val(),
+                'port': $('#smtpPort').val(),
+                'addr': $('#smtpAddr').val(),
+                'user': $('#smtpUser').val(),
+                'pass': $('#smtpPass').val(),
+                'name': $('#smtpName').val(),
+            };
+        }
+
+        const getSystemOther = () => {
+            return {
+                'VisitorMode': $('#VisitorMode').val(),
+                'UserImageSize': $('#UserImageSize').val(),
+                'UserImageExt': $('#UserImageExt').val(),
+            };
+        }
+
         //提交example1-SystemSite
         $('#submitSite').click(() => {
             IndexEntity.PostSystemSite(getSystemSiteData());
@@ -253,29 +347,15 @@
             IndexEntity.PostSystemGeetest(getSystemGeetestData());
         })
 
-        //提交
-        // $('#submitEmail').click(function () {
-        //     data = {
-        //         'uuid': $.cookie('uuid'),
-        //         'LCEAPI': $('#LCEAPI').val(),
-        //         'smtpHost': $('#smtpHost').val(),
-        //         'smtpPort': $('#smtpPort').val(),
-        //         'smtpSecure': $('#smtpSecure').val(),
-        //         'smtpUser': $('#smtpUser').val(),
-        //         'smtpPass': $('#smtpPass').val(),
-        //         'smtpName': $('#smtpName').val(),
-        //     };
-        //     //提交数据
-        //     result = apiAjax0(data, apiSystemEmail, 'POST');
-        //     if (result) {
-        //         //成功
-        //         mdui.snackbar({
-        //             message: '更新成功',
-        //             position: 'left-top'
-        //         });
-        //         return;
-        //     }
-        // })
+        //提交example1-SystemEmail
+        $('#submitEmail').click(() => {
+            IndexEntity.PostSystemEmail(getSystemEmail());
+        })
+
+        //提交example1-SystemOther
+        $('#submitOther').click(() => {
+            IndexEntity.PostSystemOther(getSystemOther());
+        })
     });
 </script>
 </body>

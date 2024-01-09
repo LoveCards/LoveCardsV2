@@ -24,11 +24,11 @@ return [
     'class' => [
         'geetest' => [
             //默认全局验证ON/OFF:1/0
-            'DefSetValidatesStatus' => env('lovecards.DefSetValidatesStatus', 0),
+            'DefSetValidatesStatus' => env('lovecards.DefSetValidatesStatus', ),
             //极验ID
-            'DefSetGeetestId' => env('lovecards.DefSetGeetestId', '145e5424cb89698be0c58a1060483735'),
+            'DefSetGeetestId' => env('lovecards.DefSetGeetestId', ''),
             //极验Key
-            'DefSetGeetestKey' => env('lovecards.DefSetGeetestKey', 'e4a515f644b3e14c20d11dc90d326743')
+            'DefSetGeetestKey' => env('lovecards.DefSetGeetestKey', '')
         ]
     ]
 ];

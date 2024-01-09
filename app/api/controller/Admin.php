@@ -16,8 +16,6 @@ class Admin
     //添加管理员-POST
     public function Add()
     {
-        $context = request()->JwtData;
-
         $userName = Request::param('userName');
         $password = Request::param('password');
         $power = Request::param('power');
@@ -44,14 +42,12 @@ class Admin
         //写入库
         $result->save($data);
         //返回数据
-        return Export::Create(null, 200, null, $context);
+        return Export::Create(null, 200, null);
     }
 
     //编辑管理员-POST
     public function Edit()
     {
-        $context = request()->JwtData;
-
         //传入必要参数
         $id = Request::param('id');
         $userName = Request::param('userName');
@@ -107,7 +103,7 @@ class Admin
 
         //写入数据
         $result->update();
-        return Export::Create(null, 200, null, $context);
+        return Export::Create(null, 200, null);
     }
 
     //删除管理员-POST
@@ -136,6 +132,6 @@ class Admin
         }
 
         $result->delete();
-        return Export::Create(null, 200, null, $context);
+        return Export::Create(null, 200, null);
     }
 }

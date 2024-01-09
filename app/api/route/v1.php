@@ -65,7 +65,13 @@ Route::group('', function () {
     Route::post('cards/setting', 'Cards/Setting');
 
     Route::post('system/site', 'System/Site');
-    Route::post('system/email', 'System/Email');
+
+    Route::get('system/email', 'System/GetEmail');
+    Route::rule('system/email', 'System/Email','PUT|PATCH');
+
+    Route::get('system/other', 'System/GetOther');
+    Route::rule('system/other', 'System/Other','PUT|PATCH');
+
     Route::post('system/template', 'System/template');
     Route::post('system/templateset', 'System/TemplateSet');
     Route::post('system/geetest', 'System/Geetest');

@@ -20,19 +20,18 @@ class Info
      * UsersModelPatch方法封装
      * 更新并返回结果 -可以移入UsersModel
      * @param Array $lDef_ParamData
-     * @param Array $context
      * @return Object
      */
-    public function mObjectEasyUsersModelPatch($lDef_ParamData, $context)
+    public function mObjectEasyUsersModelPatch($lDef_ParamData)
     {
         $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {
-            return Export::Create(null, 200, null, $context);
+            return Export::Create(null, 200, null);
         }
 
         //错误返回
         $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
-        return Export::Create(null, 500, $lDef_ErrorMsg, $context);
+        return Export::Create(null, 500, $lDef_ErrorMsg);
     }
 
     /**
@@ -96,10 +95,10 @@ class Info
         $tDef_Result = UsersModel::Get($context['uid'], ['id']);
 
         if ($tDef_Result['status']) {
-            return Export::Create($tDef_Result['data'], 200, null, $context);
+            return Export::Create($tDef_Result['data'], 200, null);
         }
 
-        return Export::Create(null, 500, $tDef_Result['msg'], $context);
+        return Export::Create(null, 500, $tDef_Result['msg']);
     }
 
     //编辑资料-Patch
@@ -122,7 +121,7 @@ class Info
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
 
-        return $this->mObjectEasyUsersModelPatch($lDef_ParamData, $context);
+        return $this->mObjectEasyUsersModelPatch($lDef_ParamData);
     }
 
     //修改密码-Post
@@ -144,7 +143,7 @@ class Info
 
         $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
 
-        return $this->mObjectEasyUsersModelPatch($lDef_ParamData, $context);
+        return $this->mObjectEasyUsersModelPatch($lDef_ParamData);
     }
 
     //修改邮箱-Post
@@ -165,7 +164,7 @@ class Info
         //验证邮箱格式
         $this->mObjectEasyTryCatchUsersValidate($lDef_ParamData);
 
-        return $this->mObjectEasyUsersModelPatch($lDef_ParamData, $context);
+        return $this->mObjectEasyUsersModelPatch($lDef_ParamData);
     }
 
     //获取邮箱绑定验证码-POST
