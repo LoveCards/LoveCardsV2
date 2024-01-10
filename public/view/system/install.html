@@ -10,8 +10,8 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 
     <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
-    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
-    <link rel="stylesheet" href="{__A-assets__}/base.css" />
+    <link rel="stylesheet" href="{__A-assets__}/lib/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/css/base.css" />
 
     <style>
         .mask-xs {
@@ -60,7 +60,7 @@
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
                             <div class="mdui-card-primary-subtitle">
-                                Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © 2023 time Made by 吃纸怪.
+                                Crafted with <a href="">$systemVer.Name</a> © 2023 time Made by 吃纸怪.
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
                             <div class="mdui-card-primary-subtitle">
-                                Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © 2023 time Made by 吃纸怪.
+                                Crafted with <a href="">$systemVer.Name</a> © 2023 time Made by 吃纸怪.
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             <div class="mdui-typo tab-e">
                                 <h4 style="margin-top: 0;font-weight:500;">LoveCards</h4>
                                 <ul>
-                                    <li>🗃️当前版本：<kbd>{$systemVer.VerS}[{$systemVer.Ver}]</kbd></li>
+                                    <li>🗃️当前版本：<kbd>$systemVer.VerS[$systemVer.Ver]</kbd></li>
                                     <li>🆕最新版本：<a href="https://github.com/zhiguai/LoveCards/releases"><kbd
                                                 id="NewVerS">加载中...</kbd></a>
                                         <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
@@ -103,7 +103,7 @@
                                             target="_blank">github.com/zhiguai/LoveCards</a></li>
                                     <li>👩‍👧‍👦交流社区：<a href="https://forum.lovecards.cn/"
                                             target="_blank">forum.lovecards.cn</a></li>
-                                    <li>👯‍♂QQ交流群：<a href="{$systemVer.QGroupUrl}" target="_blank">801235342</a></li>
+                                    <li>👯‍♂QQ交流群：<a href="$systemVer.QGroupUrl" target="_blank">801235342</a></li>
                                 </ul>
 
                             </div>
@@ -132,17 +132,17 @@
                                         <tbody>
                                             <tr>
                                                 <td>PHP</td>
-                                                <td id="verifyEnvironmentPhpV">{$verifyEnvironment.php.v}</td>
-                                                <td>[{$systemVer.InstallEnvironment.php.f},{$systemVer.InstallEnvironment.php.l})
+                                                <td id="verifyEnvironmentPhpV">$verifyEnvironment.php.v</td>
+                                                <td>[$systemVer.InstallEnvironment.php.f $systemVer.InstallEnvironment.php.l)
                                                 </td>
-                                                <td id="verifyEnvironmentPhpS">{$verifyEnvironment.php.s ? '✔️可用' :
+                                                <td id="verifyEnvironmentPhpS">$verifyEnvironment.php.s ? '✔️可用' :
                                                     '❌不可用'}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>MySQL</td>
                                                 <td>自查</td>
-                                                <td>[{$systemVer.InstallEnvironment.mysql.f},{$systemVer.InstallEnvironment.mysql.l})
+                                                <td>[$systemVer.InstallEnvironment.mysql.f,$systemVer.InstallEnvironment.mysql.l)
                                                 </td>
                                                 <td>🔍自查</td>
                                             </tr>
@@ -150,9 +150,9 @@
                                                 <td>PDO扩展</td>
                                                 <td></td>
                                                 <td></td>
-                                                <td id="verifyEnvironmentPdo_mysql">{$verifyEnvironment.pdo_mysql ?
+                                                <td id="verifyEnvironmentPdo_mysql">$verifyEnvironment.pdo_mysql ?
                                                     '✔️可用'
-                                                    : '❌不可用'}</td>
+                                                    : '❌不可用'</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -212,171 +212,14 @@
         </div>
     </div>
 
-    <script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
-    <script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
-    <script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
-    <script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
-    <script src="{__A-assets__}/base.js"></script>
-    <script src="{__A-assets__}/public.js"></script>
-    <script>
-        //Base
-        var currentDate = new Date();
-        var currentYear = currentDate.getFullYear();
-        //主页信息
-        const BaseFun = () => {
-            //最新版本
-            GithubDateRelesesLatest().then(function (result) {
-                if (result != 'error') {
-                    $('#NewVerS').text(result['name']);
-                } else {
-                    $('#NewVerS').text('前往查看');
-                }
-            })
+    <script src="{__A-assets__}/lib/jquery-3.6.0/jquery.min.js"></script>
+    <script src="{__A-assets__}/lib/mdui-v1.0.2/js/mdui.min.js"></script>
+    <script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+    <script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+    <script src="{__A-assets__}/lib/axios-1.5.0/axios.min.js"></script>
+    <script src="{__A-assets__}/js/Base.js"></script>
+    <script src="{__A-assets__}/js/AdminCommon.js"></script>
+    <script src="{__A-assets__}/js/commonOld.js"></script>
 
-            $.ajax({ url: "https://ghps.cc/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md", type: 'GET', async: true }).then(function (data) {
-                $('#NewVerSVerLog').text(data);
-            }).catch(function (error) {
-                $('#NewVerSVerLog').text('获取失败');
-            });
-        }; BaseFun();
-        //更新版权
-        $('.mdui-card-primary-subtitle').html('Crafted with <a href="{$systemVer.Url}">{$systemVer.Name}</a> © ' + currentYear + ' Made by 吃纸怪.')
-
-        //初始化
-        var nowTab = 1;
-        var inst = new mdui.Tab('#tab');
-        //页面动态
-        var FunTabControl = (state) => {
-            nowTab = nowTab + state;
-            //显示下一个Tab
-            $('#tab' + nowTab).attr("disabled", false);
-            $('#tab-e' + nowTab).attr('class', '');
-            //隐藏当前Tab
-            $('#tab' + (nowTab - state)).attr("disabled", true);
-            $('#tab-e' + (nowTab - state)).attr('class', 'hide');
-        }
-        //下一页
-        var btnNext = () => {
-            if (nowTab < $('#tab').children().length - 1) {
-                //显示上一页btn
-                $('#btnPrev').attr('style', '');
-                //锁定其他Tab
-                FunTabControl(1);
-                //更新进度条
-                inst.next();
-                if (nowTab == $('#tab').children().length - 1) {
-                    //隐藏上一页btn
-                    $('#btnPrev').remove();
-                    $('#btnNext').attr('class', 'mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-block').text('进入你的领域！');
-                }
-            } else {
-                //console.log('安装完成');
-            }
-        }
-        //上一页
-        var btnPrev = () => {
-            if (nowTab > 1) {
-                //锁定其他Tab
-                FunTabControl(-1);
-                //更新进度条
-                inst.prev();
-                if (nowTab == 1) {
-                    //隐藏上一页btn
-                    $('#btnPrev').attr('style', 'visibility: hidden;');
-                }
-            } else {
-                //console.log('第一页了');
-            }
-        }
-
-        //重新检测环境
-        $('#btnVerifyEnvironment').click(function () {
-            var result = apiAjax0('', apiSystemInstallVerifyEnvironment, 'POST', false);
-            if (result['ec'] == 200) {
-                mdui.snackbar({
-                    message: '结果已更新',
-                    position: 'left-top'
-                });
-                VEStatus = String(result['data']['pdo_mysql'] && result['data']['php']['s']);
-                $('#verifyEnvironmentPhpV').text(result['data']['php']['v']);
-                $('#verifyEnvironmentPhpS').text(result['data']['php']['s'] ? '✔️可用' : '❌不可用');
-                $('#verifyEnvironmentPdo_mysql').text(result['data']['pdo_mysql'] ? '✔️可用' : '❌不可用');
-            }
-        })
-        var VEStatus = '{$verifyEnvironment.php.s && $verifyEnvironment.pdo_mysql ? "true" : "fasle"}';
-
-        //操作
-        $('#btnNext').click(function () {
-            //数据库tab
-            if (nowTab == 2) {
-                if (VEStatus != 'true') {
-                    //失败
-                    mdui.snackbar({
-                        message: '环境不可用请重新检测后再继续',
-                        position: 'left-top'
-                    });
-                } else {
-                    btnNext();
-                }
-            } else if (nowTab == 3) {
-                //数据库导入
-                var data = {
-                    'hostname': $('#formDataHostname').val(),
-                    'database': $('#formDataDatabase').val(),
-                    'username': $('#formDataUsername').val(),
-                    'password': $('#formDataPassword').val(),
-                    'hostport': $('#formDataHostport').val(),
-                };
-                var result = apiAjax0a(data, apiSystemInstallSetDbConfig, 'POST', false);
-                //console.log(result['r']);
-                if (result['r']['ec'] == 200) {
-                    //成功
-                    mdui.snackbar({
-                        message: '数据库配置成功',
-                        position: 'left-top'
-                    });
-                    btnNext();
-                } else if (result['r']['ec'] == 201) {
-                    //选择跳过
-                    mdui.snackbar({
-                        position: 'left-top',
-                        message: 'msg&nbsp;:&nbsp;' + result['r']['msg'],
-                        buttonText: '跳过',
-                        onButtonClick: function () {
-                            btnNext();
-                        }
-                    });
-                } else {
-                    //报错
-                    mdui.snackbar({
-                        position: 'left-top',
-                        message: 'msg&nbsp;:&nbsp;' + result['r']['msg'] + '<br>code&nbsp;:&nbsp;' + result['r']['ec'],
-                    });
-                }
-            } else if (nowTab == 4) {
-                var result = apiAjax0a([], apiSystemInstallSetInstallLock, 'POST', false);
-                if (result['r']['ec'] == 200) {
-                    //成功
-                    mdui.snackbar({
-                        message: '安装记录生成成功',
-                        position: 'left-top'
-                    });
-                    jumpUrl('/', 0);
-                } else {
-                    //报错
-                    mdui.snackbar({
-                        position: 'left-top',
-                        message: 'msg&nbsp;:&nbsp;' + result['r']['msg'] + '<br>code&nbsp;:&nbsp;' + result['r']['ec'],
-                    });
-                }
-            } else {
-                //正常下一步
-                btnNext();
-            }
-        })
-        $('#btnPrev').click(function () {
-            btnPrev();
-        })
-    </script>
 
 </body>

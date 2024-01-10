@@ -29,18 +29,18 @@ class Common
         return [
             'Name' => 'LoveCards',
             'Url' => '//lovecards.cn',
-            'VerS' => '2.2.0',
+            'VerS' => '2.3.0',
             'Ver' => '1.0.15',
             'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
             'InstallEnvironment' => [
                 'php' => [
-                    'f' => '7.2.5',
-                    'l' => '8.0.99'
+                    '[' => '7.2.5',
+                    ')' => '8.0.99'
                 ],
                 'mysql' => [
-                    'f' => '5.7',
-                    'l' => '9999'
+                    '[' => '5.7',
+                    ')' => '9999'
                 ],
             ]
         ];
