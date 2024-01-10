@@ -12,15 +12,14 @@ use DomainException;
 use InvalidArgumentException;
 use UnexpectedValueException;
 
-use think\Facade;
 use think\facade\Config;
 use think\facade\Cache;
 use app\common\Common;
 
-class Jwt extends Facade
+class Jwt
 {
     //生成验签
-    protected static function SignToken($data): string
+    public static function SignToken($data): string
     {
         $jwt_config = Config::get('jwt');
         $privateKey = file_get_contents('..' . $jwt_config['privateKey']);
@@ -38,8 +37,8 @@ class Jwt extends Facade
         return $token; //根据参数生成了token，可选：HS256、HS384、HS512、RS256、ES256等
     }
 
-    //验证token
-    protected static function CheckToken($token): array
+    //验证Token
+    public static function CheckToken($token): array
     {
         $jwt_config = Config::get('jwt');
         $publicKey = file_get_contents('..' . $jwt_config['publicKey']);
@@ -81,8 +80,8 @@ class Jwt extends Facade
         }
     }
 
-    //刷新token
-    protected static function RenewToken($token, $data): array
+    //刷新Token
+    public static function RenewToken($token, $data): array
     {
         if (Cache::has('token_' . $token)) {
             //删除原token
@@ -97,11 +96,24 @@ class Jwt extends Facade
     }
 
     //删除Token
-    protected static function DeleteToken($token): array
+    public static function DeleteToken($token): array
     {
         if (Cache::has('token_' . $token)) {
             Cache::delete('token_' . $token);
         };
         return Common::mArrayEasyReturnStruct(null, true);
+    }
+
+    //验证RSA密钥对是否可用
+    public static function VerifyRsa($publicKey, $privateKey)
+    {
+        $jwt_config = Config::get('jwt');
+        $payload = ['Test' => true];
+        $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
+        $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']));
+        if($decoded->Test == $payload['Test']){
+            return true;
+        }
+        return false;
     }
 }

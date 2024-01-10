@@ -11,6 +11,8 @@ use app\system\utils\Database;
 use app\system\utils\Environment;
 use app\system\utils\Rsa;
 
+use jwt\Jwt;
+
 class Install
 {
 
@@ -93,7 +95,29 @@ class Install
     //创建公私钥
     public function PostCreateRsa()
     {
-        dd(Rsa::Generate());
-        return 0;
+        $key = [
+            'public' => Request::param('public'),
+            'private' => Request::param('private'),
+        ];
+
+        //生成还是传入
+        if (!$key['public'] && !$key['private']) {
+            $key = Rsa::Generate();
+            if (!$key) {
+                return Export::Create(null, 500, '密钥对生成失败');
+            }
+        }
+
+        //校验是否可用
+        if(!Jwt::VerifyRsa($key['public'], $key['private'])){
+            return Export::Create(null, 500, '密钥对不可用');
+        }
+
+        //写入文件
+        $result = Rsa::UpdataRsa($key['public'], $key['private']);
+        if (!$result) {
+            return Export::Create(null, 500, '密钥写入失败，请检查权限');
+        }
+        return Export::Create(null, 200);
     }
 }
