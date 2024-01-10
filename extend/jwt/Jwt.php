@@ -109,11 +109,16 @@ class Jwt
     {
         $jwt_config = Config::get('jwt');
         $payload = ['Test' => true];
-        $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
-        $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']));
-        if($decoded->Test == $payload['Test']){
-            return true;
+
+        try {
+            $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
+            $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']));
+            if($decoded->Test == $payload['Test']){
+                return true;
+            }
+            return false;
+        } catch (\Throwable $th) {
+            return false;
         }
-        return false;
     }
 }
