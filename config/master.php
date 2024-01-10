@@ -1,7 +1,7 @@
 <?php
 return [
     'System' => [
-        'VisitorMode' => env('master.SystemVisitorMode', false),
+        'VisitorMode' => env('master.SystemVisitorMode', true),
     ],
     'Upload' => [
         //最大上传图片大小 单位:M
