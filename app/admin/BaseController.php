@@ -23,7 +23,7 @@ class BaseController extends Common
         //安装检测
         @$file = fopen("../lock.txt", "r");
         if (!$file) {
-            header("location:/system/install");
+            header("location:/system/index/install");
             exit;
         }
 
