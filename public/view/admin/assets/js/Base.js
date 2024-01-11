@@ -63,8 +63,8 @@ class Base {
             CommentsDelete: '/api/comments/delete',//删除评论
 
             //install
-            SystemInstallVerifyEnvironment: '/system/Install/apiVerifyEnvironment',//验证环境
-            SystemInstallSetDbConfig: '/system/Install/apiSetDbConfig',//配置数据库
+            SystemInstallCheckEnvironment: '/system/Install/GetCheckEnvironment',//验证环境
+            SystemInstallSetDbConfig: '/system/Install/PostDbConfig',//配置数据库
             SystemInstallSetInstallLock: '/system/Install/apiSetInstallLock',//生成安装记录
         };
 

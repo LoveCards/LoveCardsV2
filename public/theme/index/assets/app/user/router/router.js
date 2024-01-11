@@ -9,7 +9,7 @@ const router = VueRouter.createRouter({
 
 // 在导航守卫中设置页面标题
 router.beforeEach((to, from, next) => {
-    document.title = to.meta.title || 'LoveCards用户中心';
+    document.title = to.meta.title || '用户中心 - LoveCards';
     next();
 });
 
