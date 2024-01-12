@@ -30,7 +30,7 @@ class Common
             'Name' => 'LoveCards',
             'Url' => '//lovecards.cn',
             'VerS' => '2.3.0',
-            'Ver' => '1.0.15',
+            'Ver' => '16',
             'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
             'InstallEnvironment' => [

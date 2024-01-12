@@ -3,6 +3,8 @@
 namespace app\system\controller;
 
 use think\facade\Request;
+use think\facade\Http;
+use think\facade\Cache;
 
 use app\common\Export;
 
@@ -23,6 +25,41 @@ class Install
         if ($result['status'] === false) {
             return Export::Create(null, 500, '勿重复安装');
         }
+    }
+
+    private function getHttpData($key = '', $url = '', $heade = [], $time = 3600): string
+    {
+        $data = Cache::get($key);
+        if (!$data) {
+            // 设置HTTP头，模拟浏览器请求
+            $options = [
+                'http' => [
+                    'header' => "User-Agent: PHP\r\n"
+                ]
+            ];
+            $context = stream_context_create($options);
+            // 发送请求并获取响应
+            try {
+                $data = file_get_contents($url, false, $context);
+                Cache::set($key, $data, $time);
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }
+        return $data;
+    }
+
+    //获取系统信息
+    public function GetVersionInfo()
+    {
+        $latestInfo = $this->getHttpData('GithubReleasesLatestInfo', 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest');
+        $verlogMd = $this->getHttpData('GithubVerlogMd', 'https://github.moeyy.xyz/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md');
+
+        $data = Common::mArrayGetLCVersionInfo();
+        $data['GithubInfo'] = json_decode($latestInfo, true);
+        $data['GithubVerlogMd'] = $verlogMd;
+
+        return Export::Create($data, 200);
     }
 
     //配置数据库
@@ -89,7 +126,8 @@ class Install
     //检查环境
     public function GetCheckEnvironment()
     {
-        return Export::Create(Environment::Check(), 200);
+        $data = Environment::Check();
+        return Export::Create($data, 200);
     }
 
     //创建公私钥
@@ -109,7 +147,7 @@ class Install
         }
 
         //校验是否可用
-        if(!Jwt::VerifyRsa($key['public'], $key['private'])){
+        if (!Jwt::VerifyRsa($key['public'], $key['private'])) {
             return Export::Create(null, 500, '密钥对不可用');
         }
 
