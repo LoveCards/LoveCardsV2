@@ -64,8 +64,10 @@ class Base {
 
             //install
             SystemInstallCheckEnvironment: '/system/Install/GetCheckEnvironment',//验证环境
+            SystemInstallCreateRsa: '/system/Install/PostCreateRsa',//创建RSA密钥
             SystemInstallSetDbConfig: '/system/Install/PostDbConfig',//配置数据库
-            SystemInstallSetInstallLock: '/system/Install/apiSetInstallLock',//生成安装记录
+            SystemInstallSetInstallLock: '/system/Install/PostInstallLock',//生成安装记录
+            SystemInstallGetVersionInfo: '/system/Install/GetVersionInfo',//
         };
 
         //极验配置
