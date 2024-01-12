@@ -21,8 +21,6 @@
   <a href="https://github.com/zhiguai/LoveCards/releases">下载</a>
 </p>
 
-<img src="https://img1.imgtp.com/2023/09/18/UyB65ww3.png">
-
 ## 🌟 亮点
 
 🗃️ 不止表白卡，更有交流卡  
@@ -48,7 +46,7 @@
 #### 默认主题配色展示
 <div style="display: flex; justify-content: space-between;">
     <img src="https://s11.ax1x.com/2024/01/11/pFCitaD.jpg" style="width: 30%;" alt="Image 1">
-    <img src="https://s11.ax1x.com/2024/01/11/pFCilx1.png" style="width: 30%;" alt="Image 2">
+    <img src="https://s11.ax1x.com/2024/01/11/pFCi8r6.jpg" style="width: 30%;" alt="Image 2">
     <img src="https://s11.ax1x.com/2024/01/11/pFCiYVO.jpg" style="width: 30%;" alt="Image 3">
 </div>
 
@@ -90,16 +88,13 @@ redis(可选)
 -   <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API 文档</a>(🔥更新中)
 
 #### 版本号说明  
--   Ver为实际版本号，程序中的“版本检测”将优先或仅以Ver为准
+-   Ver为开发本号，程序中的“版本检测”将优先或仅以Ver为准
 -   VerS为展示版本号，用作发行版的展示
 -   VerS中[A.B.C]  
     当 A 改变意味着 有较低层的代码或架构等存在重大改动  
     当 B 改变意味着 数据库相关有改动  
     当 C 改变意味着 一般逻辑代码有改动
--   Ver中[A.B.C]  
-    A 指的也就是LC2中的2 一般不变  
-    B 可简单对照 VerS中的 A
-    C 可简单对照 VerS中的 B与C的合
+-   Ver一般按照发行版本递增 
 
 ## ⚗️ 技术栈
 
