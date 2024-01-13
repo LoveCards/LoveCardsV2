@@ -5,6 +5,11 @@
     --VerS：2.3.0
     --commit：详见论坛[]
 
+-   ↑2024 年 1 月 13 日  
+    --Ver：16  
+    --VerS：2.2.1  
+    --commit：详见论坛[forum.lovecards.cn/d/51]
+
 -   *2023 年 9 月 19 日  
     --Ver：1.0.15  
     --VerS：2.2.0  
