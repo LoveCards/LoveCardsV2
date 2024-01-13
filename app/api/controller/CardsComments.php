@@ -10,7 +10,7 @@ use think\facade\Config;
 use app\api\validate\CardsComments as CommentsValidate;
 
 use app\common\Common;
-use app\Common\Export;
+use app\common\Export;
 
 class CardsComments extends Common
 {
