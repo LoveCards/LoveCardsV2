@@ -36,7 +36,7 @@ $Config = [
         'ThemePrimary' => [
             'Name' => '主题主色',
             'Introduction' => '颜色可参考<a href="https://www.mdui.org/docs/color" target="_blank">MDUI颜色与主题</a>',
-            'Default' => env('ThemeConfig.SelectThemePrimary', 0),
+            'Default' => env('ThemeConfig.SelectThemePrimary', 4),
             'Element' => [
                 0 => 'red',
                 1 => 'pink',
