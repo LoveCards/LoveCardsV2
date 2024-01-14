@@ -128,10 +128,10 @@ class Database
         }
 
         //写入并返回结果        
-        $result = file_put_contents($filename, $str_file);
-        if ($result) {
+        try {
+            $result = file_put_contents($filename, $str_file);
             return true;
-        } else {
+        } catch (\Throwable $th) {
             return false;
         }
     }
