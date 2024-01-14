@@ -76,7 +76,8 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
-            return View::fetch('../error/404');
+            View::config(['view_path' => './view/']);
+            return View::fetch('error/404');
         } else {
             return redirect('/');
         }
