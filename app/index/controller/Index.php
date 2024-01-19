@@ -6,6 +6,7 @@ use think\facade\View;
 
 use app\common\File;
 use app\common\Theme;
+use app\common\Common;
 use app\index\BaseController;
 
 use app\index\method\IndexFacade as IndexFacade;
@@ -44,7 +45,7 @@ class Index extends BaseController
                 if (is_array($tDef_Result)) {
                     //返回为标准格式
                     View::assign($tDef_Result['data']);
-                }else{
+                } else {
                     //返回对象直接执行
                     return $tDef_Result;
                 }
@@ -72,6 +73,8 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
+            View::assign('LCVersionInfo', Common::mArrayGetLCVersionInfo());
+            View::config(['view_path' => './view/']);
             return View::fetch('error/404');
         } else {
             return redirect('/');

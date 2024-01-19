@@ -7,10 +7,10 @@
  */
 return [
     'driver'          => env('mail.driver', 'smtp'), // 邮件驱动, 支持 smtp|sendmail|mail 三种驱动
-    'host'            => env('mail.host', 'smtp.ym.163.com'), // SMTP服务器地址
-    'port'            => env('mail.port', 465), // SMTP服务器端口号,一般为25
-    'addr'            => env('mail.addr', 'toolman@fatda.cn'), // 发件邮箱地址
-    'pass'            => env('mail.pass', '123456zxc'), // 发件邮箱密码
+    'host'            => env('mail.host', ''), // SMTP服务器地址
+    'port'            => env('mail.port', ), // SMTP服务器端口号,一般为25
+    'addr'            => env('mail.addr', ''), // 发件邮箱地址
+    'pass'            => env('mail.pass', ''), // 发件邮箱密码
     'name'            => env('mail.name', 'FatDa邮递员'), // 发件邮箱名称
     'content_type'    => 'text/html', // 默认文本内容 text/html|text/plain
     'charset'         => 'utf-8', // 默认字符集
