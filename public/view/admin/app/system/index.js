@@ -14,9 +14,6 @@ class Index extends Base {
      * @param {Object} editData 
      */
     PostSystemSite = (editData) => {
-        this.SetPostSystemSiteHooks(undefined, () => {
-            this.commonFunctions.snackbar('编辑成功');
-        });
         const data = {
             'siteUrl': editData.siteUrl,
             'siteName': editData.siteName,
@@ -27,7 +24,12 @@ class Index extends Base {
             'password': editData.Password,
             'siteCopyright': editData.siteCopyright,
         };
-        this.RequestApiUrl('post', 'SystemSite', 'PostSystemSite', data);
+        this.RequestApiUrl('post', 'SystemSite', {
+            inti: () => { },
+            then: () => {
+                this.commonFunctions.snackbar('编辑成功')
+            }
+        }, data);
     }
 
     /**
@@ -35,15 +37,17 @@ class Index extends Base {
      * @param {Object} editData 
      */
     PostSystemGeetest = (editData) => {
-        this.SetPostSystemGeetestHooks(undefined, () => {
-            this.commonFunctions.snackbar('编辑成功');
-        });
         const data = {
             'DefSetGeetestId': editData.DefSetGeetestId,
             'DefSetGeetestKey': editData.DefSetGeetestKey,
             'DefSetValidatesStatus': editData.DefSetValidatesStatus,
         };
-        this.RequestApiUrl('post', 'SystemGeetest', 'PostSystemGeetest', data);
+        this.RequestApiUrl('post', 'SystemGeetest', {
+            inti: () => { },
+            then: () => {
+                this.commonFunctions.snackbar('编辑成功')
+            }
+        }, data);
     }
 
     /**

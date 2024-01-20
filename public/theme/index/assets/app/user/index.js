@@ -11,8 +11,18 @@ const app = createApp({
     created() {
         //CookieMsg处理
         CommonEntity.CookieMsgHandling();
-        //内置类绑定注销
-        CommonEntity.BindLogout('Logout');
+    },
+    methods: {
+        postLogout() {
+            BaseEntity.RequestApiUrl('post', 'UserAuthLogout', {
+                inti: () => { },
+                then: (response) => {
+                    BaseEntity.DeleteToken('UserTokenName');//清除Token
+                    BaseEntity.commonFunctions.snackbar('退出成功，正在跳转');
+                    window.location.replace('/');
+                }
+            }, [], 'UserTokenName');
+        }
     }
 });
 app.use(router);

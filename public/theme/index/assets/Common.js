@@ -113,6 +113,7 @@ class Common extends Base {
                     //默认回调函数
                     this.SetToken(response.data.token, 'UserTokenName');//设置Token
                     this.commonFunctions.snackbar('注册成功，正在跳转');
+                    window.location.reload();
                 }
             }, true);
         }
