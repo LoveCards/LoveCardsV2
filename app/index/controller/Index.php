@@ -30,24 +30,26 @@ class Index extends BaseController
 
         //加载app指定数据方法与鉴权方法
         $tDef_AppConfigArray = IndexFacade::mArrayMatchThemeAppConfig($tDef_AppPath, $this->attrGReqView['Theme']['Config']);
-        if ($tDef_AppConfigArray['PageAuth']) {
-            foreach ($tDef_AppConfigArray['PageAuth'] as $value) {
-                $tDef_Result = IndexFacade::$value();
-                if ($tDef_Result) {
-                    return $tDef_Result;
+        if ($tDef_AppConfigArray) {
+            if ($tDef_AppConfigArray['PageAuth']) {
+                foreach ($tDef_AppConfigArray['PageAuth'] as $value) {
+                    $tDef_Result = IndexFacade::$value();
+                    if ($tDef_Result) {
+                        return $tDef_Result;
+                    }
                 }
             }
-        }
-        if ($tDef_AppConfigArray['PageAssignData']) {
-            foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
-                // $tDef_NewExample = new CardsMethod;
-                $tDef_Result = IndexFacade::$value();
-                if (is_array($tDef_Result)) {
-                    //返回为标准格式
-                    View::assign($tDef_Result['data']);
-                } else {
-                    //返回对象直接执行
-                    return $tDef_Result;
+            if ($tDef_AppConfigArray['PageAssignData']) {
+                foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
+                    // $tDef_NewExample = new CardsMethod;
+                    $tDef_Result = IndexFacade::$value();
+                    if (is_array($tDef_Result)) {
+                        //返回为标准格式
+                        View::assign($tDef_Result['data']);
+                    } else {
+                        //返回对象直接执行
+                        return $tDef_Result;
+                    }
                 }
             }
         }
