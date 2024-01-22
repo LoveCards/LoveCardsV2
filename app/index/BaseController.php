@@ -68,6 +68,9 @@ class BaseController extends Common
 
         //获取主题配置
         $lRes_ThemeConfig = Theme::mResultGetThemeConfig($this->attrGReqView['Theme']['DirectoryName']);
+        if ($lRes_ThemeConfig === false) {
+            $lRes_ThemeConfig = [];
+        }
         //获取主题原配置
         $this->attrGReqView['Theme']['Config'] = Theme::mResultGetThemeConfig($this->attrGReqView['Theme']['DirectoryName'], true);
 

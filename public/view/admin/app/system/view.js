@@ -28,6 +28,7 @@ class View extends Base {
     PostSystemTemplate = (editData) => {
         this.SetSystemTemplateHooks(undefined, () => {
             this.commonFunctions.snackbar('设置成功');
+            window.location.reload();
         });
         const data = {
             'themeDirectory': editData.themeDirectory,
