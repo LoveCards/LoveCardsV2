@@ -121,6 +121,16 @@ class Base {
     // }
 
     /**
+     * 读取Cookie
+     * @param {*} key 
+     * @returns 
+     */
+    GetCookie = (key) => {
+        const cookies = document.cookie.split(';').map(cookie => cookie.trim().split('='));
+        const cookie = cookies.find(([cookieKey]) => cookieKey === key);
+        return cookie ? cookie[1] : null;
+    }
+    /**
      * Cookie设置
      * @param {String} key 
      * @param {String} value 
@@ -128,8 +138,24 @@ class Base {
      * @param {String} path //def='/'
      */
     SetCookie = (key, value, expires = 7, path = '/') => {
-        $.cookie(key, value, { path: path, expires });
-    }
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + expires);
+
+        const cookieString = `${key}=${value}; expires=${expirationDate.toUTCString()}; path=${path}`;
+        document.cookie = cookieString;
+    };
+    /**
+     * Cookie删除
+     * @param {*} key 
+     * @param {*} path 
+     */
+    DeleteCookie = (key, path = '/') => {
+        const expirationDate = new Date();
+        expirationDate.setFullYear(expirationDate.getFullYear() - 1);
+
+        const cookieString = `${key}=; expires=${expirationDate.toUTCString()}; path=${path}`;
+        document.cookie = cookieString;
+    };
 
     /**
      * 设置Token Cookie
@@ -147,7 +173,7 @@ class Base {
      * @returns 
      */
     DeleteToken = (tokenName) => {
-        if ($.removeCookie(this.config.token[tokenName], { path: '/' })) {
+        if (this.DeleteCookie(this.config.token[tokenName], { path: '/' })) {
             return true;
         }
         return false;
@@ -158,8 +184,8 @@ class Base {
      * @returns 
      */
     GetToken = (tokenName) => {
-        if ($.cookie(this.config.token[tokenName])) {
-            return `Bearer ${$.cookie(this.config.token[tokenName])}`;
+        if (this.GetCookie(this.config.token[tokenName])) {
+            return `Bearer ${this.GetCookie(this.config.token[tokenName])}`;
         }
         return false;
     }
@@ -200,7 +226,7 @@ class Base {
      * @param {Function} PostFunction 
      */
     Geetest4 = (submitId, PostFunction) => {
-        const button = $('#' + submitId);
+        const button = document.getElementById(submitId);
         const CaptchaId = this.config.geetest4.CaptchaId;
         //验证
         initGeetest4({
@@ -244,7 +270,6 @@ class Base {
                 //自定义回调函数
                 this.hooks.Axios.request(config);
             }
-
             return config;
         }, (error) => {
             console.log('请求拦截器报错');
@@ -309,7 +334,7 @@ class Base {
      * //当为undefined时将不再是Hooks模式而返回原始Promise 
      * //当使用RequestHooks传入时将激活内部的Promise默认方法
      * @param {Object} data //参数对象 可传入请求头 将自动分离 ReqHeaders
-     * @param {TokenConfig} tokenName //参数对象
+     * @param {TokenConfig} tokenName //携带TOKEN
      * 
      * @returns {Promise}
      */

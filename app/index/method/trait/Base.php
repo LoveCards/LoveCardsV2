@@ -100,6 +100,12 @@ trait Base
         //优先匹配文件 匹配到停止
         if ($lDef_ThemeConfig) {
             //匹配文件
+            if (!array_key_exists('PageAuth', $lDef_ThemeConfig)) {
+                $lDef_ThemeConfig['PageAuth'] = '';
+            }
+            if (!array_key_exists('PageAssignData', $lDef_ThemeConfig)) {
+                $lDef_ThemeConfig['PageAssignData'] = '';
+            }
             $lDef_ResultArray['PageAuth'] = matchArray($lDef_ThemeConfig['PageAuth'], $tDef_AppPath);
             $lDef_ResultArray['PageAssignData'] = matchArray($lDef_ThemeConfig['PageAssignData'], $tDef_AppPath);
             //没有主机匹配目录
