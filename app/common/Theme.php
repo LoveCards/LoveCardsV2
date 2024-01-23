@@ -91,13 +91,17 @@ class Theme extends Facade
                 $require = $Config;
             } else {
                 //选择格式数据获取
-                foreach ($Config['Select'] as $key => $value) {
-                    $require[$key] = $value['Element'][$value['Default']];
+                if (array_key_exists('Select', $Config)) {
+                    foreach ($Config['Select'] as $key => $value) {
+                        $require[$key] = $value['Element'][$value['Default']];
+                    }
                 }
-                foreach ($Config['Text'] as $key => $value) {
-                    //反转义
-                    $require[$key] = urldecode($value['Default']);
-                    //dd($require[$key]);
+                if (array_key_exists('Text', $Config)) {
+                    foreach ($Config['Text'] as $key => $value) {
+                        //反转义
+                        $require[$key] = urldecode($value['Default']);
+                        //dd($require[$key]);
+                    }
                 }
             }
             //dd($require);
