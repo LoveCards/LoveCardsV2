@@ -28,8 +28,13 @@
     </script>
 </head>
 
-<body
-    class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-accent-pink mdui-theme-layout-dark mdui-loaded">
+<body class="mdui-appbar-with-toolbar 
+            mdui-appbar-with-tab 
+            mdui-theme-primary-{$ThemeConfig.ThemePrimary} 
+            mdui-theme-accent-{$ThemeConfig.ThemeAccent} 
+            {if $ThemeConfig.ThemeDark} mdui-theme-layout-dark{/if}
+">
+
     <div id="app">
         <!-- 顶栏 -->
         <header class="mdui-appbar mdui-appbar-fixed">
@@ -145,6 +150,39 @@
         //     //内置类绑定注销
         //     CommonEntity.BindLogout('Logout');
         // });
+    </script>
+    <script>
+        /*
+        *主题控制
+        */
+        const FunSetThemeDarkStyle = () => {
+            //按钮和主体样式刷新
+            const Obj = $.cookie("ThemeDark");
+            if (Obj == "true") {
+                $("body").removeClass("mdui-theme-layout-white");
+                $("body").addClass("mdui-theme-layout-dark");
+            } else {
+                $("body").removeClass("mdui-theme-layout-dark");
+                $("body").addClass("mdui-theme-layout-white");
+            }
+        };
+        const FunSetBtnThemeDarkValue = () => {
+            //根据Cookie初始化主题
+            var cookieValue = $.cookie("ThemeDark");
+            if (cookieValue == undefined || cookieValue == "") {
+                cookieValue = "true";
+                $.cookie("ThemeDark", cookieValue, { expires: 7, path: "/" });
+            }
+            if (cookieValue == "true") {
+                $("#jsBtnThemeDark").attr("value", "true");
+                FunSetThemeDarkStyle();
+            } else {
+                $("#jsBtnThemeDark").attr("value", "false");
+                FunSetThemeDarkStyle();
+            }
+        };
+        FunSetBtnThemeDarkValue();
+
     </script>
     <!-- <script type="module" src="{$ThemeAssetsUrlPath}/app/user/index.js"></script> -->
     <script type="module" src="{$ThemeAssetsUrlPath}/app/user/index.js"></script>

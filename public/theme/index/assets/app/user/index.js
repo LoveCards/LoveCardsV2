@@ -8,11 +8,23 @@ const CommonEntity = new Common();
 const JumpUrl = (url, time) => CommonEntity.JumpUrl(url, time);
 
 const app = createApp({
+    data() {
+        return {
+            theme: {}
+        }
+    },
     created() {
         //CookieMsg处理
         CommonEntity.CookieMsgHandling();
     },
     methods: {
+        getThemeConfig() {
+            CommonEntity.RequestApiUrl('get', 'ThemeConfig', undefined, [], 'UserTokenName').then((req) => {
+                this.theme = req.data;
+            }).catch((err) => {
+                BaseEntity.commonFunctions.snackbar('主题配置获取失败，请刷新页面后再试！');
+            })
+        },
         postLogout() {
             BaseEntity.RequestApiUrl('post', 'UserAuthLogout', {
                 inti: () => { },
@@ -22,7 +34,22 @@ const app = createApp({
                     window.location.replace('/');
                 }
             }, [], 'UserTokenName');
-        }
+        },
+        // FunSetBtnThemeDarkValue() {
+        //     //根据Cookie初始化主题
+        //     var cookieValue = $.cookie("ThemeDark");
+        //     if (cookieValue == undefined || cookieValue == "") {
+        //         cookieValue = theme.Config.ThemeDark;
+        //         $.cookie("ThemeDark", cookieValue, { expires: 7, path: "/" });
+        //     }
+        //     if (cookieValue == "true") {
+        //         $("#jsBtnThemeDark").attr("value", "true");
+        //         FunSetThemeDarkStyle();
+        //     } else {
+        //         $("#jsBtnThemeDark").attr("value", "false");
+        //         FunSetThemeDarkStyle();
+        //     }
+        // }
     }
 });
 app.use(router);

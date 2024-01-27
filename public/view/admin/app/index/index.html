@@ -151,7 +151,7 @@
                     $('.js-notice-ul').children().remove();
                     result.data.forEach(element => {
                         $('.js-notice-ul').append(`
-                    <li class="css-list-item mdui-ripple" onclick=jumpUrl('https://127.0.0.1',0)>
+                    <li class="css-list-item mdui-ripple" onclick=window.open("${element.url}")>
                         <div class="mdui-list-item-avatar">
                             <img src="{__A-assets__}/img/lcl.png" />
                         </div>
