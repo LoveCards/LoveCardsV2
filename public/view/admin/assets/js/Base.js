@@ -62,6 +62,8 @@ class Base {
             CommentsEdit: '/api/comments/edit',//编辑评论
             CommentsDelete: '/api/comments/delete',//删除评论
 
+            ThemeConfig: '/api/theme/config',//主题配置
+
             //install
             SystemInstallCheckEnvironment: '/system/Install/GetCheckEnvironment',//验证环境
             SystemInstallCreateRsa: '/system/Install/PostCreateRsa',//创建RSA密钥
@@ -72,7 +74,7 @@ class Base {
 
         //极验配置
         const geetest4 = {
-            CaptchaId: '145e5424cb89698be0c58a1060483735',
+            CaptchaId: '',
             CaptchaStatus: 0
         };
 
@@ -95,6 +97,21 @@ class Base {
         //this.hooks.undefined = {};
 
         this.commonFunctions.snackbar = (message) => mdui.snackbar({ message: message, position: 'right-top' });
+    }
+
+    /**
+     * 加载主题配置
+     * @returns {Promise}
+     */
+    ThemeInit = () => {
+        //获取极验配置
+        return this.RequestApiUrl('get', 'ThemeConfig', undefined, [], 'UserTokenName').then((req) => {
+            this.config.geetest4.CaptchaId = req.data.system.config.file.class.geetest.DefSetGeetestId;
+            this.config.geetest4.CaptchaStatus = Number(req.data.system.config.file.class.geetest.DefSetValidatesStatus);
+            //console.log(this.config.geetest4);
+        }).catch((err) => {
+            this.commonFunctions.snackbar('获取配置信息失败,请刷新页面后再试！');
+        });
     }
 
     /**
@@ -248,7 +265,7 @@ class Base {
                 //your code
             })
             // 按钮提交事件
-            button.click(() => {
+            button.addEventListener('click', function () {
                 captcha.showBox(); //显示验证码
             });
         });
