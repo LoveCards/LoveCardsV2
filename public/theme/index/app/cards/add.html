@@ -129,7 +129,7 @@
 <script src="{__A-assets__}/js/cardsEdit.js"></script>
 {if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
 <script src="https://static.geetest.com/v4/gt4.js"></script>
-<script src="{__A-assets__}/gt4/base.js"></script>
+<script src="{__A-assets__}/lib/gt4/base.js"></script>
 {/if}
 <script>
 
@@ -166,7 +166,9 @@
         });
 
         //绑定按钮
-        AddEntity.BindPostCardsAdd('submitAdd', getCardsAddValue);
+        AddEntity.ThemeInit().then(() => {
+            AddEntity.BindPostCardsAdd('submitAdd', getCardsAddValue);
+        });
 
         //悬浮按钮
         $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {

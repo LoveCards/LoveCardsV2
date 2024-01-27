@@ -99,7 +99,9 @@
 
         $(function () {
             //绑定方法
-            LoginEntity.BindLogin('submitLogin', 'userName', 'password');
+            LoginEntity.ThemeInit().then(()=>{
+                LoginEntity.BindLogin('submitLogin', 'userName', 'password');
+            });
         })
     </script>
 </body>

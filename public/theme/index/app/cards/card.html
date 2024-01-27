@@ -231,8 +231,9 @@
             url: 'src'
         });
 
-        CardEntity.BindPostCommentsAdd('btnAddComments', Number('{$Card.CardData.id}'), 'addCommentsDataName', 'addCommentsDataContent');
-
+        CardEntity.ThemeInit().then(() => {
+            CardEntity.BindPostCommentsAdd('btnAddComments', Number('{$Card.CardData.id}'), 'addCommentsDataName', 'addCommentsDataContent');
+        });
         //悬浮按钮
         $('#jsBtnGreen').click(function () {
             jumpUrl('/index/cards/add{if $Card.CardData.model == 1}/model/1{/if}', 0);

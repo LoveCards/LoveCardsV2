@@ -24,6 +24,7 @@ Route::group('', function () {
     Route::post('cards/add', 'cards/Add');
     Route::post('comments/add', 'comments/Add');
     Route::post('cards/good', 'cards/Good');
+    Route::get('theme/config', 'theme/Config');
 })->middleware([JwtAuthCheck::class]);
 
 //用户登入鉴权
