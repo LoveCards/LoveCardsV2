@@ -20,7 +20,7 @@ class Rsa
      *
      * @return array|bool
      */
-    public static function Generate(): array
+    public static function Generate()
     {
         try {
             //创建公私钥
