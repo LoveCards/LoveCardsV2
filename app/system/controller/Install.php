@@ -142,7 +142,7 @@ class Install
         if (!$key['public'] && !$key['private']) {
             $key = Rsa::Generate();
             if (!$key) {
-                return Export::Create(null, 500, '密钥对生成失败');
+                return Export::Create(null, 500, '密钥对生成失败，请检查openssl扩展是否可用');
             }
         }
 

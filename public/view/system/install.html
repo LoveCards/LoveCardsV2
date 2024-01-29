@@ -151,10 +151,10 @@
                             <table class="mdui-table">
                                 <thead>
                                     <tr>
-                                        <th>检测项目</th>
+                                        <th>运行环境</th>
                                         <th>本地版本</th>
                                         <th>要求版本</th>
-                                        <th>状态</th>
+                                        <th class="mdui-table-col-numeric">可用状态</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,16 +173,25 @@
                                         </td>
                                         <td>🔍自查</td>
                                     </tr>
+                                </tbody>
+                            </table>
+                            <table class="mdui-table">
+                                <thead>
                                     <tr>
-                                        <td>[扩展]PDO</td>
-                                        <td></td>
-                                        <td></td>
+                                        <th>扩展</th>
+                                        <!-- <th>开启状态</th> -->
+                                        <th class="mdui-table-col-numeric">可用状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>PDO</td>
+                                        <!-- <td></td> -->
                                         <td>{{res.Environment.pdo_mysql?.status?'✔️可用':'❌不可用'}}</td>
                                     </tr>
                                     <tr>
-                                        <td>[扩展]openssl</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>openssl</td>
+                                        <!-- <td></td> -->
                                         <td>{{res.Environment.openssl?.status?'✔️可用':'❌不可用'}}</td>
                                     </tr>
                                 </tbody>
