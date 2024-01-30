@@ -11,6 +11,8 @@ use app\common\Export;
 use app\index\BaseController;
 use think\facade\Config;
 
+use app\common\ConfigFacade;
+
 class Theme
 {
     function Config()
@@ -57,7 +59,7 @@ class Theme
             'system' => [
                 'version' => Common::mArrayGetLCVersionInfo(),
                 'config' => [
-                    'file' => $SyetemFileConfig,
+                    'file' => array_merge($SyetemFileConfig, ConfigFacade::mArrayGetMasterConfig()),
                     'db' => Common::mArrayGetDbSystemData(),
                 ],
             ],

@@ -12,6 +12,8 @@ use app\api\middleware\AdminAuthCheck;
 use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
 
+Route::get('theme/config', 'theme/Config');
+
 Route::post('user/auth/login', 'user.Auth/Login');
 Route::post('user/auth/logout', 'user.Auth/Logout');
 Route::post('user/auth/register', 'user.Auth/Register');
@@ -24,7 +26,6 @@ Route::group('', function () {
     Route::post('cards/add', 'cards/Add');
     Route::post('comments/add', 'comments/Add');
     Route::post('cards/good', 'cards/Good');
-    Route::get('theme/config', 'theme/Config');
 })->middleware([JwtAuthCheck::class]);
 
 //用户登入鉴权

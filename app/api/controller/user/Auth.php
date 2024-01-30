@@ -12,6 +12,8 @@ use app\api\validate\Users as UsersValidate;
 use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
+use app\common\ConfigFacade;
+
 use jwt\Jwt;
 use email\Email;
 use captcha\Code;
@@ -135,9 +137,11 @@ class Auth
         $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //验证码校验
-        if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
-            return Export::Create(['验证码错误'], 401, '注册失败');
-        };
+        if(ConfigFacade::mArraySearchConfigKey('UserAuth')[0]){
+            if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
+                return Export::Create(['验证码错误'], 401, '注册失败');
+            };
+        }
 
         //验证器
         try {
