@@ -109,8 +109,10 @@ class Base {
             this.config.geetest4.CaptchaId = req.data.system.config.file.class.geetest.DefSetGeetestId;
             this.config.geetest4.CaptchaStatus = Number(req.data.system.config.file.class.geetest.DefSetValidatesStatus);
             //console.log(this.config.geetest4);
+            return req;
         }).catch((err) => {
             this.commonFunctions.snackbar('获取配置信息失败,请刷新页面后再试！');
+            throw err;
         });
     }
 
