@@ -236,6 +236,19 @@
 
                         </div>
                     </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">注册验证</label>
+                            <select class="mdui-select" style="width: 100%;" id="Captcha">
+                                <option value="true">
+                                    开启
+                                </option>
+                                <option value="false">
+                                    关闭
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="mdui-row">
                     <div class="mdui-col-xs-12 mdui-col-md-6">
@@ -287,10 +300,12 @@
             });
 
             IndexEntity.GetSystemOther().then((result) => {
+                console.log(result.data.UserAuth.Captcha);
                 const data = result.data;
                 $('#VisitorMode').val(String(data.System.VisitorMode));
                 $('#UserImageSize').val(data.Upload.UserImageSize);
                 $('#UserImageExt').val(data.Upload.UserImageExt);
+                $('#Captcha').val(String(data.UserAuth.Captcha));
             });
 
         }; Show();
@@ -334,6 +349,7 @@
                 'VisitorMode': $('#VisitorMode').val(),
                 'UserImageSize': $('#UserImageSize').val(),
                 'UserImageExt': $('#UserImageExt').val(),
+                'UserAuthCaptcha': $('#Captcha').val(),
             };
         }
 

@@ -87,6 +87,7 @@ class System
             'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
             'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
             'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
+            'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
         ];
         $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
 

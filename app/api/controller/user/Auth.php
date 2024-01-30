@@ -137,7 +137,7 @@ class Auth
         $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //验证码校验
-        if(ConfigFacade::mArraySearchConfigKey('UserAuth')[0]){
+        if(ConfigFacade::mArraySearchConfigKey('Captcha')[0]){
             if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
                 return Export::Create(['验证码错误'], 401, '注册失败');
             };
