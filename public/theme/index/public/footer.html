@@ -67,7 +67,7 @@
 
         //初始化主题
         CommonEntity.ThemeInit().then((req) => {
-            if (!req.data.system.config.file.Email.TurnOn.UserAuth) {
+            if (!req.data.system.config.file.UserAuth.Captcha) {
                 if ($('#SendMsgCaptchaDiv').length) {
                     $('#SendMsgCaptchaDiv').hide();
                 }

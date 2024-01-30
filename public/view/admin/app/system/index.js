@@ -86,11 +86,12 @@ class Index extends Base {
      * @param {Object} editData 
      */
     PostSystemOther = (editData) => {
-        const data = {
-            'VisitorMode': editData.VisitorMode,
-            'UserImageSize': editData.UserImageSize,
-            'UserImageExt': editData.UserImageExt,
-        };
+        const data = editData;
+        // const data = {
+        //     'VisitorMode': editData.VisitorMode,
+        //     'UserImageSize': editData.UserImageSize,
+        //     'UserImageExt': editData.UserImageExt,
+        // };
         this.RequestApiUrl('post', 'SystemOther', {
             inti: () => { },
             then: () => {

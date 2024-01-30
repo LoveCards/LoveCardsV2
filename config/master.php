@@ -8,9 +8,7 @@ return [
         'UserImageSize' => env('master.UploadUserImageSize', 2),
         'UserImageExt' => env('master.UploadUserImageSize', 'jpg,png,gif,webp'),
     ],
-    'Email' => [
-        'TurnOn' => [
-            'UserAuth' => env('master.EmailTurnOnUserAuth', false)
-        ]
+    'UserAuth' => [
+        'Captcha' => env('master.UserAuthCaptcha', true),
     ]
 ];
