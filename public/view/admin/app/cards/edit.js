@@ -43,6 +43,7 @@ class Edit extends Base {
             'woName': editData.woName,
             'taName': editData.taName,
             'woContact': editData.woContact,
+            'taContact': editData.taContact,
             'model': editData.model,
             'tag': editData.tag,
             'img': editData.img
