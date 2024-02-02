@@ -1,9 +1,9 @@
 ## 发行日志
 
 -   *2024 年 月 日  
-    --Ver：1.1.0  
+    --Ver：17 
     --VerS：2.3.0
-    --commit：详见论坛[]
+    --commit：详见论坛[forum.lovecards.cn/d/54]
 
 -   ↑2024 年 1 月 13 日  
     --Ver：16  
