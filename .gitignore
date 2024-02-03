@@ -3,4 +3,9 @@
 /vendor
 *.log
 .env
+<<<<<<< HEAD
 /public/.user.ini
+=======
+public/.user.ini
+public/runtime
+>>>>>>> dev

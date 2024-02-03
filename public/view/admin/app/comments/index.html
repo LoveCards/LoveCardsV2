@@ -1,0 +1,134 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-card mdui-p-a-2">
+        <div class="mdui-table-fluid mdui-shadow-0 mdui-m-b-1">
+            <table class="mdui-table mdui-typo">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CID/PID</th>
+                        <th>封禁状态</th>
+                        <th>昵称</th>
+                        <th>内容</th>
+                        <th>IP</th>
+                        <th>时间</th>
+                        <th class="mdui-table-col-numeric">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name='CommonNowList' id='D'}
+                    <tr>
+                        <td>{$D.id}</td>
+                        <td>{$D.pid}</td>
+                        <td value="{$D.status}">
+                            <div class="mdui-chip">
+                                {if $D.status == 0}
+                                <span class="mdui-chip-title">正常</span>
+                                {/if}
+                                {if $D.status == 1}
+                                <span class="mdui-chip-title">封禁</span>
+                                {/if}
+                            </div>
+                        </td>
+
+                        <td>{$D.name}</td>
+                        <td>
+                            <input class="mdui-textfield-input" style="width:unset"
+                                mdui-tooltip="{content: '{$D.content}'}" type="text" value="{$D.content}"
+                                readonly="true" />
+                        </td>
+                        <td>{$D.ip}</td>
+                        <td>{$D.time}</td>
+                        <td>
+                            <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                                <i class="mdui-icon material-icons">edit</i>
+                            </button>
+                            <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">delete</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+        <!-- 分页按钮组件 -->
+        {include file="public/easyPaging"}
+    </div>
+
+    <!-- 弹窗组件 -->
+    <div class="mdui-dialog" id="dialogedit">
+        <div class="mdui-dialog-title">编辑评论</div>
+        <div class="mdui-row mdui-p-x-4">
+            <div class="mdui-row">
+                <div class="mdui-col-xs-9 mdui-col-md-10">
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">昵称</label>
+                        <input class="mdui-textfield-input" id="editCommentsDataName" type="text" />
+                    </div>
+                </div>
+                <div class="mdui-col-xs-3 mdui-col-md-2">
+                    <label class="mdui-textfield-label mdui-m-t-2">封禁状态</label>
+                    <select class="mdui-select" id="editCommentsDataStatus" style="width: 100%;">
+                        <option value="0">正常</option>
+                        <option value="1">封禁</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label">内容</label>
+                <textarea class="mdui-textfield-input" id="editCommentsDataContent" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" id="btnEditComments" mdui-dialog-close>确定</button>
+        </div>
+    </div>
+
+</div>
+{include file="public/footer"}
+
+<script>
+
+    let IndexEntity = new Index();
+
+    $(function (param) {
+        //初始化-分页按钮
+        pager();
+
+        //按钮-初始化-编辑
+        $('.js-Btn-Edit').click(function () {
+            var thisObj = $(this).parent().siblings('td');
+            $('#editCommentsDataName').val(thisObj.eq(3).html());
+            $('#editCommentsDataContent').val(thisObj.eq(4).children().val());
+            $('#editCommentsDataStatus').val(thisObj.eq(2).attr('value'));
+            $('#btnEditComments').val(thisObj.eq(0).html());
+        });
+
+
+        //按钮-删除
+        $('.js-Btn-Delete').click(function () {
+            const id = $(this).parent().siblings('td:first').html();
+            IndexEntity.PostDelete(id);
+        });
+
+        //自定义钩子
+        IndexEntity.SetPostEditHooks();
+        //绑定编辑按钮
+        IndexEntity.BindPostEdit('btnEditComments', 'btnEditComments', 'editCommentsDataName', 'editCommentsDataContent', 'editCommentsDataStatus');
+    })
+</script>
+</body>
+
+</html>

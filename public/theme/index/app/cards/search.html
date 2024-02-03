@@ -1,0 +1,127 @@
+{include file="public/header" ViewTitle="$SearchCardList.ViewTitle"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsPageHierarchy=0 jsTabClass="3" class="mdui-container mdui-p-t-2">
+
+    <div class="mdui-row mdui-p-t-1">
+        <div class="mdui-col-md-6 mdui-col-offset-md-3">
+            <div class="mdui-row">
+                <div class="mdui-col-xs-10 mdui-col-sm-11">
+                    <div class="mdui-textfield">
+                        <i class="mdui-icon material-icons mdui-ripple"
+                            mdui-dialog="{target: '#dialogFilter'}">filter_list</i>
+                        <div class="mdui-dialog" id="dialogFilter">
+                            <div class="mdui-dialog-title">高级搜索</div>
+                            <div class="mdui-row mdui-p-x-4">
+                                <div class="mdui-row-xs-2 mdui-row-sm-4">
+                                    <div class="mdui-p-x-1">
+                                        <div class="mdui-row-xs-3 mdui-row-sm-3">
+
+                                            <div class="mdui-col">
+                                                <label class="mdui-radio">
+                                                    <input id="dialogFilterItemModel-0" type="radio"
+                                                        name="radioModelGroup" onclick="radioModel=0" />
+                                                    <i class="mdui-radio-icon"></i>
+                                                    表白卡
+                                                </label>
+                                            </div>
+
+                                            <div class="mdui-col">
+                                                <label class="mdui-radio">
+                                                    <input id="dialogFilterItemModel-1" type="radio"
+                                                        name="radioModelGroup" onclick="radioModel=1" />
+                                                    <i class="mdui-radio-icon"></i>
+                                                    交流卡
+                                                </label>
+                                            </div>
+
+                                            <div class="mdui-col">
+                                                <button class="mdui-btn mdui-ripple"
+                                                    id="btnRestChooseFilter">重置</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mdui-dialog-actions">
+                                <button class="mdui-btn mdui-ripple" id="btnChooseFilter" mdui-dialog-close>确定</button>
+                            </div>
+                        </div>
+                        <input id="SearchValue" class="mdui-textfield-input" type="search" placeholder="ID、名字、内容">
+                    </div>
+                </div>
+                <div class="mdui-col-xs-2 mdui-col-sm-1 mdui-text-center mdui-float-right">
+                    <button id="requestSearch"
+                        class="mdui-btn mdui-btn-icon mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-m-t-2">
+                        <i class="mdui-icon material-icons">search</i>
+                    </button>
+                    <!-- <button type="button"
+                        class="mdui-m-y-2 mdui-btn mdui-btn-raised mdui-color-theme-accent">搜索</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div id="jsMainComp" class="mdui-m-t-2">
+
+        <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
+            <!-- 卡片循环 -->
+            {include file="public/cardsList" CardList="SearchCardList"}
+            <!-- 分享弹窗 -->
+            {include file="public/share"}
+
+        </div>
+    </div>
+
+</div>
+
+{include file="public/footer"}
+
+<script>
+    //高级搜索状态
+    var radioModel = 'false';
+
+    $(function () {
+        //初始化-分页组件
+        pager();
+        //初始化-Tag组件
+        ViewCardsTag('{$CardsTagsListJson|raw}');
+        //初始化-View-搜索
+        if (getUrlParam('search')) {
+            $('#SearchValue').val(getUrlParam('value'));
+            if (!$('.mdui-card').length) {
+                $('#jsMainComp').children().html('<div class="mdui-typo-title-opacity mdui-text-center" style="padding-top: 184px">没有唉~</div>')
+            }
+        }
+
+        //初始化高级搜索视图
+        if (getUrlParam('model') != 'false' && getUrlParam('search') == 'true') {
+            var model = Number(getUrlParam('model'));
+            $('#dialogFilterItemModel-' + model).prop("checked", true);
+            radioModel = model;
+        }
+
+        //高级搜索重置按钮
+        $('#btnRestChooseFilter').click(function () {
+            $('#dialogFilterItemModel-0').prop("checked", false);
+            $('#dialogFilterItemModel-1').prop("checked", false);
+            radioModel = 'false';
+        })
+
+        //悬浮按钮
+        $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
+            FunBackUpHistoryUrl();
+        });
+    });
+
+    //表单-按钮-搜索
+    $('#requestSearch').click(function () {
+        jumpUrl('/index/Cards/search?search=true&model=' + radioModel + '&value=' + $('#SearchValue').val(), 0);
+    });
+</script>
+
+</body>
+
+</html>

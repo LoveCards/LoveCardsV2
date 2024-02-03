@@ -41,19 +41,31 @@ jobs:
                   rm -rf .gitignore .github .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
+<<<<<<< HEAD
               run: zip -r LoveCards-v2.2.1.zip ./  # 记得修改
+=======
+              run: zip -r LoveCards-v2.3.0.zip ./  # 记得修改
+>>>>>>> dev
 
             - name: 🎅创建发布并上传压缩包
               uses: softprops/action-gh-release@v1
               if: startsWith(github.ref, 'refs/tags/')
               with:
                   tag_name: ${{ steps.github_ref.outputs.tag }}
+<<<<<<< HEAD
                   name: 2.2.1[16] # 记得修改
+=======
+                  name: 2.3.0[17] # 记得修改
+>>>>>>> dev
                   body_path: RELEASE.txt
                   draft: false
                   prerelease: true
                   files: | # 记得修改
+<<<<<<< HEAD
                       LoveCards-v2.2.1.zip
+=======
+                      LoveCards-v2.3.0.zip
+>>>>>>> dev
                       LICENSE
               env:
                   # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret

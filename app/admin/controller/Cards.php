@@ -11,22 +11,12 @@ use app\common\Common;
 use app\common\FrontEnd;
 
 use app\admin\BaseController;
+use app\api\model\Images as ImagesModel;
 
 class Cards extends BaseController
 {
-
-    //中间件
-    protected $middleware = [
-        \app\admin\middleware\AdminAuthCheck::class => [
-            'only' => ['Index', 'Edit']
-        ],
-        \app\admin\middleware\AdminPowerCheck::class => [
-            'only' => ['Setting']
-        ]
-    ];
-
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
 
         //获取列表
@@ -43,16 +33,16 @@ class Cards extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '卡片管理'
         ]);
 
         //输出模板
-        return View::fetch('/cards');
+        return View::fetch($this->attrGReqView);
     }
 
     //Edit
-    public function Edit(TypeRequest $tDef_request)
+    public function Edit()
     {
         //传入必要参数
         $tDef_Id = request()->param('id');
@@ -74,7 +64,7 @@ class Cards extends BaseController
         //判断是否存在图片并获取图集
         if ($tDef_CardData['img']) {
             //获取IMG数据
-            $lDef_Result = Db::table('img')->where('pid', $tDef_Id)->select()->toArray();
+            $lDef_Result = ImagesModel::where('pid', $tDef_Id)->select()->toArray();
             View::assign('CardImgList', $lDef_Result);
         } else {
             View::assign('CardImgList', false);
@@ -85,24 +75,24 @@ class Cards extends BaseController
 
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '编辑卡片'
         ]);
 
         //输出模板
-        return View::fetch('/cards-edit');
+        return View::fetch($this->attrGReqView);
     }
 
     //setting
-    public function Setting(TypeRequest $tDef_Request)
+    public function Setting()
     {
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '模块设置'
         ]);
 
         //输出模板
-        return View::fetch('/cards-setting');
+        return View::fetch($this->attrGReqView);
     }
 }

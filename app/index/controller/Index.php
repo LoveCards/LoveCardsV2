@@ -3,71 +3,70 @@
 namespace app\index\controller;
 
 use think\facade\View;
-use think\facade\Db;
 
-use app\common\Common;
+use app\common\File;
 use app\common\Theme;
+use app\common\Common;
 use app\index\BaseController;
+
+use app\index\method\IndexFacade as IndexFacade;
 
 class Index extends BaseController
 {
-    public function Index()
+    public function Customize()
     {
-        define("CONST_G_TOP_LISTS_MAX", 32); //置顶卡片列表最大个数
-        define("CONST_G_HOT_LISTS_MAX", 8); //热门卡片列表最大个数
+        //基础变量
+        //$this->attrGReqAssignArray['ViewTitle']  = '自定义页面';
 
-        //Cards置顶列表
-        $var_l_def_result = Db::table('cards')
-            ->where('status', 0)
-            ->where('top', 1)
-            ->order('id', 'desc')
-            ->limit(CONST_G_TOP_LISTS_MAX)
-            ->select()->toArray();
-        $var_l_def_cards_lists = $var_l_def_result;
-        //Cards推荐列表
-        //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
-        //->limit(CONST_G_HOT_LISTS_MAX)->select()->toArray();
-        $var_l_def_result = Db::query("select * from cards where top = '0' and status = '0' order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
-        //合并推荐列表到置顶列表
-        $var_l_def_cards_lists = array_merge($var_l_def_cards_lists, $var_l_def_result);
-        //取Good状态合并到CardsList数据
-        for ($i = 0; $i < sizeof($var_l_def_cards_lists); $i++) {
-            $var_l_def_result = Db::table('good')->where('aid', 1)->where('ip', $this->attrGReqIp);
-            //查找对应封面
-            if ($var_l_def_result->where('pid', $var_l_def_cards_lists[$i]['id'])->findOrEmpty() == []) {
-                //未点赞
-                $var_l_def_cards_lists[$i]['ipGood'] = false;
-            } else {
-                //已点赞
-                $var_l_def_cards_lists[$i]['ipGood'] = true;
+        // 页面路径
+        $tDef_AppPathArray = IndexFacade::mArrayEasyGetUrlAppPath('/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app');
+        $tDef_AppPath = end($tDef_AppPathArray);
+        //dd($tDef_AppPathArray);
+        // 获取主题匹配JS路径
+        $lDef_PageJsPath = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/app' . $tDef_AppPath;
+        if (File::read_file($lDef_PageJsPath . '.js', true)) {
+            $this->attrGReqAssignArray['ViewActionJS'] = '/app' . $tDef_AppPath;
+        };
+
+        //加载app指定数据方法与鉴权方法
+        $tDef_AppConfigArray = IndexFacade::mArrayMatchThemeAppConfig($tDef_AppPath, $this->attrGReqView['Theme']['Config']);
+        if ($tDef_AppConfigArray) {
+            if ($tDef_AppConfigArray['PageAuth']) {
+                foreach ($tDef_AppConfigArray['PageAuth'] as $value) {
+                    $tDef_Result = IndexFacade::$value();
+                    if ($tDef_Result) {
+                        return $tDef_Result;
+                    }
+                }
+            }
+            if ($tDef_AppConfigArray['PageAssignData']) {
+                foreach ($tDef_AppConfigArray['PageAssignData'] as $value) {
+                    // $tDef_NewExample = new CardsMethod;
+                    $tDef_Result = IndexFacade::$value();
+                    if (is_array($tDef_Result)) {
+                        //返回为标准格式
+                        View::assign($tDef_Result['data']);
+                    } else {
+                        //返回对象直接执行
+                        return $tDef_Result;
+                    }
+                }
             }
         }
 
-        //Tag列表
-        $var_l_def_result = Db::table('cards_tag')->where('status', 0)->select()->toArray();
-        View::assign([
-            'CardsTagsListJson' => json_encode($var_l_def_result),
-            'CardsTagsList' => $var_l_def_result
-        ]);
-
-        //Cards列表;
-        View::assign('CardsList', $var_l_def_cards_lists);
-
-        //基础变量
-        View::assign([
-            'ViewTitle'  => '推荐',
-        ]);
-
+        //分配变量
+        View::assign($this->attrGReqAssignArray);
+        //dd(View::engine());
         //输出模板
-        return View::fetch('/index');
+        return View::fetch('app' . $tDef_AppPath);
     }
 
     public function Error()
     {
-        $code = request()->param('code');
-
         //恢复view为系统配置
-        Theme::mObjectEasySetViewConfig('');
+        Theme::mObjectEasySetViewConfig(0);
+
+        $code = request()->param('code');
 
         //输出模板
         if ($code == 404) {
@@ -76,6 +75,10 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
+<<<<<<< HEAD
+=======
+            View::assign('LCVersionInfo', Common::mArrayGetLCVersionInfo());
+>>>>>>> dev
             View::config(['view_path' => './view/']);
             return View::fetch('error/404');
         } else {

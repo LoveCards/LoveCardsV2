@@ -1,4 +1,6 @@
-<div class="mdui-fab-wrapper" id="exampleFab" mdui-fab="{trigger: 'hover'}">
+{include file="public/example"}
+
+<div id="exampleFab" class="mdui-fab-wrapper" mdui-fab="{trigger: 'hover'}">
     <button
         class="mdui-fab mdui-ripple mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
         <!-- 默认显示的图标 -->
@@ -19,94 +21,154 @@
 
 <div class="mdui-p-y-5"></div>
 {if $ThemeConfig['ThemeLinkCDN']}
-<script src="{__A-assets__}/jquery-3.6.0/jquery.min.js"></script>
-<script src="{__A-assets__}/mdui-v1.0.2/js/mdui.min.js"></script>
-<script src="{__A-assets__}/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
-<script src="{__A-assets__}/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
-<script src="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.js"></script>
-<script src="{__A-assets__}/clipboard-2.0.6/clipboard.min.js"></script>
-<script src="{$ThemeAssetsUrlPath}/masonry-4.2.2/masonry.pkgd.min.js"></script>
-{else /}
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/js/mdui.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/axios.js/1.5.0/axios.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+{else /}
+<script src="{__A-assets__}/lib/jquery-3.6.0/jquery.min.js"></script>
+<script src="{__A-assets__}/lib/mdui-v1.0.2/js/mdui.min.js"></script>
+<script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+<script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+<script src="{__A-assets__}/lib/viewer-jquery-1.1.0/viewer.min.js"></script>
+<script src="{__A-assets__}/lib/clipboard-2.0.6/clipboard.min.js"></script>
+<script src="{__A-assets__}/lib/axios-1.5.0/axios.min.js"></script>
+<script src="{$ThemeAssetsUrlPath}/masonry-4.2.2/masonry.pkgd.min.js"></script>
 {/if}
+
+<!-- 全局弹窗 -->
+<script>
+    const ExampleLogin = new mdui.Dialog('#ExampleComponent-Login');
+    const ExampleRegister = new mdui.Dialog('#ExampleComponent-Register');
+</script>
+
+<script src="{__A-assets__}/js/Base.js"></script>
+<script src="{__A-assets__}/js/commonOld.js"></script>
+<script src="{$ThemeAssetsUrlPath}/Common.js"></script>
+{if $ViewActionJS}
+<!-- 对应页面类 -->
+<script src="{$ThemeUrlPath}{$ViewActionJS}.js"></script>
+{/if}
+<!-- 全局 -->
+<script>
+    //实例化通用类
+    let CommonEntity = new Common();
+
+    //通用跳转
+    const jumpUrl = (url, time) => CommonEntity.JumpUrl(url, time);
+
+    $(function () {
+        //CookieMsg处理
+        CommonEntity.CookieMsgHandling();
+
+        //初始化主题
+        CommonEntity.ThemeInit().then((req) => {
+            if (!req.data.system.config.file.UserAuth.Captcha) {
+                if ($('#SendMsgCaptchaDiv').length) {
+                    $('#SendMsgCaptchaDiv').hide();
+                }
+            }
+        });
+
+        //内置类绑定登入
+        CommonEntity.BindLogin('Login', 'loginAccount', 'loginPassword', 'loginRememberMe');
+        //内置类绑定注册
+        CommonEntity.BindRegister('Register', 'registerAccount', 'registerPassword', 'registerRepassword', 'registerCode', 'registerRememberMe');
+        //内置类绑定验证码
+        CommonEntity.BindSendMsgCaptcha('SendMsgCaptcha', 'registerAccount',
+            '<button style="margin-top: 42px; width: 100%;" class="mdui-btn mdui-color-pink-accent" disabled>冷却中</button>'
+        );
+        //内置类绑定注销
+        CommonEntity.BindLogout('Logout');
+        //内置类绑定点赞方法
+        CommonEntity.CBindCardsGood("js-Btn-Update-CardsGood", (data) => {
+            return (
+                '<button value="false" class="css-card-actions-good-1 mdui-btn mdui-float-right"><i class="mdui-icon material-icons">favorite</i>点赞' +
+                data +
+                "</button>"
+            );
+        });
+    });
+</script>
+
 <script src="{$ThemeAssetsUrlPath}/base.js"></script>
 <script>
     /*
-    *初始化导航栏样式
-    */
-    var jsTabClass = $('#jsParameter').attr('jsTabClass');
-    $('#jsTab' + jsTabClass + 'Class').attr('class', 'mdui-tab-active');
+     *初始化导航栏样式
+     */
+    var jsTabClass = $("#jsParameter").attr("jsTabClass");
+    $("#jsTab" + jsTabClass + "Class").attr("class", "mdui-tab-active");
 
     /*
-    *主题控制
-    */
+     *主题控制
+     */
     const FunSetThemeDarkStyle = () => {
         //按钮和主体样式刷新
-        const Obj = $('#jsBtnThemeDark');
-        if (Obj.attr('value') == 'true') {
-            Obj.removeClass('mdui-color-black');
-            Obj.addClass('mdui-color-white');
-            Obj.children('i').html('brightness_high');
-            $('body').removeClass('mdui-theme-layout-white');
-            $('body').addClass('mdui-theme-layout-dark');
+        const Obj = $("#jsBtnThemeDark");
+        if (Obj.attr("value") == "true") {
+            Obj.removeClass("mdui-color-black");
+            Obj.addClass("mdui-color-white");
+            Obj.children("i").html("brightness_high");
+            $("body").removeClass("mdui-theme-layout-white");
+            $("body").addClass("mdui-theme-layout-dark");
         } else {
-            Obj.removeClass('mdui-color-white');
-            Obj.addClass('mdui-color-black');
-            Obj.children('i').html('brightness_low');
-            $('body').removeClass('mdui-theme-layout-dark');
-            $('body').addClass('mdui-theme-layout-white');
+            Obj.removeClass("mdui-color-white");
+            Obj.addClass("mdui-color-black");
+            Obj.children("i").html("brightness_low");
+            $("body").removeClass("mdui-theme-layout-dark");
+            $("body").addClass("mdui-theme-layout-white");
         }
     };
     const FunSetBtnThemeDarkValue = () => {
         //根据Cookie初始化主题
-        const cookieValue = $.cookie('ThemeDark');
-        if (cookieValue == undefined || cookieValue == '') {
-            $.cookie('ThemeDark', $('#jsBtnThemeDark').attr('value'), { expires: 7, path: '/' });
+        var cookieValue = $.cookie("ThemeDark");
+        if (cookieValue == undefined || cookieValue == "") {
+            cookieValue = $("#jsBtnThemeDark").attr("value");
+            $.cookie("ThemeDark", cookieValue, { expires: 7, path: "/" });
         }
-        if (cookieValue == 'true') {
-            $('#jsBtnThemeDark').attr('value', 'true');
+        if (cookieValue == "true") {
+            $("#jsBtnThemeDark").attr("value", "true");
             FunSetThemeDarkStyle();
         } else {
-            $('#jsBtnThemeDark').attr('value', 'false');
+            $("#jsBtnThemeDark").attr("value", "false");
             FunSetThemeDarkStyle();
         }
-    }; FunSetBtnThemeDarkValue();
+    };
+    FunSetBtnThemeDarkValue();
     const FunSetThemeDark = (Obj) => {
         //暗色设置
-        if (Obj.attr('value') == 'true') {
-            $.cookie('ThemeDark', 'false', { expires: 7, path: '/' });
-            Obj.attr('value', 'false');
+        if (Obj.attr("value") == "true") {
+            $.cookie("ThemeDark", "false", { expires: 7, path: "/" });
+            Obj.attr("value", "false");
             FunSetThemeDarkStyle();
         } else {
-            $.cookie('ThemeDark', 'true', { expires: 7, path: '/' });
-            Obj.attr('value', 'true');
+            $.cookie("ThemeDark", "true", { expires: 7, path: "/" });
+            Obj.attr("value", "true");
             FunSetThemeDarkStyle();
         }
-    }
-    $('#jsBtnThemeDark').click(function () {
+    };
+    $("#jsBtnThemeDark").click(function () {
         //绑定按钮
         FunSetThemeDark($(this));
     });
 
     /*
-    *渲染初始化
-    */
+     *渲染初始化
+     */
     $(function () {
-        const LoadingImgSrc = '{$ThemeAssetsUrlPath}/image/loading.png'
-        const ErrorImgSrc = '{$ThemeAssetsUrlPath}/image/error.png'
+        const LoadingImgSrc = "{$ThemeAssetsUrlPath}/image/loading.png";
+        const ErrorImgSrc = "{$ThemeAssetsUrlPath}/image/error.png";
         const FunEndLoad = (el) => {
             var el = el.parent().parent().next();
-            if (el.attr('class') === 'css-cards-img-loading mdui-spinner') {
+            if (el.attr("class") === "css-cards-img-loading mdui-spinner") {
                 el.remove();
             }
             return;
-        }
+        };
 
         $("img").lazyload({
             threshold: 200,
@@ -116,48 +178,51 @@
             appear: function () {
                 setTimeout(function () {
                     initMasonry();
-                }, 300)
+                }, 300);
             },
             load: function () {
                 // 图片加载完成后初始化瀑布流
                 initMasonry();
                 FunEndLoad($(this));
-            }
+            },
         });
 
         setTimeout(function () {
             $("img.js-jumpurl-cardId").each(function () {
                 //加载失败图片更新
-                if ($(this).attr('src') == LoadingImgSrc) {
+                if ($(this).attr("src") == LoadingImgSrc) {
                     FunEndLoad($(this));
-                    $(this).attr('src', ErrorImgSrc);
+                    $(this).attr("src", ErrorImgSrc);
                 }
             });
         }, 5000);
-
     });
 
     //初始化分享按钮
-    FunInitShareBtn('mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}');
+    FunInitShareBtn(
+        "mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}"
+    );
 
     //当页面中不存在图片时直接加载瀑布流
     if ($("img[data-original]").length <= 0) {
         setTimeout(function () {
-            initMasonry()
+            initMasonry();
         }, 300);
     }
 
     //瀑布流初始化
     function initMasonry() {
-        var elem = document.querySelector('.mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3');
+        var elem = document.querySelector(
+            ".mdui-row-xs-1, .mdui-row-sm-2, .mdui-row-md-3, .mdui-row-lg-3"
+        );
         if (elem != null) {
             var msnry = new Masonry(elem, {
-                itemSelector: '.mdui-col',
-                columnWidth: '.mdui-col',
-                percentPosition: true
+                itemSelector: ".mdui-col",
+                columnWidth: ".mdui-col",
+                percentPosition: true,
             });
         }
     }
-
 </script>
-<script src="{__A-assets__}/public.js"></script>
+
+<div style="margin-top: 140px"></div>

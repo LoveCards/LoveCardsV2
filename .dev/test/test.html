@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Tab 选项卡 - 通过 JavaScript 调用</title>
+    <link rel="stylesheet" href="https://cdn.w3cbus.com/library/mdui/1.0.2/css/mdui.min.css" />
+</head>
+
+<body style="padding-top: 20px;">
+
+    <div class="mdui-container">
+        <div class="mdui-p-x-2 mdui-p-t-4">
+            <div class="mdui-tab mdui-tab-full-width" id="tab">
+                <a href="#tab1-content" class="mdui-ripple">版本详情</a>
+                <a href="#tab2-content" class="mdui-ripple">环境检测</a>
+                <a href="#tab3-content" class="mdui-ripple">配置数据库</a>
+                <a href="#tab4-content" class="mdui-ripple">完成安装</a>
+            </div>
+        </div>
+
+        <div class="mdui-p-x-5 mdui-p-t-5">
+
+            <div id="tab1-content">
+                <div class="mdui-typo">
+                    <h4 style="margin-top: 0;font-weight:500;">LoveCards</h4>
+                    <ul>
+                        <li>🗃️当前版本：<kbd>$systemVer.VerS[$systemVer.Ver]</kbd></li>
+                        <li>🆕最新版本：<a href="https://github.com/zhiguai/LoveCards/releases"><kbd
+                                    id="NewVerS">加载中...</kbd></a>
+                            <pre style="max-height:150px" id="NewVerSVerLog">加载中...</pre>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>💻项目主页：<a href="https://lovecards.cn/" target="_blank">lovecards.cn</a></li>
+                        <li>👨‍💻Github主页：<a href="https://github.com/zhiguai/LoveCards"
+                                target="_blank">github.com/zhiguai/LoveCards</a></li>
+                        <li>👩‍👧‍👦交流社区：<a href="https://forum.lovecards.cn/" target="_blank">forum.lovecards.cn</a>
+                        </li>
+                        <li>👯‍♂QQ交流群：<a href="$systemVer.QGroupUrl" target="_blank">801235342</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="tab2-content">
+                1
+            </div>
+
+            <div id="tab3-content">
+                2
+            </div>
+
+            <div id="tab4-content">
+                3
+            </div>
+        </div>
+
+        <button id="prev" class="mdui-btn mdui-color-pink-accent mdui-m-a-1">prev</button>
+        <button id="next" class="mdui-btn mdui-color-pink-accent mdui-m-a-1">next</button>
+        <br />
+        <button id="show-first" class="mdui-btn mdui-color-pink-accent mdui-m-a-1">show first</button>
+        <button id="show-second" class="mdui-btn mdui-color-pink-accent mdui-m-a-1">show-second</button>
+    </div>
+
+    <script src="https://cdn.w3cbus.com/library/mdui/1.0.2/js/mdui.min.js"></script>
+    <script>
+        var $ = mdui.$;
+        var inst = new mdui.Tab('#tab');
+
+        // method
+        $('#prev').on('click', function () {
+            console.log(inst.activeIndex);
+        });
+
+        $('#next').on('click', function () {
+            inst.next();
+        });
+
+        $('#show-first').on('click', function () {
+            inst.show(0);
+        });
+
+        $('#show-second').on('click', function () {
+            inst.show('tab2');
+        });
+    </script>
+</body>
+
+</html>

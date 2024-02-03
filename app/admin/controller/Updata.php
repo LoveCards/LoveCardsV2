@@ -12,19 +12,16 @@ use app\admin\BaseController;
 
 class Updata extends BaseController
 {
-    //中间件
-    protected $middleware = [\app\admin\middleware\AdminPowerCheck::class];
-
     //Index
-    public function Index(TypeRequest $tDef_Request)
+    public function Index()
     {
         //基础变量
         View::assign([
-            'AdminData'  => $tDef_Request->attrLDefNowAdminAllData,
+            'AdminData'  => request()->middleware('NowAdminData'),
             'ViewTitle'  => '系统更新'
         ]);
 
         //输出模板
-        return View::fetch('/updata');
+        return View::fetch($this->attrGReqView);
     }
 }

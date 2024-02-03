@@ -3,8 +3,15 @@
 namespace app\api\controller;
 
 use think\facade\Config;
-
+use think\facade\Filesystem;
+use app\common\Base;
 use app\common\Export;
+
+use think\facade\Request;
+
+use app\api\model\Images as ImagesModel;
+use app\api\validate\Upload as UploadValidate;
+use think\exception\ValidateException;
 
 class Upload
 {
@@ -31,5 +38,45 @@ class Upload
         } catch (\Exception $e) {
             return Export::mObjectEasyCreate($e->getMessage(), '上传失败', 400);
         }
+    }
+
+    //上传文件-POST
+    public function UserImages()
+    {
+        $context = request()->JwtData;
+
+        $lReq_ParmasArray = [
+            'file' => request()->file('file'),
+            'aid' => Request::param('aid'),
+            'pid' => Request::param('pid'),
+            'uid' => Request::param('uid'),
+        ];
+
+        //校验参数
+        try {
+            validate(UploadValidate::class)
+                ->scene('CheckUpload')
+                ->check($lReq_ParmasArray);
+        } catch (\Exception $e) {
+            return Export::Create($e->getMessage(), 500, '上传失败');
+        }
+
+        //保存图片
+        $lDef_Result = Filesystem::disk('public')->putFile('image', $lReq_ParmasArray['file']);
+        if (!$lDef_Result) {
+            return Export::Create('保存文件失败', 500, '上传失败');
+        }
+
+        //创建数据
+        if (!isset($context['aid'])) {
+            $lReq_ParmasArray['uid'] = $context['uid'];
+        }
+        $lReq_ParmasArray['url'] =  $lDef_Result;
+        $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
+        if (!$lDef_CreatData) {
+            //待完善-回滚操作，删除文件
+            return Export::Create('数据创建失败', 500, '上传失败');
+        }
+        return Export::Create('/storage/' . $lDef_Result, 200, null);
     }
 }

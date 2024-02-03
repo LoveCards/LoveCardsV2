@@ -1,5 +1,5 @@
 <?php
-$Config = [
+return [
     //选择格式配置
     'Select' => [
         //推荐页面公告卡开关
@@ -26,7 +26,7 @@ $Config = [
         'ThemeDark' => [
             'Name' => '默认暗色开关',
             'Introduction' => '主题为默认暗色的开关',
-            'Default' => env('ThemeConfig.SelectThemeDark', 0),
+            'Default' => env('ThemeConfig.SelectThemeDark', 1),
             'Element' => [
                 0 => false,
                 1 => true
@@ -143,5 +143,49 @@ $Config = [
             'Introduction' => '支持HTML代码，请勿插入来源不明的JS代码',
             'Default' => env('ThemeConfig.TextThemeNotifyContent', '%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0LoveCardsV2%E7%9A%84%E9%A2%86%E5%9F%9F%EF%BC%8C%E5%9C%A8%E8%BF%99%E9%87%8C%E6%82%A8%E5%8F%AF%E4%BB%A5%E7%95%85%E6%89%80%E6%AC%B2%E8%A8%80%EF%BC%81')
         ],
+    ],
+
+    //鉴权
+    'PageAuth' => [
+        '/user/' => [
+            'CookieUtokenCheck'
+        ]
+    ],
+
+    //分配数据
+    'PageAssignData' => [
+        //页面
+        '/index/index' => [
+            'HotCardList',
+            'TagList',
+            'MyInfo',
+        ],
+        '/user/' => [
+            'MyInfo',
+        ],
+        '/cards/index' => [
+            'CommonCardList',
+            'TagList',
+            'MyInfo',
+        ],
+        '/cards/search' => [
+            'SearchCardList',
+            'TagList',
+            'MyInfo',
+        ],
+        '/cards/tag' => [
+            'TagCardList',
+            'TagList',
+            'MyInfo',
+        ],
+        '/cards/card' => [
+            'Card',
+            'TagList',
+            'MyInfo',
+        ],
+        '/cards/add' => [
+            'TagList',
+            'MyInfo',
+        ]
     ]
 ];

@@ -1,6 +1,6 @@
 <?php
 return [
-    'theme_directory' => env('lovecards.theme_directory', 'index'),
+    'theme_directory' => env('lovecards.theme_directory', 'SecretCapsule'),
     'api' => [
         'Cards' => [
             //默认卡片状态ON/OFF:0/1
@@ -24,10 +24,10 @@ return [
     'class' => [
         'geetest' => [
             //默认全局验证ON/OFF:1/0
-            'DefSetValidatesStatus' => env('lovecards.DefSetValidatesStatus', 0),
-            //默认添加卡片上传图片个数
+            'DefSetValidatesStatus' => env('lovecards.DefSetValidatesStatus', ),
+            //极验ID
             'DefSetGeetestId' => env('lovecards.DefSetGeetestId', ''),
-            //默认添加卡片标签个数
+            //极验Key
             'DefSetGeetestKey' => env('lovecards.DefSetGeetestKey', '')
         ]
     ]

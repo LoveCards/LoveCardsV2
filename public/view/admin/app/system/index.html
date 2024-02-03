@@ -1,0 +1,379 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+
+    <div class="mdui-card">
+
+        <div class="mdui-tab" mdui-tab>
+            <a href="#example1-SystemSite" class="mdui-ripple">基本信息</a>
+            <a href="#example1-SystemGeetest" class="mdui-ripple">极验配置</a>
+            <a href="#example1-SystemEmail" class="mdui-ripple">邮箱配置</a>
+            <a href="#example1-SystemOther" class="mdui-ripple">其他设置</a>
+        </div>
+        <div class="mdui-p-a-2">
+            <div id="example1-SystemSite">
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点域名</label>
+                            <input class="mdui-textfield-input" type="text" id="siteUrl" value="{$siteUrl}"
+                                placeholder="lovecards.cn" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点名</label>
+                            <input class="mdui-textfield-input" type="text" id="siteName" value="{$siteName}"
+                                placeholder="LoveCards" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点标题</label>
+                            <input class="mdui-textfield-input" type="text" id="siteTitle" value="{$siteTitle}"
+                                placeholder="简约而不简单" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点关键词(Keywords)</label>
+                            <input class="mdui-textfield-input" type="text" id="siteKeywords" value="{$siteKeywords}"
+                                placeholder="LoveCards" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点介绍(description)</label>
+                            <input class="mdui-textfield-input" type="text" id="siteDes" value="{$siteDes}"
+                                placeholder="本站由LoveCards强力驱动" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点备案信息</label>
+                            <input class="mdui-textfield-input" type="text" id="siteICPId" value="{$siteICPId}"
+                                placeholder="ICPxxxxxxx" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">站点版权信息</label>
+                            <input class="mdui-textfield-input" type="text" id="siteCopyright" value="{$siteCopyright}"
+                                placeholder="LoveCards.cn版权所有" maxlength="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12">
+                        <!--提交按钮-->
+                        <button id="submitSite"
+                            class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div id="example1-SystemGeetest">
+                <div class="mdui-row">
+
+                    <div class="mdui-col-xs-12 mdui-col-md-4">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">验证 ID</label>
+                            <input class="mdui-textfield-input" type="text" id="DefSetGeetestId"
+                                value="{$SystemConfig.class.geetest.DefSetGeetestId}" placeholder="145e5424cb8xxx"
+                                maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-4">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">验证 Key</label>
+                            <input class="mdui-textfield-input" type="text" id="DefSetGeetestKey"
+                                value="{$SystemConfig.class.geetest.DefSetGeetestKey}" placeholder="e4a515f6443xxx"
+                                maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-4">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">验证模块状态</label>
+                            <select class="mdui-select" style="width: 100%;" id="DefSetValidatesStatus">
+                                <option value="0" {if
+                                    $SystemConfig.class.geetest.DefSetValidatesStatus==0}selected{/if}>
+                                    关闭
+                                </option>
+                                <option value="1" {if
+                                    $SystemConfig.class.geetest.DefSetValidatesStatus==1}selected{/if}>
+                                    开启
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12">
+                        <div class="mdui-textfield">
+                            <div class="mdui-textfield-helper">请确认ID/Key可用再开启，直接开启验证将会导致无法登入后台</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-6">
+                        <div class="mdui-m-t-4 mdui-typo">
+                            <a href="https://forum.lovecards.cn/d/26">不会配置？</a>
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-6">
+                        <button id="submitGeetest"
+                            class="mdui-float-right  mdui-m-t-4 mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div id="example1-SystemEmail">
+                <div class="mdui-row">
+
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">邮件驱动</label>
+                            <select class="mdui-select" style="width: 100%;" id="smtpDriver">
+                                <option value="smtp">
+                                    smtp
+                                </option>
+                                <option value="sendmail">
+                                    sendmail
+                                </option>
+                                <option value="mail">
+                                    mail
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">加密方式</label>
+                            <select class="mdui-select" style="width: 100%;" id="smtpSecurity">
+                                <option value="null">
+                                    null
+                                </option>
+                                <option value="ssl">
+                                    ssl
+                                </option>
+                                <option value="tls">
+                                    tls
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">SMTPHost</label>
+                            <input class="mdui-textfield-input" type="text" id="smtpHost" value=""
+                                placeholder="lovecards.cn" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">SMTPPort</label>
+                            <input class="mdui-textfield-input" type="text" id="smtpPort" value="" placeholder="25"
+                                maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">SMTP邮箱地址</label>
+                            <input class="mdui-textfield-input" type="text" id="smtpAddr" value=""
+                                placeholder="LoveCards" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">SMTP密码</label>
+                            <input class="mdui-textfield-input" type="text" id="smtpPass" value=""
+                                placeholder="LoveCards" maxlength="">
+                        </div>
+                    </div>
+
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">发件人昵称</label>
+                            <input class="mdui-textfield-input" type="text" id="smtpName" value=""
+                                placeholder="LoveCards邮局" maxlength="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12">
+                        <button id="submitEmail"
+                            class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+                    </div>
+                </div>
+            </div>
+            <div id="example1-SystemOther">
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">游客模式</label>
+                            <select class="mdui-select" style="width: 100%;" id="VisitorMode">
+                                <option value="true">
+                                    开启
+                                </option>
+                                <option value="false">
+                                    关闭
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">注册验证</label>
+                            <select class="mdui-select" style="width: 100%;" id="Captcha">
+                                <option value="true">
+                                    开启
+                                </option>
+                                <option value="false">
+                                    关闭
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">上传图片大小</label>
+                            <input class="mdui-textfield-input" type="text" id="UserImageSize" value=""
+                                placeholder="lovecards.cn" maxlength="">
+                        </div>
+                    </div>
+                    <div class="mdui-col-xs-12 mdui-col-md-6">
+                        <div class="mdui-textfield">
+                            <label class="mdui-textfield-label">图片格式限制</label>
+                            <input class="mdui-textfield-input" type="text" id="UserImageExt" value=""
+                                placeholder="lovecards.cn" maxlength="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdui-row">
+                    <div class="mdui-col-xs-12">
+                        <button id="submitOther"
+                            class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{include file="public/footer"}
+
+<script>
+
+    let IndexEntity = new Index();
+
+    $(function () {
+        const Show = () => {
+            IndexEntity.GetSystemEmail().then((result) => {
+                const data = result.data;
+                $('#smtpDriver').val(data.driver);
+                $('#smtpSecurity').val(data.security);
+                $('#smtpHost').val(data.host);
+                $('#smtpPort').val(data.port);
+                $('#smtpAddr').val(data.addr);
+                $('#smtpUser').val(data.user);
+                $('#smtpPass').val(data.pass);
+                $('#smtpName').val(data.name);
+            });
+
+            IndexEntity.GetSystemOther().then((result) => {
+                console.log(result.data.UserAuth.Captcha);
+                const data = result.data;
+                $('#VisitorMode').val(String(data.System.VisitorMode));
+                $('#UserImageSize').val(data.Upload.UserImageSize);
+                $('#UserImageExt').val(data.Upload.UserImageExt);
+                $('#Captcha').val(String(data.UserAuth.Captcha));
+            });
+
+        }; Show();
+
+        const getSystemSiteData = () => {
+            return {
+                'siteUrl': $('#siteUrl').val(),
+                'siteName': $('#siteName').val(),
+                'siteTitle': $('#siteTitle').val(),
+                'siteKeywords': $('#siteKeywords').val(),
+                'siteDes': $('#siteDes').val(),
+                'siteICPId': $('#siteICPId').val(),
+                'password': $('#Password').val(),
+                'siteCopyright': $('#siteCopyright').val(),
+            };
+        }
+
+        const getSystemGeetestData = () => {
+            return {
+                'DefSetGeetestId': $('#DefSetGeetestId').val(),
+                'DefSetGeetestKey': $('#DefSetGeetestKey').val(),
+                'DefSetValidatesStatus': $('#DefSetValidatesStatus').val(),
+            };
+        }
+
+        const getSystemEmail = () => {
+            return {
+                'driver': $('#smtpDriver').val(),
+                'security': $('#smtpSecurity').val(),
+                'host': $('#smtpHost').val(),
+                'port': $('#smtpPort').val(),
+                'addr': $('#smtpAddr').val(),
+                'user': $('#smtpUser').val(),
+                'pass': $('#smtpPass').val(),
+                'name': $('#smtpName').val(),
+            };
+        }
+
+        const getSystemOther = () => {
+            return {
+                'VisitorMode': $('#VisitorMode').val(),
+                'UserImageSize': $('#UserImageSize').val(),
+                'UserImageExt': $('#UserImageExt').val(),
+                'UserAuthCaptcha': $('#Captcha').val(),
+            };
+        }
+
+        //提交example1-SystemSite
+        $('#submitSite').click(() => {
+            IndexEntity.PostSystemSite(getSystemSiteData());
+        })
+
+        //提交example1-SystemGeetest
+        $('#submitGeetest').click(() => {
+            IndexEntity.PostSystemGeetest(getSystemGeetestData());
+        })
+
+        //提交example1-SystemEmail
+        $('#submitEmail').click(() => {
+            IndexEntity.PostSystemEmail(getSystemEmail());
+        })
+
+        //提交example1-SystemOther
+        $('#submitOther').click(() => {
+            IndexEntity.PostSystemOther(getSystemOther());
+        })
+    });
+</script>
+</body>
+
+</html>

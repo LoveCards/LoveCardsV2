@@ -11,19 +11,17 @@ use app\common\Export;
 use app\common\BackEnd;
 use app\common\Theme;
 use app\common\Common;
+use app\common\ConfigFacade;
 
 class System
 {
-
-    //中间件
-    protected $middleware = [\app\api\middleware\AdminPowerCheck::class];
 
     //基本信息-POST
     public function Site()
     {
         $siteUrl = Request::param('siteUrl');
         if (empty($siteUrl)) {
-            return Export::mObjectEasyCreate([], '站点域名不得为空', 400);
+            return Export::Create(null, 400, '站点域名不得为空');
         }
         $siteName = Request::param('siteName');
         $siteICPId = Request::param('siteICPId');
@@ -42,31 +40,64 @@ class System
         Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
 
         //返回数据
-        return Export::mObjectEasyCreate([], '更新成功', 200);
+        return Export::Create(null, 200);
     }
 
-    //邮箱配置-POST
+    //邮箱配置-Get
+    public function GetEmail()
+    {
+        $lDef_Result = Config::get('mail');
+        return Export::Create($lDef_Result, 200);
+    }
+
+    //邮箱配置-PATCH
     public function Email()
     {
-        $LCEAPI = Request::param('LCEAPI');
-        $smtpUser = Request::param('smtpUser');
-        $smtpHost = Request::param('smtpHost');
-        $smtpPort = Request::param('smtpPort');
-        $smtpPass = Request::param('smtpPass');
-        $smtpName = Request::param('smtpName');
-        $smtpSecure = Request::param('smtpSecure');
+        $lReq_Params = [
+            'driver' => Request::param('driver'),
+            'host' => Request::param('host'),
+            'port' => Request::param('port'),
+            'addr' => Request::param('addr'),
+            'pass' => Request::param('pass'),
+            'name' => Request::param('name'),
+            'security' => Request::param('security')
+        ];
+
+        $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+        //更新数据
+        $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params);
+
+        if ($tDef_Result) {
+            return Export::Create(null, 200);
+        }
+        return Export::Create(null, 500, '设置失败');
+    }
+
+    //获取其他配置-Get
+    public function GetOther()
+    {
+        $lDef_Result = ConfigFacade::mArrayGetMasterConfig();
+        return Export::Create($lDef_Result, 200);
+    }
+
+    //其他配置-PATCH
+    public function Other()
+    {
+        $lReq_Params = [
+            'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
+            'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
+            'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
+            'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
+        ];
+        $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
 
         //更新数据
-        Db::table('system')->where('name', 'LCEAPI')->update(['value' => $LCEAPI]);
-        Db::table('system')->where('name', 'smtpUser')->update(['value' => $smtpUser]);
-        Db::table('system')->where('name', 'smtpHost')->update(['value' => $smtpHost]);
-        Db::table('system')->where('name', 'smtpPort')->update(['value' => $smtpPort]);
-        Db::table('system')->where('name', 'smtpPass')->update(['value' => $smtpPass]);
-        Db::table('system')->where('name', 'smtpName')->update(['value' => $smtpName]);
-        Db::table('system')->where('name', 'smtpSecure')->update(['value' => $smtpSecure]);
+        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
-        //返回数据
-        return Export::mObjectEasyCreate([], '更新成功', 200);
+        if ($tDef_Result) {
+            return Export::Create(null, 200);
+        }
+        return Export::Create(null, 500, '设置失败');
     }
 
     //主题设置-POST
@@ -77,15 +108,15 @@ class System
         $tDef_LCVersionInfo = Common::mArrayGetLCVersionInfo();
 
         if (!($tDef_LCVersionInfo['VerS'] >= $tReq_ThemeInfo['SysVersionL'] && $tDef_LCVersionInfo['VerS'] < $tReq_ThemeInfo['SysVersionR'])) {
-            return Export::mObjectEasyCreate([], '修改失败，该主题不适用当前版本', 400);
+            return Export::Create(null, 400, '修改失败，该主题不适用当前版本');
         }
 
         $tDef_Result = BackEnd::mBoolCoverConfig('lovecards', ['theme_directory' => $tReq_ThemeDirectoryName]);
 
         if ($tDef_Result == true) {
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } else {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 
@@ -104,7 +135,7 @@ class System
         if (!empty($lReq_ParamSelect)) {
             foreach ($lReq_ParamSelect as $key => $value) {
                 if (count($tDef_ThemeConfig['Select'][$key]['Element']) < $value) {
-                    return Export::mObjectEasyCreate([], '修改失败，Select存在非法元素', 400);
+                    return Export::Create('修改失败，Select存在非法元素', 400);
                 }
                 $lDef_ParamThemeConfig['Select' . $key] = $value;
             }
@@ -114,7 +145,7 @@ class System
         if (!empty($lReq_ParamText)) {
             foreach ($lReq_ParamText as $key => $value) {
                 if (empty($tDef_ThemeConfig['Text'][$key]['Name'])) {
-                    return Export::mObjectEasyCreate([], '修改失败，Text存在非法元素', 400);
+                    return Export::Create('修改失败，Text存在非法元素', 400);
                 }
                 $lDef_ParamThemeConfig['Text' . $key] = $value;
             }
@@ -124,9 +155,9 @@ class System
         $tDef_Result = Theme::mBoolCoverThemeConfig($tDef_ThemeDirectory, $lDef_ParamThemeConfig);
 
         if ($tDef_Result) {
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } else {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 
@@ -140,9 +171,9 @@ class System
             ];
             BackEnd::mBoolCoverConfig('lovecards', $data);
             BackEnd::mBoolCoverConfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
-            return Export::mObjectEasyCreate([], '修改成功', 200);
+            return Export::Create(null, 200);
         } catch (\Throwable $th) {
-            return Export::mObjectEasyCreate([], '修改失败，请重试', 400);
+            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 }

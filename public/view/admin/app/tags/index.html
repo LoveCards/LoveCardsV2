@@ -1,0 +1,145 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+        <div class="mdui-col-xs-6">
+            <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
+                mdui-dialog="{target: '#dialogAdd'}">添加标签</button>
+            <!-- 弹窗组件 -->
+            <div class="mdui-dialog" id="dialogAdd">
+                <div class="mdui-dialog-title">添加标签</div>
+                <div class="mdui-row mdui-p-x-4">
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">标签名</label>
+                        <input class="mdui-textfield-input" id="addTagDataName" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">提示</label>
+                        <textarea class="mdui-textfield-input" id="addTagDataTip" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="mdui-dialog-actions">
+                    <button class="mdui-btn mdui-ripple" id="btnAddTag" mdui-dialog-close>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-card mdui-p-a-2">
+        <div class="mdui-table-fluid mdui-shadow-0 mdui-m-b-1">
+            <table class="mdui-table mdui-typo">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>封禁状态</th>
+                        <th>标签名</th>
+                        <th>提示</th>
+                        <th class="mdui-table-col-numeric">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {volist name='CommonNowList' id='data'}
+                    <tr>
+                        <td>{$data.id}</td>
+                        <td value="{$data.status}">
+                            <div class="mdui-chip">
+                                {if $data.status == 0}
+                                <span class="mdui-chip-title">正常</span>
+                                {/if}
+                                {if $data.status == 1}
+                                <span class="mdui-chip-title">封禁</span>
+                                {/if}
+                            </div>
+                        </td>
+                        <td>{$data.name}</td>
+                        <td>{$data.tip}</td>
+                        <td>
+                            <button class="js-Btn-Edit mdui-btn mdui-btn-icon" mdui-dialog="{target: '#dialogedit'}">
+                                <i class="mdui-icon material-icons">edit</i>
+                            </button>
+                            <button class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">delete</i>
+                            </button>
+                        </td>
+                    </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+        <!-- 分页按钮组件 -->
+        {include file="public/easyPaging"}
+    </div>
+
+    <!-- 弹窗组件 -->
+    <div class="mdui-dialog" id="dialogedit">
+        <div class="mdui-dialog-title">编辑标签</div>
+        <div class="mdui-row mdui-p-x-4">
+            <div class="mdui-row">
+                <div class="mdui-col-xs-9 mdui-col-md-10">
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">标签名</label>
+                        <input class="mdui-textfield-input" id="editTagDataName" type="text" />
+                    </div>
+                </div>
+                <div class="mdui-col-xs-3 mdui-col-md-2">
+                    <label class="mdui-textfield-label mdui-m-t-2">封禁状态</label>
+                    <select class="mdui-select" id="editTagDataStatus" style="width: 100%;">
+                        <option value="0">正常</option>
+                        <option value="1">封禁</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mdui-textfield">
+                <label class="mdui-textfield-label">提示</label>
+                <textarea class="mdui-textfield-input" id="editTagDataTip" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple" id="btnEditTag" mdui-dialog-close>确定</button>
+        </div>
+    </div>
+
+</div>
+{include file="public/footer"}
+
+<script>
+
+    let IndexEntity = new Index();
+
+    $(function () {
+        //初始化-分页组件
+        pager();
+
+        //按钮-初始化-编辑
+        $('.js-Btn-Edit').click(function () {
+            var thisObj = $(this).parent().siblings('td');
+            $('#editTagDataName').val(thisObj.eq(2).html());
+            $('#editTagDataTip').val(thisObj.eq(3).html());
+            $('#editTagDataStatus').val(thisObj.eq(1).attr('value'));
+            $('#btnEditTag').val(thisObj.eq(0).html());
+        });
+
+
+        //按钮-删除
+        $('.js-Btn-Delete').click(function () {
+            const id = $(this).parent().siblings('td:first').html();
+            IndexEntity.PostDelete(id);
+        });
+
+        //绑定添加按钮
+        IndexEntity.BindPostAdd('btnAddTag', 'addTagDataName', 'addTagDataTip');
+        //绑定编辑按钮
+        IndexEntity.BindPostEdit('btnEditTag', 'btnEditTag', 'editTagDataName', 'editTagDataTip', 'editTagDataStatus');
+    })
+
+</script>
+</body>
+
+</html>
