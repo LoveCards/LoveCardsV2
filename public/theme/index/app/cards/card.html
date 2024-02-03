@@ -1,0 +1,247 @@
+{include file="public/header" ViewTitle="$Card.ViewTitle"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $Card.CardData.model == 0}2{else}1{/if}" class="mdui-container">
+
+    <div class="mdui-row mdui-p-t-2">
+        <div style="display: none;" id="CardDataTitle">
+            {if $Card.CardData.model == 0}
+            {if $Card.CardData['woName']}[{$Card.CardData['woName']} 的表白卡]-{$Card.CardData['woName']} 表白
+            {$Card.CardData['taName']}
+            {else}[匿名 的表白卡]-对 {$Card.CardData['taName']} 说
+            {/if}
+            {else}
+            {if $Card.CardData['woName']}[{$Card.CardData['woName']} 的交流卡]-{$Card.CardData['woName']} 对
+            {$Card.CardData['taName']} 说
+            {else}[匿名 的交流卡]-对 {$Card.CardData['taName']} 说
+            {/if}
+            {/if}
+        </div>
+        <!-- 顶部信息组件 -->
+        <div class="mdui-col-xs-10">
+            {if $Card.CardData.model == 0}
+            {if $Card.CardData['woName']}
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                {$Card.CardData['woName']} 的表白卡</div>
+            {else}
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                匿名 的表白卡</div>
+            {/if}
+            {else}
+            {if $Card.CardData['woName']}
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                {$Card.CardData['woName']} 的交流卡</div>
+            {else}
+            <div
+                class="mdui-typo-headline-opacity mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                匿名 的交流卡</div>
+            {/if}
+            {/if}
+            <div class="mdui-typo-subheading-opacity">{$Card.CardData['id']}# {$Card.CardData['time']}</div>
+        </div>
+        <div class="mdui-col-xs-2">
+            <button
+                class="js-jumpurl-BackUp mdui-btn mdui-btn-icon mdui-btn-raised mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-float-right">
+                <i class="mdui-icon material-icons">arrow_back</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 卡片组件 -->
+    {if $Card.CardData.model == 0}
+    <div class="mdui-p-t-2">
+        <div
+            class="mdui-card mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-p-a-2">
+            <div class="mdui-typo-headline-opacity mdui-text-left">
+                {if $Card.CardData['woName']}
+                {$Card.CardData['woName']}
+                {else}
+                匿名
+                {/if}
+            </div>
+            <div class="mdui-text-center">
+                <i class="css-icon iconfont icon-heart-pulse"></i>
+            </div>
+            <div class="mdui-typo-headline-opacity mdui-text-right">{$Card.CardData['taName']}</div>
+        </div>
+    </div>
+    {/if}
+
+    <!-- 内容组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-sm-7 mdui-p-t-{if $Card.CardData.model == 0}3{else}2{/if}">
+
+            <div class="mdui-card">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-typo-title-opacity">
+                        内容
+                        <i class="js-Shareurl-cardId" state="card" value={$Card.CardData.id}>&#xe63d;</i>
+                    </div>
+                </div>
+                <div class="mdui-typo">
+                    <blockquote id="CardDataContent">
+                        <p style="font-size: 16px;">
+                            {$Card.CardData['content']}
+                        </p>
+                    </blockquote>
+                    {if $Card.CardData['tag']}
+                    <div class="mdui-p-x-2" id="CardDataTag">
+                        <div class="css-cards-primary-subtitle" value={$Card.CardData.tag|raw}>
+                            <!-- Tag标签 -->
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+
+                <div class="mdui-card-actions">
+                    <div class="mdui-typo-caption-opacity mdui-p-l-1">浏览{$Card.CardData['look']}</div>
+                    {if $Card.CardData['ipGood'] == false}
+                    <button value="{$Card.CardData['id']}"
+                        class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
+                        <i class="mdui-icon material-icons">favorite</i>点赞{$Card.CardData['good']}
+                    </button>
+                    {else}
+                    <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                        <i class="mdui-icon material-icons">favorite</i>点赞{$Card.CardData['good']}
+                    </button>
+                    {/if}
+                </div>
+
+            </div>
+
+            <!-- <div class="mdui-card mdui-m-t-1">
+                <div class="mdui-p-x-3 mdui-p-y-2">
+                    <img class="mdui-img-fluid" src="//test.fatda.cn/uploads/20221122019047855.jpeg" />
+                </div>
+            </div> -->
+            {if $Card.CardImgList}
+            <div class="mdui-card mdui-m-t-1">
+                <div class="mdui-m-x-1 mdui-m-t-1">
+                    <div class="mdui-row-xs-2 mdui-row-sm-3" id="viewer">
+                        {volist name="Card.CardImgList" id="D"}
+                        <div class="mdui-col mdui-p-b-1">
+                            <div class="mdui-grid-tile">
+                                <div class="css-cardsList-img">
+                                    <img class="js-url-UpdataImage" src="{$D.url}">
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+
+
+        <!-- 评论组件 -->
+        <div class="mdui-col-xs-12 mdui-col-sm-5 mdui-p-t-{if $Card.CardData.model == 0}3{else}2{/if}">
+            <div class="mdui-card">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-typo-title-opacity">评论</div>
+
+                    <div class="mdui-textfield">
+                        <input class="mdui-textfield-input" type="text" placeholder="姓名" id="addCommentsDataName" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <input class="mdui-textfield-input" type="text" placeholder="内容" id="addCommentsDataContent" />
+                    </div>
+                </div>
+
+                <div class="mdui-card-actions">
+                    <button id="btnAddComments"
+                        class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-float-right">
+                        提交
+                    </button>
+                </div>
+            </div>
+
+            {if $Card.CardCommentList}
+            <div class="mdui-card mdui-m-t-1">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-typo-subheading-opacity">共{$Card.CardData['comments']}条</div>
+                </div>
+                <!-- 卡片的内容 -->
+                <ul class="mdui-list">
+                    {volist name="Card.CardCommentList" id="D"}
+                    <li class="mdui-divider"></li>
+                    <li class="css-list-item">
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">{$D.name}</div>
+                            <div class="mdui-list-item-text">
+                                {$D.content}
+                            </div>
+                            <div class="mdui-list-item-text">
+                                {$D.id}# {$D.time}
+                            </div>
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+
+            <!-- 分页按钮组件 -->
+            <div class="mdui-p-t-2 mdui-text-center">
+                <div style="display: none;">{$Card.CardCommentListEasyPagingComponent|raw}</div>
+                <button id="pageFirst" type="button"
+                    class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+                    <i class="mdui-icon material-icons ">first_page</i>
+                </button>
+                <button id="pageLast" type="button"
+                    class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+                    <i class="mdui-icon material-icons">last_page</i>
+                </button>
+            </div>
+            {else}
+            <div class="mdui-card mdui-m-t-1">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-y-2 mdui-p-x-2">
+                    <div class="mdui-typo-subheading-opacity mdui-text-center">还没有评论哦~</div>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </div>
+    <!-- 分享弹窗 -->
+    {include file="public/share"}
+
+</div>
+
+{include file="public/footer"}
+{if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
+<script src="https://static.geetest.com/v4/gt4.js"></script>
+{/if}
+<script>
+
+    let CardEntity = new Card();
+
+    $(function () {
+        //初始化-分页组件
+        pager();
+        //初始化-Tag组件
+        ViewCardsTag('{$CardsTagsListJson|raw}');
+        //viewer图片放大插件初始化
+        $('#viewer').viewer({
+            url: 'src'
+        });
+
+        CardEntity.ThemeInit().then(() => {
+            CardEntity.BindPostCommentsAdd('btnAddComments', Number('{$Card.CardData.id}'), 'addCommentsDataName', 'addCommentsDataContent');
+        });
+        //悬浮按钮
+        $('#jsBtnGreen').click(function () {
+            jumpUrl('/index/cards/add{if $Card.CardData.model == 1}/model/1{/if}', 0);
+        })
+    });
+
+</script>
+
+</body>
+
+</html>

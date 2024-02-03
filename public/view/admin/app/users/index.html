@@ -1,0 +1,113 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div id="app" class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+
+        <div class="mdui-col-xs-6">
+            <!-- <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
+                mdui-dialog="{target: '#dialogAdd'}">添加用户</button> -->
+            <!-- 弹窗组件 -->
+            <div class="mdui-dialog" id="dialogAdd">
+                <div class="mdui-dialog-title">添加用户</div>
+                <div class="mdui-row mdui-p-x-4">
+                    <div class="mdui-row">
+                        <div class="mdui-col-xs-9 mdui-col-md-10">
+                            <div class="mdui-textfield">
+                                <label class="mdui-textfield-label">用户名</label>
+                                <input class="mdui-textfield-input" id="addUserDataName" type="text" />
+                            </div>
+                        </div>
+                        <div class="mdui-col-xs-3 mdui-col-md-2">
+                            <label class="mdui-textfield-label mdui-m-t-2">权限</label>
+                            <select class="mdui-select" id="addUserDataPower">
+                                <option value="0">站长</option>
+                                <option value="1">管理员</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">密码</label>
+                        <input class="mdui-textfield-input" id="addUserDataPassword" type="password" />
+                    </div>
+                </div>
+
+                <div class="mdui-dialog-actions">
+                    <button class="mdui-btn mdui-ripple" id="btnAddUser" mdui-dialog-close>确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-card mdui-p-a-2">
+        <div class="mdui-table-fluid mdui-shadow-0 mdui-m-b-1">
+
+            <table class="mdui-table mdui-typo">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>头像</th>
+                        <th>账号</th>
+                        <th>用户名</th>
+                        <th>邮箱</th>
+                        <th>手机号</th>
+                        <th>注册时间</th>
+                        <th>状态</th>
+                        <th class="mdui-table-col-numeric">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in UsersIndex.data">
+                        <td>{{item.id}}</td>
+                        <td>
+                            <img style="max-height: 40px;" class="mdui-img-fluid mdui-img-circle"
+                                v-bind:src="item.avatar ? item.avatar : '/view/admin/assets/img/avatar.png'">
+                        </td>
+                        <td>{{item.number}}</td>
+                        <td>{{item.username}}</td>
+                        <td>{{item.email}}</td>
+                        <td>{{item.phone}}</td>
+                        <td>{{item.created_at}}</td>
+                        <td>{{item.status?'封禁':'正常'}}</td>
+                        <td>
+                            <button @click="editUser(item)" class="js-Btn-Edit mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">edit</i>
+                            </button>
+                            <button @click="deleteUser(item.id)" class="js-Btn-Delete mdui-btn mdui-btn-icon">
+                                <i class="mdui-icon material-icons">delete</i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <!-- 分页按钮组件 -->
+        <div class="mdui-float-right">
+            <button type="button" class="mdui-btn mdui-color-theme-accent mdui-btn-dense"
+                v-if="UsersIndex.current_page != 1" @click="prevPage">
+                <i class="mdui-icon material-icons">first_page</i>
+            </button>
+            <span class="mdui-p-x-1"></span>
+            <button type="button" class="mdui-btn mdui-color-theme-accent mdui-btn-dense"
+                v-if="UsersIndex.current_page != UsersIndex.last_page" @click="nextPage">
+                <i class="mdui-icon material-icons">last_page</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 弹窗组件 -->
+    <component-edit-user v-model:enter-user-obj="EditUser" v-model:show-status="EditShow"></component-edit-user>
+
+</div>
+{include file="public/footer"}
+<script type="module" src="/view/admin/app/{$SystemControllerName}/VueIndex.js"></script>
+</body>
+
+</html>

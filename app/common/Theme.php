@@ -63,10 +63,11 @@ class Theme extends Facade
         }
 
         //写入并返回结果
-        if (!file_put_contents($fileName, $str_file)) {
-            return false;
-        } else {
+        try {
+            file_put_contents($fileName, $str_file);
             return true;
+        } catch (\Throwable $th) {
+            return false;
         }
     }
 
@@ -84,19 +85,23 @@ class Theme extends Facade
     {
         $path = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $TemplateDirectory . '/config.php';
         if (is_file($path)) {
-            include $path;
+            $Config = include $path;
             $require = array();
             if ($Original) {
                 $require = $Config;
             } else {
                 //选择格式数据获取
-                foreach ($Config['Select'] as $key => $value) {
-                    $require[$key] = $value['Element'][$value['Default']];
+                if (array_key_exists('Select', $Config)) {
+                    foreach ($Config['Select'] as $key => $value) {
+                        $require[$key] = $value['Element'][$value['Default']];
+                    }
                 }
-                foreach ($Config['Text'] as $key => $value) {
-                    //反转义
-                    $require[$key] = urldecode($value['Default']);
-                    //dd($require[$key]);
+                if (array_key_exists('Text', $Config)) {
+                    foreach ($Config['Text'] as $key => $value) {
+                        //反转义
+                        $require[$key] = urldecode($value['Default']);
+                        //dd($require[$key]);
+                    }
                 }
             }
             //dd($require);
@@ -134,11 +139,11 @@ class Theme extends Facade
      * @LastEditors: github.com/zhiguai
      * @param {*} $tDef_ThemeDirectoryName
      */
-    protected static function mObjectEasySetViewConfig($tDef_ThemeDirectoryName = '')
+    protected static function mObjectEasySetViewConfig($tDef_ThemeDirectoryName = 0)
     {
         if (empty($tDef_ThemeDirectoryName)) {
             $tDef_Config = [
-                'view_path' => '',
+                'view_path' => 'view/',
                 'tpl_replace_string' => Config::get('view.tpl_replace_string')
             ];
         } else {

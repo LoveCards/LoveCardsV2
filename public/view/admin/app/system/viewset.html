@@ -1,0 +1,98 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-card">
+        <div class="mdui-p-b-2 mdui-p-x-2">
+            <div class="mdui-row">
+                {foreach $TemplateConfig['Select'] as $key=>$D0 }
+                <div class="mdui-col-xs-12">
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">{$D0['Name']}</label>
+                        <select class="mdui-select" style="width: 100%;" id="{$key}">
+                            {foreach $D0['Element'] as $key=>$D1 }
+                            <option value="{$key}" {if $D0['Default']==$key}selected{/if}>
+                                {if $D1===false}
+                                关闭
+                                {elseif $D1===true/}
+                                开启
+                                {else /}
+                                {$D1}
+                                {/if}
+                            </option>
+                            {/foreach}
+                        </select>
+                        <div class="mdui-textfield">
+                            <div class="mdui-textfield-helper mdui-typo">{$D0['Introduction']|raw}</div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+                {foreach $TemplateConfig['Text'] as $key=>$D0 }
+                <div class="mdui-col-xs-12">
+                    <div class="mdui-textfield">
+                        <div class="mdui-textfield">
+                            <textarea class="mdui-textfield-input" rows="4" placeholder="{$D0['Name']}"
+                                id="{$key}">{$D0['Default']}</textarea>
+                            <div class="mdui-textfield-helper mdui-typo">{$D0['Introduction']|raw}</div>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+
+            <div class="mdui-row">
+                <div class="mdui-col-xs-12">
+                    <!--提交按钮-->
+                    <button id="submitSet"
+                        class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="public/footer"}
+
+<script>
+
+    let ViewSetEntity = new ViewSet();
+
+    $(function () {
+
+        //提交
+        const getTemplateSetData = () => {
+            //初始化参数
+            let SelectJson = {};
+            let TextJson = {};
+
+            //赋值
+            $('.mdui-select').each(function () {
+                SelectJson[$(this).attr('id')] = $(this).val();
+            });
+            $('.mdui-textfield-input').each(function () {
+                TextJson[$(this).attr('id')] = $(this).val();
+            });
+
+            return {
+                'select': JSON.stringify(SelectJson),
+                'text': JSON.stringify(TextJson),
+            };
+        }
+
+        $('#submitSet').click(() => {
+            ViewSetEntity.PostSystemTemplateSet(getTemplateSetData());
+        })
+    });
+</script>
+</body>
+
+</html>

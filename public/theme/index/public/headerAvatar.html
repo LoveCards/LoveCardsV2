@@ -1,0 +1,29 @@
+{if $MyInfo['id']}
+<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
+    mdui-menu="{target: '#MenuComponent-HeaderAvatar',covered:false}">
+    <div style="margin: 10%;">
+        {if $MyInfo['avatar']}
+        <img class="mdui-img-fluid mdui-img-circle" src="{$MyInfo['avatar']}" />
+        {else}
+        <img class="mdui-img-fluid mdui-img-circle" src="{$ThemeAssetsUrlPath}/image/avatar.png" />
+        {/if}
+    </div>
+</span>
+<ul id="MenuComponent-HeaderAvatar" class="mdui-menu">
+    <li class="mdui-menu-item">
+        <a onclick="jumpUrl('/index/user',0)" href="javascript:;" class="mdui-ripple">
+            <i class="mdui-menu-item-icon mdui-icon material-icons">home</i>个人中心
+        </a>
+    </li>
+    <li class="mdui-divider"></li>
+    <li class="mdui-menu-item">
+        <a id="Logout" href="javascript:;" class="mdui-ripple">
+            <i class="mdui-menu-item-icon mdui-icon material-icons">directions_run</i>退 出
+        </a>
+    </li>
+</ul>
+{else}
+<span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-dialog="{target: '#ExampleComponent-Login'}">
+    <i class="mdui-icon material-icons">account_circle</i>
+</span>
+{/if}

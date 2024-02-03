@@ -1,0 +1,60 @@
+{include file="public/header" ViewTitle="$CommonCardList.ViewTitle"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsPageHierarchy=0 jsTabClass="{if $CommonCardList.CardsModel == 0}2{else}1{/if}" class="mdui-container">
+    <!-- 顶部按钮组件 -->
+    <div class="mdui-p-t-2">
+        {if $CommonCardList.CardsModel == 0}
+        <button class="mdui-btn mdui-btn-block mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-btn-raised"
+            onclick="location.assign('/index/cards/add/model/0')">发布表白卡</button>
+        {else}
+        <button class="mdui-btn mdui-btn-block mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-btn-raised"
+            onclick="location.assign('/index/cards/add/model/1')">发布交流卡</button>
+        {/if}
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-p-t-2">
+
+        <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
+            <!-- 卡片循环 -->
+            {include file="public/cardsList" CardList="CommonCardList"}
+            <!-- 分享弹窗 -->
+            {include file="public/share"}
+        </div>
+    </div>
+
+    <!-- 分页按钮组件 -->
+    <div class="mdui-p-t-2 mdui-text-center">
+        <div style="display: none;">{$CommonCardList.CardListEasyPagingComponent|raw}</div>
+        <button id="pageFirst" type="button" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+            <i class="mdui-icon material-icons ">first_page</i>
+        </button>
+        <button id="pageLast" type="button" class="mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}">
+            <i class="mdui-icon material-icons">last_page</i>
+        </button>
+    </div>
+
+</div>
+
+
+{include file="public/footer"}
+
+<script>
+    $(function () {
+        //初始化分页
+        pager();
+        //获取Tag数据
+        ViewCardsTag('{$CardsTagsListJson|raw}');
+
+        //悬浮按钮
+        $('#jsBtnGreen').click(function () {
+            jumpUrl('/index/cards/add{if $CommonCardList.CardsModel == 1}/model/1{/if}', 0);
+        })
+    })
+
+</script>
+
+</body>
+
+</html>

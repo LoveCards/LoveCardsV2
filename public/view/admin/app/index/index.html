@@ -1,0 +1,203 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-12 mdui-col-sm-9 mdui-p-t-2">
+            <div class="mdui-card">
+                <div class="mdui-p-a-2">
+                    <div class="mdui-typo-subheading-opacity">趋势</div>
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="mdui-col-xs-12 mdui-col-sm-3 mdui-p-t-2">
+            <div class="mdui-card">
+                <div class="mdui-p-a-2">
+                    <div class="mdui-typo-subheading-opacity">总计</div>
+                </div>
+                <ul class="mdui-list">
+                    <li class="mdui-list-item mdui-ripple">
+                        <i
+                            class="mdui-list-item-avatar mdui-icon material-icons mdui-color-blue mdui-text-color-white">note</i>
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">{$ViewDataCount['cards']}</div>
+                            <div class="mdui-list-item-text">卡片总数</div>
+                        </div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i
+                            class="mdui-list-item-avatar mdui-icon material-icons mdui-color-yellow-600 mdui-text-color-white">insert_comment</i>
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">{$ViewDataCount['comments']}</div>
+                            <div class="mdui-list-item-text">评论总数</div>
+                        </div>
+                    </li>
+                    <li class="mdui-list-item mdui-ripple">
+                        <i
+                            class="mdui-list-item-avatar mdui-icon material-icons mdui-color-red-600 mdui-text-color-white">favorite</i>
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">{$ViewDataCount['good']}</div>
+                            <div class="mdui-list-item-text">点赞总数</div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="mdui-col-xs-12 mdui-col-sm-4 mdui-p-t-2">
+            <div class="mdui-card">
+                <div class="mdui-p-a-2">
+                    <div class="mdui-row">
+                        <div class="mdui-col-xs-2 mdui-col-sm-3 mdui-text-center">
+                            <i class="css-icon iconfont icon-heart-pulse mdui-text-color-light-blue-500"></i>
+                        </div>
+                        <div class="mdui-col-xs-10 mdui-col-sm-9 mdui-p-t-1 mdui-text-color-grey-800">
+                            <div class="mdui-typo-title-opacity">{$LCVersionInfo['Name']}</div>
+                            <div class="mdui-typo-subheading-opacity">{$LCVersionInfo['VerS']}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-divider"></div>
+                <ul class="mdui-list">
+                    <a href="{$LCVersionInfo.Url}" target="_blank">
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon mdui-icon material-icons">home</i>
+                            <div class="mdui-list-item-content">项目主页</div>
+                        </li>
+                    </a>
+                    <a href="https://forum.lovecards.cn/" target="_blank">
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon mdui-icon material-icons">school</i>
+                            <div class="mdui-list-item-content">论坛</div>
+                        </li>
+                    </a><a href="{$LCVersionInfo.GithubUrl}" target="_blank">
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon iconfont">&#xe885;</i>
+                            <div class="mdui-list-item-content">Github</div>
+                        </li>
+                    </a><a href="{$LCVersionInfo.QGroupUrl}" target="_blank">
+                        <li class="mdui-list-item mdui-ripple">
+                            <i class="mdui-list-item-icon iconfont">&#xe882;</i>
+                            <div class="mdui-list-item-content">QQ交流群</div>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mdui-col-xs-12 mdui-col-sm-8 mdui-p-t-2">
+            <!-- 右侧 -->
+            <div class="mdui-card">
+                <ul class="js-notice-ul mdui-list">
+
+                    <li class="css-list-item mdui-ripple">
+                        <div class="mdui-list-item-avatar">
+                            <img src="{__A-assets__}/img/lcl.png" />
+                        </div>
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-text">
+                                加载中...
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+</div>
+{include file="public/footer"}
+<script src="{__A-assets__}/lib/chart-4.2.0/chart.umd.min.js"></script>
+<script>
+
+    //实例化
+    let IndexEntity = new Index();
+
+    $(function () {
+
+        //图表数据传递
+        let chartJsonData = JSON.parse('{$ViewChartJson|raw}');
+        //绑定方法
+        IndexEntity.BindJsonLineChart('myChart', chartJsonData);
+
+        //待更新 获取LCS-Notice
+        $.ajax({
+            url: 'https://server.lovecards.cn/apiv1/Notice',
+            type: 'GET',
+            async: true,
+            dataType: 'JSON',
+            //data: data,
+
+            // beforeSend: function () {//提交数据前执行判断，根据返回t/f决定是否发送
+            //     return true;
+            // },
+
+            success: function (result, status) {
+                if (result.ec == '200') {
+                    $('.js-notice-ul').children().remove();
+                    result.data.forEach(element => {
+                        $('.js-notice-ul').append(`
+                    <li class="css-list-item mdui-ripple" onclick=window.open("${element.url}")>
+                        <div class="mdui-list-item-avatar">
+                            <img src="{__A-assets__}/img/lcl.png" />
+                        </div>
+                        <div class="mdui-list-item-content">
+                            <div class="mdui-list-item-title">${element.title}</div>
+                            <div class="mdui-list-item-text">
+                                ${element.content}
+                            </div>
+                            <div class="mdui-list-item-text">
+                                #${element.id} ${element.date}
+                            </div>
+                        </div>
+                    </li>
+                    `)
+                    });
+                    return;
+                } else {
+                    //失败
+                    data = false;
+                    var arrData = result.data;
+                    var reuData = '';
+                    //整理二维数组
+                    for (let index in arrData) {
+                        reuData = reuData + arrData[index] + '&nbsp;';
+                    }
+                    //详细输出
+                    reuData = '<br>' + result.ec + '&nbsp;:&nbsp;' + reuData;
+                    mdui.snackbar({
+                        message: 'msg&nbsp;:&nbsp;' + result.msg + reuData,
+                        position: 'left-top'
+                    });
+                    return;
+                }
+            },
+
+            error: function () {
+                data = false;
+                mdui.snackbar({
+                    message: '4XX&nbsp;:&nbsp;未知错误，数据获取失败',
+                    position: 'left-top'
+                });
+                return;
+            }
+        })
+    })
+</script>
+</body>
+
+</html>

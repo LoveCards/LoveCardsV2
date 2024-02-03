@@ -1,0 +1,78 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+
+    <div class="mdui-card mdui-p-a-2">
+        <div class="mdui-typo">请将模板文件解压至<code>/public/theme</code></div>
+    </div>
+
+    <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3">
+
+        {volist name="ThemeConfig" id="D"}
+        <div class="mdui-col">
+            <div class="mdui-card mdui-m-t-2">
+                <div class="mdui-card-header">
+                    <div class="mdui-card-header-title mdui-text-color-theme" style="margin-left:unset;">{$D.Name}
+                    </div>
+                    <div class="mdui-card-header-subtitle" style="margin-left:unset;">{$D.Introduce}</div>
+                </div>
+                <div class="mdui-card-media">
+                    <div class="css-cards-img" style="border-radius:unset;height: 240px;">
+                        <img src="/theme/{$D.DirectoryName}/show.png" />
+                    </div>
+                    <div class="mdui-card-media-covered">
+                        <div class="mdui-card-primary">
+                            <div class="mdui-card-primary-subtitle">
+                                <div class="mdui-typo">
+                                    <kbd>{$D.Version}</kbd> 作者：{$D.Author}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdui-card-actions">
+                    {if md5($nowThemeInfo['Name'].$nowThemeInfo['Version']) != md5($D['Name'].$D['Version'])}
+                    <button value="{$D.DirectoryName}"
+                        class="submit-template mdui-btn mdui-ripple mdui-color-theme-accent mdui-float-right">设为当前主题</button>
+                    {else}
+                    {if $nowThemeInfo['Config'] != false}
+                    <button value="{$D.DirectoryName}" onclick="jumpUrl('/admin/System/viewset',0)"
+                        class="mdui-btn mdui-ripple mdui-color-green mdui-text-color-white mdui-float-right">配置当前主题</button>
+                    {else /}
+                    <button value="{$D.DirectoryName}"
+                        class="mdui-btn mdui-ripple mdui-color-blue mdui-text-color-white mdui-float-right">当前主题</button>
+                    {/if}
+                    {/if}
+                </div>
+
+            </div>
+        </div>
+        {/volist}
+    </div>
+
+    {include file="public/footer"}
+
+    <script>
+
+        let ViewEntity = new View();
+
+        $(function () {
+            //提交
+            $('.submit-template').click(function () {
+                ViewEntity.PostSystemTemplate({ 'themeDirectory': $(this).val() });
+            })
+        });
+    </script>
+    </body>
+
+    </html>

@@ -1,0 +1,182 @@
+{include file="public/header" ViewTitle="添加卡片"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsPageHierarchy=1 jsTabClass="{if $TagList.CardModel == 0}2{else}1{/if}" class="mdui-container">
+
+    <div class="mdui-row mdui-p-t-2">
+
+        <div class="mdui-col-md-6 mdui-col-offset-md-3">
+
+            <div class="mdui-p-b-2">
+                <button class="js-jumpurl-BackUp
+                    mdui-btn mdui-btn-block
+                    mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if}
+                    mdui-ripple mdui-btn-raised">返 回</button>
+            </div>
+
+            <div class="mdui-card mdui-m-b-1">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-y-2 mdui-p-x-2">
+                    (*)为必填项，姓名不填则为匿名，其他不填默认为空
+                </div>
+            </div>
+
+            <div class="mdui-card">
+                <!-- 卡片的内容 -->
+                <div class="mdui-p-t-2 mdui-p-x-2">
+                    <!-- 添加标签 -->
+                    <label class="mdui-textfield-label">标签</label>
+                    <button id="btnChooseTagAdd" class="mdui-btn mdui-btn-icon mdui-ripple"
+                        mdui-dialog="{target: '#dialogChooseTag'}">
+                        <i class="mdui-icon material-icons">add</i>
+                    </button>
+                    <div class="mdui-dialog" id="dialogChooseTag">
+                        <div class="mdui-dialog-title">选择标签</div>
+                        <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
+                            <div class="mdui-row-xs-2 mdui-row-sm-4">
+                                {volist name="CardsTagsList" id="D"}
+                                <div class="mdui-col">
+                                    <label class="mdui-checkbox">
+                                        <input type="checkbox" value="{$D.id}" name="inputChooseTag" />
+                                        <i class="mdui-checkbox-icon"></i>
+                                        {$D['name']}
+                                    </label>
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
+
+                        <div class="mdui-dialog-actions">
+                            <button class="mdui-btn mdui-ripple" id="btnChooseTag" mdui-dialog-close>确定</button>
+                        </div>
+                    </div>
+
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">姓名</label>
+                        <input class="mdui-textfield-input" id="woName" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">联系方式</label>
+                        <input class="mdui-textfield-input" id="woContact" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">TA的姓名(与谁交流)</label>
+                        <input class="mdui-textfield-input" id="taName" type="text" />
+                    </div>
+                    {if $TagList.CardModel == 0}
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">表白写些什么*</label>
+                        <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
+                    </div>
+                    {else}
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">TA的联系方式</label>
+                        <input class="mdui-textfield-input" id="taContact" type="text" />
+                    </div>
+                    <div class="mdui-textfield">
+                        <label class="mdui-textfield-label">交流写些什么*</label>
+                        <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
+                    </div>
+                    {/if}
+
+                    <div class="mdui-textfield">
+                        <div id="listImageUrl" class="mdui-row-xs-2 mdui-row-sm-3">
+                            <!-- 图片容器 -->
+                        </div>
+                        <!-- 添加图片 -->
+                        <button
+                            class="mdui-btn mdui-btn-block mdui-text-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple"
+                            mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
+                        <div class="mdui-dialog" id="dialogUploadImage">
+                            <div class="mdui-dialog-title">上传图片</div>
+                            <div class="mdui-dialog-content">
+                                <div class="mdui-row">
+                                    <div class="mdui-col-xs-12 mdui-col-sm-10">
+                                        <div class="mdui-textfield">
+                                            <input class="mdui-textfield-input" id="urlUpdataImage" type="text"
+                                                placeholder="http://">
+                                            <div class="mdui-textfield-helper">最大支持上传2M图片*9</div>
+                                        </div>
+                                    </div>
+                                    <div class="mdui-col-xs-12 mdui-col-sm-2 mdui-text-center mdui-float-right">
+                                        <label id="btnUploadImage"
+                                            class="mdui-m-y-2 mdui-btn mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-btn-block">
+                                            <span>上 传</span>
+                                            <input id="dataUpdataImage" type="file" style="display: none;" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mdui-dialog-actions">
+                                <button class="mdui-btn mdui-ripple" id="btnUpdataImgUrl" mdui-dialog-close>添加</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="model" value="{$TagList.CardModel}" class="mdui-card-actions">
+                    <button id="submitAdd"
+                        class="mdui-btn mdui-btn-raised mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-float-right">提交</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{include file="public/footer"}
+<script src="{__A-assets__}/js/cardsEdit.js"></script>
+{if $SystemConfig['class']['geetest']['DefSetValidatesStatus'] == 1}
+<script src="https://static.geetest.com/v4/gt4.js"></script>
+<script src="{__A-assets__}/lib/gt4/base.js"></script>
+{/if}
+<script>
+
+    let AddEntity = new Add();
+
+    $(function () {
+        //提交
+        const getCardsAddValue = () => {
+            //构建图片url数组并获取
+            var jsonImageUrl = [];
+            $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
+                jsonImageUrl.push($(this).attr('src'));
+            });
+            img = JSON.stringify(jsonImageUrl);
+            tag = JSON.stringify(checkChooseTagId);//全局变量在cardsEdit.js中 待优化
+            data = {
+                'content': $('#content').val(),
+                'woName': $('#woName').val(),
+                'taName': $('#taName').val(),
+                'woContact': $('#woContact').val(),
+                'taContact': $('#taContact').val(),
+                'model': $('#model').attr('value'),
+                'tag': tag,
+                'img': img,
+            };
+            return data;
+        }
+
+        //设置钩子
+        AddEntity.SetPostCardsAddHooks(() => { }, (response) => {
+            //默认回调函数
+            AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
+            AddEntity.JumpUrl('/index/cards/card/id/' + response.data.id);
+        });
+
+        //绑定按钮
+        AddEntity.ThemeInit().then(() => {
+            AddEntity.BindPostCardsAdd('submitAdd', getCardsAddValue);
+        });
+
+        //悬浮按钮
+        $('#jsBtnGreen').html('<i class="mdui-icon material-icons">arrow_back</i>').click(function () {
+            FunBackUpHistoryUrl();
+        });
+    });
+</script>
+
+</body>
+
+</html>

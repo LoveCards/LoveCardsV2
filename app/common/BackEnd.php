@@ -6,35 +6,28 @@ use think\Facade;
 use think\facade\Session;
 use think\facade\Request;
 use think\facade\Db;
+use app\common\Common;
 
 class BackEnd extends Facade
 {
     /**
-     * @description: 后端依API验证uuid并获取当前用户数据
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:57:00
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
+     * 通过ID查询管理员全部数据
+     *
+     * @param int $id
+     * @return array
      */
-    protected static function mArrayGetNowAdminAllData()
+    public static function mArrayGetNowAdminAllData($id)
     {
-        //整理数据
-        $uuid = Request::param('uuid');
-        if (empty($uuid)) {
-            return array(400, '缺少uuid');
-        }
         //查询数据
         $result = Db::table('admin')
-            ->where('uuid', $uuid)
+            ->where('id', $id)
             ->find();
         //判断数据是否存在
         if (empty($result)) {
-            return array(401, '当前uuid已失效请重新登入');
-        } else {
+            return Common::mArrayEasyReturnStruct('管理员不存在', false);
+        } else
             //返回用户数据
-            return $result;
-        }
+            return Common::mArrayEasyReturnStruct(null, true, $result);
     }
 
     /**
@@ -45,7 +38,7 @@ class BackEnd extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
-    protected static function mStringGenerateUUID()
+    public static function mStringGenerateUUID()
     {
         $charid = md5(uniqid(mt_rand(), true));
         $hyphen = chr(45); // "-"
@@ -60,17 +53,19 @@ class BackEnd extends Facade
     }
 
     /**
-     * @description: 编辑配置文件
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:16:37
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $filename
-     * @param {*} $data
+     * 编辑配置文件
+     *
+     * @param string $filename
+     * @param array $data
+     * @param boolean $free
+     * @param string $env
+     * @return boolean
      */
-    protected static function mBoolCoverConfig($filename, $data, $free = false, $env = 'lovecards'): bool
+    public static function mBoolCoverConfig($filename = '', $data = [], $free = false, $env = ''): bool
     {
+        if (!$env) {
+            $env = $filename;
+        }
         $filename = '../config/' . $filename . '.php';
         $str_file = file_get_contents($filename);
 
@@ -115,7 +110,7 @@ class BackEnd extends Facade
      * @param {*} $setName
      * @param {*} $time
      */
-    protected static function mRemindEasyDebounce($setName, $time = 6)
+    public static function mRemindEasyDebounce($setName, $time = 6)
     {
         if (strtotime(date("Y-m-d H:i:s")) > strtotime(Session::get($setName))) {
             //符合要求

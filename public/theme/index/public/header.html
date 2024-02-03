@@ -2,7 +2,7 @@
 <html lang="zh">
 
 <head>
-    <title>{$ViewTitle} - {$SystemData['siteName']}</title>
+    <title>[ViewTitle] - {$SystemData['siteName']}</title>
     <meta name="description" content="{if $ViewDescription}{$ViewDescription}{else}{$SystemData.siteDes}{/if}">
     <meta name="keywords" content="{if $ViewKeywords}{$ViewKeywords}{else}{$SystemData.siteKeywords}{/if}">
     <meta charset="utf-8">
@@ -17,10 +17,10 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="https://cdn.bootcdn.net/ajax/libs/imageviewer/1.1.0/viewer.min.css" rel="stylesheet">
     {else /}
-    <link rel="stylesheet" href="{__A-assets__}/mdui-v1.0.2/css/mdui.min.css" />
-    <link rel="stylesheet" href="{__A-assets__}/viewer-jquery-1.1.0/viewer.min.css">
+    <link rel="stylesheet" href="{__A-assets__}/lib/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/lib/viewer-jquery-1.1.0/viewer.min.css">
     {/if}
-    <link rel="stylesheet" href="{__A-assets__}/base.css" />
+    <link rel="stylesheet" href="{__A-assets__}/css/base.css" />
     <!-- <link rel="stylesheet" href="{$ThemeAssetsUrlPath}/base.css" /> -->
     <script>
         var _paq = window._paq = window._paq || [];
@@ -43,7 +43,7 @@
             mdui-theme-primary-{$ThemeConfig.ThemePrimary} 
             mdui-theme-accent-{$ThemeConfig.ThemeAccent} 
             {if $ThemeConfig.ThemeDark} mdui-theme-layout-dark{/if}
-            ">
+">
 
     <!-- 顶栏 -->
     <div class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-toolbar-hide">
@@ -52,6 +52,11 @@
             <a href="#" class="mdui-typo-headline">{$SystemData['siteName']}</a>
             <div class="mdui-toolbar-spacer"></div>
 
+            <!-- <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
+                mdui-dialog="{target: '#dialog-docs-theme'}" mdui-tooltip="{content: '设置主题'}">
+                <i class="mdui-icon material-icons">color_lens</i>
+            </span> -->
+            {include file="public/headerAvatar"}
         </div>
         <div class="css-tab mdui-tab mdui-tab-centered mdui-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}"
             mdui-tab>

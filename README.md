@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://lovecards.cn/" alt="logo" ><img src="https://img1.imgtp.com/2023/08/04/TiKztuPI.png" width="150"/></a>
+  <a href="https://lovecards.cn/" alt="logo" ><img src="https://s11.ax1x.com/2024/01/11/pFCilx1.png" width="150"/></a>
   <br>
   LoveCards
   <br>
@@ -21,11 +21,10 @@
   <a href="https://github.com/zhiguai/LoveCards/releases">下载</a>
 </p>
 
-<img src="https://img1.imgtp.com/2023/09/18/UyB65ww3.png">
-
 ## 🌟 亮点
 
 🗃️ 不止表白卡，更有交流卡  
+👨‍👩‍👧‍👦 强大的用户系统，也支持游客的随时访问
 ✨ 标签系统，你的站点，你的热点，你创造  
 💙 模板系统，给你无限可能  
 📤 卡片不限字数，支持多图片上传  
@@ -39,16 +38,16 @@
 ## 👀 部分图示
 
 #### 后台总览
-<img src="https://img1.imgtp.com/2023/09/18/wJOgnEV3.jpeg">  
+<img src="https://s11.ax1x.com/2024/01/11/pFCifRs.jpg">  
 
 #### 外观设置
-<img src="https://img1.imgtp.com/2023/09/18/qKfUP3lO.jpeg">
+<img src="https://s11.ax1x.com/2024/01/11/pFCiDMt.jpg">
 
 #### 默认主题配色展示
 <div style="display: flex; justify-content: space-between;">
-    <img src="https://img1.imgtp.com/2023/09/18/Bri5vAWy.jpeg" style="width: 30%;" alt="Image 1">
-    <img src="https://img1.imgtp.com/2023/09/18/oPHWRrKy.jpeg" style="width: 30%;" alt="Image 2">
-    <img src="https://img1.imgtp.com/2023/09/18/XDdW1sZu.jpeg" style="width: 30%;" alt="Image 3">
+    <img src="https://s11.ax1x.com/2024/01/11/pFCitaD.jpg" style="width: 30%;" alt="Image 1">
+    <img src="https://s11.ax1x.com/2024/01/11/pFCi8r6.jpg" style="width: 30%;" alt="Image 2">
+    <img src="https://s11.ax1x.com/2024/01/11/pFCiYVO.jpg" style="width: 30%;" alt="Image 3">
 </div>
 
 ## 🛠️ 部署
@@ -58,7 +57,8 @@
 Nginx/Apache  
 PHP8+  
 Composer  
-mysql
+mysql  
+redis(可选)  
 
 #### 2. TP6 安装依赖（发行版跳过）
 
@@ -83,21 +83,18 @@ mysql
 
 #### 模板说明
 
--   <a href="https://docs.lovecards.cn">LoveCards文档🪞</a>
--   <a href="https://lovecards.github.io">LoveCards文档🐱</a>
--   <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API 文档</a>(未完)
+-   <a href="https://docs.lovecards.cn">LoveCards文档镜像🪞</a>(🔥更新中)
+-   <a href="https://lovecards.github.io">LoveCards文档🐱</a>(🔥更新中)
+-   <a href="https://console-docs.apipost.cn/preview/ad83ecdb4f10e38b/e187796270055b7b">API 文档</a>(🔥更新中)
 
 #### 版本号说明  
--   Ver为实际版本号，程序中的“版本检测”将优先或仅以Ver为准
+-   Ver为开发本号，程序中的“版本检测”将优先或仅以Ver为准
 -   VerS为展示版本号，用作发行版的展示
 -   VerS中[A.B.C]  
     当 A 改变意味着 有较低层的代码或架构等存在重大改动  
     当 B 改变意味着 数据库相关有改动  
     当 C 改变意味着 一般逻辑代码有改动
--   Ver中[A.B.C]  
-    A 指的也就是LC2中的2 一般不变  
-    B 可简单对照 VerS中的 A
-    C 可简单对照 VerS中的 B与C的合
+-   Ver一般按照发行版本递增 
 
 ## ⚗️ 技术栈
 

@@ -1,0 +1,78 @@
+{if !$MyInfo['id']}
+<div id="ExampleComponent-Login" class="mdui-dialog" style="max-width: 450px">
+    <div class="mdui-dialog-title">登 入</div>
+    <div class="mdui-dialog-content">
+        <div class="mdui-typo">没有账号？前往<a href="#" onclick="ExampleRegister.open()">注册</a>👉</div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">账户</label>
+            <input id="loginAccount" class="mdui-textfield-input" type="text" />
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">密码</label>
+            <input id="loginPassword" class="mdui-textfield-input" type="password" />
+        </div>
+        <div class="mdui-typo">
+            <div class="mdui-textfield mdui-textfield-floating-label" style="overflow: unset">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" id="loginRememberMe" />
+                    <i class="mdui-checkbox-icon"></i>
+                    同意<a href="#">《用户隐私政策》</a>
+                </label>
+            </div>
+        </div>
+        <div class="mdui-float-right">
+            <button id="Login" class="mdui-btn mdui-color-pink-accent">
+                登 入
+            </button>
+        </div>
+    </div>
+</div>
+<div id="ExampleComponent-Register" class="mdui-dialog" style="max-width: 450px">
+    <div class="mdui-dialog-title">注 册</div>
+    <div class="mdui-dialog-content">
+        <div class="mdui-typo">已有帐号？前往<a href="#" onclick="ExampleLogin.open()">登入</a>👉</div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">邮箱/手机号</label>
+            <input id="registerAccount" class="mdui-textfield-input" type="text" />
+        </div>
+        <div class="mdui-row" id="SendMsgCaptchaDiv">
+            <div class="mdui-col-xs-8">
+                <div class="mdui-textfield mdui-textfield-floating-label">
+                    <label class="mdui-textfield-label">验证码</label>
+                    <input id="registerCode" class="mdui-textfield-input" type="text" />
+                </div>
+            </div>
+            <div class="mdui-col-xs-4">
+                <div class="mdui-valign">
+                    <button id="SendMsgCaptcha" style="margin-top: 42px; width: 100%;"
+                        class="mdui-btn mdui-color-pink-accent">
+                        验证码
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">密码</label>
+            <input id="registerPassword" class="mdui-textfield-input" type="password" />
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label">
+            <label class="mdui-textfield-label">重复密码</label>
+            <input id="registerRepassword" class="mdui-textfield-input" type="password" />
+        </div>
+        <div class="mdui-typo">
+            <div class="mdui-textfield mdui-textfield-floating-label" style="overflow: unset">
+                <label class="mdui-checkbox">
+                    <input type="checkbox" id="registerRememberMe" />
+                    <i class="mdui-checkbox-icon"></i>
+                    同意<a href="#">《用户隐私政策》</a>
+                </label>
+            </div>
+        </div>
+        <div class="mdui-float-right">
+            <button id="Register" class="mdui-btn mdui-color-pink-accent">
+                注 册
+            </button>
+        </div>
+    </div>
+</div>
+{/if}

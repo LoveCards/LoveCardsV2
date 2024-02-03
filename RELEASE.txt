@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### 🆕发行版本2.2.1，开发版本16
 ### 👉前往LoveCards Forum查看更新内容
 [https://forum.lovecards.cn/d/51](https://forum.lovecards.cn/d/51)
@@ -5,3 +6,12 @@
 ### 🆕Release version 2.2.1, 16 development version
 ### 👉To LoveCards Forum to check the update content
 [https://forum.lovecards.cn/d/51](https://forum.lovecards.cn/d/51)
+=======
+### 🆕发行版本2.3.0，开发版本17
+### 👉前往LoveCards Forum查看更新内容
+[https://forum.lovecards.cn/d/54](https://forum.lovecards.cn/d/54)
+
+### 🆕Release version 2.3.0, 17 development version
+### 👉To LoveCards Forum to check the update content
+[https://forum.lovecards.cn/d/54](https://forum.lovecards.cn/d/54)
+>>>>>>> dev

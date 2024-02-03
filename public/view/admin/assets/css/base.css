@@ -1,0 +1,209 @@
+/* 顶部导航栏样式 */
+.css-tab {
+    /* border-bottom-right-radius: 30%;
+    border-bottom-left-radius: 30%; */
+}
+
+/* 卡页面样式 */
+.css-cardsList-img {
+    cursor: pointer;
+    Background-color: #0000000a;
+    height: 240px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-radius: 6.6666px;
+}
+
+/* 写卡页面样式 */
+.css-cardsAdd-img {
+    Background-color: #0000000a;
+    height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-radius: 6.6666px;
+}
+
+.mdui-cardAdd-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+}
+
+/* 全局样式 */
+
+.mdui-btn:not(.mdui-btn-icon) {
+    border-radius: 6.6666px;
+}
+
+.mdui-dialog {
+    border-radius: 6.6666px;
+}
+
+.mdui-menu {
+    border-radius: 6.6666px;
+}
+
+/* .mdui-table-fluid {
+    border-radius: 6.6666px;
+} */
+
+.mdui-collapse-item .mdui-list-item.mdui-ripple {
+    border-radius: 6.6666px !important;
+}
+
+.mdui-list .mdui-list-item.mdui-ripple{
+    border-radius: 6.6666px !important;
+}
+
+/* 卡片样式 */
+.mdui-card {
+    border-radius: 6.6666px;
+}
+
+.css-cards-img {
+    /* height: 280px; */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-radius: 6.6666px;
+    z-index: 2;
+}
+
+.css-cards-img-loading {
+    float: right;
+    margin-top: -40px;
+    margin-right: 20px;
+    z-index: 0;
+}
+
+.css-caard-header-title {
+    display: block;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    opacity: .87;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 700;
+}
+
+.css-caard-header-subtite {
+    display: block;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    opacity: .54;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 700;
+}
+
+.css-caard-header-subtite-liulan {
+    font-size: 6px;
+    float: right !important;
+}
+
+.css-caard-header-btn-round {
+    border-radius: 16%;
+}
+
+.css-cards-primary-subtitle {
+    display: block;
+    font-size: 14px;
+    line-height: 24px;
+    /* opacity: .54; */
+    font-weight: 700;
+}
+
+.css-cards-primary-content {
+    position: relative;
+    font-size: 14px;
+    line-height: 24px;
+    /* font-weight: 700;    */
+}
+
+.css-card-actions-good-0 {
+    opacity: .54;
+    font-weight: 700;
+    color: #ff4081;
+}
+
+.css-card-actions-good-1 {
+    /* opacity: .54; */
+    font-weight: 700;
+    color: #ff4081;
+}
+
+.css-card-actions-btn {
+    /* opacity: .54; */
+    font-weight: 700;
+}
+
+/* 评论列表样式 */
+.css-list-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    min-height: 48px;
+    padding: 0 16px;
+    text-decoration: none;
+    /* cursor: pointer; */
+    -webkit-transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
+    transition: background-color .3s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* mdui原样式覆盖 */
+.mdui-table {
+    white-space: nowrap;
+}
+
+/* 主题配色 */
+/* .mdui-theme-primary-yuebai .mdui-text-color-theme {
+    color: #d4e5ef!important
+}
+
+.mdui-theme-accent-xiaohong .mdui-color-theme-accent {
+    background-color: #e67762!important;
+    color: #fff!important
+} */
+
+/* 图标 */
+/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+/* @font-face {
+    font-family: 'iconfont';
+    src: url('//at.alicdn.com/t/c/font_3815034_n1d5wmsz1b.woff2?t=1679390830185') format('woff2'),
+        url('//at.alicdn.com/t/c/font_3815034_n1d5wmsz1b.woff?t=1679390830185') format('woff'),
+        url('//at.alicdn.com/t/c/font_3815034_n1d5wmsz1b.ttf?t=1679390830185') format('truetype');
+} */
+@font-face {
+    font-family: 'iconfont';
+    src: url('icon/iconfont.woff2?t=1694322651073') format('woff2'),
+        url('icon/iconfont.woff?t=1694322651073') format('woff'),
+        url('icon/iconfont.ttf?t=1694322651073') format('truetype');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 24px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-heart-pulse:before {
+    content: "\e79c";
+}
+
+.css-icon {
+    font-size: 48px;
+}

@@ -1,0 +1,243 @@
+{include file="public/header"}
+<!-- 页体 -->
+<div class="mdui-container">
+
+    <!-- 标题组件 -->
+    <div class="mdui-row">
+        <div class="mdui-col-xs-6">
+            <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}-ID{$CardData['id']}</h1>
+        </div>
+        <div class="mdui-col-xs-6">
+            <button class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple"
+                onclick="javascript :history.back(-1);">返回管理</button>
+        </div>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-card mdui-p-a-2">
+
+        <label class="mdui-textfield-label">标签</label>
+        <button id="btnChooseTagAdd" class="mdui-btn mdui-btn-icon mdui-ripple"
+            mdui-dialog="{target: '#dialogChooseTag'}">
+            <i class="mdui-icon material-icons">add</i>
+        </button>
+        <!-- 弹窗组件 -->
+        <div class="mdui-dialog" id="dialogChooseTag">
+            <div class="mdui-dialog-title">选择标签</div>
+            <div class="mdui-dialog-content" style="color: unset; font-size: unset; line-height: unset;">
+                <div class="mdui-row-xs-2 mdui-row-sm-4">
+                    {volist name="TagsList" id="data"}
+                    <div class="mdui-col">
+                        <label class="mdui-checkbox">
+                            <input type="checkbox" value="{$data.id}" name="inputChooseTag" />
+                            <i class="mdui-checkbox-icon"></i>
+                            {$data.name}
+                        </label>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+
+            <div class="mdui-dialog-actions">
+                <button class="mdui-btn mdui-ripple" id="btnChooseTag" mdui-dialog-close>确定</button>
+            </div>
+        </div>
+
+        <div class="mdui-row">
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">UID</label>
+                    <input class="mdui-textfield-input" type="text" value="{$CardData['uid']}" id="uid" disabled />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">发布时间</label>
+                    <input class="mdui-textfield-input" type="text" value="{$CardData['time']}" disabled />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">发布IP</label>
+                    <input class="mdui-textfield-input" type="text" value="{$CardData['ip']}" disabled />
+                </div>
+            </div>
+            <div class="mdui-col-xs-4 mdui-col-md-2">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">模型</label>
+                    <select class="mdui-select" style="width: 100%;" id="model">
+                        <option value="0" {if $CardData['model']==0}selected{/if}>0:表白卡</option>
+                        <option value="1" {if $CardData['model']==1}selected{/if}>1:交流卡</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mdui-col-xs-4 mdui-col-md-2">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">置顶状态</label>
+                    <select class="mdui-select" style="width: 100%;" id="top">
+                        <option value="0" {if $CardData['top']==0}selected{/if}>关闭</option>
+                        <option value="1" {if $CardData['top']==1}selected{/if}>置顶</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mdui-col-xs-4 mdui-col-md-2">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">封禁状态</label>
+                    <select class="mdui-select" style="width: 100%;" id="status">
+                        <option value="0" {if $CardData['status']==0}selected{/if}>正常</option>
+                        <option value="1" {if $CardData['status']==1}selected{/if}>封禁</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mdui-col-xs-6 mdui-col-md-3">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">点赞数</label>
+                    <input class="mdui-textfield-input" id="good" type="text" value="{$CardData['good']}" disabled />
+                </div>
+            </div>
+            <div class="mdui-col-xs-6 mdui-col-md-3">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">浏览量</label>
+                    <input class="mdui-textfield-input" id="look" type="text" value="{$CardData['look']}" disabled />
+                </div>
+            </div>
+        </div>
+
+        <div class="mdui-row">
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">姓名</label>
+                    <input class="mdui-textfield-input" id="woName" type="text" value="{$CardData['woName']}" />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">联系方式</label>
+                    <input class="mdui-textfield-input" id="woContact" type="text" value="{$CardData['woContact']}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="mdui-row">
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">TA的姓名*</label>
+                    <input class="mdui-textfield-input" id="taName" type="text" value="{$CardData['taName']}" />
+                </div>
+            </div>
+            <div class="mdui-col-xs-12 mdui-col-md-6">
+                <div class="mdui-textfield">
+                    <label class="mdui-textfield-label">TA的联系方式</label>
+                    <input class="mdui-textfield-input" id="taContact" type="text" value="{$CardData['taContact']}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="mdui-textfield">
+            <label class="mdui-textfield-label">表白内容*</label>
+            <textarea class="mdui-textfield-input" id="content" rows="4">{$CardData['content']}</textarea>
+        </div>
+
+        <div class="mdui-textfield">
+            <div id="listImageUrl" class="mdui-row-xs-2 mdui-row-sm-3">
+                <!-- 图片容器 -->
+                {volist name='CardImgList' id='data'}
+                <div class="mdui-col mdui-p-b-1">
+                    <div class="mdui-grid-tile">
+                        <div class="css-cardsAdd-img">
+                            <img class="js-url-UpdataImage" src="{$data.url}">
+                            <div class="mdui-cardAdd-menu">
+                                <button class="mdui-btn mdui-btn-icon js-btn-delete-UrlUpdataImage">
+                                    <i class="mdui-icon material-icons" style="padding:unset;">clear</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <button class="mdui-btn mdui-btn-block mdui-text-color-theme-accent mdui-ripple"
+                mdui-dialog="{target: '#dialogUploadImage'}">添加图片</button>
+            <!-- 弹窗组件 -->
+            <div class="mdui-dialog" id="dialogUploadImage">
+                <div class="mdui-dialog-title">上传图片</div>
+                <div class="mdui-dialog-content">
+                    <div class="mdui-row">
+                        <div class="mdui-col-xs-12 mdui-col-sm-10">
+                            <div class="mdui-textfield">
+                                <input class="mdui-textfield-input" id="urlUpdataImage" type="text"
+                                    placeholder="http://">
+                                <div class="mdui-textfield-helper">最大支持上传2M图片*9</div>
+                            </div>
+                        </div>
+                        <div class="mdui-col-xs-12 mdui-col-sm-2 mdui-text-center mdui-float-right">
+                            <label id="btnUploadImage"
+                                class="mdui-m-y-2 mdui-btn mdui-color-theme-accent mdui-btn-block">
+                                <span>上 传</span>
+                                <input id="dataUpdataImage" type="file" style="display: none;" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-dialog-actions">
+                    <button class="mdui-btn mdui-ripple" id="btnUpdataImgUrl" mdui-dialog-close>添加</button>
+                </div>
+            </div>
+        </div>
+
+        <!--提交按钮-->
+        <button id="submitAdd"
+            class="mdui-m-t-4 mdui-float-right mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple">提交</button>
+
+    </div>
+
+</div>
+{include file="public/footer"}
+<script src="{__A-assets__}/js/cardsEdit.js"></script>
+<script>
+
+    //实例化
+    let EditEntity = new Edit();
+
+    //初始化-Tag组件
+    InitialChooseTagAdd('{$CardData["tag"]|raw}');
+
+    $(function () {
+        const getData = () => {
+            //构建图片url数组并获取
+            let jsonImageUrl = [];
+            $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
+                jsonImageUrl.push($(this).attr('src'));
+            });
+            let img = JSON.stringify(jsonImageUrl);
+            let tag = JSON.stringify(checkChooseTagId);
+
+            let data = {
+                'id': "{$CardData['id']}",
+                'uid': $('#uid').val(),
+                'top': $('#top').val(),
+                'status': $('#status').val(),
+                'model': $('#model').val(),
+                'good': $('#good').val(),
+                'content': $('#content').val(),
+                'look': $('#look').val(),
+                'woName': $('#woName').val(),
+                'taName': $('#taName').val(),
+                'woContact': $('#woContact').val(),
+                'taContact': $('#taContact').val(),
+                'model': $('#model').val(),
+                'tag': tag,
+                'img': img,
+            };
+            return data;
+        }
+
+        //绑定编辑按钮
+        $('#submitAdd').click(() => {
+            EditEntity.PostEdit(getData());
+        })
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{$ViewTitle} - {$LCVersionInfo['Name']}</title>
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <link rel="shortcut icon" href="{__A-assets__}/img/favicon.ico">
+    <link rel="stylesheet" href="{__A-assets__}/lib/mdui-v1.0.2/css/mdui.min.css" />
+    <link rel="stylesheet" href="{__A-assets__}/css/base.css" />
+</head>
+
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-indigo mdui-theme-layout-light mdui-theme-accent-pink">
+
+    <!-- 顶栏 -->
+    <header class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <a href="#" class="mdui-typo-headline">{$LCVersionInfo['Name']}</a>
+            <div class="mdui-toolbar-spacer"></div>
+
+        </div>
+    </header>
+
+    <!-- 侧栏 -->
+
+
+    <!-- 页体 -->
+    <div class="mdui-container">
+        <h1 class="mdui-text-color-theme mdui-p-t-2">{$ViewTitle}</h1>
+
+        <!-- 框架层 -->
+        <div class="mdui-col-offset-md-3">
+            <div class="mdui-card 
+                        mdui-col-xs-12
+                        mdui-col-md-8
+                        mdui-p-y-3
+                        mdui-p-x-3
+                        mdui-m-b-2">
+
+                <!-- 组件层 -->
+                <div class="mdui-p-b-5">
+                    <!--"账号"输入框-->
+                    <div class="mdui-textfield mdui-textfield-floating-label">
+                        <i class="mdui-icon material-icons">&#xe853;</i>
+                        <label class="mdui-textfield-label">用户名</label>
+                        <input class="mdui-textfield-input" type="text" id="userName" />
+                    </div>
+                    <!--"密码"输入框-->
+                    <div class="mdui-textfield mdui-textfield-floating-label">
+
+                        <i class="mdui-icon material-icons">&#xe898;</i>
+                        <label class="mdui-textfield-label">密码</label>
+                        <input class="mdui-textfield-input" type="password" id="password" />
+                    </div>
+                </div>
+
+                <!-- 组件层 -->
+                <div class="mdui-p-b-3">
+                    <button id="submitLogin" type="button"
+                        class="mdui-btn-block mdui-color-theme-accent mdui-btn mdui-ripple">
+                        登 录
+                    </button>
+                </div>
+
+                <!-- 组件层 -->
+                <div class="mdui-divider"></div>
+
+                <!-- 组件层 -->
+                <div class="mdui-typo-caption mdui-text-color-black-disabled mdui-p-t-1 mdui-typo">
+                    <!--废话 <kbd>Ver-{$LCVersionInfo['VerS']}-{$LCVersionInfo['Ver']}</kbd> -->
+                    <p>本站由<a href="{$LCVersionInfo['Url']}" target="_blank"
+                            class="mdui-text-color-pink">{$LCVersionInfo['Name']}</a>强力驱动</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 140px">
+    </div>
+    <script src="{__A-assets__}/lib/jquery-3.6.0/jquery.min.js"></script>
+    <script src="{__A-assets__}/lib/mdui-v1.0.2/js/mdui.min.js"></script>
+    <script src="{__A-assets__}/lib/jquery_lazyload-1.9.7/jquery.lazyload.js"></script>
+    <script src="{__A-assets__}/lib/jquery-cookie-1.4.1/jquery.cookie.min.js"></script>
+    {if $SystemConfig.class.geetest.DefSetValidatesStatus == 1}
+    <script src="https://static.geetest.com/v4/gt4.js"></script>
+    {/if}
+    <script src="{__A-assets__}/lib/axios-1.5.0/axios.min.js"></script>
+    <script src="{__A-assets__}/js/Base.js"></script>
+    <script src="{__A-assets__}/js/AdminCommon.js"></script>
+    <script src="/view/admin/app/auth/Login.js"></script>
+    <script>
+        //实例化
+        let LoginEntity = new Login();
+
+        $(function () {
+            //绑定方法
+            LoginEntity.ThemeInit().then(()=>{
+                LoginEntity.BindLogin('submitLogin', 'userName', 'password');
+            });
+        })
+    </script>
+</body>
+
+</html>

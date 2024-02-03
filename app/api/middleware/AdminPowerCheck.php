@@ -2,7 +2,7 @@
 
 namespace app\api\middleware;
 
-use app\api\middleware\CheckClass;
+use app\common\CheckClass;
 
 class AdminPowerCheck extends CheckClass
 {
@@ -14,8 +14,7 @@ class AdminPowerCheck extends CheckClass
             return $var_t_def_result;
         }
         //传递当前管理员全部数据
-        $tDef_Request->attrLDefAdminAllData = $this->attrLDefAdminAllData;
-
+        $tDef_Request->NowAdminData = $this->attrLDefAdminAllData;
 
         //实现AdminPower鉴权
         $var_t_def_result = $this->mObjectEasyVerifyPower();
