@@ -1,0 +1,175 @@
+{include file="public/header" ViewTitle="$HotCardList.ViewTitle"}
+
+<!-- 页体 -->
+<div id="jsParameter" jsPageHierarchy=0 jsTabClass="0" class="mdui-container">
+    <!-- 顶部按钮组件 -->
+    <div class="mdui-p-t-2">
+        <button
+            class="mdui-btn mdui-btn-block mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-ripple mdui-btn-raised"
+            onclick="jumpUrl('/index/cards/add',0)">发布卡片</button>
+    </div>
+
+    <!-- 主体组件 -->
+    <div class="mdui-p-t-2">
+
+        <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3 mdui-row-lg-3">
+
+            {if $ThemeConfig['ThemeNotify']}
+            <!-- 公告 -->
+            <div class="mdui-col mdui-m-b-2">
+                <a href="/theme/index/index.html"></a>
+                <div class="mdui-card">
+                    <!-- 卡片头部，包含头像、标题、副标题 -->
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                            {$ThemeConfig['ThemeNotifyTitle']}
+                            <!-- <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i> -->
+                        </div>
+                    </div>
+                    <div style="z-index: 1;" class="mdui-card-media mdui-p-t-1">
+                        <div class="css-cards-img mdui-m-x-1">
+                            <img data-original="{$ThemeConfig.ThemeNotifyUrl}">
+                        </div>
+                    </div>
+                    <!-- 卡片的内容 -->
+                    <div class="mdui-p-a-2 mdui-typo">
+                        <div class="mdui-p-t-1 css-cards-primary-content" value="11" style="cursor:pointer;">
+                            {$ThemeConfig['ThemeNotifyContent']|raw}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/if}
+
+            <!-- TOP 卡片循环 -->
+            {volist name='HotCardList.CardList' id='D'}
+            <div class="mdui-col mdui-m-b-2">
+                <a href="{__ThemeUrlPath__}/index.html"></a>
+                <div class="mdui-card">
+                    <!-- 卡片头部，包含头像、标题、副标题 -->
+                    {if $D['model'] == 0}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $D['woName']}
+                        <div
+                            class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                            {$D['woName']}的表白卡
+                            <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
+                            {if $D['top']}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$D['woName']} 表白 {$D['taName']}
+                            <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
+                        </div>
+                        {else}
+                        <div
+                            class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                            匿名的表白卡
+                            <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
+                            {if $D['top']}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                        </div>
+                        <div class="css-caard-header-subtite">表白 {$D['taName']}
+                            <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
+                        </div>
+                        {/if}
+                    </div>
+                    {else}
+                    <div class="mdui-p-t-2 mdui-p-x-2">
+                        {if $D['woName']}
+                        <div
+                            class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                            {$D['woName']}的交流卡
+                            <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
+                            {if $D['top']}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                            <i class="mdui-icon material-icons mdui-float-right">face</i>
+                        </div>
+                        <div class="css-caard-header-subtite">{$D['woName']} {if $D['taName']}对 {$D['taName']}{/if} 说
+                            <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
+                        </div>
+                        {else}
+                        <div
+                            class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                            匿名的交流卡
+                            <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
+                            {if $D['top']}
+                            <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i>
+                            {/if}
+                        </div>
+                        <div class="css-caard-header-subtite">{if $D['taName']}对 {$D['taName']}{/if} 说
+                            <span class="css-caard-header-subtite-liulan">浏览{$D['look']}</span>
+                        </div>
+                        {/if}
+                    </div>
+                    {/if}
+
+                    {if $D['img']}
+                    <div style="z-index: 1;" class="mdui-card-media mdui-p-t-2">
+                        <div class="css-cards-img mdui-m-x-1">
+                            <img data-original="{$D.img}" class="js-jumpurl-cardId" value="{$D.id}" />
+                        </div>
+                    </div>
+                    <div class="css-cards-img-loading mdui-spinner"></div>
+                    {/if}
+
+                    <!-- 卡片的内容 -->
+                    <div class="mdui-p-a-2 mdui-typo">
+                        {if $D['tag']}
+                        <div class="css-cards-primary-subtitle" value={$D.tag|raw}>
+                            <!-- Tag标签 -->
+                        </div>
+                        {/if}
+                        <div class="js-jumpurl-cardId mdui-p-t-1 css-cards-primary-content" value="{$D.id}">
+                            {$D['content']}
+                        </div>
+                    </div>
+
+                    <!-- 卡片的按钮 -->
+                    <div class="mdui-card-actions">
+                        <button class="js-jumpurl-cardId css-card-actions-btn mdui-btn mdui-float-left" value="{$D.id}">
+                            <i class="mdui-icon material-icons">insert_comment</i>评论{$D['comments']}
+                        </button>
+
+                        {if $D['ipGood'] == false}
+                        <button value="{$D.id}"
+                            class="js-Btn-Update-CardsGood css-card-actions-good-0 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$D['good']}
+                        </button>
+                        {else}
+                        <button class="css-card-actions-good-1 mdui-btn mdui-float-right">
+                            <i class="mdui-icon material-icons">favorite</i>点赞{$D['good']}
+                        </button>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            {/volist}
+            <!-- 分享弹窗 -->
+            {include file="public/share"}
+        </div>
+    </div>
+
+</div>
+
+
+{include file="public/footer"}
+
+<script>
+    $(function () {
+        //获取Tag数据
+        ViewCardsTag('{$CardsTagsListJson|raw}');
+
+        //悬浮按钮
+        $('#jsBtnGreen').click(function () {
+            jumpUrl('/index/cards/add', 0);
+        })
+    })
+</script>
+
+</body>
+
+</html>
