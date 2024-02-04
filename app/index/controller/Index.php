@@ -75,10 +75,7 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
-<<<<<<< HEAD
-=======
             View::assign('LCVersionInfo', Common::mArrayGetLCVersionInfo());
->>>>>>> dev
             View::config(['view_path' => './view/']);
             return View::fetch('error/404');
         } else {

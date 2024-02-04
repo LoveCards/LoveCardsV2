@@ -29,13 +29,8 @@ class Common
         return [
             'Name' => 'LoveCards',
             'Url' => '//lovecards.cn',
-<<<<<<< HEAD
-            'VerS' => '2.2.1',
-            'Ver' => '16',
-=======
             'VerS' => '2.3.0',
             'Ver' => '17',
->>>>>>> dev
             'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
             'InstallEnvironment' => [
