@@ -9,6 +9,6 @@ return [
         'UserImageExt' => env('master.UploadUserImageSize', 'jpg,png,gif,webp'),
     ],
     'UserAuth' => [
-        'Captcha' => env('master.UserAuthCaptcha', true),
+        'Captcha' => env('master.UserAuthCaptcha', false),
     ]
 ];

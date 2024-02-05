@@ -54,18 +54,19 @@ class System
     public function Email()
     {
         $lReq_Params = [
-            'driver' => Request::param('driver'),
-            'host' => Request::param('host'),
-            'port' => Request::param('port'),
-            'addr' => Request::param('addr'),
-            'pass' => Request::param('pass'),
-            'name' => Request::param('name'),
-            'security' => Request::param('security')
+            'driver' => ['value' => Request::param('driver'), 'free' => false],
+            'host' => ['value' => Request::param('host'), 'free' => false],
+            'port' => ['value' => Request::param('port'), 'free' => true],
+            'addr' => ['value' => Request::param('addr'), 'free' => false],
+            'pass' => ['value' => Request::param('pass'), 'free' => false],
+            'name' => ['value' => Request::param('name'), 'free' => false],
+            'security' => ['value' => Request::param('security'), 'free' => false],
         ];
 
-        $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+        //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+        //dd($lReq_Params);
         //更新数据
-        $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params);
+        $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params, 'auto');
 
         if ($tDef_Result) {
             return Export::Create(null, 200);
@@ -89,7 +90,7 @@ class System
             'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
             'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
         ];
-        $lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+        //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
 
         //更新数据
         $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
