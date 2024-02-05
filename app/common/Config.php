@@ -121,10 +121,11 @@ class Config
         }
 
         //写入并返回结果
-        if (!file_put_contents($filename, $str_file)) {
-            return false;
-        } else {
+        try {
+            file_put_contents($filename, $str_file);
             return true;
+        } catch (\Throwable $th) {
+            return false;
         }
     }
 }
