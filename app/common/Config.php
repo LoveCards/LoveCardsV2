@@ -104,7 +104,7 @@ class Config
                 }
             } elseif ($free === 'auto') {
                 //自动构建正则匹配
-                if ($value['free'] === true) {
+                if ($value['free'] == true) {
                     if (preg_match($freePattern, $str_file)) {
                         $str_file = preg_replace($freePattern, "env('" . $env . "." . $key . "', " . $value['value'] . ")", $str_file);
                     }

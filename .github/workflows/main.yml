@@ -38,7 +38,7 @@ jobs:
 
             - name: ❌删除非必要文件
               run: |
-                  rm -rf .gitignore .github .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env think
+                  rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
               run: zip -r LoveCards-v2.3.0.zip ./  # 记得修改
