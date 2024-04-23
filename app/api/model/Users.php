@@ -147,7 +147,7 @@ class Users extends Model
     }
 
     /**
-     * Undocumented function
+     * 读取指定ID行
      *
      * @param int $id
      * @param array $without
