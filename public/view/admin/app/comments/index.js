@@ -74,7 +74,7 @@ class Index extends Base {
             'content': content,
             'status': status
         };
-        this.RequestApiUrl('post', 'CoomentsEdit', 'PostEdit', data);
+        this.RequestApiUrl('post', 'CommentsEdit', 'PostEdit', data);
     }
 
     /**
@@ -89,6 +89,6 @@ class Index extends Base {
         var data = {
             'id': id
         };
-        this.RequestApiUrl('post', 'CoomentsDelete', 'PostDelete', data);
+        this.RequestApiUrl('post', 'CommentsDelete', 'PostDelete', data);
     }
 }
