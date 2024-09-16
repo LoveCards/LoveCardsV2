@@ -3,7 +3,7 @@ const BaseEntity = new Base();
 const MyCards = {
     data() {
         return {
-            theme: {},
+            theme: { config: { ThemePrimaryDepth: {} } },
             cards: {},
         }
     },
@@ -13,6 +13,9 @@ const MyCards = {
         mdui.mutation();
     },
     methods: {
+        goCard(id) {
+            BaseEntity.JumpUrl('/index/Cards/card/id/' + id);
+        },
         previousPage() {
             if (this.cards.current_page == 1) {
                 return;
@@ -76,7 +79,7 @@ const MyCards = {
 
                     <div v-if="item.img">
                         <div style="z-index: 1;" class="mdui-card-media mdui-p-t-2">
-                            <div class="css-cards-img mdui-m-x-1">
+                            <div class="css-cards-img mdui-m-x-1" style="cursor:pointer;" @click='goCard(item.id)'>
                                 <img :src="item.img" />
                             </div>
                         </div>
@@ -85,7 +88,7 @@ const MyCards = {
 
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
-                        <div class="mdui-p-t-1 css-cards-primary-content">
+                        <div class="mdui-p-t-1 css-cards-primary-content" style="cursor:pointer;" @click='goCard(item.id)'>
                             {{item.content}}
                         </div>
                     </div>
