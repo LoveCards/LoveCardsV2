@@ -39,6 +39,9 @@ Route::group('', function () {
 
     Route::patch('user', 'user.info/Patch');
     Route::get('user', 'user.info/Get');
+
+    Route::get('cards', 'Cards/List');
+    Route::delete('cards', 'Cards/Delete');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权

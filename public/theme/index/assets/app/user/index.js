@@ -1,3 +1,9 @@
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2024-09-16 20:57:24
+ * @Email: 2903074366@qq.com
+ */
 const { createApp } = Vue;
 import router from './router/router.js';
 
@@ -18,13 +24,13 @@ const app = createApp({
         CommonEntity.CookieMsgHandling();
     },
     methods: {
-        getThemeConfig() {
-            CommonEntity.RequestApiUrl('get', 'ThemeConfig', undefined, [], 'UserTokenName').then((req) => {
-                this.theme = req.data;
-            }).catch((err) => {
-                BaseEntity.commonFunctions.snackbar('主题配置获取失败，请刷新页面后再试！');
-            })
-        },
+        // getThemeConfig() {
+        //     CommonEntity.RequestApiUrl('get', 'ThemeConfig', undefined, [], 'UserTokenName').then((req) => {
+        //         this.theme = req.data;
+        //     }).catch((err) => {
+        //         BaseEntity.commonFunctions.snackbar('主题配置获取失败，请刷新页面后再试！');
+        //     })
+        // },
         postLogout() {
             BaseEntity.RequestApiUrl('post', 'UserAuthLogout', {
                 inti: () => { },

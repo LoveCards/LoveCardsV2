@@ -48,6 +48,7 @@ class Base {
             SystemTemplateSet: '/api/system/TemplateSet',//主题配置
             SystemGeetest: '/api/system/geetest',//验证码设置
 
+            Cards: '/api/cards',
             CardsAdd: '/api/cards/add',//添加卡片
             CardsEdit: '/api/cards/edit',//编辑卡片
             CardsDelete: '/api/cards/delete',//删除卡片
