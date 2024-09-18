@@ -2,7 +2,7 @@
 import MyInfo from "../components/MyInfo.js";
 import MyCards from "../components/MyCards.js";
 import MyComments from "../components/MyComments.js";
-// import MyLikes from "../components/MyLikes.js";
+import MyLikes from "../components/MyLikes.js";
 
 // 2. 定义一些路由
 const routes = [
@@ -27,13 +27,13 @@ const routes = [
             title: '我的评论'
         },
     },
-    // {
-    //     path: '/my-liks',
-    //     component: MyLikes,
-    //     meta: {
-    //         title: '我的喜欢'
-    //     },
-    // },
+    {
+        path: '/my-likes',
+        component: MyLikes,
+        meta: {
+            title: '我的喜欢'
+        },
+    },
 ]
 
 export default routes;
