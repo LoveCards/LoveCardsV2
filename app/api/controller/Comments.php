@@ -2,6 +2,7 @@
 
 namespace app\api\controller;
 
+use app\api\service\Comments as CommentsService;
 use think\facade\Db;
 use think\facade\Request;
 use think\exception\ValidateException;
@@ -14,6 +15,29 @@ use app\common\Export;
 
 class Comments extends Common
 {
+
+    //列表
+    public function List()
+    {
+        try {
+            $result = CommentsService::list();
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
+        }
+        return Export::Create($result);
+    }
+
+    //删除
+    public function DeleteNew()
+    {
+        try {
+            CommentsService::updata(['status' => 1], ['id' => Request::param('id')]);
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
+        }
+        return Export::Create([]);
+    }
+
     protected function CAndU($id, $data, $method)
     {
         // 获取数据

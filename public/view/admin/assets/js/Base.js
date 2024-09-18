@@ -59,6 +59,7 @@ class Base {
             TagsEdit: '/api/tags/edit',//编辑标签
             TagsDelete: '/api/tags/delete',//删除标签
 
+            Comments: '/api/comments',//编辑评论
             CommentsAdd: '/api/comments/add',//编辑评论
             CommentsEdit: '/api/comments/edit',//编辑评论
             CommentsDelete: '/api/comments/delete',//删除评论

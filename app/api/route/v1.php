@@ -41,7 +41,10 @@ Route::group('', function () {
     Route::get('user', 'user.info/Get');
 
     Route::get('cards', 'Cards/List');
-    Route::delete('cards', 'Cards/Delete');
+    Route::delete('cards', 'Cards/DeleteNew');
+
+    Route::get('comments', 'Comments/List');
+    Route::delete('comments', 'Comments/DeleteNew');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权
