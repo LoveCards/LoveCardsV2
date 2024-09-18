@@ -55,6 +55,8 @@ class Base {
             CardsSetting: '/api/cards/setting',//模块设置
             CardsGood: '/api/cards/good',//点赞
 
+            Likes: '/api/Likes',
+
             TagsAdd: '/api/tags/add',//添加标签
             TagsEdit: '/api/tags/edit',//编辑标签
             TagsDelete: '/api/tags/delete',//删除标签

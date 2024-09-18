@@ -45,6 +45,9 @@ Route::group('', function () {
 
     Route::get('comments', 'Comments/List');
     Route::delete('comments', 'Comments/DeleteNew');
+
+    Route::get('likes', 'Likes/List');
+    Route::delete('likes', 'Likes/Delete');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权
