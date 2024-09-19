@@ -196,7 +196,7 @@ class Base {
      * @returns 
      */
     DeleteToken = (tokenName) => {
-        if (this.DeleteCookie(this.config.token[tokenName], { path: '/' })) {
+        if (this.DeleteCookie(this.config.token[tokenName])) {
             return true;
         }
         return false;
