@@ -52,6 +52,22 @@ const MyCards = {
             });
         }
     },
+    watch: {
+        likes() {
+            this.$nextTick(() => {
+                const grid = document.querySelector('.mdui-row-xs-1');
+                //console.log(grid.innerHTML);
+                
+                if (grid) {
+                    new Masonry(grid, {
+                        itemSelector: '.mdui-col',
+                        columnWidth: '.mdui-col',
+                        percentPosition: true
+                    });
+                }
+            });
+        }
+    },
     template: `
         <div class="mdui-card mdui-m-b-2">
             <div class="mdui-p-a-2">
