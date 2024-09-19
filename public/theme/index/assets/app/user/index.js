@@ -1,9 +1,3 @@
-/*
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2024-09-16 20:57:24
- * @Email: 2903074366@qq.com
- */
 const { createApp } = Vue;
 import router from './router/router.js';
 
@@ -22,6 +16,9 @@ const app = createApp({
     created() {
         //CookieMsg处理
         CommonEntity.CookieMsgHandling();
+    },
+    mount() {
+        this.initMasonry();
     },
     methods: {
         // getThemeConfig() {

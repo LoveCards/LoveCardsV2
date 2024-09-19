@@ -10,7 +10,7 @@ const MyLikes = {
     created() {
         this.getThemeConfig();
         this.getLikes();
-        mdui.mutation();
+        // mdui.mutation();
     },
     methods: {
         // goCard(id) {
@@ -49,6 +49,22 @@ const MyLikes = {
                 this.likes.data[index].ip = '';
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
+            });
+        },
+    },
+    watch: {
+        likes() {
+            this.$nextTick(() => {
+                const grid = document.querySelector('.mdui-row-xs-1');
+                //console.log(grid.innerHTML);
+                
+                if (grid) {
+                    new Masonry(grid, {
+                        itemSelector: '.mdui-col',
+                        columnWidth: '.mdui-col',
+                        percentPosition: true
+                    });
+                }
             });
         }
     },
@@ -96,7 +112,7 @@ const MyLikes = {
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
                         <button class="mdui-btn mdui-float-right" @click="deleteLikes(index)" :disabled="!item.ip">
-                            <i class="mdui-icon material-icons">favorite</i> {{item.ip == 1?'已取消':'取消喜欢'}}
+                            <i class="mdui-icon material-icons">favorite</i> {{item.ip?'取消喜欢':'已取消'}}
                         </button>
                     </div>
                 </div>
@@ -111,7 +127,7 @@ const MyLikes = {
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
                         <button class="mdui-btn mdui-float-right" @click="deleteLikes(index)" :disabled="!item.ip">
-                            <i class="mdui-icon material-icons">favorite</i> {{item.ip == 1?'已取消':'取消喜欢'}}
+                            <i class="mdui-icon material-icons">favorite</i> {{item.ip?'取消喜欢':'已取消'}}
                         </button>
                     </div>
                 </div>
