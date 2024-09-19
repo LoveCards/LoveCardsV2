@@ -57,7 +57,7 @@ const MyLikes = {
             this.$nextTick(() => {
                 const grid = document.querySelector('.mdui-row-xs-1');
                 //console.log(grid.innerHTML);
-                
+
                 if (grid) {
                     new Masonry(grid, {
                         itemSelector: '.mdui-col',
@@ -119,9 +119,7 @@ const MyLikes = {
                 <div class="mdui-card" v-if="!item.card">
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
-                        <div class="mdui-p-t-1 css-likes-primary-content" style="cursor:pointer;">
-                            已失效
-                        </div>
+                        <div class="mdui-typo-headline-opacity mdui-text-center">已失效</div>
                     </div>
 
                     <!-- 卡片的按钮 -->
