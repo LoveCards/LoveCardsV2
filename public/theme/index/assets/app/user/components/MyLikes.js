@@ -13,9 +13,9 @@ const MyLikes = {
         // mdui.mutation();
     },
     methods: {
-        // goCard(id) {
-        //     BaseEntity.JumpUrl('/index/Likes/card/id/' + id);
-        // },
+        goCard(id) {
+            BaseEntity.JumpUrl('/index/cards/card/id/' + id);
+        },
         previousPage() {
             if (this.likes.current_page == 1) {
                 return;
@@ -51,20 +51,23 @@ const MyLikes = {
                 BaseEntity.AxiosErrorHandling(err);
             });
         },
+        masonry() {
+            const grid = document.querySelector('.mdui-row-xs-1');
+            //console.log(grid.innerHTML);
+
+            if (grid) {
+                new Masonry(grid, {
+                    itemSelector: '.mdui-col',
+                    columnWidth: '.mdui-col',
+                    percentPosition: true
+                });
+            }
+        }
     },
     watch: {
         likes() {
             this.$nextTick(() => {
-                const grid = document.querySelector('.mdui-row-xs-1');
-                //console.log(grid.innerHTML);
-
-                if (grid) {
-                    new Masonry(grid, {
-                        itemSelector: '.mdui-col',
-                        columnWidth: '.mdui-col',
-                        percentPosition: true
-                    });
-                }
+                this.masonry()
             });
         }
     },
@@ -95,16 +98,16 @@ const MyLikes = {
 
                     <div v-if="item.card.img">
                         <div style="z-index: 1;" class="mdui-card-media mdui-p-t-2">
-                            <div class="css-likes-img mdui-m-x-1" style="cursor:pointer;" @click='goCard(item.card.id)'>
-                                <img :src="item.card.img" />
+                            <div class="css-cards-img mdui-m-x-1" style="cursor:pointer;" @click='goCard(item.card.id)'>
+                                <img :src="item.card.img" @load="masonry()"/>
                             </div>
                         </div>
-                        <div class="css-likes-img-loading mdui-spinner"></div>
+                        <div class="css-cards-img-loading mdui-spinner"></div>
                     </div>
 
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
-                        <div class="mdui-p-t-1 css-likes-primary-content" style="cursor:pointer;" @click='goCard(item.card.id)'>
+                        <div class="mdui-p-t-1 css-cards-primary-content" style="cursor:pointer;" @click='goCard(item.card.id)'>
                             {{item.card.content}}
                         </div>
                     </div>

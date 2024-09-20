@@ -50,21 +50,24 @@ const MyCards = {
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
             });
+        },
+        masonry() {
+            const grid = document.querySelector('.mdui-row-xs-1');
+            //console.log(grid.innerHTML);
+
+            if (grid) {
+                new Masonry(grid, {
+                    itemSelector: '.mdui-col',
+                    columnWidth: '.mdui-col',
+                    percentPosition: true
+                });
+            }
         }
     },
     watch: {
         likes() {
             this.$nextTick(() => {
-                const grid = document.querySelector('.mdui-row-xs-1');
-                //console.log(grid.innerHTML);
-                
-                if (grid) {
-                    new Masonry(grid, {
-                        itemSelector: '.mdui-col',
-                        columnWidth: '.mdui-col',
-                        percentPosition: true
-                    });
-                }
+                this.masonry()
             });
         }
     },
@@ -96,7 +99,7 @@ const MyCards = {
                     <div v-if="item.img">
                         <div style="z-index: 1;" class="mdui-card-media mdui-p-t-2">
                             <div class="css-cards-img mdui-m-x-1" style="cursor:pointer;" @click='goCard(item.id)'>
-                                <img :src="item.img" />
+                                <img :src="item.img" @load="masonry()"/>
                             </div>
                         </div>
                         <div class="css-cards-img-loading mdui-spinner"></div>
