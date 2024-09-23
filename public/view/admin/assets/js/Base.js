@@ -307,6 +307,10 @@ class Base {
             }
             return response;
         }, (error) => {
+            if(error.response.status == 401){
+                this.DeleteToken('UserTokenName')
+                this.commonFunctions.snackbar('请刷新后再试')
+            }
             console.log('响应拦截器报错');
             return Promise.reject(error);
         });

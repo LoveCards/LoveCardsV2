@@ -161,8 +161,13 @@
         //设置钩子
         AddEntity.SetPostCardsAddHooks(() => { }, (response) => {
             //默认回调函数
-            AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
-            AddEntity.JumpUrl('/index/cards/card/id/' + response.data.id);
+            if (response.data?.id) {
+                AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
+                AddEntity.JumpUrl('/index/cards/card/id/' + response.data.id);
+            }else{
+                AddEntity.commonFunctions.snackbar('添加成功，等待审核');
+                AddEntity.JumpUrl('/');
+            }
         });
 
         //绑定按钮
