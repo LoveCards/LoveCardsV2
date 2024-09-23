@@ -29,8 +29,13 @@ class Card extends Base {
             this.SetPostCommentsAddHooks({
                 inti: () => { },
                 then: (response) => {
-                    window.location.reload();
-                    //console.log('提交成功刷新页面');
+                    console.log();
+                    if (response.status == 201) {
+                        this.commonFunctions.snackbar('提交成功，等待审核');
+                    } else {
+                        window.location.reload();
+                        //console.log('提交成功刷新页面');
+                    }
                 }
             }, true);
         }
