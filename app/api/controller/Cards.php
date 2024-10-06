@@ -12,6 +12,8 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 
 use app\api\model\Images as ImagesModel;
 
+use app\api\service\Cards as CardsService;
+
 use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
@@ -19,6 +21,29 @@ use app\common\App;
 
 class Cards extends Common
 {
+
+    //列表
+    public function List()
+    {
+        try {
+            $result = CardsService::list();
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
+        }
+        return Export::Create($result);
+    }
+
+    //删除
+    public function DeleteNew()
+    {
+        try {
+            CardsService::updata(['status' => 1], ['id' => Request::param('id')]);
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
+        }
+        return Export::Create([]);
+    }
+
     //操作函数
     protected function CAndU($id, $data, $method)
     {

@@ -5,7 +5,7 @@ namespace app\api\middleware;
 use think\facade\Request;
 
 use app\common\Export;
-use geetest\gt4;
+use geetest\Gt4;
 
 class GeetestCheck
 {

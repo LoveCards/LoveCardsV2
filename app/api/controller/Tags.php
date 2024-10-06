@@ -6,6 +6,7 @@ use think\facade\Request;
 use think\facade\Db;
 use think\exception\ValidateException;
 
+use app\api\model\TagsMap as TagsMapModel;
 use app\api\validate\Tags as TagsValidate;
 
 use app\common\Common;
@@ -54,7 +55,7 @@ class Tags extends Common
                 //写入并返回ID
                 $Id = $DbResult->insertGetId($DbData);
             } else {
-                //获取Cards数据库对象
+                //获取数据库对象
                 $DbResult = $DbResult->where('id', $id);
                 if (!$DbResult->find()) {
                     return Common::mArrayEasyReturnStruct('ID不存在', false);

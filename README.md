@@ -98,8 +98,8 @@ redis(可选)
 
 ## ⚗️ 技术栈
 
--   [PHP](https://www.php.net "PHP")+[ThinkPHP6](https://www.thinkphp.cn/ "ThinkPHP6")
--   [MDUI](https://www.mdui.org/ "MDUI")+[Jquery](https://jquery.com/ "Jquery")
+-   [ThinkPHP](https://www.thinkphp.cn/ "ThinkPHP")
+-   [MDUI](https://www.mdui.org/ "MDUI")+[Vue](https://cn.vuejs.org/ "Vue")+[Jquery](https://jquery.com/ "Jquery")
 
 ## 👯‍♀️👯‍♂ 大家庭
 
