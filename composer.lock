@@ -934,11 +934,16 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v6.1.4",
+            "version": "v6.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/framework.git",
+                "reference": "57d1950a1844ef8d3098ea290032aeb92e2e32c3"
+            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/66eb9cf4d627df12911344cd328faf9bb596bf2c",
-                "reference": "66eb9cf4d627df12911344cd328faf9bb596bf2c",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/57d1950a1844ef8d3098ea290032aeb92e2e32c3",
+                "reference": "57d1950a1844ef8d3098ea290032aeb92e2e32c3",
                 "shasum": ""
             },
             "require": {
@@ -986,7 +991,11 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2023-07-11T15:16:03+00:00"
+            "support": {
+                "issues": "https://github.com/top-think/framework/issues",
+                "source": "https://github.com/top-think/framework/tree/v6.1.5"
+            },
+            "time": "2024-04-16T02:01:19+00:00"
         },
         {
             "name": "topthink/think-filesystem",
@@ -1496,5 +1505,6 @@
     "platform": {
         "php": ">=7.2.5"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
 }

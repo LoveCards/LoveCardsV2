@@ -23,9 +23,11 @@ Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 
 //用户登入鉴权-支持游客
 Route::group('', function () {
-    Route::post('cards/add', 'cards/Add');
-    Route::post('comments/add', 'comments/Add');
-    Route::post('cards/good', 'cards/Good');
+    Route::group('', function () {
+        Route::post('cards/add', 'Cards/Add');
+        Route::post('comments/add', 'Comments/Add');
+    })->middleware([SessionDebounce::class, GeetestCheck::class]);
+    Route::post('cards/good', 'Cards/Good');
 })->middleware([JwtAuthCheck::class]);
 
 //用户登入鉴权
@@ -37,6 +39,15 @@ Route::group('', function () {
 
     Route::patch('user', 'user.info/Patch');
     Route::get('user', 'user.info/Get');
+
+    Route::get('cards', 'Cards/List');
+    Route::delete('cards', 'Cards/DeleteNew');
+
+    Route::get('comments', 'Comments/List');
+    Route::delete('comments', 'Comments/DeleteNew');
+
+    Route::get('likes', 'Likes/List');
+    Route::delete('likes', 'Likes/Delete');
 })->middleware([JwtAuthCheck::class]);
 
 //登入鉴权
@@ -69,18 +80,12 @@ Route::group('', function () {
     Route::post('system/site', 'System/Site');
 
     Route::get('system/email', 'System/GetEmail');
-    Route::rule('system/email', 'System/Email','PUT|PATCH');
+    Route::rule('system/email', 'System/Email', 'PUT|PATCH');
 
     Route::get('system/other', 'System/GetOther');
-    Route::rule('system/other', 'System/Other','PUT|PATCH');
+    Route::rule('system/other', 'System/Other', 'PUT|PATCH');
 
     Route::post('system/template', 'System/template');
     Route::post('system/templateset', 'System/TemplateSet');
     Route::post('system/geetest', 'System/Geetest');
 })->middleware([JwtAuthCheck::class, AdminPowerCheck::class]);
-
-//防抖+极验鉴权(内置开关)
-Route::group('', function () {
-    Route::post('cards/add', 'Cards/Add');
-    Route::post('comments/add', 'Comments/Add');
-})->middleware([SessionDebounce::class, GeetestCheck::class]);

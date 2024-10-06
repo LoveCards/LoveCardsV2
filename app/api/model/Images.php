@@ -37,6 +37,12 @@ class Images extends Model
         'updated_at'
     ];
 
+    /**
+     * 插入行
+     *
+     * @param array $data
+     * @return void
+     */
     public static function Post($data)
     {
         $result = self::create($data);

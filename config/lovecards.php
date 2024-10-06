@@ -1,6 +1,6 @@
 <?php
 return [
-    'theme_directory' => env('lovecards.theme_directory', 'SecretCapsule'),
+    'theme_directory' => env('lovecards.theme_directory', 'index'),
     'api' => [
         'Cards' => [
             //默认卡片状态ON/OFF:0/1

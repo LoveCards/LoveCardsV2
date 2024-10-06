@@ -202,7 +202,7 @@ const MyInfo = {
                         <div class="mdui-valign">
                             <button :disabled="sendMsgBtn.disabled" @click="getUserEmailCaptcha()"
                                 style="margin-top: 42px; width: 100%;"
-                                class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-pink-accent">
+                                class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent">
                                 {{sendMsgBtn.countdown != 60?sendMsgBtn.showText:'验证码'}}
                             </button>
                         </div>

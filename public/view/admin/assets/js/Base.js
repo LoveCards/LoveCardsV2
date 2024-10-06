@@ -48,16 +48,20 @@ class Base {
             SystemTemplateSet: '/api/system/TemplateSet',//主题配置
             SystemGeetest: '/api/system/geetest',//验证码设置
 
+            Cards: '/api/cards',
             CardsAdd: '/api/cards/add',//添加卡片
             CardsEdit: '/api/cards/edit',//编辑卡片
             CardsDelete: '/api/cards/delete',//删除卡片
             CardsSetting: '/api/cards/setting',//模块设置
             CardsGood: '/api/cards/good',//点赞
 
+            Likes: '/api/Likes',
+
             TagsAdd: '/api/tags/add',//添加标签
             TagsEdit: '/api/tags/edit',//编辑标签
             TagsDelete: '/api/tags/delete',//删除标签
 
+            Comments: '/api/comments',//编辑评论
             CommentsAdd: '/api/comments/add',//编辑评论
             CommentsEdit: '/api/comments/edit',//编辑评论
             CommentsDelete: '/api/comments/delete',//删除评论
@@ -192,7 +196,7 @@ class Base {
      * @returns 
      */
     DeleteToken = (tokenName) => {
-        if (this.DeleteCookie(this.config.token[tokenName], { path: '/' })) {
+        if (this.DeleteCookie(this.config.token[tokenName])) {
             return true;
         }
         return false;
@@ -303,6 +307,10 @@ class Base {
             }
             return response;
         }, (error) => {
+            if(error.response.status == 401){
+                this.DeleteToken('UserTokenName')
+                this.commonFunctions.snackbar('请刷新后再试')
+            }
             console.log('响应拦截器报错');
             return Promise.reject(error);
         });

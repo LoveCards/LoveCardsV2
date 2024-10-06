@@ -12,10 +12,11 @@ use think\facade\Request;
 use app\api\model\Images as ImagesModel;
 use app\api\validate\Upload as UploadValidate;
 use think\exception\ValidateException;
+use app\common\Base as CommonBase;
 
 class Upload
 {
-    //上传图片-POST
+    //上传图片-POST 这个api要替换掉的
     public function Image()
     {
         if (empty(request()->file('file'))) {
@@ -24,11 +25,14 @@ class Upload
         // 获取表单上传文件
         $file = request()->file('file');
         $DefSetCardsImgSize = Config::get('lovecards.api.Upload.DefSetCardsImgSize');
+
+        $lDef_ImageExt = CommonBase::conf()->mArraySearchConfigKey('UserImageExt');
+        $lDef_ImageExt[0] != '' ? $lDef_ImageExt = $lDef_ImageExt[0] : $lDef_ImageExt = 'jpg,png,gif';
         //验证
         try {
             validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的
                 'fileSize' => 1024 * 1000 * $DefSetCardsImgSize, //允许文件大小
-                'fileExt'  => array('jpg', 'png', 'gif'),  //文件后缀
+                'fileExt'  => $lDef_ImageExt,  //文件后缀
                 //'fileMime' => array('jpg', 'png'),  //文件类型
             ]])->check(['file' => $file]); //对上传的$file进行验证
 
