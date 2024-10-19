@@ -306,8 +306,8 @@ class Base {
                 this.hooks.Axios.response(response);
             }
             return response;
-        }, (error) => {
-            if(error.response.status == 401){
+        }, (error) => { 
+            if(error.response.status == 401 && error.response.data.error != "请先登入"){
                 this.DeleteToken('UserTokenName')
                 this.commonFunctions.snackbar('请刷新后再试')
             }
