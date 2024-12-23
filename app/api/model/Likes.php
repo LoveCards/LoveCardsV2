@@ -13,14 +13,9 @@ class Likes extends Model
     // 设置当前模型对应的完整数据表名称
     protected $table = 'good';
 
-    //开启软删除
-    // use SoftDelete;
-    // protected $deleteTime = 'deleted_at';
-
     //自动时间戳
-    // protected $autoWriteTimestamp = 'datetime';
-    // protected $createTime = 'created_at';
-    // protected $updateTime = 'updated_at';
+    //protected $autoWriteTimestamp = 'datetime';
+    //protected $createTime = 'created_at';
 
     // 设置字段信息
     protected $schema = [
@@ -34,9 +29,7 @@ class Likes extends Model
 
     // 默认排除字段
     // protected static $withoutField = [
-    //     'deleted_at',
     //     'created_at',
-    //     'updated_at'
     // ];
 
     public function card()
