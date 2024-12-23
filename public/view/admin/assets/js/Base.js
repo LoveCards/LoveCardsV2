@@ -286,34 +286,38 @@ class Base {
     * @returns {Promise}
     */
     Axios = (method, url, data, headers = {}) => {
-        // 添加请求拦截器
-        axios.interceptors.request.use((config) => {
-            //载入钩子
-            if (this.hooks.Axios?.request) {
-                //自定义回调函数
-                this.hooks.Axios.request(config);
-            }
-            return config;
-        }, (error) => {
-            console.log('请求拦截器报错');
-            return Promise.reject(error);
-        });
+        //防止重复添加拦截器
+        if (!axios.interceptors.request.handlers.length) {
+            // 添加请求拦截器
+            axios.interceptors.request.use((config) => {
+                //载入钩子
+                if (this.hooks.Axios?.request) {
+                    //自定义回调函数
+                    this.hooks.Axios.request(config);
+                }
+                return config;
+            }, (error) => {
+                console.log('请求拦截器报错');
+                return Promise.reject(error);
+            });
 
-        // 添加响应拦截器
-        axios.interceptors.response.use((response) => {
-            if (this.hooks.Axios?.response) {
-                //自定义回调函数
-                this.hooks.Axios.response(response);
-            }
-            return response;
-        }, (error) => { 
-            if(error.response.status == 401 && error.response.data.error != "请先登入"){
-                this.DeleteToken('UserTokenName')
-                this.commonFunctions.snackbar('请刷新后再试')
-            }
-            console.log('响应拦截器报错');
-            return Promise.reject(error);
-        });
+            // 添加响应拦截器
+            axios.interceptors.response.use((response) => {
+                if (this.hooks.Axios?.response) {
+                    //自定义回调函数
+                    this.hooks.Axios.response(response);
+                }
+                return response;
+            }, (error) => {
+                //Token失效后清除缓存
+                if (error.response.status == 401 && error.config.headers.authorization) {
+                    this.DeleteToken('UserTokenName')
+                    this.commonFunctions.snackbar('请刷新页面后再试')
+                }
+                console.log('响应拦截器报错');
+                return Promise.reject(error);
+            });
+        }
 
         let ReqObj = {
             method: method,
