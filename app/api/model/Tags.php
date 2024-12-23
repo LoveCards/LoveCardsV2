@@ -9,6 +9,9 @@ use app\common\Common;
 
 class Tags extends Model
 {
+    protected $name = 'tags';
+    protected $pk = 'id';
+
     //开启软删除
     use SoftDelete;
     protected $deleteTime = 'deleted_at';
@@ -19,16 +22,16 @@ class Tags extends Model
     protected $updateTime = 'updated_at';
 
     // 设置字段信息
-    protected $schema = [
-        'id' => 'int(11)',
-        'aid' => 'int(11)',
-        'name' => 'varchar(8)',
-        'tip' => 'varchar(64)',
-        'status' => 'int(11)',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
+    // protected $schema = [
+    //     'id' => 'int(11)',
+    //     'aid' => 'int(11)',
+    //     'name' => 'varchar(8)',
+    //     'tip' => 'varchar(64)',
+    //     'status' => 'int(11)',
+    //     'created_at' => 'datetime',
+    //     'updated_at' => 'datetime',
+    //     'deleted_at' => 'datetime',
+    // ];
 
     // 默认排除字段
     protected static $withoutField = [
