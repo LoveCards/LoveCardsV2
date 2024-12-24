@@ -1,0 +1,46 @@
+name: dev
+
+on:
+  # 手动触发部署
+  workflow_dispatch:
+
+jobs:
+  Dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🏡拉取代码
+        uses: actions/checkout@v3
+        with:
+          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+          fetch-depth: 0
+
+      - name: 💾缓存 Composer 依赖
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: 🛠️安装依赖
+        uses: php-actions/composer@v6
+        with:
+          php_version: "8.1"
+          version: 2
+
+      - name: ❌删除非必要文件
+        run: |
+          rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
+
+      - name: 🏷️设置压缩包名称
+        id: set_zip_name
+        run: echo "zip_name=LoveCardsDev-$(date +%Y%m%d%H%M%S).zip" >> $GITHUB_OUTPUT
+
+      - name: 📦压缩为zip
+        run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
+
+      - name: 🚀上传Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.set_zip_name.outputs.zip_name }}
+          path: ${{ steps.set_zip_name.outputs.zip_name }}
+          if-no-files-found: error

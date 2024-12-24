@@ -19,19 +19,29 @@ class Comments extends Common
     //列表
     public function List()
     {
+        $context = request()->JwtData;
+        if ($context['uid'] == 0) {
+            return Export::Create([], 401, '请先登入');
+        }
+
         try {
-            $result = CommentsService::list();
+            $result = CommentsService::list($context);
         } catch (\Throwable $th) {
             return Export::Create([], $th->getCode(), $th->getMessage());
         }
         return Export::Create($result);
     }
 
-    //删除
+    //删除-面向用户的软删除
     public function DeleteNew()
     {
+        $context = request()->JwtData;
+        if ($context['uid'] == 0) {
+            return Export::Create([], 401, '请先登入');
+        }
+
         try {
-            CommentsService::updata(['status' => 1], ['id' => Request::param('id')]);
+            CommentsService::updata($context, ['status' => 1], ['id' => Request::param('id')]);
         } catch (\Throwable $th) {
             return Export::Create([], $th->getCode(), $th->getMessage());
         }

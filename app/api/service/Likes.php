@@ -5,23 +5,28 @@ namespace app\api\service;
 use app\api\model\Likes as LikesModel;
 use app\api\model\Cards as CardsModel;
 
+use \think\facade\Db;
 use think\db\Query;
 
 class Likes
 {
 
-    //列表
-    static public function list()
+    /**
+     * 列表
+     *
+     * @param array $context
+     * @return array
+     */
+    static public function list($context)
     {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            throw new \Exception('请先登入', 401);
-        }
-
         //$currentPage = 1;
         $pageSize = 15;
 
         $result = LikesModel::where('uid', $context['uid'])->paginate($pageSize);
+        if($result->isEmpty()){
+            throw new \Exception('没有找到', 204);
+        }
+
         $likes = $result->toArray();
         foreach ($result as $items) {
             $apps[$items['aid']][] = $items['pid'];
@@ -49,19 +54,36 @@ class Likes
         return $likes;
     }
 
-    static public function delete($data)
+    /**
+     * 删除喜欢
+     *
+     * @param int|array $data
+     * @param array $context
+     * @return void
+     */
+    static public function delete($data, $context)
     {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            throw new \Exception('请先登入', 401);
+        // 启动事务
+        Db::startTrans();
+        try {
+            if (is_array($data)) {
+                //批量
+                $Likes = LikesModel::whereIn('id', $data)->where('uid', $context['uid']);
+                $card_pids = $Likes->column('pid');
+                $Likes->delete();
+                CardsModel::whereIn('id', $card_pids)->dec('good')->update();
+            } else {
+                $Likes = LikesModel::where('id', $data)->where('uid', $context['uid']);
+                $card_pids = $Likes->column('pid');
+                $Likes->delete();
+                CardsModel::where('id', $card_pids[0])->dec('good')->update();
+            }
+            // 提交事务
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return $e;
         }
-
-        if (is_array($data)) {
-            $result = LikesModel::whereIn('id', $data)->where('uid', $context['uid'])->delete();
-        } else {
-            $result = LikesModel::where('id', $data)->where('uid', $context['uid'])->delete();
-        }
-
-        return $result;
     }
 }

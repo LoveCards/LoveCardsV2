@@ -6,6 +6,7 @@ use think\facade\Request;
 use think\facade\Db;
 use think\exception\ValidateException;
 
+use app\api\model\Tags as TagsModel;
 use app\api\model\TagsMap as TagsMapModel;
 use app\api\validate\Tags as TagsValidate;
 
@@ -42,10 +43,10 @@ class Tags extends Common
         }
 
         // 启动事务
-        Db::startTrans();
+        DB::startTrans();
         try {
             //获取数据库对象
-            $DbResult = Db::table('tags');
+            $DbResult = new TagsModel();
             $DbData = $Datas;
             // 方法选择
             if ($method == 'c') {
@@ -53,24 +54,24 @@ class Tags extends Common
                 //默认状态:0/1
                 $DbData['status'] = 0;
                 //写入并返回ID
-                $Id = $DbResult->insertGetId($DbData);
+                $DbResult->save($DbData);
+                $Id = $DbResult->id;
             } else {
                 //获取数据库对象
-                $DbResult = $DbResult->where('id', $id);
-                if (!$DbResult->find()) {
+                $DbResult = TagsModel::find($id);
+                if (!$DbResult->findOrEmpty()) {
                     return Common::mArrayEasyReturnStruct('ID不存在', false);
                 }
                 //写入并返回ID
-                $DbResult->update($DbData);
+                $DbResult->save($DbData);
             }
 
             // 提交事务
-            Db::commit();
+            DB::commit();
             return Common::mArrayEasyReturnStruct('操作成功');
         } catch (\Exception $e) {
-            dd($e);
             // 回滚事务
-            Db::rollback();
+            DB::rollback();
             return Common::mArrayEasyReturnStruct('操作失败', false, $e);
         }
     }
