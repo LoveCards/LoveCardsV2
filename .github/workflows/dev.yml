@@ -38,12 +38,9 @@ jobs:
       - name: 📦压缩为zip
         run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
 
-      - name: 🔍检查zip文件是否存在
-        run: pwd
-
       - name: 🚀上传Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.set_zip_name.outputs.zip_name }}
-          path: ./LoveCardsV2/${{ steps.set_zip_name.outputs.zip_name }}
+          name: Dev.zip
+          path: ${{ steps.set_zip_name.outputs.zip_name }}
           if-no-files-found: error
