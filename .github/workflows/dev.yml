@@ -42,6 +42,9 @@ jobs:
       - name: 📦压缩为zip
         run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
 
+      - name: 🔍检查zip文件是否存在
+        run: ls -l ${{ steps.set_zip_name.outputs.zip_name }}
+
       - name: 🚀上传Artifact
         uses: actions/upload-artifact@v3
         with:
