@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docs:
+  Dev:
     runs-on: ubuntu-latest
 
     steps:
