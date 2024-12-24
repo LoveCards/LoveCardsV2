@@ -26,9 +26,8 @@ jobs:
                   key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
             - name: ✍️提取标签名称
-              id: github_ref
-              run: tag=$(echo "${{ github.ref }}" | cut -d '/' -f 3)
-                  echo "tag=$tag" >> $GITHUB_STATE
+              id: extract_tag
+              run: echo "tag=${{ github.ref }}" >> $GITHUB_OUTPUT
 
             - name: 🛠️安装依赖
               uses: php-actions/composer@v6
@@ -41,20 +40,21 @@ jobs:
                   rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env think
 
             - name: 📦压缩为zip
-              run: zip -r LoveCards-v2.3.1.zip ./  # 记得修改
+              run: zip -r ${{ steps.extract_tag.outputs.tag }}.zip ./
+              env:
+                  TAG_NAME: ${{ steps.extract_tag.outputs.tag }}
 
             - name: 🎅创建发布并上传压缩包
               uses: softprops/action-gh-release@v1
               if: startsWith(github.ref, 'refs/tags/')
               with:
-                  tag_name: ${{ steps.github_ref.outputs.tag }}
-                  name: 2.3.1[18] # 记得修改
+                  tag_name: ${{ steps.extract_tag.outputs.tag }}
+                  name: ${{ steps.extract_tag.outputs.tag }}
                   body_path: RELEASE.txt
                   draft: false
                   prerelease: true
-                  files: | # 记得修改
-                      LoveCards-v2.3.1.zip
+                  files: |
+                      ${{ steps.extract_tag.outputs.tag }}.zip
                       LICENSE
               env:
-                  # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
