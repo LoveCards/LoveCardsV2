@@ -33,7 +33,7 @@ jobs:
 
       - name: 🏷️设置压缩包名称
         id: set_zip_name
-        run: echo "zip_name=LoveCardsDev[19]-$(date +%Y%m%d%H%M%S).zip" >> $GITHUB_OUTPUT
+        run: echo "zip_name=LoveCardsDev-$(date +%Y%m%d%H%M%S).zip" >> $GITHUB_OUTPUT
 
       - name: 📦压缩为zip
         run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
@@ -41,6 +41,6 @@ jobs:
       - name: 🚀上传Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Dev.zip
+          name: ${{ steps.set_zip_name.outputs.zip_name }}
           path: ${{ steps.set_zip_name.outputs.zip_name }}
           if-no-files-found: error
