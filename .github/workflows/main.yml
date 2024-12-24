@@ -27,7 +27,7 @@ jobs:
 
             - name: ✍️提取标签名称
               id: extract_tag
-              run: echo "tag=${{ github.ref }}" >> $GITHUB_OUTPUT
+              run: echo "tag=$(echo "${{ github.ref }}" | cut -d '/' -f 3)" >> $GITHUB_OUTPUT
 
             - name: 🛠️安装依赖
               uses: php-actions/composer@v6
@@ -55,5 +55,5 @@ jobs:
                       LoveCards-${{ steps.extract_tag.outputs.tag }}.zip
                       LICENSE
               env:
-                  # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+                  # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret 
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
