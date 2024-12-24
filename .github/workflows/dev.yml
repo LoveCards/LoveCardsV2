@@ -42,5 +42,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.set_zip_name.outputs.zip_name }}
-          path: ${{ steps.set_zip_name.outputs.zip_name }}
+          path: ./${{ steps.set_zip_name.outputs.zip_name }}
           if-no-files-found: error
