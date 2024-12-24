@@ -136,7 +136,7 @@ CREATE TABLE `system` (
 
 INSERT INTO `system` (`id`, `name`, `value`) VALUES
 (1, 'siteUrl', 'lovecards.cn'),
-(2, 'siteName', 'LoveCardsV2.3.1'),
+(2, 'siteName', 'LoveCardsV2.3.2'),
 (3, 'siteICPId', ''),
 (4, 'siteKeywords', ''),
 (5, 'siteDes', ''),
