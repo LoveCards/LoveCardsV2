@@ -24,8 +24,16 @@ class JwtAuthCheck
                 //jwt校验通过并传递参数
                 $tDef_Request->JwtData = $data['data'];
             } else {
-                //jwt校验不通过
-                return Export::Create($data['msg'], 401, '登入失效，请重新登入'); //Token未通过校验
+                if (!ConfigFacade::mArraySearchConfigKey('VisitorMode')[0]) {
+                    //jwt校验不通过
+                    return Export::Create($data['msg'], 401, '登入失效，请重新登入'); //Token未通过校验
+                } else {
+                    //jwt校验通过并传递参数
+                    $tDef_Request->JwtData = [
+                        'uid' => '0',
+                        'token' => null,
+                    ];
+                }
             }
         } else {
             if (!ConfigFacade::mArraySearchConfigKey('VisitorMode')[0]) {

@@ -1,13 +1,11 @@
 {if $MyInfo['id']}
 <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
     mdui-menu="{target: '#MenuComponent-HeaderAvatar',covered:false}">
-    <div style="margin: 10%;">
         {if $MyInfo['avatar']}
-        <img class="mdui-img-fluid mdui-img-circle" src="{$MyInfo['avatar']}" />
+        <img class="mdui-img-fluid mdui-img-circle" style="width: 90%;height: 90%;position: fixed;top: 5%;left: 5%;" src="{$MyInfo['avatar']}" />
         {else}
-        <img class="mdui-img-fluid mdui-img-circle" src="{$ThemeAssetsUrlPath}/image/avatar.png" />
+        <img class="mdui-img-fluid mdui-img-circle" style="width: 90%;height: 90%;position: fixed;top: 5%;left: 5%;" src="{$ThemeAssetsUrlPath}/image/avatar.png" />
         {/if}
-    </div>
 </span>
 <ul id="MenuComponent-HeaderAvatar" class="mdui-menu">
     <li class="mdui-menu-item">

@@ -22,13 +22,8 @@ class Comments
 {
 
     //列表
-    static public function list()
+    static public function list($context)
     {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            throw new \Exception('请先登入', 401);
-        }
-
         //$currentPage = 1;
         $pageSize = 15;
 
@@ -41,13 +36,8 @@ class Comments
     }
 
     //更新指定ID的指定字段
-    static public function updata($data, $where = [], $allowField = [])
+    static public function updata($context, $data, $where = [], $allowField = [])
     {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            throw new \Exception('请先登入', 401);
-        }
-
         $where = ['uid' => $context['uid']] + $where;
         $result = CommentsModel::update($data, $where, $allowField);
 

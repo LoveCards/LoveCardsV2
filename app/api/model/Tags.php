@@ -9,6 +9,9 @@ use app\common\Common;
 
 class Tags extends Model
 {
+    protected $name = 'tags';
+    protected $pk = 'id';
+
     //开启软删除
     use SoftDelete;
     protected $deleteTime = 'deleted_at';
