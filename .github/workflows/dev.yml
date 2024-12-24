@@ -37,10 +37,10 @@ jobs:
 
       - name: 📦压缩为zip
         run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
-        env:
-          zip_name: ${{ steps.set_zip_name.outputs.zip_name }}
 
-      - name: 🏗️下载压缩包
-        run: |
-          # 此处将压缩包下载到Runner的临时目录，您可以根据需要修改路径
-          echo "Downloading ${{ steps.set_zip_name.outputs.zip_name }} to runner's temporary directory"
+      - name: 🚀上传Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.set_zip_name.outputs.zip_name }}
+          path: ${{ steps.set_zip_name.outputs.zip_name }}
+          if-no-files-found: error
