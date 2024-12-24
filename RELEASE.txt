@@ -1,7 +1,7 @@
-### 🆕发行版本2.3.1，开发版本18
+### 🆕发行版本2.3.2，开发版本19
 ### 👉前往LoveCards Forum查看更新内容
-[https://forum.lovecards.cn/d/117](https://forum.lovecards.cn/d/117)
+[https://forum.lovecards.cn/d/134](https://forum.lovecards.cn/d/134)
 
-### 🆕Release version 2.3.1, 18 development version
+### 🆕Release version 2.3.2, 19 development version
 ### 👉To LoveCards Forum to check the update content
-[https://forum.lovecards.cn/d/117](https://forum.lovecards.cn/d/117)
+[https://forum.lovecards.cn/d/134](https://forum.lovecards.cn/d/134)
