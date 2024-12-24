@@ -96,7 +96,7 @@
             </button>
             <span class="mdui-p-x-1"></span>
             <button type="button" class="mdui-btn mdui-color-theme-accent mdui-btn-dense"
-                v-if="UsersIndex.current_page != UsersIndex.last_page" @click="nextPage">
+                v-if="UsersIndex.current_page != UsersIndex.last_page && UsersIndex.last_page != 0" @click="nextPage">
                 <i class="mdui-icon material-icons">last_page</i>
             </button>
         </div>
