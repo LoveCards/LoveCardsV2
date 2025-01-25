@@ -6,7 +6,7 @@ use think\Request as TypeRequest;
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use app\api\model\Users as UsersModel;
+use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\Common;
@@ -77,7 +77,7 @@ class Auth
     }
 
     //登入-POST
-    public function Login(UsersModel $userModel)
+    public function Login()
     {
         $account = Request::param('account');
         $password = Request::param('password');
@@ -103,7 +103,7 @@ class Auth
         }
 
         //账号校验请求
-        $result = $userModel->Login($account, $password);
+        $result = UsersService::Login($account, $password);
         //常规密码登入
         if ($result['status'] == false) {
             return Export::Create([$result['msg']], 401, '登录失败');
@@ -125,7 +125,7 @@ class Auth
     }
 
     //注册-POST
-    public function Register(UsersModel $userModel)
+    public function Register()
     {
         $account = Request::param('account');
         $password = Request::param('password');
@@ -159,7 +159,7 @@ class Auth
         }
 
         //写入数据
-        $result = $userModel->Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
+        $result = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
         if ($result['status'] == false) {
             return Export::Create([$result['msg']], 401, '注册失败');
         }
@@ -171,6 +171,11 @@ class Auth
         Code::DeleteCaptcha($account, 'Auth');
 
         return Export::Create(['token' => $result], 200);
+    }
+
+    //访客登入-POST
+    public function Guest()
+    {
     }
 
     //获取验证码-POST

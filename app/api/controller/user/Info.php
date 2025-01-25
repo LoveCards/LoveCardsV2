@@ -5,7 +5,7 @@ namespace app\api\controller\user;
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use app\api\model\Users as UsersModel;
+use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\Common;
@@ -17,14 +17,14 @@ use email\Email;
 class Info
 {
     /**
-     * UsersModelPatch方法封装
-     * 更新并返回结果 -可以移入UsersModel
+     * UsersServicePatch方法封装
+     * 更新并返回结果 -可以移入UsersService
      * @param Array $lDef_ParamData
      * @return Object
      */
-    public function mObjectEasyUsersModelPatch($lDef_ParamData)
+    public function mObjectEasyUsersServicePatch($lDef_ParamData)
     {
-        $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        $tDef_Result = UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null);
         }
@@ -92,7 +92,7 @@ class Info
     {
         $context = request()->JwtData;
 
-        $tDef_Result = UsersModel::Get($context['uid'], ['id']);
+        $tDef_Result = UsersService::Get($context['uid'], ['id']);
 
         if ($tDef_Result['status']) {
             return Export::Create($tDef_Result['data'], 200, null);
@@ -121,7 +121,7 @@ class Info
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
 
-        return $this->mObjectEasyUsersModelPatch($lDef_ParamData);
+        return $this->mObjectEasyUsersServicePatch($lDef_ParamData);
     }
 
     //修改密码-Post
@@ -143,7 +143,7 @@ class Info
 
         $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
 
-        return $this->mObjectEasyUsersModelPatch($lDef_ParamData);
+        return $this->mObjectEasyUsersServicePatch($lDef_ParamData);
     }
 
     //修改邮箱-Post
@@ -164,7 +164,7 @@ class Info
         //验证邮箱格式
         $this->mObjectEasyTryCatchUsersValidate($lDef_ParamData);
 
-        return $this->mObjectEasyUsersModelPatch($lDef_ParamData);
+        return $this->mObjectEasyUsersServicePatch($lDef_ParamData);
     }
 
     //获取邮箱绑定验证码-POST
@@ -180,7 +180,7 @@ class Info
     // public function PostAuthCaptcha()
     // {
     //     $context = request()->JwtData;
-    //     $tDef_Result = UsersModel::Get($context['uid'], ['id']);
+    //     $tDef_Result = UsersService::Get($context['uid'], ['id']);
     //     //优先邮箱
     //     $tDef_Result['email'] ? $account = $tDef_Result['email'] : $account = $tDef_Result['phone'];
 

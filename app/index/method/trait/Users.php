@@ -4,7 +4,7 @@ namespace app\index\method;
 
 use app\common\Common;
 use app\common\FrontEnd;
-use app\api\model\Users as UsersModel;
+use app\api\service\Users as UsersService;
 
 trait Users
 {
@@ -21,7 +21,7 @@ trait Users
                 'MyInfo' => $tDef_UserAllData['data'],
             ]);
         }
-        $tDef_EmptyData = UsersModel::Get(0);
+        $tDef_EmptyData = UsersService::Get(0);
         return Common::mArrayEasyReturnStruct($tDef_UserAllData['msg'], false, [
             'MyInfo' => $tDef_EmptyData['data'],
         ]);
