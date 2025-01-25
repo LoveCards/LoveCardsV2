@@ -7,7 +7,7 @@ use think\facade\Request;
 use think\exception\ValidateException;
 use think\facade\Db;
 
-use app\api\model\Users as UsersModel;
+use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\Export;
@@ -29,7 +29,7 @@ class Users
             $lDef_Paginte['list_rows'] = Request::param('list_rows') > 100 ? 100 : Request::param('list_rows');
         }
 
-        $lDef_Result = UsersModel::Index($lDef_Paginte);
+        $lDef_Result = UsersService::Index($lDef_Paginte);
 
         return Export::Create($lDef_Result['data'], 200, null);
     }
@@ -100,7 +100,7 @@ class Users
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
 
-        $tDef_Result = UsersModel::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        $tDef_Result = UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null);
         }
@@ -122,7 +122,7 @@ class Users
             return Export::Create(null, 400, '缺少id参数');
         }
 
-        $tDef_Result = UsersModel::Del($id);
+        $tDef_Result = UsersService::Del($id);
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null);
         }

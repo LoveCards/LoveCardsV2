@@ -70,10 +70,10 @@ class Jwt
             return  Common::mArrayEasyReturnStruct('签名不正确', false);
         } catch (BeforeValidException $e) {
             // 签名在某个时间点之后才能用
-            return Common::mArrayEasyReturnStruct('token失效1', false);
+            return Common::mArrayEasyReturnStruct('token未生效', false);
         } catch (ExpiredException $e) {
             // token过期 校验payload的exp:data字段
-            return Common::mArrayEasyReturnStruct('token失效0', false);
+            return Common::mArrayEasyReturnStruct('token已失效', false);
         } catch (UnexpectedValueException $e) {
             //其他错误
             return Common::mArrayEasyReturnStruct('未知错误:' . $e->getMessage(), false);

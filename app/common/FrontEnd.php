@@ -11,7 +11,7 @@ use app\common\CheckClass;
 
 use jwt\Jwt;
 
-use app\api\model\Users as UsersModel;
+use app\api\service\Users as UsersService;
 
 class FrontEnd extends Facade
 {
@@ -88,7 +88,7 @@ class FrontEnd extends Facade
         }
 
         //取用户数据
-        $lDef_GetNowUserAllDataResult = UsersModel::Get($lDef_JwtCheckTokenResult['data']['uid']);
+        $lDef_GetNowUserAllDataResult = UsersService::Get($lDef_JwtCheckTokenResult['data']['uid']);
         //判断数据是否存在
         if ($lDef_GetNowUserAllDataResult['status']) {
             //返回用户数据
