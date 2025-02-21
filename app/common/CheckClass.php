@@ -27,6 +27,9 @@ class CheckClass
     {
         $TDef_JwtData = request()->JwtData;
         //验证身份并返回数据
+        if (!array_key_exists('aid', $TDef_JwtData)) {
+            return Export::Create(null, 401, '身份验证失败');
+        }
         $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid']);
 
         if (!$this->attrLDefAdminAllData['status']) {
