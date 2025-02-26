@@ -109,7 +109,7 @@ class Roles
         }
 
         $baseUrl = $group[$id]['baseUrl'];
-        $currentUrl = Request::baseUrl();
+        $currentUrl = strtolower(Request::baseUrl());
 
         if (in_array($currentUrl, $baseUrl)) {
             return true;
