@@ -12,6 +12,9 @@ use app\api\middleware\AdminAuthCheck;
 use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
 
+use yunarch\app\roles\middleware\RolesCheck;
+
+//不鉴权
 Route::get('theme/config', 'theme/Config');
 
 Route::post('user/auth/login', 'user.Auth/Login');
@@ -21,17 +24,10 @@ Route::post('user/auth/captcha', 'user.Auth/Captcha');
 
 Route::post('auth/logout', 'Auth/logout')->middleware(JwtAuthLogout::class);
 
-//用户登入鉴权-支持游客
-Route::group('', function () {
-    Route::group('', function () {
-        Route::post('cards/add', 'Cards/Add');
-        Route::post('comments/add', 'Comments/Add');
-    })->middleware([SessionDebounce::class, GeetestCheck::class]);
-    Route::post('cards/good', 'Cards/Good');
-})->middleware([JwtAuthCheck::class]);
 
-//用户登入鉴权
 Route::group('', function () {
+
+    //用户鉴权
     Route::post('upload/user-images', 'upload/UserImages');
     Route::post('user/password', 'user.info/PostPassword');
     Route::post('user/email', 'user.info/PostEmail');
@@ -48,10 +44,14 @@ Route::group('', function () {
 
     Route::get('likes', 'Likes/List');
     Route::delete('likes', 'Likes/Delete');
-})->middleware([JwtAuthCheck::class]);
+    //特殊鉴权
+    Route::group('', function () {
+        Route::post('cards/add', 'Cards/Add');
+        Route::post('comments/add', 'Comments/Add');
+    })->middleware([SessionDebounce::class, GeetestCheck::class]);
+    Route::post('cards/good', 'Cards/Good');
 
-//登入鉴权
-Route::group('', function () {
+    //管理员鉴权
     Route::post('admin/add', 'Admin/Add');
     Route::post('admin/edit', 'Admin/Edit');
     Route::post('admin/delete', 'Admin/Delete');
@@ -71,10 +71,8 @@ Route::group('', function () {
     Route::delete('users/delete', 'Users/Delete');
 
     Route::post('upload/user-images', 'upload/UserImages');
-})->middleware([JwtAuthCheck::class, AdminAuthCheck::class]);
 
-//超管鉴权
-Route::group('', function () {
+    //超管鉴权
     Route::post('cards/setting', 'Cards/Setting');
 
     Route::post('system/site', 'System/Site');
@@ -88,4 +86,4 @@ Route::group('', function () {
     Route::post('system/template', 'System/template');
     Route::post('system/templateset', 'System/TemplateSet');
     Route::post('system/geetest', 'System/Geetest');
-})->middleware([JwtAuthCheck::class, AdminPowerCheck::class]);
+})->middleware([JwtAuthCheck::class, RolesCheck::class]);
