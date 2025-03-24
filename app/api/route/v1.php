@@ -17,6 +17,9 @@ use yunarch\app\roles\middleware\RolesCheck;
 //不鉴权
 Route::get('theme/config', 'theme/Config');
 
+Route::post('auth/login', 'Auth/Login');
+Route::post('auth/logout', 'Auth/Logout');
+
 Route::post('user/auth/login', 'user.Auth/Login');
 Route::post('user/auth/logout', 'user.Auth/Logout');
 Route::post('user/auth/register', 'user.Auth/Register');
