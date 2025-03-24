@@ -10,10 +10,13 @@ use think\facade\Db;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
+use yunarch\utils\api\facade\Api as ApiUtils;
+
 use app\common\Export;
 
 class Users
 {
+
     //查询-GET
     public function Index()
     {
@@ -121,6 +124,8 @@ class Users
         if (empty($id)) {
             return Export::Create(null, 400, '缺少id参数');
         }
+
+        $id = ApiUtils::BatchOrSingle($id);
 
         $tDef_Result = UsersService::Del($id);
         if ($tDef_Result['status']) {
