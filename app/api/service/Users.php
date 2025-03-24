@@ -100,17 +100,37 @@ class Users
     /**
      * 更新指定ID行
      *
-     * @param int $id
+     * @param int|array $id 单个ID或ID数组
      * @param array $data
-     * @return void
+     * @return array
      */
     public static function Patch($id, $data)
     {
         try {
-            $result = UsersModel::update($data, ['id' => $id]);
+            if (is_array($id)) {
+                $result = UsersModel::whereIn('id', $id)->update($data);
+            } else {
+                $result = UsersModel::update($data, ['id' => $id]);
+            }
             return Common::mArrayEasyReturnStruct(null, true, $result);
         } catch (\Throwable $th) {
             return Common::mArrayEasyReturnStruct('更新失败', false, $th);
+        }
+    }
+
+    /**
+     * 批量更新用户数据
+     *
+     * @param array $data 包含多个用户数据的数组，每个元素必须包含id
+     * @return array
+     */
+    public static function BatchPatch($data)
+    {
+        try {
+            $result = UsersModel::saveAll($data);
+            return Common::mArrayEasyReturnStruct(null, true, $result);
+        } catch (\Throwable $th) {
+            return Common::mArrayEasyReturnStruct('批量更新失败', false, $th);
         }
     }
 
@@ -136,15 +156,19 @@ class Users
     /**
      * 删除指定ID行
      *
-     * @param int $id
-     * @return void
+     * @param int|array $id 单个ID或ID数组
+     * @return array
      */
     public static function Del($id)
     {
-        $result = UsersModel::destroy($id);
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result);
+        try {
+            $result = UsersModel::destroy($id);
+            if ($result) {
+                return Common::mArrayEasyReturnStruct(null, true, $result);
+            }
+            return Common::mArrayEasyReturnStruct('删除失败', false);
+        } catch (\Throwable $th) {
+            return Common::mArrayEasyReturnStruct('删除失败', false, $th);
         }
-        return Common::mArrayEasyReturnStruct('删除失败', false);
     }
 }
