@@ -1,0 +1,58 @@
+<?php
+
+namespace yunarch\app\api\validate;
+
+use think\Validate;
+
+//通用超级分页查询验证类
+class Index extends Validate
+{
+    protected function searchKey($value, $rule, $data = [])
+    {
+        // 指定字段时，搜索值不能为空
+        if ($data['search_value'] == null) {
+            return '搜索内容不能为空';
+        }
+        if (!is_array($value)) {
+            return '搜索字段格式错误';
+        }
+        return true;
+    }
+
+    protected function stringBool($value, $rule, $data = [])
+    {
+        if($value != null){
+            if($value == 'true' || $value == 'false'){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    //定义验证规则
+    protected $rule =   [
+        //页码
+        'page'  => 'number',
+        //列表长度
+        'list_rows'   => 'number|between:1,1000',
+        //搜索值
+        // 'search_value' => '',
+        //搜索字段
+        'search_keys' => 'searchKey',
+        //排序字段
+        'order_desc' => 'stringBool',
+        //排序字段
+        //'order_key' => '',
+    ];
+
+    //定义错误信息
+    protected $message  =   [
+        'page.number' => '页码格式错误',
+
+        'list_rows.number' => '列表长度格式错误',
+        'list_rows.between' => '列表长度范围错误(1-1000)',
+
+        'order_desc.stringBool' => '排序方式格式错误',
+    ];
+}
