@@ -10,7 +10,9 @@ use think\facade\Db;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
-use yunarch\utils\api\facade\Api as ApiUtils;
+use yunarch\app\api\facade\UtilsCommon as UtilsCommon;
+use yunarch\app\api\validate\Index as ApiIndexValidate;
+
 
 use app\common\Export;
 
@@ -20,56 +22,40 @@ class Users
     //查询-GET
     public function Index()
     {
-        if (Request::param('page') == null) {
-            $lDef_Paginte['page'] = 0;
-        } else {
-            $lDef_Paginte['page'] = Request::param('page');
+        $params = [
+            'page' => Request::param('page', 0),
+            'list_rows' => Request::param('list_rows', 12),
+            'search_value' => Request::param('search_value'),
+            'search_keys' => UtilsCommon::isJson(Request::param('search_keys')),
+            'order_desc' => Request::param('order_desc'),
+            'order_key' => Request::param('order_key')
+        ];
+
+        //验证参数
+        try {
+            validate(ApiIndexValidate::class)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
         }
 
-        if (Request::param('list_rows') == null) {
-            $lDef_Paginte['list_rows'] = 12;
-        } else {
-            $lDef_Paginte['list_rows'] = Request::param('list_rows') > 100 ? 100 : Request::param('list_rows');
-        }
-
-        $lDef_Result = UsersService::Index($lDef_Paginte);
+        $lDef_Result = UsersService::Index($params);
+        //dd($lDef_Result);
 
         return Export::Create($lDef_Result['data'], 200, null);
     }
 
-    //添加-POST
-    // public function Add()
-    // {
-    //     $context = request()->JwtData;
-
-    //     $userName = Request::param('userName');
-    //     $password = Request::param('password');
-    //     $power = Request::param('power');
-
-    //     //验证参数是否合法
-    //     try {
-    //         validate(UserValidate::class)->batch(true)
-    //             ->scene('add')
-    //             ->check([
-    //                 'userName'  => $userName,
-    //                 'password'   => $password,
-    //                 'power' => $power
-    //             ]);
-    //     } catch (ValidateException $e) {
-    //         // 验证失败 输出错误信息
-    //         $validateerror = $e->getError();
-    //         return Export::Create($validateerror, 400, '添加失败');
-    //     }
-
-    //     //获取数据库对象
-    //     $result = Db::table('admin');
-    //     //整理数据
-    //     $data = ['userName' => $userName, 'password' => sha1($password), 'power' => $power];
-    //     //写入库
-    //     $result->save($data);
-    //     //返回数据
-    //     return Export::Create(null, 200, null);
-    // }
+    //创建-POST
+    public function Create()
+    {
+        //接收参数
+        //验证参数
+        //调用服务
+        //返回结果
+    }
 
     //编辑-PUT
     public function Patch()
@@ -125,9 +111,9 @@ class Users
             return Export::Create(null, 400, '缺少id参数');
         }
 
-        $id = ApiUtils::BatchOrSingle($id);
+        $id = UtilsCommon::BatchOrSingle($id);
 
-        $tDef_Result = UsersService::Del($id);
+        $tDef_Result = UsersService::Delete($id);
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null);
         }

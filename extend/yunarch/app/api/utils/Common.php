@@ -1,9 +1,40 @@
 <?php
 
-namespace yunarch\utils\api;
+namespace yunarch\app\api\utils;
 
-class Api
+//api通用函数类
+class Common
 {
+    /**
+     * 判断输入是否是有效的 JSON 格式字符串，并返回解析后的数组
+     *
+     * @param mixed $input 输入的值（通常是一个字符串）
+     * @return array|null 如果输入是有效的 JSON 格式字符串，返回解析后的数组；否则返回 null
+     */
+    function isJson($input)
+    {
+        // 检查输入是否是字符串
+        // JSON 格式字符串必须是字符串类型
+        if (!is_string($input)) {
+            return null; // 如果输入不是字符串，直接返回 null
+        }
+
+        // 尝试将输入解析为 JSON
+        // json_decode 会尝试将 JSON 字符串解析为 PHP 值
+        // 第二个参数设置为 true，表示将 JSON 对象解析为关联数组
+        $decoded = json_decode($input, true);
+
+        // 检查 JSON 解析是否成功
+        // json_last_error() 返回最近一次 JSON 操作的错误代码
+        // 如果返回 JSON_ERROR_NONE，说明解析成功
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded; // 返回解析后的数组
+        } else {
+            return null; // 如果解析失败，返回 null
+        }
+    }
+
+
     /**
      * BatchOrSingle 函数用于判断输入是一个单独的数字还是一个JSON格式的数组字符串。
      * 如果是数字，直接返回该数字；如果是有效的JSON数组字符串，解析后返回数组；否则返回false。

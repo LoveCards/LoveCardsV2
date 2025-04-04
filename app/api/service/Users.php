@@ -6,6 +6,8 @@ use app\api\model\Users as UsersModel;
 
 use app\common\Common;
 
+use yunarch\app\api\utils\Index as UtilsIndex;
+
 class Users
 {
     /**
@@ -85,12 +87,10 @@ class Users
      *
      * @return void
      */
-    public static function Index($paginte)
+    public static function Index($params)
     {
-        $result = UsersModel::withoutField('password')->paginate([
-            'list_rows' => $paginte['list_rows'],
-            'page' => $paginte['page'],
-        ]);
+        $m = new UtilsIndex(UsersModel::class, $params);
+        $result = $m->common('username', ['password'], true);
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
@@ -159,7 +159,7 @@ class Users
      * @param int|array $id 单个ID或ID数组
      * @return array
      */
-    public static function Del($id)
+    public static function Delete($id)
     {
         try {
             $result = UsersModel::destroy($id);

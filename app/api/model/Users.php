@@ -1,10 +1,4 @@
 <?php
-/*
- * @Description: 
- * @Author: github.com/zhiguai
- * @Date: 2024-10-06 20:16:37
- * @Email: 2903074366@qq.com
- */
 
 namespace app\api\model;
 
