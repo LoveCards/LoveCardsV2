@@ -64,6 +64,7 @@ class Users
         $lDef_ParamData = [
             'id' => Request::param('id'),
             'number' => Request::param('number'),
+            'roles_id' => Request::param('roles_id'),
             'avatar' => Request::param('avatar'),
             'email' => Request::param('email'),
             'phone' => Request::param('phone'),
