@@ -51,7 +51,7 @@ class Users extends Validate
     protected $rule =   [
         'id' => 'number',
         'email' => 'length:3,254|email|unique:users',
-        'number' => 'length:3,20|unique:users',
+        'number' => 'require|length:3,20|alphaDash|unique:users',
         'phone' => 'mobile|unique:users',
         'username' => 'length:3,12|chsDash|unique:users',
         'password' => 'length:5,36|password',
@@ -69,6 +69,7 @@ class Users extends Validate
         'status.number' => '状态格式错误',
 
         'number.require' => '账号不得为空',
+        'number.alphaDash' => '账号只能为字母、数字下划线及破折号',
         'number.length'     => '账号超出范围(3-20)',
         'number.unique' => '账号已存在',
 
