@@ -23,6 +23,7 @@ class Users extends Validate
         'username' => 'length:3,12|chsDash|unique:users',
         'password' => 'length:5,36|password',
 
+        //'avatar' => 'length:3,254|url',
         'email' => 'length:3,254|email|unique:users',
         'phone' => 'mobile|unique:users',
 
@@ -67,7 +68,7 @@ class Users extends Validate
 
     //场景-规则
     static public $all_scene = [
-        'edit' => ['id', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
+        'edit' => ['id', 'avatar', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
         'register' => ['email', 'phone', 'username', 'password'],
         'login' => ['email', 'phone', 'username', 'password'],
     ];
