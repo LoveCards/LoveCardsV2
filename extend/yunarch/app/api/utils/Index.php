@@ -21,6 +21,14 @@ class Index
      * @var array
      */
     private $params;
+    // $params = [
+    //     'page' => Request::param('page', 0),
+    //     'list_rows' => Request::param('list_rows', 12),
+    //     'search_value' => Request::param('search_value'),
+    //     'search_keys' => UtilsCommon::isJson(Request::param('search_keys')),
+    //     'order_desc' => Request::param('order_desc'),
+    //     'order_key' => Request::param('order_key')
+    // ];
 
     /**
      * 查询对象
@@ -39,6 +47,10 @@ class Index
         $this->model = new $model();
         $this->params = $params;
         $this->query = $this->model;
+
+        //默认值设置
+        $this->params['page'] = isset($this->params['page']) ? $this->params['page'] : 1;
+        $this->params['list_rows'] = isset($this->params['list_rows']) ? $this->params['list_rows'] : 12;
     }
 
     /**
@@ -78,7 +90,13 @@ class Index
      */
     private function where($default_key = "id")
     {
-        if ($this->params['search_keys'] != null) {
+        // 没搜索值直接返回当前对象
+        if (!isset($this->params["search_value"])) {
+            return $this;
+        }
+
+        // 激活搜索
+        if (isset($this->params['search_keys'])) {
             $searchKey = $this->params['search_keys'];
             $map = [];
             foreach ($searchKey as $key => $value) {
@@ -88,6 +106,7 @@ class Index
         } else {
             $this->query = $this->query->where($default_key, 'like', '%' . $this->params['search_value'] . '%');
         }
+
         return $this;
     }
 

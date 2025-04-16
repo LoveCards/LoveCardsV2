@@ -12,10 +12,10 @@ class Utils
      * @param array $controlParams 控制参数数组
      * @return array 返回一个新的数组，仅包含符合条件的元素
      */
-    public function filterParams(array $inputParams, array $standardParams, array $controlParams = []): array
+    public function filterParams(array $inputParams, array $standardParams, array $mustParams = []): array
     {
         // 将控制参数数组转换为键值对，提高查找效率
-        $controlParams = array_flip($controlParams);
+        $mustParams = array_flip($mustParams);
 
         // 初始化返回数组
         $filteredParams = [];
@@ -25,9 +25,11 @@ class Utils
             // 检查传入参数数组中是否存在该键
             if (array_key_exists($key, $inputParams)) {
                 // 检查控制参数数组中该键是否为空
-                if (!isset($controlParams[$key]) || $inputParams[$key] !== '') {
-                    // 检查传入参数是否为空，为空则赋值为 null
-                    $filteredParams[$key] = $inputParams[$key] !== '' ? $inputParams[$key] : false;
+                if (!isset($mustParams[$key]) || $inputParams[$key] !== '') {
+                    // 检查传入参数是否为空，为空则赋值为 ''
+                    $filteredParams[$key] = $inputParams[$key] !== '' ? $inputParams[$key] : '';
+                } elseif (isset($mustParams[$key])) {
+                    $filteredParams[$key] = false; // 如果控制参数存在且值为空，则设置为 null
                 }
             }
         }

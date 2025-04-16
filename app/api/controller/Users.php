@@ -13,7 +13,7 @@ use app\api\validate\Users as UsersValidate;
 use yunarch\app\api\facade\ControllerUtils as ApiControllerUtils;
 use yunarch\app\api\facade\UtilsCommon as UtilsCommon;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
-
+use yunarch\app\api\utils\Json as ApiJsonUtils;
 
 use app\common\Export;
 
@@ -23,14 +23,17 @@ class Users
     //查询-GET
     public function Index()
     {
-        $params = [
-            'page' => Request::param('page', 0),
-            'list_rows' => Request::param('list_rows', 12),
-            'search_value' => Request::param('search_value'),
-            'search_keys' => UtilsCommon::isJson(Request::param('search_keys')),
-            'order_desc' => Request::param('order_desc'),
-            'order_key' => Request::param('order_key')
-        ];
+        // 获取参数并按照规则过滤
+        $params = ApiControllerUtils::filterParams(Request::param(), ApiIndexValidate::$all_scene['index']);
+        // 特殊处理
+        if (array_key_exists("search_keys", $params)) {
+            $decoded = json_decode($params['search_keys'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $params['search_keys'] = $decoded;
+            } else {
+                unset($params['search_keys']);
+            }
+        }
 
         //验证参数
         try {
@@ -44,7 +47,6 @@ class Users
         }
 
         $lDef_Result = UsersService::Index($params);
-        //dd($lDef_Result);
 
         return Export::Create($lDef_Result['data'], 200, null);
     }
@@ -62,7 +64,8 @@ class Users
     public function Patch()
     {
         //获取参数并按照规则过滤
-        $lDef_ParamData = ApiControllerUtils::filterParams(Request::param(), UsersValidate::$all_scene['edit']);
+        $MustParams = ['number'];
+        $lDef_ParamData = ApiControllerUtils::filterParams(Request::param(), UsersValidate::$all_scene['edit'], $MustParams);
 
         //验证修改参数是否合法
         try {
@@ -77,11 +80,11 @@ class Users
         }
 
         //如果密码存在则进行密码加密
-        if ($lDef_ParamData['password']) {
+        if (array_key_exists('password', $lDef_ParamData)) {
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
 
-        $tDef_Result = UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        $tDef_Result = UsersService::Patch($lDef_ParamData['id'], $lDef_ParamData);
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null);
         }

@@ -7,10 +7,21 @@ use think\Validate;
 //通用超级分页查询验证类
 class Index extends Validate
 {
+    static $all_scene = [
+        'index' => [
+            'page',
+            'list_rows',
+            'search_value',
+            'search_keys',
+            'order_desc',
+            'order_key'
+        ]
+    ];
+
     protected function searchKey($value, $rule, $data = [])
     {
         // 指定字段时，搜索值不能为空
-        if ($data['search_value'] == null) {
+        if (!isset($data['search_value'])) {
             return '搜索内容不能为空';
         }
         if (!is_array($value)) {
@@ -21,10 +32,10 @@ class Index extends Validate
 
     protected function stringBool($value, $rule, $data = [])
     {
-        if($value != null){
-            if($value == 'true' || $value == 'false'){
+        if ($value != null) {
+            if ($value == 'true' || $value == 'false') {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
