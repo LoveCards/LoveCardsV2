@@ -11,7 +11,7 @@ class Common
      * @param mixed $input 输入的值（通常是一个字符串）
      * @return array|null 如果输入是有效的 JSON 格式字符串，返回解析后的数组；否则返回 null
      */
-    function isJson($input)
+    function _isJson($input)
     {
         // 检查输入是否是字符串
         // JSON 格式字符串必须是字符串类型
@@ -49,7 +49,7 @@ class Common
      * var_dump(BatchOrSingle('hello')); // 输出：bool(false)
      * var_dump(BatchOrSingle(null)); // 输出：bool(false)
      */
-    function BatchOrSingle($id)
+    static public function BatchOrSingle($id)
     {
         // 如果输入是数字，直接返回该数字
         if (is_numeric($id)) {

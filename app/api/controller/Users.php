@@ -10,8 +10,8 @@ use think\facade\Db;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
+use yunarch\app\api\utils\Common as UtilsCommon;
 use yunarch\app\api\facade\ControllerUtils as ApiControllerUtils;
-use yunarch\app\api\facade\UtilsCommon as UtilsCommon;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
 use yunarch\app\api\utils\Json as ApiJsonUtils;
 
@@ -45,9 +45,9 @@ class Users
             $error = $e->getError();
             return Export::Create($error, 400, '参数错误');
         }
-
+        //调用服务
         $lDef_Result = UsersService::Index($params);
-
+        //返回结果
         return Export::Create($lDef_Result['data'], 200, null);
     }
 
@@ -67,7 +67,7 @@ class Users
         $MustParams = ['number'];
         $lDef_ParamData = ApiControllerUtils::filterParams(Request::param(), UsersValidate::$all_scene['edit'], $MustParams);
 
-        //验证修改参数是否合法
+        //验证参数
         try {
             validate(UsersValidate::class)
                 ->batch(true)
@@ -83,7 +83,7 @@ class Users
         if (array_key_exists('password', $lDef_ParamData)) {
             $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
         }
-
+        //调用服务
         $tDef_Result = UsersService::Patch($lDef_ParamData['id'], $lDef_ParamData);
         if ($tDef_Result['status']) {
             return Export::Create(null, 200, null);

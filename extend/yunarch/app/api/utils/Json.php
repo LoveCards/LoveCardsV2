@@ -6,7 +6,7 @@ namespace yunarch\app\api\utils;
 class Json
 {
     //  json类型验证
-    static function jsonTypePass($value, $rule)
+    static public function jsonTypePass($value, $rule)
     {
         //可以解析为数组
         if ($rule === 'array' && !is_array($value)) {
