@@ -3,58 +3,29 @@
 namespace app\api\validate;
 
 use think\Validate;
-use think\facade\Config;
+use yunarch\app\api\facade\ValidateUtils as ApiValidateUtils;
 
 class Users extends Validate
 {
-
-    // 自定义验证规则，检查密码格式
     protected function password($value)
     {
-        // 密码包含大写字母、小写字母、数字或特殊字符中的至少一个
-        if (!preg_match('/[A-Z]|[a-z]|\d|[@#$%^&+=!]/', $value)) {
-            return false;
-        }
-        return true;
+        return ApiValidateUtils::rulePassword($value);
     }
-
-    function jsonTypePass($value, $rule)
+    protected function arrayJson($value)
     {
-        //可以解析为数组
-        if ($rule === 'array' && !is_array($value)) {
-            return false;
-        }
-        //其他
-        if ($rule === 'integer' && !is_int($value)) {
-            return false;
-        }
-        if ($rule === 'string' && !is_string($value)) {
-            return false;
-        }
-        if ($rule === 'bool' && !is_bool($value)) {
-            return false;
-        }
-        return true;
-    }
-
-    function arrayJson($value)
-    {
-        $decoded = json_decode($value, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $this->jsonTypePass($decoded, 'array');
-        } else {
-            return false;
-        }
+        return ApiValidateUtils::ruleArrayJson($value);
     }
 
     //定义验证规则
     protected $rule =   [
         'id' => 'number',
-        'email' => 'length:3,254|email|unique:users',
-        'number' => 'require|length:3,20|alphaDash|unique:users',
-        'phone' => 'mobile|unique:users',
+        'number' => 'length:3,20|alphaDash|unique:users',
         'username' => 'length:3,12|chsDash|unique:users',
         'password' => 'length:5,36|password',
+
+        'email' => 'length:3,254|email|unique:users',
+        'phone' => 'mobile|unique:users',
+
         'status' => 'number',
 
         'roles_id' => 'arrayJson',
@@ -76,7 +47,7 @@ class Users extends Validate
         'email.require' => '邮箱不得为空',
         'email.email' => '邮箱格式不正确',
         'email.unique' => '邮箱已存在',
-        'emil.length'     => '账号超出范围(3-254)',
+        'email.length'     => '邮箱超出范围(3-254)',
 
         'phone.require' => '手机号不得为空',
         'phone.mobile' => '手机号格式不正确',
@@ -94,24 +65,31 @@ class Users extends Validate
         'roles_id.arrayJson' => '权限组格式错误',
     ];
 
-    //登入场景
+    //场景-规则
+    static public $all_scene = [
+        'edit' => ['id', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
+        'register' => ['email', 'phone', 'username', 'password'],
+        'login' => ['email', 'phone', 'username', 'password'],
+    ];
+
+    //场景-登入
     protected function sceneLogin()
     {
-        return $this->only(['email', 'phone', 'username', 'password'])
+        return $this->only($this::$all_scene['login'])
             ->remove('email', 'unique')
             ->remove('phone', 'unique')
             ->remove('username', 'unique');
     }
-    //注册场景
+    //场景-注册
     protected function sceneRegister()
     {
-        return $this->only(['email', 'phone', 'username', 'password'])
+        return $this->only($this::$all_scene['register'])
             ->append('require');
     }
-    //编辑场景
+    //场景-编辑
     protected function sceneEdit()
     {
-        return $this->only(['id', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'])
+        return $this->only($this::$all_scene['edit'])
             ->append('id', 'require');
     }
 }

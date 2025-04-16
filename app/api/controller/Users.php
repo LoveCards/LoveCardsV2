@@ -10,6 +10,7 @@ use think\facade\Db;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
+use yunarch\app\api\facade\ControllerUtils as ApiControllerUtils;
 use yunarch\app\api\facade\UtilsCommon as UtilsCommon;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
 
@@ -60,18 +61,8 @@ class Users
     //编辑-PUT
     public function Patch()
     {
-        //传入必要参数
-        $lDef_ParamData = [
-            'id' => Request::param('id'),
-            'number' => Request::param('number'),
-            'roles_id' => Request::param('roles_id'),
-            'avatar' => Request::param('avatar'),
-            'email' => Request::param('email'),
-            'phone' => Request::param('phone'),
-            'username' => Request::param('username'),
-            'password' => Request::param('password'),
-            'status' => Request::param('status'),
-        ];
+        //获取参数并按照规则过滤
+        $lDef_ParamData = ApiControllerUtils::filterParams(Request::param(), UsersValidate::$all_scene['edit']);
 
         //验证修改参数是否合法
         try {
