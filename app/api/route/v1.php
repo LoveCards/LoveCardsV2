@@ -36,8 +36,8 @@ Route::group('', function () {
     Route::post('user/email', 'user.info/PostEmail');
     Route::post('user/email-captcha', 'user.info/PostBindEmailCaptcha');
 
-    Route::patch('user', 'user.info/Patch');
-    Route::get('user', 'user.info/Get');
+    // Route::patch('user', 'user.info/Patch');
+    // Route::get('user', 'user.info/Get');
 
     Route::get('cards', 'Cards/List');
     Route::delete('cards', 'Cards/DeleteNew');

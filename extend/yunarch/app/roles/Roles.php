@@ -66,6 +66,9 @@ class Roles
                 '/api/cards/add',
                 '/api/comments/add',
                 '/api/cards/good',
+                
+                //新-遵循restful api
+                '/api/user/info',
             ]
         ],
     ];
