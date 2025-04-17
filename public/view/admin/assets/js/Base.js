@@ -35,7 +35,7 @@ class Base {
             UsersAdd: '/api/users/add',//添加用户
             UsersPatch: '/api/users/patch',//添加用户
 
-            UserInfo: '/api/user',//用户-RF
+            UserInfo: '/api/user/info',//用户-RF
             UserPassword: '/api/user/password',//设置密码
             UserEmail: '/api/user/email',//修改邮箱
             UserEmailCaptcha: '/api/user/email-captcha',//获取修改邮箱验证码
