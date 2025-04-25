@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\admin;
 
 use think\facade\Request;
 use think\facade\Db;
@@ -77,7 +77,7 @@ class Tags extends Common
     }
 
     //添加-POST
-    public function add()
+    public function Post()
     {
         $result = self::CAndU('', [
             'aid' => Request::param('aid'),
@@ -92,8 +92,8 @@ class Tags extends Common
         }
     }
 
-    //编辑-POST
-    public function edit()
+    //编辑-Patch
+    public function Patch()
     {
         $result = self::CAndU(Request::param('id'), [
             'aid' => Request::param('aid'),
@@ -109,8 +109,8 @@ class Tags extends Common
         }
     }
 
-    //删除-POST
-    public function delete()
+    //删除-DELETE
+    public function Delete()
     {
         //获取数据
         $id = Request::param('id');

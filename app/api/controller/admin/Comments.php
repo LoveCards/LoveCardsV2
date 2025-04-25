@@ -81,8 +81,8 @@ class Comments extends Common
         }
     }
 
-    //编辑-POST
-    public function Edit()
+    //编辑-PATCH
+    public function Patch()
     {
         $result = self::CAndU(Request::param('id'), [
             'uid' => Request::param('uid'),
