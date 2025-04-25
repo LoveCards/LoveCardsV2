@@ -11,9 +11,9 @@ use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use yunarch\app\api\utils\Common as UtilsCommon;
-use yunarch\app\api\facade\ControllerUtils as ApiControllerUtils;
+use yunarch\app\api\controller\Utils as ApiControllerUtils;
+use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
-use yunarch\app\api\utils\Json as ApiJsonUtils;
 
 use app\common\Export;
 
@@ -25,15 +25,8 @@ class Users
     {
         // 获取参数并按照规则过滤
         $params = ApiControllerUtils::filterParams(Request::param(), ApiIndexValidate::$all_scene['index']);
-        // 特殊处理
-        if (array_key_exists("search_keys", $params)) {
-            $decoded = json_decode($params['search_keys'], true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $params['search_keys'] = $decoded;
-            } else {
-                unset($params['search_keys']);
-            }
-        }
+        // search_keys转数组
+        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params);
 
         //验证参数
         try {

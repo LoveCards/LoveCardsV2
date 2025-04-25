@@ -1,6 +1,6 @@
 <?php
 
-namespace yunarch\app\api\utils;
+namespace yunarch\app\api\service;
 
 use think\Model;
 
@@ -8,7 +8,7 @@ use think\Model;
  * 通用模型超级分页查询类
  * 提供基于模型的灵活分页查询功能，支持条件筛选、字段过滤、排序等操作
  */
-class Index
+class IndexUtils
 {
     /**
      * 传入的模型类名

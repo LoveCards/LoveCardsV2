@@ -29,10 +29,7 @@ class Roles
             'value' => 'admin',
             'name' => '管理员',
             'baseUrl' => [
-                '/api/admin/add',
-                '/api/admin/edit',
-                '/api/admin/delete',
-
+                '/api/cards/index',
                 '/api/cards/edit',
                 '/api/cards/delete',
 
@@ -48,6 +45,45 @@ class Roles
                 '/api/users/delete',
 
                 '/api/dashboard',
+            ],
+            'restful_api' => [
+                [
+                    'base_url' => '/api/cards',
+                    'methods' => [
+                        'GET',
+                        'POST',
+                        'PUT',
+                        'DELETE'
+                    ]
+                ],
+                [
+                    'base_url' => '/api/comments',
+                    'methods' => [
+                        'GET',
+                        'POST',
+                        'PUT',
+                        'DELETE'
+                    ]
+                ],
+                [
+                    'base_url' => '/api/tags',
+                    'methods' => [
+                        'GET',
+                        'POST',
+                        'PUT',
+                        'DELETE'
+                    ]
+                ],
+                [
+                    'base_url' => '/api/users',
+                    'methods' => [
+                        'GET',
+                        'POST',
+                        'PUT',
+                        'DELETE'
+                    ]
+                ],
+
             ]
         ],
         2 => [
@@ -66,7 +102,7 @@ class Roles
                 '/api/cards/add',
                 '/api/comments/add',
                 '/api/cards/good',
-                
+
                 //新-遵循restful api
                 '/api/user/info',
             ]

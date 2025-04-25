@@ -6,7 +6,7 @@ use app\api\model\Users as UsersModel;
 
 use app\common\Common;
 
-use yunarch\app\api\utils\Index as UtilsIndex;
+use yunarch\app\api\service\IndexUtils;
 
 class Users
 {
@@ -89,8 +89,8 @@ class Users
      */
     public static function Index($params)
     {
-        $m = new UtilsIndex(UsersModel::class, $params);
-        $result = $m->common('username', ['password'], true);
+        $index = new IndexUtils(UsersModel::class, $params);
+        $result = $index->common('username', ['password'], true);
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
