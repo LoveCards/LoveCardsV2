@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\admin;
 
 use think\Request as TypeRequest;
 use think\facade\Request;
@@ -60,7 +60,7 @@ class Users
         //返回结果
     }
 
-    //编辑-PUT
+    //编辑-Patch
     public function Patch()
     {
         //获取参数并按照规则过滤

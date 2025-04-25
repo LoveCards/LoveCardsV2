@@ -47,8 +47,6 @@ class Roles
                 '/api/users/patch',
                 '/api/users/delete',
 
-                '/api/upload/user-images',
-
                 '/api/dashboard',
             ]
         ],

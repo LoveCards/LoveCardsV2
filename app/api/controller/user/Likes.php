@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\user;
 
 use think\facade\Request;
 use think\exception\ValidateException;

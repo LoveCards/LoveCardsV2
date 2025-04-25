@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\user;
 
 use think\facade\Request;
 use think\exception\ValidateException;
@@ -177,100 +177,6 @@ class Cards extends Common
             }
         } else {
             return Export::Create($result['data'], 500, $result['msg']);
-        }
-    }
-
-    //编辑-POST
-    public function Edit()
-    {
-        $result = self::CAndU(Request::param('id'), [
-            'uid' => Request::param('uid'),
-            'content' => Request::param('content'),
-
-            'woName' => Request::param('woName'),
-            'woContact' => Request::param('woContact'),
-            'taName' => Request::param('taName'),
-            'taContact' => Request::param('taContact'),
-
-            'tag' => Request::param('tag'),
-            'img' => Request::param('img'),
-
-            'top' => Request::param('top'),
-            'model' => Request::param('model'),
-            'status' => Request::param('status')
-        ], 'u');
-
-        if ($result['status']) {
-            return Export::Create(['id' => $result['data']], 200);
-        } else {
-            return Export::Create($result['data'], 500, '编辑失败');
-        }
-    }
-
-    //删除-POST
-    public function Delete()
-    {
-        $lDef_AppCardsID = APP::mArrayGetAppTableMapValue('cards')['data'];
-        //获取数据
-        $id = Request::param('id');
-
-        //获取Cards数据库对象
-        $result = Db::table('cards')->where('id', $id);
-        if (!$result->find()) {
-            return Export::Create(null, 400, 'id不存在');
-        }
-        $result->delete();
-
-        //获取img数据库对象
-        $result = Db::table('images')->where('aid', $lDef_AppCardsID)->where('pid', $id);
-        if ($result->find()) {
-            $result->delete();
-        }
-
-        //获取tag数据库对象
-        $result = Db::table('tags_map')->where('aid', $lDef_AppCardsID)->where('pid', $id);
-        if ($result->find()) {
-            $result->delete();
-        }
-
-        //获取comments数据库对象
-        $result = Db::table('comments')->where('aid', $lDef_AppCardsID)->where('pid', $id);
-        if ($result->find()) {
-            $result->delete();
-        }
-
-        //返回数据
-        return Export::Create(null, 200);
-    }
-
-    //设置-POST
-    public function Setting()
-    {
-
-        $data = [
-            'DefSetCardsImgNum' => Request::param('DefSetCardsImgNum'),
-            'DefSetCardsTagNum' => Request::param('DefSetCardsTagNum'),
-            'DefSetCardsStatus' => Request::param('DefSetCardsStatus'),
-            'DefSetCardsImgSize' => Request::param('DefSetCardsImgSize'),
-            'DefSetCardsCommentsStatus' => Request::param('DefSetCardsCommentsStatus')
-        ];
-
-        // 数据校验
-        try {
-            validate(CardsValidateSetting::class)
-                ->batch(true)
-                ->check($data);
-        } catch (ValidateException $e) {
-            $validateerror = $e->getError();
-            return Export::Create($validateerror, 400, '修改失败');
-        }
-
-        $result = BackEnd::mBoolCoverConfig('lovecards', $data, true);
-
-        if ($result == true) {
-            return Export::Create(null, 200);
-        } else {
-            return Export::Create(null, 400, '修改失败，请重试');
         }
     }
 
