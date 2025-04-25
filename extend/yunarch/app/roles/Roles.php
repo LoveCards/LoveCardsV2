@@ -10,6 +10,7 @@ class Roles
         0 => [
             'value' => 'root',
             'name' => '超级管理员',
+            //待优化
             'baseUrl' => [
                 '/api/cards/setting',
                 '/api/system/site',
@@ -29,82 +30,55 @@ class Roles
             'value' => 'admin',
             'name' => '管理员',
             'baseUrl' => [
-                '/api/cards/index',
-                '/api/cards/edit',
-                '/api/cards/delete',
+                //User
+                '/api/admin/users:get',
+                '/api/admin/users:patch',
+                '/api/admin/users:delete',
 
-                '/api/comments/edit',
-                '/api/comments/delete',
+                //Cards
+                '/api/admin/cards:get',
+                '/api/admin/cards:patch',
+                '/api/admin/cards:delete',
 
-                '/api/tags/add',
-                '/api/tags/edit',
-                '/api/tags/delete',
+                //Comments
+                '/api/admin/comments:patch',
+                '/api/admin/comments:delete',
 
-                '/api/users/index',
-                '/api/users/patch',
-                '/api/users/delete',
+                //Tags
+                '/api/admin/tags:post',
+                '/api/admin/tags:patch',
+                '/api/admin/tags:delete',
 
-                '/api/dashboard',
-            ],
-            'restful_api' => [
-                [
-                    'base_url' => '/api/cards',
-                    'methods' => [
-                        'GET',
-                        'POST',
-                        'PUT',
-                        'DELETE'
-                    ]
-                ],
-                [
-                    'base_url' => '/api/comments',
-                    'methods' => [
-                        'GET',
-                        'POST',
-                        'PUT',
-                        'DELETE'
-                    ]
-                ],
-                [
-                    'base_url' => '/api/tags',
-                    'methods' => [
-                        'GET',
-                        'POST',
-                        'PUT',
-                        'DELETE'
-                    ]
-                ],
-                [
-                    'base_url' => '/api/users',
-                    'methods' => [
-                        'GET',
-                        'POST',
-                        'PUT',
-                        'DELETE'
-                    ]
-                ],
-
+                //Dashboard
+                '/api/admin/dashboard:get',
             ]
         ],
         2 => [
             'value' => 'user',
             'name' => '用户',
+            //旧的API风格
             'baseUrl' => [
-                '/api/upload/user-images',
-                '/api/user/password',
-                '/api/user/email',
-                '/api/user/email-captcha',
-                //'/api/user',
-                '/api/cards',
-                '/api/comments',
-                '/api/likes',
+                '/api/upload/user-images:post',
+                '/api/user/password:post',
+                '/api/user/email:post',
+                '/api/user/email-captcha:post',
+                
+                '/api/cards:get',
+                '/api/cards:delete',
+
+                '/api/comments:get',
+                '/api/comments:delete',
+
+                '/api/likes:get',
+                '/api/likes:get',
                 //游客api
-                '/api/cards/add',
-                '/api/comments/add',
-                '/api/cards/good',
+                '/api/cards/add:post',
+                '/api/comments/add:post',
+                '/api/cards/good:post',
 
                 //新-遵循restful api
-                '/api/user/info',
+                '/api/user/info:patch',
+                '/api/user/info:get',
             ]
         ],
     ];
@@ -148,7 +122,8 @@ class Roles
         }
 
         $baseUrl = $group[$id]['baseUrl'];
-        $currentUrl = strtolower(Request::baseUrl());
+        //url+方法
+        $currentUrl = strtolower(Request::baseUrl() . ':' . Request::method());
 
         if (in_array($currentUrl, $baseUrl)) {
             return true;

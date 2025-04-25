@@ -13,7 +13,7 @@ use yunarch\app\roles\middleware\RolesCheck;
 
 //不鉴权
 Route::get('theme/config', 'theme/Config');
-Route::post('upload/image', 'upload/Images');
+Route::post('upload/image', 'Upload/Image');
 
 Route::group('', function () {
     Route::post('upload/user-images', 'upload/UserImages');

@@ -31,9 +31,6 @@ class Cards
     static public function list()
     {
         $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            throw new \Exception('请先登入', 401);
-        }
 
         //$currentPage = 1;
         $pageSize = 15;
@@ -50,9 +47,6 @@ class Cards
     static public function updata($data, $where = [], $allowField = [])
     {
         $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            throw new \Exception('请先登入', 401);
-        }
 
         $where = ['uid' => $context['uid']] + $where;
         $result = CardsModel::update($data, $where, $allowField);

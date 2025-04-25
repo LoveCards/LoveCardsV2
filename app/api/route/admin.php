@@ -28,21 +28,21 @@ Route::group('', function () {
     Route::post('cards/setting', 'admin.Cards/Setting');
 
     //管理员
-    Route::get('cards/index', 'admin.Cards/Index');
-    Route::post('cards/edit', 'admin.Cards/Edit');
-    Route::post('cards/delete', 'admin.Cards/Delete');
+    Route::get('admin/cards', 'admin.Cards/Index');
+    Route::patch('admin/cards', 'admin.Cards/Patch');
+    Route::delete('admin/cards', 'admin.Cards/Delete');
 
-    Route::get('users/index', 'admin.Users/Index');
-    Route::patch('users/patch', 'admin.Users/Patch');
-    Route::delete('users/delete', 'admin.Users/Delete');
+    Route::get('admin/users', 'admin.Users/Index');
+    Route::patch('admin/users', 'admin.Users/Patch');
+    Route::delete('admin/users', 'admin.Users/Delete');
 
-    Route::post('tags/add', 'admin.Tags/Add');
-    Route::post('tags/edit', 'admin.Tags/Edit');
-    Route::post('tags/delete', 'admin.Tags/Delete');
+    Route::post('admin/tags', 'admin.Tags/Post');
+    Route::patch('admin/tags', 'admin.Tags/Patch');
+    Route::delete('admin/tags', 'admin.Tags/Delete');
 
-    Route::post('comments/edit', 'admin.Comments/Edit');
-    Route::post('comments/delete', 'admin.Comments/Delete');
+    Route::patch('admin/comments', 'admin.Comments/Patch');
+    Route::post('admin/comments', 'admin.Comments/Delete');
 
     //控制台
-    Route::get('dashboard', 'admin.Dashboard/Index');
+    Route::get('admin/dashboard', 'admin.Dashboard/Index');
 })->middleware([JwtAuthCheck::class, RolesCheck::class]);

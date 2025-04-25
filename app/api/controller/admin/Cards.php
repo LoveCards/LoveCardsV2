@@ -153,8 +153,8 @@ class Cards extends Common
         }
     }
 
-    //编辑-POST
-    public function Edit()
+    //编辑-Patch
+    public function Patch()
     {
         $result = self::CAndU(Request::param('id'), [
             'uid' => Request::param('uid'),
