@@ -15,6 +15,9 @@ use app\api\middleware\GeetestCheck;
 use yunarch\app\roles\middleware\RolesCheck;
 
 Route::group('', function () {
+    //控制台
+    Route::get('dashboard', 'Dashboard/Index');
+
     Route::patch('user/info', 'user.info/Patch');
     Route::get('user/info', 'user.info/Get');
 })->middleware([JwtAuthCheck::class, RolesCheck::class]);
