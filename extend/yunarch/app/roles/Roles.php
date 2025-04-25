@@ -48,6 +48,8 @@ class Roles
                 '/api/users/delete',
 
                 '/api/upload/user-images',
+
+                '/api/dashboard',
             ]
         ],
         2 => [
@@ -58,7 +60,7 @@ class Roles
                 '/api/user/password',
                 '/api/user/email',
                 '/api/user/email-captcha',
-                '/api/user',
+                //'/api/user',
                 '/api/cards',
                 '/api/comments',
                 '/api/likes',
