@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\user;
 
 use app\api\service\Comments as CommentsService;
 use think\facade\Db;
@@ -15,38 +15,6 @@ use app\common\Export;
 
 class Comments extends Common
 {
-
-    //列表
-    public function List()
-    {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            return Export::Create([], 401, '请先登入');
-        }
-
-        try {
-            $result = CommentsService::list($context);
-        } catch (\Throwable $th) {
-            return Export::Create([], $th->getCode(), $th->getMessage());
-        }
-        return Export::Create($result);
-    }
-
-    //删除-面向用户的软删除
-    public function DeleteNew()
-    {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            return Export::Create([], 401, '请先登入');
-        }
-
-        try {
-            CommentsService::updata($context, ['status' => 1], ['id' => Request::param('id')]);
-        } catch (\Throwable $th) {
-            return Export::Create([], $th->getCode(), $th->getMessage());
-        }
-        return Export::Create([]);
-    }
 
     protected function CAndU($id, $data, $method)
     {
@@ -138,39 +106,35 @@ class Comments extends Common
         }
     }
 
-    //编辑-POST
-    public function Edit()
+    //列表
+    public function List()
     {
-        $result = self::CAndU(Request::param('id'), [
-            'uid' => Request::param('uid'),
-            'content' => Request::param('content'),
-            'name' => Request::param('name'),
-            'status' => Request::param('status')
-        ], 'u');
-
-        if ($result['status']) {
-            return Export::Create(null, 200);
-        } else {
-            return Export::Create($result['data'], 500, $result['msg']);
+        $context = request()->JwtData;
+        if ($context['uid'] == 0) {
+            return Export::Create([], 401, '请先登入');
         }
+
+        try {
+            $result = CommentsService::list($context);
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
+        }
+        return Export::Create($result);
     }
 
-    //删除-POST
-    public function Delete()
+    //删除-面向用户的软删除
+    public function DeleteNew()
     {
-        $id = Request::param('id');
-        if (!$id) {
-            return Export::Create(null, 400, 'id缺失');
+        $context = request()->JwtData;
+        if ($context['uid'] == 0) {
+            return Export::Create([], 401, '请先登入');
         }
 
-        //获取数据库对象
-        $result = Db::table('comments')->where('id', $id);
-        if (!$result->find()) {
-            return Export::Create(null, 500, 'id不存在');
+        try {
+            CommentsService::updata($context, ['status' => 1], ['id' => Request::param('id')]);
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
         }
-        if (!$result->delete()) {
-            return Export::Create(null, 500, '删除失败');
-        }
-        return Export::Create(null, 200);
+        return Export::Create([]);
     }
 }
