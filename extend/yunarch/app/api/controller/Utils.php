@@ -4,6 +4,7 @@ namespace yunarch\app\api\controller;
 
 class Utils
 {
+
     /**
      * 控制层参数过滤器(按照验证类标准参数过滤传入参数常用于-非GET请求)
      * 
@@ -12,7 +13,7 @@ class Utils
      * @param array $controlParams 控制参数数组
      * @return array 返回一个新的数组，仅包含符合条件的元素
      */
-    public function filterParams(array $inputParams, array $standardParams, array $mustParams = []): array
+    static public function filterParams(array $inputParams, array $standardParams, array $mustParams = []): array
     {
         // 将控制参数数组转换为键值对，提高查找效率
         $mustParams = array_flip($mustParams);

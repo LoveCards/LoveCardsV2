@@ -3,17 +3,17 @@
 namespace app\api\validate;
 
 use think\Validate;
-use yunarch\app\api\facade\ValidateUtils as ApiValidateUtils;
+use yunarch\app\api\validate\RuleUtils;
 
 class Users extends Validate
 {
     protected function password($value)
     {
-        return ApiValidateUtils::rulePassword($value);
+        return RuleUtils::password($value);
     }
     protected function arrayJson($value)
     {
-        return ApiValidateUtils::ruleArrayJson($value);
+        return RuleUtils::arrayJson($value);
     }
 
     //定义验证规则

@@ -19,8 +19,36 @@ use app\common\Export;
 use app\common\BackEnd;
 use app\common\App;
 
+use yunarch\app\api\controller\Utils as ApiControllerUtils;
+use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
+use yunarch\app\api\validate\Index as ApiIndexValidate;
+
 class Cards extends Common
 {
+
+    public function Index()
+    {
+        // 获取参数并按照规则过滤
+        $params = ApiControllerUtils::filterParams(Request::param(), ApiIndexValidate::$all_scene['index']);
+        // search_keys转数组
+        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params);
+
+        //验证参数
+        try {
+            validate(ApiIndexValidate::class)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
+        }
+        //调用服务
+        $lDef_Result = CardsService::Index($params);
+        //返回结果
+        return Export::Create($lDef_Result['data'], 200, null);
+    }
+
     //操作函数
     protected function CAndU($id, $data, $method)
     {

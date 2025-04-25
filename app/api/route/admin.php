@@ -28,6 +28,7 @@ Route::group('', function () {
     Route::post('cards/setting', 'admin.Cards/Setting');
 
     //管理员
+    Route::get('cards/index', 'admin.Cards/Index');
     Route::post('cards/edit', 'admin.Cards/Edit');
     Route::post('cards/delete', 'admin.Cards/Delete');
 

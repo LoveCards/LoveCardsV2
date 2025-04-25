@@ -2,24 +2,30 @@
 
 namespace app\api\service;
 
-use think\facade\View;
-use think\facade\Db;
-use think\facade\Request;
-use think\facade\Config;
-
-use app\api\model\Images as ImagesModel;
-use app\common\BackEnd;
-use app\common\FrontEnd;
 use app\common\Common;
-use app\index\BaseController;
 
 use app\api\model\Cards as CardsModel;
 use app\api\service\Exception;
-use Error;
-use Exception as GlobalException;
+
+use yunarch\app\api\service\IndexUtils;
 
 class Cards
 {
+
+    /**
+     * 读取用户卡片
+     *
+     * @return void
+     */
+    static public function Index($params)
+    {
+        $index = new IndexUtils(CardsModel::class, $params);
+        $result = $index->common('woName', [], true);
+        if ($result) {
+            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+        }
+        return Common::mArrayEasyReturnStruct('列表查询失败', false);
+    }
 
     //列表
     static public function list()
