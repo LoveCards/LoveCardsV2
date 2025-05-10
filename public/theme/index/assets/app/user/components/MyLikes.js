@@ -75,7 +75,7 @@ const MyLikes = {
         <div class="mdui-card mdui-m-b-2">
             <div class="mdui-p-a-2">
                 <div class="mdui-typo-title-opacity">
-                    我的卡片
+                    我的喜欢
                 </div>
             </div>
         </div>
