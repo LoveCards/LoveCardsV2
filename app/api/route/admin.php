@@ -36,6 +36,7 @@ Route::group('', function () {
     Route::patch('admin/users', 'admin.Users/Patch');
     Route::delete('admin/users', 'admin.Users/Delete');
 
+    Route::get('admin/tags', 'admin.Tags/Index');
     Route::post('admin/tags', 'admin.Tags/Post');
     Route::patch('admin/tags', 'admin.Tags/Patch');
     Route::delete('admin/tags', 'admin.Tags/Delete');
