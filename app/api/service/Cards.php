@@ -20,7 +20,7 @@ class Cards
     static public function Index($params)
     {
         $index = new IndexUtils(CardsModel::class, $params);
-        $result = $index->common('woName', [], true);
+        $result = $index->common('content', [], true);
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
