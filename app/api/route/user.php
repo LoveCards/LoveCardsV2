@@ -17,6 +17,9 @@ Route::post('user/auth/register', 'user.Auth/Register');
 Route::post('user/auth/captcha', 'user.Auth/Captcha');
 
 Route::group('', function () {
+    //标签
+    Route::get('tags', 'user.Tags/noPaginateIndex');
+
     //卡片
     Route::get('cards', 'user.Cards/List');
     Route::delete('cards', 'user.Cards/DeleteNew');

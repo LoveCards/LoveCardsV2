@@ -70,6 +70,22 @@ class IndexUtils
     }
 
     /**
+     * 执行不分页查询逻辑
+     * 包括条件筛选、字段过滤、排序
+     * @param string|null $where_default_key 默认筛选字段
+     * @param array $withoutField 需要排除的字段
+     * @param bool|null $order_default_desc 默认排序是否为降序
+     * @return mixed 查询结果
+     */
+    public function noPaginate($where_default_key = null, $withoutField = [], $order_default_desc = null)
+    {
+        return $this->where($where_default_key)
+            ->withoutField($withoutField)
+            ->order($order_default_desc)
+            ->query->select();
+    }
+
+    /**
      * 排除指定字段
      * @param array $withoutField 需要排除的字段
      * @return $this 返回当前对象，支持链式调用

@@ -69,7 +69,7 @@ trait Cards
         //Cards推荐列表
         //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit(CONST_G_HOT_LISTS_MAX)->select()->toArray();
-        $lDef_Result = Db::query("select * from cards where top = '0' and status = '0' order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+        $lDef_Result = Db::query("select * from cards where top = 0 and status = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
         //合并推荐列表到置顶列表
         $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
         //取Good状态合并到CardList数据

@@ -7,14 +7,43 @@ use think\facade\Db;
 use think\exception\ValidateException;
 
 use app\api\model\Tags as TagsModel;
+use app\api\service\Tags as TagsService;
 use app\api\model\TagsMap as TagsMapModel;
 use app\api\validate\Tags as TagsValidate;
 
 use app\common\Common;
 use app\common\Export;
 
+use yunarch\app\api\controller\Utils as ApiControllerUtils;
+use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
+use yunarch\app\api\validate\Index as ApiIndexValidate;
+
 class Tags extends Common
 {
+
+    //获取-GET
+    public function Index()
+    {
+        // 获取参数并按照规则过滤
+        $params = ApiControllerUtils::filterParams(Request::param(), ApiIndexValidate::$all_scene['index']);
+        // search_keys转数组
+        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params);
+
+        //验证参数
+        try {
+            validate(ApiIndexValidate::class)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
+        }
+        //调用服务
+        $lDef_Result = TagsService::Index($params);
+        //返回结果
+        return Export::Create($lDef_Result['data'], 200, null);
+    }
 
     protected function CAndU($id, $data, $method)
     {

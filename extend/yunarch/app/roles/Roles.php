@@ -45,6 +45,7 @@ class Roles
                 '/api/admin/comments:delete',
 
                 //Tags
+                '/api/admin/tags:get',
                 '/api/admin/tags:post',
                 '/api/admin/tags:patch',
                 '/api/admin/tags:delete',
@@ -62,7 +63,7 @@ class Roles
                 '/api/user/password:post',
                 '/api/user/email:post',
                 '/api/user/email-captcha:post',
-                
+
                 '/api/cards:get',
                 '/api/cards:delete',
 
@@ -70,7 +71,7 @@ class Roles
                 '/api/comments:delete',
 
                 '/api/likes:get',
-                '/api/likes:get',
+                '/api/likes:delete',
                 //游客api
                 '/api/cards/add:post',
                 '/api/comments/add:post',
@@ -79,6 +80,8 @@ class Roles
                 //新-遵循restful api
                 '/api/user/info:patch',
                 '/api/user/info:get',
+
+                '/api/tags:get',
             ]
         ],
     ];
