@@ -31,6 +31,8 @@ class BaseController extends Common
         'CARD.ip',
         'CARD.top',
         'CARD.status',
+        'CARD.uid',
+        'USER.avatar as userAvatar', // USER是users表的别名
         'IF(GOOD.id IS NOT NULL, TRUE, FALSE) AS ipGood', // 使用 IF 函数判断是否存在匹配项
     ]; //Cards通用查询字段
 

@@ -56,14 +56,57 @@
         <div
             class="mdui-card mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-p-a-2">
             <div class="mdui-typo-headline-opacity mdui-text-left">
-                {if $Card.CardData['woName']}
-                {$Card.CardData['woName']}
-                {else}
-                匿名
-                {/if}
+                <!-- 头像与用户信息区域 -->
+                <div class="mdui-valign">
+                    <!-- 头像 -->
+                    <img class="mdui-img-circle mdui-m-r-2" width="48" height="48" src="{if isset($Card.CardData['uid']) && $Card.CardData['uid'] > 0 && isset($Card.CardData['userAvatar']) && $Card.CardData['userAvatar']}{$Card.CardData['userAvatar']}{else}/theme/index/assets/image/guest.png{/if}" />
+                    <!-- 用户名与联系方式 -->
+                    <div>
+                        <div>
+                            {if $Card.CardData['woName']}
+                            {$Card.CardData['woName']}
+                            {else}
+                            匿名
+                            {/if}
+                        </div>
+                        {if isset($Card.CardData['woContact']) && $Card.CardData['woContact'] != ''}
+                        <div class="mdui-typo-caption-opacity">联系方式: {$Card.CardData['woContact']}</div>
+                        {/if}
+                    </div>
+                </div>
             </div>
             <div class="mdui-text-center">
-                <i class="css-icon iconfont icon-heart-pulse"></i>
+                <i class="css-icon iconfont icon-heart-pulse" style="font-size: 48px;"></i>
+            </div>
+            <div class="mdui-typo-headline-opacity mdui-text-right">{$Card.CardData['taName']}</div>
+        </div>
+    </div>
+    {else}
+    <div class="mdui-p-t-2">
+        <div
+            class="mdui-card mdui-color-theme-{if $ThemeConfig.ThemeAccentDepth}{$ThemeConfig.ThemeAccentDepth}{else}accent{/if} mdui-p-a-2">
+            <div class="mdui-typo-headline-opacity mdui-text-left">
+                <!-- 头像与用户信息区域 -->
+                <div class="mdui-valign">
+                    <!-- 头像 -->
+                    <img class="mdui-img-circle mdui-m-r-2" width="48" height="48" src="{if isset($Card.CardData['uid']) && $Card.CardData['uid'] > 0 && isset($Card.CardData['userAvatar']) && $Card.CardData['userAvatar']}{$Card.CardData['userAvatar']}{else}/theme/index/assets/image/guest.png{/if}" />
+                    <!-- 用户名与联系方式 -->
+                    <div>
+                        <div>
+                            {if $Card.CardData['woName']}
+                            {$Card.CardData['woName']}
+                            {else}
+                            匿名
+                            {/if}
+                        </div>
+                        {if isset($Card.CardData['woContact']) && $Card.CardData['woContact'] != ''}
+                        <div class="mdui-typo-caption-opacity">联系方式: {$Card.CardData['woContact']}</div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-text-center">
+                <i class="mdui-icon material-icons" style="font-size: 48px;">chat</i>
             </div>
             <div class="mdui-typo-headline-opacity mdui-text-right">{$Card.CardData['taName']}</div>
         </div>
