@@ -36,6 +36,7 @@ class Roles
                 '/api/admin/users:delete',
 
                 //Cards
+                '/api/admin/card:get',
                 '/api/admin/cards:get',
                 '/api/admin/cards:patch',
                 '/api/admin/cards:delete',

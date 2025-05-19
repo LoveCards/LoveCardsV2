@@ -24,7 +24,21 @@ class Cards
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
-        return Common::mArrayEasyReturnStruct('列表查询失败', false);
+        return Common::mArrayEasyReturnStruct('查询失败', false);
+    }
+
+    /**
+     * 读取卡片
+     *
+     * @return void
+     */
+    static public function Get($id)
+    {
+        $result = CardsModel::where('id', $id)->find();
+        if ($result) {
+            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+        }
+        return Common::mArrayEasyReturnStruct('查询失败', false);
     }
 
     //列表
