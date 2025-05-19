@@ -25,9 +25,10 @@ Route::group('', function () {
     Route::post('system/templateset', 'admin.System/TemplateSet');
     Route::post('system/geetest', 'admin.System/Geetest');
 
-    Route::post('cards/setting', 'admin.Cards/Setting');
+    Route::post('cards/setting', 'admin.Cards/Setting'); 
 
     //管理员
+    Route::get('admin/card', 'admin.Cards/Get');
     Route::get('admin/cards', 'admin.Cards/Index');
     Route::patch('admin/cards', 'admin.Cards/Patch');
     Route::delete('admin/cards', 'admin.Cards/Delete');

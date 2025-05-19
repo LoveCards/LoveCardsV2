@@ -22,9 +22,32 @@ use app\common\App;
 use yunarch\app\api\controller\Utils as ApiControllerUtils;
 use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
+use yunarch\app\api\validate\Get as ApiGetValidate;
 
 class Cards extends Common
 {
+
+    public function Get()
+    {
+        // 获取参数
+        $params = Request::param();
+
+        //验证参数
+        try {
+            validate(ApiGetValidate::class)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
+        }
+
+        //调用服务
+        $lDef_Result = CardsService::Get($params['id']);
+        //返回结果
+        return Export::Create($lDef_Result['data'], 200, null);
+    }
 
     public function Index()
     {

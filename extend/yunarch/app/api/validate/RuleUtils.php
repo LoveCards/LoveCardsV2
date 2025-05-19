@@ -16,12 +16,22 @@ class RuleUtils
         }
         return true;
     }
-    // 通用JSON验证规则
+    // 通用JSON->Array验证规则
     static public function arrayJson($value)
     {
         $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             return ApiUtilsJson::jsonTypePass($decoded, 'array');
+        } else {
+            return false;
+        }
+    }
+    // 通用JSON->Array||Integer验证规则
+    static public function arrayOrIntJson($value)
+    {
+        $decoded = json_decode($value, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return (ApiUtilsJson::jsonTypePass($decoded, 'array')||ApiUtilsJson::jsonTypePass($decoded, 'Integer'));
         } else {
             return false;
         }
