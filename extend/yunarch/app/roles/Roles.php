@@ -65,6 +65,7 @@ class Roles
                 '/api/user/email:post',
                 '/api/user/email-captcha:post',
 
+                '/api/card/images:get',
                 '/api/cards:get',
                 '/api/cards:delete',
 
