@@ -23,6 +23,10 @@ Route::group('', function () {
     //卡片
     Route::get('cards', 'user.Cards/List');
     Route::delete('cards', 'user.Cards/DeleteNew');
+
+    //图片
+    Route::get('card/images', 'admin.Images/CardIndex');
+
     //特殊鉴权
     Route::group('', function () {
         Route::post('cards/add', 'user.Cards/Add');
