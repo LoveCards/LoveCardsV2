@@ -75,12 +75,12 @@ class Upload
         if (!isset($context['aid'])) {
             $lReq_ParmasArray['uid'] = $context['uid'];
         }
-        $lReq_ParmasArray['url'] =  $lDef_Result;
+        $lReq_ParmasArray['url'] =  '/storage/' . $lDef_Result;
         $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
         if (!$lDef_CreatData) {
             //待完善-回滚操作，删除文件
             return Export::Create('数据创建失败', 500, '上传失败');
         }
-        return Export::Create('/storage/' . $lDef_Result, 200, null);
+        return Export::Create($lReq_ParmasArray['url'], 200, null);
     }
 }
