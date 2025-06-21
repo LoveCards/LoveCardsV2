@@ -57,14 +57,9 @@ class Cards
         return $result;
     }
 
-    //更新指定ID的指定字段
+    //模型更新方法
     static public function updata($data, $where = [], $allowField = [])
     {
-        $context = request()->JwtData;
-
-        $where = ['uid' => $context['uid']] + $where;
-        $result = CardsModel::update($data, $where, $allowField);
-
-        return $result;
+        return CardsModel::update($data, $where, $allowField);
     }
 }

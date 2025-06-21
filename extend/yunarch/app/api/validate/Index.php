@@ -7,6 +7,7 @@ use think\Validate;
 //通用超级分页查询验证类
 class Index extends Validate
 {
+    //参数过滤场景
     static $all_scene = [
         'index' => [
             'page',
