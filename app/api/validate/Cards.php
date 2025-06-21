@@ -5,75 +5,92 @@ namespace app\api\validate;
 use think\Validate;
 use think\facade\Config;
 
+use yunarch\app\api\validate\RuleUtils;
+
 class Cards extends Validate
 {
+    protected function arrayJson($value)
+    {
+        return RuleUtils::arrayJson($value);
+    }
+
+    //参数过滤场景
+    static public $all_scene = [
+        'user' => [
+            'post' => [
+                'data',
+                'cover',
+                'content'
+            ],
+            'patch' => [
+                'id',
+                'data',
+                'cover',
+                'content'
+            ],
+        ],
+        'admin' => [
+            'patch' => [
+                'id',
+                'is_top',
+                'status',
+                'user_id',
+                'data',
+                'cover',
+                'content',
+                'tags',
+                'goods',
+                'views',
+                'comments',
+            ]
+        ],
+    ];
+
     //定义验证规则
     protected $rule =   [
-        'uid' => 'number',
-        'content' => 'require',
-
-        'woName' => 'chsDash|max:36',
-        'woContact' => 'max:64',
-        'taName' => 'require|chsDash|length:1,36',
-        'taContact' => 'max:64',
-
-        'good' => 'number',
+        'id' => 'number',
+        'is_top' => 'number',
+        'status' => 'number',
+        'user_id' => 'number',
+        'data' => 'arrayJson',
+        'cover' => 'url|max:2083',
+        //'content' => '',
+        'tags' => '	arrayJson',
+        'goods' => 'number',
+        'views' => 'number',
         'comments' => 'number',
-
-        'tag' => 'JSON:TAG',
-        'img' => 'JSON',
-
-        'model' => 'in:0,1',
-        'top' => 'in:0,1',
-        'status' => 'in:0,1',
+        'post_ip' => 'ip|max:39',
+        'created_at' => 'date',
+        'updated_at' => 'date',
+        'deleted_at' => 'date',
     ];
 
     //定义错误信息
     protected $message  =   [
-        'uid.number' => 'uid格式非法',
-        'content.require' => 'content不得为空',
+        'id.number' => 'ID格式错误',
 
-        'woName.chsDash' => 'woName只能是汉字、字母、数字和下划线_及破折号-',
-        'woName.max' => 'woName超出范围(36)',
-        'woContact.max' => 'woContact超出范围(60)',
+        'is_top.number' => '置顶状态格式错误',
 
-        'taName.require' => 'taName不得为空',
-        'taName.chsDash' => 'taName只能是汉字、字母、数字和下划线_及破折号-',
-        'taName.max' => 'taName超出范围(36)',
-        'taContact.max' => 'taContact超出范围(60)',
+        'status.number' => '状态格式错误',
 
-        'good.number' => 'good格式非法',
-        'comments.number' => 'comments格式非法',
+        'user_id.number' => '用户ID格式错误',
 
-        'tag.JSON' => 'tag超过上限或格式非法',
-        'img.JSON' => 'img超过上限或格式非法',
+        'data.arrayJson' => '数据格式错误',
 
-        'model.in' => 'model格式非法',
-        'top.in' => 'top格式非法',
-        'status.in' => 'status格式非法',
+        'cover.url' => '封面图片格式不正确',
+        'cover.max' => '封面图片链接过长',
+
+        //'content.require' => '内容不得为空',
+
+        'tags.arrayJson' => '标签格式错误',
+
+        'goods.number' => '商品ID格式错误',
+
+        'views.number' => '浏览量格式错误',
+
+        'comments.number' => '评论数格式错误',
+
+        'post_ip.ip' => 'IP地址格式不正确',
+        'post_ip.max' => 'IP地址过长',
     ];
-
-    // 自定义验证规则
-    protected function JSON($value, $rule)
-    {
-        //获取数量限制配置
-        if ($rule == 'TAG') {
-            $rule = Config::get('lovecards.api.Cards.DefSetCardsTagNum');
-        } else {
-            //默认数量限制
-            $rule = Config::get('lovecards.api.Cards.DefSetCardsImgNum');
-        }
-        //格式转换
-        $value = json_decode($value, true);
-        //判断JSON格式
-        if (json_last_error() == JSON_ERROR_NONE) {
-            //判断图片数量
-            if (sizeof($value) <= $rule) {
-                //满足数量限制
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

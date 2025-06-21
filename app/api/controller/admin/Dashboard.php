@@ -45,7 +45,7 @@ class Dashboard
         $tDef_ViewDataCount = [
             'cards' => Db::table('cards')->count(),
             'comments' => Db::table('comments')->count(),
-            'good' => Db::table('good')->count()
+            'goods' => Db::table('goods')->count()
         ];
         //取图表数据
         $tDef_ViewChartJson = [
@@ -59,7 +59,7 @@ class Dashboard
             ],
             [
                 'label' => '点赞',
-                'data' => fArrayGetChartData('good')
+                'data' => fArrayGetChartData('goods')
             ],
         ];
 

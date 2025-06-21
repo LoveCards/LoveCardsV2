@@ -179,28 +179,24 @@ class Cards extends Common
     //编辑-Patch
     public function Patch()
     {
-        $result = self::CAndU(Request::param('id'), [
-            'uid' => Request::param('uid'),
-            'content' => Request::param('content'),
+        // 获取参数并按照规则过滤
+        $params = ApiControllerUtils::filterParams(Request::param(), CardsValidate::$all_scene['admin']['patch']);
 
-            'woName' => Request::param('woName'),
-            'woContact' => Request::param('woContact'),
-            'taName' => Request::param('taName'),
-            'taContact' => Request::param('taContact'),
-
-            'tag' => Request::param('tag'),
-            'img' => Request::param('img'),
-
-            'top' => Request::param('top'),
-            'model' => Request::param('model'),
-            'status' => Request::param('status')
-        ], 'u');
-
-        if ($result['status']) {
-            return Export::Create(['id' => $result['data']], 200);
-        } else {
-            return Export::Create($result['data'], 500, '编辑失败');
+        //验证参数
+        try {
+            validate(ApiIndexValidate::class)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
         }
+        //调用服务
+        $lDef_Result = CardsService::updata($params);
+
+        //返回结果
+        return Export::Create($lDef_Result['data'], 200, null);
     }
 
     //删除-POST
