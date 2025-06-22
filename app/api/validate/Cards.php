@@ -14,19 +14,29 @@ class Cards extends Validate
         return RuleUtils::arrayJson($value);
     }
 
+    //验证数组长度
+    protected function checkArrayLength($value)
+    {
+        $config = Config::get('lovecards.api.Cards');
+        $decoded = json_decode($value, true);
+        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
+    }
+
     //参数过滤场景
     static public $all_scene = [
         'user' => [
             'post' => [
                 'data',
                 'cover',
-                'content'
+                'content',
+                'pictures',
             ],
             'patch' => [
                 'id',
                 'data',
                 'cover',
-                'content'
+                'content',
+                'pictures',
             ],
         ],
         'admin' => [
@@ -42,12 +52,14 @@ class Cards extends Validate
                 'goods',
                 'views',
                 'comments',
+                'pictures',
             ]
         ],
     ];
 
     //定义验证规则
     protected $rule =   [
+        //数据库
         'id' => 'number',
         'is_top' => 'number',
         'status' => 'number',
@@ -63,6 +75,9 @@ class Cards extends Validate
         'created_at' => 'date',
         'updated_at' => 'date',
         'deleted_at' => 'date',
+
+        //前端
+        'pictures' => 'arrayJson|checkArrayLength',
     ];
 
     //定义错误信息
@@ -75,10 +90,10 @@ class Cards extends Validate
 
         'user_id.number' => '用户ID格式错误',
 
-        'data.arrayJson' => '数据格式错误',
+        'data.arrayJson' => '自定义字段格式错误',
 
         'cover.url' => '封面图片格式不正确',
-        'cover.max' => '封面图片链接过长',
+        'cover.max' => '封面图片地址过长',
 
         //'content.require' => '内容不得为空',
 
@@ -92,5 +107,8 @@ class Cards extends Validate
 
         'post_ip.ip' => 'IP地址格式不正确',
         'post_ip.max' => 'IP地址过长',
+
+        'pictures.arrayJson' => '图集格式错误',
+        'pictures.checkArrayNumber' => '图片个数超出上限',
     ];
 }

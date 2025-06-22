@@ -31,9 +31,19 @@ class RuleUtils
     {
         $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
-            return (ApiUtilsJson::jsonTypePass($decoded, 'array')||ApiUtilsJson::jsonTypePass($decoded, 'Integer'));
+            return (ApiUtilsJson::jsonTypePass($decoded, 'array') || ApiUtilsJson::jsonTypePass($decoded, 'Integer'));
         } else {
             return false;
         }
+    }
+
+    // 验证数组长度
+    static public function checkArrayLength($value, $rule)
+    {
+        $length = count($value);
+        if ($length <= $rule) {
+            return true;
+        }
+        return false;
     }
 }
