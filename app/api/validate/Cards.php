@@ -13,13 +13,19 @@ class Cards extends Validate
     {
         return RuleUtils::arrayJson($value);
     }
-
-    //验证数组长度
-    protected function checkArrayLength($value)
+    //验证图片个数
+    protected function picturesLength($value)
     {
         $config = Config::get('lovecards.api.Cards');
         $decoded = json_decode($value, true);
         return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
+    }
+    //验证标签个数
+    protected function tagsLength($value)
+    {
+        $config = Config::get('lovecards.api.Cards');
+        $decoded = json_decode($value, true);
+        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
     }
 
     //参数过滤场景
@@ -67,7 +73,7 @@ class Cards extends Validate
         'data' => 'arrayJson',
         'cover' => 'url|max:2083',
         //'content' => '',
-        'tags' => '	arrayJson',
+        'tags' => 'arrayJson|tagsLength',
         'goods' => 'number',
         'views' => 'number',
         'comments' => 'number',
@@ -77,7 +83,7 @@ class Cards extends Validate
         'deleted_at' => 'date',
 
         //前端
-        'pictures' => 'arrayJson|checkArrayLength',
+        'pictures' => 'arrayJson|picturesLength',
     ];
 
     //定义错误信息
@@ -98,6 +104,7 @@ class Cards extends Validate
         //'content.require' => '内容不得为空',
 
         'tags.arrayJson' => '标签格式错误',
+        'tags.tagsLength' => '标签个数超出上限',
 
         'goods.number' => '商品ID格式错误',
 
@@ -109,6 +116,6 @@ class Cards extends Validate
         'post_ip.max' => 'IP地址过长',
 
         'pictures.arrayJson' => '图集格式错误',
-        'pictures.checkArrayNumber' => '图片个数超出上限',
+        'pictures.picturesLength' => '图片个数超出上限',
     ];
 }
