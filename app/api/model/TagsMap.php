@@ -16,16 +16,16 @@ class TagsMap extends Model
 
     // 设置字段信息
     protected $schema = [
-        'id' => 'int(11)',
-        'aid' => 'int(11)',
-        'pid' => 'int(11)',
-        'tid' => 'int(11)',
-        'status' => 'int(11)',
+        'id' => 'int',
+        'aid' => 'int',
+        'pid' => 'int',
+        'tid' => 'int',
+        'status' => 'int',
         'created_at' => 'datetime',
     ];
 
     // 默认排除字段
-    protected static $withoutField = [
-        'created_at'
-    ];
+    // protected static $withoutField = [
+    //     'created_at'
+    // ];
 }

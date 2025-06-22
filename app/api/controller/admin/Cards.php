@@ -77,7 +77,6 @@ class Cards extends Common
     {
         // 获取参数并按照规则过滤
         $params = ApiControllerUtils::filterParams(Request::param(), CardsValidate::$all_scene['admin']['patch']);
-        
 
         //验证参数
         try {
@@ -89,7 +88,7 @@ class Cards extends Common
             $error = $e->getError();
             return Export::Create($error, 400, '参数错误');
         }
-        dd('11111');
+
         //调用服务
         $lDef_Result = CardsService::updata($params);
 
