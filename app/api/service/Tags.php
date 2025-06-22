@@ -41,4 +41,25 @@ class Tags
         }
         return Common::mArrayEasyReturnStruct('列表查询失败', false);
     }
+
+    /**
+     * 新增方法
+     *
+     * @param [type] $data
+     * @param boolean $control true时表示批量新增
+     * @return void
+     */
+    static public function save($data, $control = false)
+    {
+        if ($control) {
+            return TagsModel::saveAll($data);
+        }
+        return TagsModel::save($data);
+    }
+
+    //模型更新方法
+    static public function updata($data, $where = [], $allowField = [])
+    {
+        return TagsModel::update($data, $where, $allowField);
+    }
 }
