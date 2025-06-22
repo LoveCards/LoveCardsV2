@@ -23,7 +23,7 @@ class Images extends Model
         'id' => 'int',
         'aid' => 'int',
         'pid' => 'int',
-        'uid' => 'int',
+        'user_id' => 'int',
         'url' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
