@@ -90,7 +90,7 @@ class Cards extends Common
         }
 
         //调用服务
-        $lDef_Result = CardsService::updata($params);
+        $lDef_Result = CardsService::updateCard($params);
 
         //返回结果
         return Export::Create($lDef_Result['data'], 200, null);
