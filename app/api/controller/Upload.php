@@ -53,7 +53,7 @@ class Upload
             'file' => request()->file('file'),
             'aid' => Request::param('aid'),
             'pid' => Request::param('pid'),
-            'uid' => Request::param('uid'),
+            'user_id' => Request::param('user_id'),
         ];
 
         //校验参数
@@ -81,6 +81,7 @@ class Upload
             //待完善-回滚操作，删除文件
             return Export::Create('数据创建失败', 500, '上传失败');
         }
-        return Export::Create($lReq_ParmasArray['url'], 200, null);
+
+        return Export::Create(['id' => $lDef_CreatData->id, 'url' => $lReq_ParmasArray['url']], 200, null);
     }
 }

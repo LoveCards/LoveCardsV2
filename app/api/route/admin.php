@@ -30,7 +30,7 @@ Route::group('', function () {
     //管理员
     Route::get('admin/card', 'admin.Cards/Get');
     Route::get('admin/cards', 'admin.Cards/Index');
-    Route::patch('admin/cards', 'admin.Cards/Patch');
+    Route::patch('admin/card', 'admin.Cards/Patch');
     Route::delete('admin/cards', 'admin.Cards/Delete');
 
     Route::get('admin/users', 'admin.Users/Index');

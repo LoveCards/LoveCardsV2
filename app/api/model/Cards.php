@@ -21,21 +21,21 @@ class Cards extends Model
 
     // 设置字段信息
     protected $schema = [
-        'id' => 'int',
-        'is_top' => 'int',
-        'status' => 'int',
-        'user_id' => 'int',
-        'data' => 'json',
-        'cover' => 'varchar',
-        'content' => 'text',
-        'tags' => '	json',
-        'goods' => 'int',
-        'views' => 'int',
-        'comments' => 'int',
-        'post_ip' => 'varchar',
-        'created_at' => 'timestamp',
-        'updated_at' => 'timestamp',
-        'deleted_at' => 'timestamp'
+        'id' => 'INT',
+        'is_top' => 'INT',
+        'status' => 'INT',
+        'user_id' => 'INT',
+        'data' => 'JSON',
+        'cover' => 'VARCHAR',
+        'content' => 'TEXT',
+        'tags' => 'JSON',
+        'goods' => 'INT',
+        'views' => 'INT',
+        'comments' => 'INT',
+        'post_ip' => 'VARCHAR',
+        'created_at' => 'TIMESTAMP',
+        'updated_at' => 'TIMESTAMP',
+        'deleted_at' => 'TIMESTAMP'
     ];
 
     // 默认排除字段

@@ -76,7 +76,7 @@ class Cards extends Common
     public function Patch()
     {
         // 获取参数并按照规则过滤
-        $params = ApiControllerUtils::filterParams(Request::param(), CardsValidate::$all_scene['admin']['patch']);
+        $params = ApiControllerUtils::filterParams(Request::param(), CardsValidate::$all_scene['admin']['patch'], [], ['tags', 'pictures', 'data']);
 
         //验证参数
         try {
