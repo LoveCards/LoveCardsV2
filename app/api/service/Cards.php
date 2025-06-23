@@ -72,10 +72,14 @@ class Cards
         // 存储事务
         Db::startTrans();
         try {
-            self::updateCardTags($data);
-            self::updateCardPictures($data);
+            if (isset($data['tags'])) {
+                self::updateCardTags($data);
+            }
+            if (isset($data['pictures'])) {
+                self::updateCardPictures($data);
+                unset($data['pictures']);
+            }
 
-            unset($data['pictures']);
             CardsModel::update($data);
 
             Db::commit(); // 提交事务

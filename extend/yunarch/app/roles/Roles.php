@@ -38,7 +38,7 @@ class Roles
                 //Cards
                 '/api/admin/card:get',
                 '/api/admin/cards:get',
-                '/api/admin/cards:patch',
+                '/api/admin/card:patch',
                 '/api/admin/cards:delete',
 
                 //Comments
