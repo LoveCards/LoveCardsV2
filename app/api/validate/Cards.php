@@ -72,7 +72,7 @@ class Cards extends Validate
         'user_id' => 'number',
         'data' => 'arrayJson',
         'cover' => 'url|max:2083',
-        //'content' => '',
+        'content' => 'max:5000',
         'tags' => 'arrayJson|tagsLength',
         'goods' => 'number',
         'views' => 'number',
