@@ -104,7 +104,7 @@ class Cards extends Common
         $id = Request::param('id');
 
         //调用服务
-        $lDef_Result = CardsService::deleteCard($params);
+        $lDef_Result = CardsService::deleteCards($id);
 
         //返回数据
         return Export::Create(null, 200);

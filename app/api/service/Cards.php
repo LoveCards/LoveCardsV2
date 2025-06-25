@@ -134,7 +134,7 @@ class Cards
     }
 
     //删除卡片方法
-    static public function deleteCards($id, $ids)
+    static public function deleteCards($id = false, $ids = [])
     {
         $data = $id ? $id : $ids;
         // 存储事务
