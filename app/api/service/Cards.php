@@ -134,16 +134,17 @@ class Cards
     }
 
     //删除卡片方法
-    static public function deleteCard($data)
+    static public function deleteCards($id, $ids)
     {
+        $data = $id ? $id : $ids;
         // 存储事务
         Db::startTrans();
         try {
-            self::deleteCardTags($data);
-            self::deleteCardPictures($data);
-            self::deleteCardComments($data);
+            self::deleteCardsTags($data);
+            self::deleteCardsPictures($data);
+            self::deleteCardsComments($data);
 
-            CardsModel::delete($data['id']);
+            CardsModel::delete($data);
 
             Db::commit(); // 提交事务
             return Common::mArrayEasyReturnStruct('删除成功', true);
@@ -153,25 +154,22 @@ class Cards
         }
     }
     //删除卡片标签
-    static public function deleteCardTags($data)
+    static public function deleteCardsTags($pids)
     {
-        $pid = (int) $data['id'];
-        TagsMapModel::where('aid', 1)->where('pid', $pid)->delete();
+        TagsMapModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }
     //删除卡片图片
-    static public function deleteCardPictures($data)
+    static public function deleteCardsPictures($pids)
     {
-        $pid = (int) $data['id'];
         $def_data = [
             'aid' => 0,
             'pid' => 0,
         ];
-        ImagesModel::where('aid', 1)->where('pid', $pid)->update($def_data);
+        ImagesModel::where('aid', 1)->where('pid', 'in', $pids)->update($def_data);
     }
     //删除卡片评论
-    static public function deleteCardComments($data)
+    static public function deleteCardsComments($pids)
     {
-        $pid = (int) $data['id'];
-        CommentsModel::where('aid', 1)->where('pid', $pid)->delete();
+        CommentsModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }
 }

@@ -103,30 +103,8 @@ class Cards extends Common
         //获取数据
         $id = Request::param('id');
 
-        //获取Cards数据库对象
-        $result = Db::table('cards')->where('id', $id);
-        if (!$result->find()) {
-            return Export::Create(null, 400, 'id不存在');
-        }
-        $result->delete();
-
-        //获取img数据库对象
-        $result = Db::table('images')->where('aid', $lDef_AppCardsID)->where('pid', $id);
-        if ($result->find()) {
-            $result->delete();
-        }
-
-        //获取tag数据库对象
-        $result = Db::table('tags_map')->where('aid', $lDef_AppCardsID)->where('pid', $id);
-        if ($result->find()) {
-            $result->delete();
-        }
-
-        //获取comments数据库对象
-        $result = Db::table('comments')->where('aid', $lDef_AppCardsID)->where('pid', $id);
-        if ($result->find()) {
-            $result->delete();
-        }
+        //调用服务
+        $lDef_Result = CardsService::deleteCard($params);
 
         //返回数据
         return Export::Create(null, 200);
