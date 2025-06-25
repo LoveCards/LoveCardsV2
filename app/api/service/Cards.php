@@ -9,6 +9,7 @@ use app\common\Common;
 use app\api\model\Cards as CardsModel;
 use app\api\model\TagsMap as TagsMapModel;
 use app\api\model\Images as ImagesModel;
+use app\api\model\Comments as CommentsModel;
 
 use yunarch\app\api\service\IndexUtils;
 
@@ -89,7 +90,6 @@ class Cards
             return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
         }
     }
-
     //更新卡片标签
     static public function updateCardTags($data)
     {
@@ -97,7 +97,7 @@ class Cards
         $tags = json_decode($data['tags'], true);
 
         // 删除旧的标签映射
-        TagsMapModel::where('aid', 1)->where('pid', $data['id'])->delete();
+        TagsMapModel::where('aid', 1)->where('pid', $pid)->delete();
 
         // 创建新的标签映射
         foreach ($tags as $tag_id) {
@@ -109,7 +109,6 @@ class Cards
             TagsMapModel::create($item);
         }
     }
-
     //更新卡片图片
     static public function updateCardPictures($data)
     {
@@ -119,9 +118,9 @@ class Cards
         // 解绑旧的图片
         $def_data = [
             'aid' => 0, // 模块ID
-            'pid' => $pid, // 卡片ID
+            'pid' => 0, // 卡片ID
         ];
-        ImagesModel::where('aid', 1)->where('pid', $data['id'])->update($def_data);
+        ImagesModel::where('aid', 1)->where('pid', $pid)->update($def_data);
 
         // 批量绑定图片到卡片
         foreach ($pictures as $picture_id) {
@@ -132,5 +131,47 @@ class Cards
             ];
             ImagesModel::update($item);
         }
+    }
+
+    //删除卡片方法
+    static public function deleteCard($data)
+    {
+        // 存储事务
+        Db::startTrans();
+        try {
+            self::deleteCardTags($data);
+            self::deleteCardPictures($data);
+            self::deleteCardComments($data);
+
+            CardsModel::delete($data['id']);
+
+            Db::commit(); // 提交事务
+            return Common::mArrayEasyReturnStruct('删除成功', true);
+        } catch (\Throwable $th) {
+            Db::rollback(); // 回滚事务
+            return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
+        }
+    }
+    //删除卡片标签
+    static public function deleteCardTags($data)
+    {
+        $pid = (int) $data['id'];
+        TagsMapModel::where('aid', 1)->where('pid', $pid)->delete();
+    }
+    //删除卡片图片
+    static public function deleteCardPictures($data)
+    {
+        $pid = (int) $data['id'];
+        $def_data = [
+            'aid' => 0,
+            'pid' => 0,
+        ];
+        ImagesModel::where('aid', 1)->where('pid', $pid)->update($def_data);
+    }
+    //删除卡片评论
+    static public function deleteCardComments($data)
+    {
+        $pid = (int) $data['id'];
+        CommentsModel::where('aid', 1)->where('pid', $pid)->delete();
     }
 }
