@@ -9,25 +9,6 @@ use yunarch\app\api\validate\RuleUtils;
 
 class Cards extends Validate
 {
-    protected function arrayJson($value)
-    {
-        return RuleUtils::arrayJson($value);
-    }
-    //验证图片个数
-    protected function picturesLength($value)
-    {
-        $config = Config::get('lovecards.api.Cards');
-        $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
-    }
-    //验证标签个数
-    protected function tagsLength($value)
-    {
-        $config = Config::get('lovecards.api.Cards');
-        $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
-    }
-
     //参数过滤场景
     static public $all_scene = [
         'user' => [
@@ -62,6 +43,25 @@ class Cards extends Validate
             ]
         ],
     ];
+
+    protected function arrayJson($value)
+    {
+        return RuleUtils::arrayJson($value);
+    }
+    //验证图片个数
+    protected function picturesLength($value)
+    {
+        $config = Config::get('lovecards.api.Cards');
+        $decoded = json_decode($value, true);
+        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
+    }
+    //验证标签个数
+    protected function tagsLength($value)
+    {
+        $config = Config::get('lovecards.api.Cards');
+        $decoded = json_decode($value, true);
+        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
+    }
 
     //定义验证规则
     protected $rule =   [
