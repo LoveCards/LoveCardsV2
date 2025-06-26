@@ -144,7 +144,7 @@ class Cards
             self::deleteCardsPictures($data);
             self::deleteCardsComments($data);
 
-            CardsModel::delete($data);
+            CardsModel::destroy($data);
 
             Db::commit(); // 提交事务
             return Common::mArrayEasyReturnStruct('删除成功', true);

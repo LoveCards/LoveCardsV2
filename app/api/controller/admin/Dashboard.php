@@ -2,19 +2,14 @@
 
 namespace app\api\controller\admin;
 
-use think\facade\Request;
-use think\exception\ValidateException;
 use think\facade\Db;
-use think\facade\Config;
 
-use app\api\model\Images as ImagesModel;
+use app\api\model\Cards as CardsModel;
+use app\api\model\Likes as LikesModel;
+use app\api\model\Comments as CommentsModel;
 
-use app\api\service\Likes as LikesService;
-
-use app\common\Common;
 use app\common\Export;
-use app\common\BackEnd;
-use app\common\App;
+
 
 class Dashboard
 {
@@ -32,7 +27,7 @@ class Dashboard
         {
             for ($i = 1; $i <= 6; $i++) {
                 $time = date('Y-m-d', strtotime('-' . $i . 'day'));
-                $arr['y'][$i] = Db::table($key)->whereDay('time', $time)->count();
+                $arr['y'][$i] = Db::table($key)->whereDay('created_at', $time)->count();
                 $arr['x'][$i] = $time;
                 if ($i == 1) $arr['x'][$i] = '昨日';
             }
@@ -43,15 +38,15 @@ class Dashboard
 
         //取总览数据
         $tDef_ViewDataCount = [
-            'cards' => Db::table('cards')->count(),
-            'comments' => Db::table('comments')->count(),
-            'goods' => Db::table('goods')->count()
+            'cards' => CardsModel::count(),
+            'comments' => CommentsModel::count(),
+            'goods' => LikesModel::count()
         ];
         //取图表数据
         $tDef_ViewChartJson = [
             [
                 'label' => '卡片',
-                'data' => fArrayGetChartData('cards'),
+                'data' => fArrayGetChartData('new_cards'),
             ],
             [
                 'label' => '评论',
@@ -59,7 +54,7 @@ class Dashboard
             ],
             [
                 'label' => '点赞',
-                'data' => fArrayGetChartData('goods')
+                'data' => [], //fArrayGetChartData('goods')
             ],
         ];
 

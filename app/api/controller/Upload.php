@@ -75,7 +75,7 @@ class Upload
         if (!isset($context['aid'])) {
             $lReq_ParmasArray['uid'] = $context['uid'];
         }
-        $lReq_ParmasArray['url'] =  '/storage/' . $lDef_Result;
+        $lReq_ParmasArray['url'] =  Request::scheme() . '://' . Request::host() . '/storage/' . $lDef_Result;
         $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
         if (!$lDef_CreatData) {
             //待完善-回滚操作，删除文件

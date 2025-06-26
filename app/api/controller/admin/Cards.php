@@ -99,7 +99,6 @@ class Cards extends Common
     //删除-POST
     public function Delete()
     {
-        $lDef_AppCardsID = APP::mArrayGetAppTableMapValue('cards')['data'];
         //获取数据
         $id = Request::param('id');
 
