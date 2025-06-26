@@ -55,7 +55,7 @@ class Index extends Validate
         //排序字段
         'order_desc' => 'stringBool',
         //排序字段
-        //'order_key' => '',
+        'order_key' => 'alphaDash',
     ];
 
     //定义错误信息
@@ -66,5 +66,7 @@ class Index extends Validate
         'list_rows.between' => '列表长度范围错误(1-1000)',
 
         'order_desc.stringBool' => '排序方式格式错误',
+
+        'order_key.alphaDash' => '排序字段格式错误',
     ];
 }

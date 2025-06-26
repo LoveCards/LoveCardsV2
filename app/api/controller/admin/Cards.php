@@ -7,34 +7,37 @@ use think\exception\ValidateException;
 use think\facade\Db;
 use think\facade\Config;
 
+//基础应用验证
 use app\api\validate\Cards as CardsValidate;
 use app\api\validate\CardsSetting as CardsValidateSetting;
 
-use app\api\model\Images as ImagesModel;
-
+//基础应用服务
 use app\api\service\Cards as CardsService;
 
+//旧的
 use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
-use app\common\App;
 
+//yunarch框架相关
 use yunarch\app\api\controller\Utils as ApiControllerUtils;
 use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
 use yunarch\app\api\validate\Get as ApiGetValidate;
+use yunarch\app\api\validate\Common as ApiCommonValidate;
 
 class Cards extends Common
 {
 
-    public function Get()
+    //快速验证过滤数据
+    protected function getParams($ValidateClass, $all_scene, $mustParams = [], $nullableParams = [])
     {
-        // 获取参数
-        $params = Request::param();
+        // 获取参数并按照规则过滤
+        $params = ApiControllerUtils::filterParams(Request::param(), $all_scene, $mustParams, $nullableParams);
 
         //验证参数
         try {
-            validate(ApiGetValidate::class)
+            validate($ValidateClass)
                 ->batch(true)
                 ->check($params);
         } catch (ValidateException $e) {
@@ -43,12 +46,10 @@ class Cards extends Common
             return Export::Create($error, 400, '参数错误');
         }
 
-        //调用服务
-        $lDef_Result = CardsService::Get($params['id']);
-        //返回结果
-        return Export::Create($lDef_Result['data'], 200, null);
+        return $params;
     }
 
+    //读取列表
     public function Index()
     {
         // 获取参数并按照规则过滤
@@ -67,49 +68,52 @@ class Cards extends Common
             return Export::Create($error, 400, '参数错误');
         }
         //调用服务
-        $lDef_Result = CardsService::Index($params);
+        $result = CardsService::Index($params);
         //返回结果
-        return Export::Create($lDef_Result['data'], 200, null);
+        return Export::Create($result['data'], 200, null);
     }
 
-    //编辑-Patch
+    //读取一张卡片
+    public function Get()
+    {
+        //获取参数
+        $params = $this->getParams(ApiGetValidate::class, ApiGetValidate::$all_scene['get']);
+        //调用服务
+        $result = CardsService::Get($params['id']);
+        //返回结果
+        return Export::Create($result['data'], 200, null);
+    }
+
+    //编辑一张卡片
     public function Patch()
     {
-        // 获取参数并按照规则过滤
-        $params = ApiControllerUtils::filterParams(Request::param(), CardsValidate::$all_scene['admin']['patch'], [], ['tags', 'pictures', 'data']);
-
-        //验证参数
-        try {
-            validate(CardsValidate::class)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
-
+        //获取参数
+        $params = $this->getParams(ApiGetValidate::class, CardsValidate::$all_scene['admin']['patch'], [], ['tags', 'pictures', 'data']);
         //调用服务
-        $lDef_Result = CardsService::updateCard($params);
-
+        $result = CardsService::updateCard($params);
         //返回结果
-        return Export::Create($lDef_Result['data'], 200, null);
+        return Export::Create($result['data'], 200, null);
     }
 
-    //删除-POST
+    //删除一张卡片
     public function Delete()
     {
-        //获取数据
-        $id = Request::param('id');
-
+        //获取参数
+        $params = $this->getParams(ApiGetValidate::class, ApiGetValidate::$all_scene['get']);
         //调用服务
-        $lDef_Result = CardsService::deleteCards($id);
-
+        $result = CardsService::deleteCards($params);
         //返回数据
         return Export::Create(null, 200);
     }
 
-    //设置-POST
+    //批量操作
+    public function BatchOperate()
+    {
+        //获取参数
+        $params = $this->getParams(ApiCommonValidate::class, 'default');
+    }
+
+    //设置
     public function Setting()
     {
 

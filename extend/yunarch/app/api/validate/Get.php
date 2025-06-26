@@ -8,7 +8,7 @@ use think\Validate;
 class Get extends Validate
 {
     static $all_scene = [
-        'index' => [
+        'get' => [
             'id'
         ]
     ];

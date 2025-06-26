@@ -45,21 +45,21 @@ class Cards
         return Common::mArrayEasyReturnStruct('查询失败', false);
     }
 
-    //列表
-    static public function list()
-    {
-        $context = request()->JwtData;
+    //列表-旧的
+    // static public function list()
+    // {
+    //     $context = request()->JwtData;
 
-        //$currentPage = 1;
-        $pageSize = 15;
+    //     //$currentPage = 1;
+    //     $pageSize = 15;
 
-        $result = CardsModel::where('status', 0)
-            ->where('uid', $context['uid'])
-            ->order('id', 'desc')
-            ->paginate($pageSize);
+    //     $result = CardsModel::where('status', 0)
+    //         ->where('uid', $context['uid'])
+    //         ->order('id', 'desc')
+    //         ->paginate($pageSize);
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
     //模型更新方法
     static public function updata($data, $where = [], $allowField = [])
@@ -67,7 +67,7 @@ class Cards
         return CardsModel::update($data, $where, $allowField);
     }
 
-    //卡片更新方法
+    //更新单张卡片方法
     static public function updateCard($data)
     {
         // 存储事务
@@ -90,7 +90,7 @@ class Cards
             return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
         }
     }
-    //更新卡片标签
+    //更新单张卡片标签
     static public function updateCardTags($data)
     {
         $pid = (int) $data['id'];
@@ -109,7 +109,7 @@ class Cards
             TagsMapModel::create($item);
         }
     }
-    //更新卡片图片
+    //更新单张卡片图片
     static public function updateCardPictures($data)
     {
         $pid = (int) $data['id'];
@@ -133,7 +133,7 @@ class Cards
         }
     }
 
-    //删除卡片方法
+    //删除单&多张卡片方法
     static public function deleteCards($id = false, $ids = [])
     {
         $data = $id ? $id : $ids;
@@ -153,12 +153,12 @@ class Cards
             return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
         }
     }
-    //删除卡片标签
+    //删除单&多张卡片标签
     static public function deleteCardsTags($pids)
     {
         TagsMapModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }
-    //删除卡片图片
+    //删除单&多张卡片图片
     static public function deleteCardsPictures($pids)
     {
         $def_data = [
@@ -167,7 +167,7 @@ class Cards
         ];
         ImagesModel::where('aid', 1)->where('pid', 'in', $pids)->update($def_data);
     }
-    //删除卡片评论
+    //删除单&多张卡片评论
     static public function deleteCardsComments($pids)
     {
         CommentsModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
