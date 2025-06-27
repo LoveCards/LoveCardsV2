@@ -2,11 +2,20 @@
 
 namespace yunarch\app\api\validate;
 
+use think\Validate;
+
 use yunarch\app\api\utils\Json as ApiUtilsJson;
 
 //验证工具类
 class RuleUtils
 {
+
+    function __construct()
+    {
+        // 构造函数
+        //Validate::maker();
+    }
+
     // 通用密码验证规则
     static public function password($value)
     {

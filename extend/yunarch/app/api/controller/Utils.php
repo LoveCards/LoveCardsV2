@@ -5,7 +5,7 @@ namespace yunarch\app\api\controller;
 class Utils
 {
 
-    /**!!!!!!!存在一些注意事项，目前该方法的空值过滤提示需要配合验证器的规则耦合使用！！！可以后面增加对false值的验证步骤来完善配套
+    /**!!!!!!!临时的只有User还在用
      * 控制层参数过滤器(按照验证类标准参数过滤传入参数常用于-非GET请求"验证参数格式和空值管理")
      * 
      * @param array $inputParams 通过 Request::param() 获取的传入参数数组

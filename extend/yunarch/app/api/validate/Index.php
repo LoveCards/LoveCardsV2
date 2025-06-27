@@ -9,38 +9,20 @@ class Index extends Validate
 {
     //参数过滤场景
     static $all_scene = [
-        'index' => [
-            'page',
-            'list_rows',
-            'search_value',
-            'search_keys',
-            'order_desc',
-            'order_key'
+        'Defult' => [
+            'normal' => [
+                'page',
+                'list_rows',
+                'search_value',
+                'search_keys',
+                'order_desc',
+                'order_key',
+            ],
+            'require' => false,
+            'nonNull' => false,
+            'toNull' => false,
         ]
     ];
-
-    protected function searchKey($value, $rule, $data = [])
-    {
-        // 指定字段时，搜索值不能为空
-        if (!isset($data['search_value'])) {
-            return '搜索内容不能为空';
-        }
-        if (!is_array($value)) {
-            return '搜索字段格式错误';
-        }
-        return true;
-    }
-
-    protected function stringBool($value, $rule, $data = [])
-    {
-        if ($value != null) {
-            if ($value == 'true' || $value == 'false') {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 
     //定义验证规则
     protected $rule =   [
@@ -57,7 +39,6 @@ class Index extends Validate
         //排序字段
         'order_key' => 'alphaDash',
     ];
-
     //定义错误信息
     protected $message  =   [
         'page.number' => '页码格式错误',
@@ -69,4 +50,26 @@ class Index extends Validate
 
         'order_key.alphaDash' => '排序字段格式错误',
     ];
+
+    protected function searchKey($value, $rule, $data = [])
+    {
+        // 指定字段时，搜索值不能为空
+        if (!isset($data['search_value'])) {
+            return '搜索内容不能为空';
+        }
+        if (!is_array($value)) {
+            return '搜索字段格式错误';
+        }
+        return true;
+    }
+    protected function stringBool($value, $rule, $data = [])
+    {
+        if ($value != null) {
+            if ($value == 'true' || $value == 'false') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

@@ -7,14 +7,12 @@ use yunarch\app\api\validate\RuleUtils;
 
 class Users extends Validate
 {
-    protected function password($value)
-    {
-        return RuleUtils::password($value);
-    }
-    protected function arrayJson($value)
-    {
-        return RuleUtils::arrayJson($value);
-    }
+    //场景-规则
+    static public $all_scene = [
+        'edit' => ['id', 'avatar', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
+        'register' => ['email', 'phone', 'username', 'password'],
+        'login' => ['email', 'phone', 'username', 'password'],
+    ];
 
     //定义验证规则
     protected $rule =   [
@@ -66,13 +64,6 @@ class Users extends Validate
         'roles_id.arrayJson' => '权限组格式错误',
     ];
 
-    //场景-规则
-    static public $all_scene = [
-        'edit' => ['id', 'avatar', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
-        'register' => ['email', 'phone', 'username', 'password'],
-        'login' => ['email', 'phone', 'username', 'password'],
-    ];
-
     //场景-登入
     protected function sceneLogin()
     {
@@ -92,5 +83,14 @@ class Users extends Validate
     {
         return $this->only($this::$all_scene['edit'])
             ->append('id', 'require');
+    }
+    
+    protected function password($value)
+    {
+        return RuleUtils::password($value);
+    }
+    protected function arrayJson($value)
+    {
+        return RuleUtils::arrayJson($value);
     }
 }
