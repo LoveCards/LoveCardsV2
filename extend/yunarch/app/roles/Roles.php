@@ -40,6 +40,7 @@ class Roles
                 '/api/admin/cards:get',
                 '/api/admin/card:patch',
                 '/api/admin/cards:delete',
+                '/api/admin/cards/batch-operate:post',
 
                 //Comments
                 '/api/admin/comments:patch',

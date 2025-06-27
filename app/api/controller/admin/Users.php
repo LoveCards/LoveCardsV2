@@ -14,6 +14,7 @@ use yunarch\app\api\utils\Common as UtilsCommon;
 use yunarch\app\api\controller\Utils as ApiControllerUtils;
 use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
+use yunarch\app\api\validate\Common as ApiCommonValidate;
 
 use app\common\Export;
 
@@ -24,7 +25,7 @@ class Users
     public function Index()
     {
         // 获取参数并按照规则过滤
-        $params = ApiControllerUtils::filterParams(Request::param(), ApiIndexValidate::$all_scene['index']);
+        $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
         // search_keys转数组
         $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params);
 

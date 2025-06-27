@@ -32,6 +32,7 @@ Route::group('', function () {
     Route::get('admin/cards', 'admin.Cards/Index');
     Route::patch('admin/card', 'admin.Cards/Patch');
     Route::delete('admin/cards', 'admin.Cards/Delete');
+    Route::post('admin/cards/batch-operate', 'admin.Cards/BatchOperate');
 
     Route::get('admin/users', 'admin.Users/Index');
     Route::patch('admin/users', 'admin.Users/Patch');

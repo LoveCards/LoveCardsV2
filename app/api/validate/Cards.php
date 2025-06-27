@@ -13,55 +13,61 @@ class Cards extends Validate
     static public $all_scene = [
         'user' => [
             'post' => [
-                'data',
-                'cover',
-                'content',
-                'pictures',
+                'normal' => [
+                    'data',
+                    'cover',
+                    'content',
+                    'pictures',
+                ],
+                'require' => false,
+                'nonNull' => false,
+                'toNull' => false,
             ],
             'patch' => [
-                'id',
-                'data',
-                'cover',
-                'content',
-                'pictures',
+                'normal' => [
+                    'data',
+                    'cover',
+                    'content',
+                    'pictures',
+                ],
+                'require' => [
+                    'id',
+                ],
+                'nonNull' => false,
+                'toNull' => [
+                    'tags',
+                    'pictures',
+                    'data'
+                ],
             ],
         ],
         'admin' => [
             'patch' => [
-                'id',
-                'is_top',
-                'status',
-                'user_id',
-                'data',
-                'cover',
-                'content',
-                'tags',
-                'goods',
-                'views',
-                'comments',
-                'pictures',
+                'normal' => [
+                    'is_top',
+                    'status',
+                    'user_id',
+                    'cover',
+                    'content',
+                    'goods',
+                    'views',
+                    'comments',
+                ],
+                'require' => [
+                    'id',
+                ],
+                'nonNull' => false,
+                'toNull' => [
+                    'tags',
+                    'pictures',
+                    'data'
+                ],
             ]
         ],
     ];
-
-    protected function arrayJson($value)
-    {
-        return RuleUtils::arrayJson($value);
-    }
-    //验证图片个数
-    protected function picturesLength($value)
-    {
-        $config = Config::get('lovecards.api.Cards');
-        $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
-    }
-    //验证标签个数
-    protected function tagsLength($value)
-    {
-        $config = Config::get('lovecards.api.Cards');
-        $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
-    }
+    static public $scene_message = [
+        'id.require' => 'ID不能为空'
+    ];
 
     //定义验证规则
     protected $rule =   [
@@ -118,4 +124,23 @@ class Cards extends Validate
         'pictures.arrayJson' => '图集格式错误',
         'pictures.picturesLength' => '图片个数超出上限',
     ];
+
+    protected function arrayJson($value)
+    {
+        return RuleUtils::arrayJson($value);
+    }
+    //验证图片个数
+    protected function picturesLength($value)
+    {
+        $config = Config::get('lovecards.api.Cards');
+        $decoded = json_decode($value, true);
+        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
+    }
+    //验证标签个数
+    protected function tagsLength($value)
+    {
+        $config = Config::get('lovecards.api.Cards');
+        $decoded = json_decode($value, true);
+        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
+    }
 }
