@@ -67,7 +67,13 @@ class Cards
         return CardsModel::update($data, $where, $allowField);
     }
 
-    //批量操作方法
+    /**
+     * 批量操作卡片
+     *
+     * @param string $method
+     * @param array $ids
+     * @return void
+     */
     static public function batchOperate($method, $ids)
     {
         switch ($method) {
@@ -115,7 +121,12 @@ class Cards
         }
     }
 
-    //更新单张卡片方法
+    /**
+     * 更新单张卡片方法
+     *
+     * @param array $data 卡片数据
+     * @return void
+     */
     static public function updateCard($data)
     {
         // 存储事务
@@ -181,7 +192,14 @@ class Cards
         }
     }
 
-    //删除单&多张卡片方法
+    /**
+     * 删除单&多张卡片方法
+     * * 删除卡片时会同时删除相关的标签、图片和评论
+     *
+     * @param boolean $id 单张卡片ID
+     * @param array $ids 多张卡片ID集
+     * @return void
+     */
     static public function deleteCards($id = false, $ids = [])
     {
         $data = $id ? $id : $ids;
