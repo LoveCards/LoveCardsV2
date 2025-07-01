@@ -6,14 +6,30 @@ use think\Validate;
 
 use yunarch\app\api\utils\Json as ApiUtilsJson;
 
-//验证工具类
+//验证规则工具类
 class RuleUtils
 {
 
     function __construct()
     {
-        // 构造函数
-        //Validate::maker();
+        // 自动加载验证规则到全局
+        Validate::maker(function ($validate) {
+            $validate->extend('password', function ($value) {
+                return self::password($value);
+            });
+            $validate->extend('arrayJson', function ($value) {
+                return self::arrayJson($value);
+            });
+            $validate->extend('arrayOrIntJson', function ($value) {
+                return self::arrayOrIntJson($value);
+            });
+            $validate->extend('checkArrayLength', function ($value, $rule) {
+                return self::arrayOrIntJson($value, $rule);
+            });
+            $validate->extend('nonNull', function ($value) {
+                return self::nonNull($value);
+            });
+        });
     }
 
     // 通用密码验证规则
@@ -51,6 +67,15 @@ class RuleUtils
     {
         $length = count($value);
         if ($length <= $rule) {
+            return true;
+        }
+        return false;
+    }
+
+    // 验证数组长度
+    static public function nonNull($value)
+    {
+        if (!empty($value)) {
             return true;
         }
         return false;

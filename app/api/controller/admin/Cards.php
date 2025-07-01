@@ -15,18 +15,17 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\api\service\Cards as CardsService;
 
 //旧的
-use app\common\Common;
 use app\common\Export;
 use app\common\BackEnd;
 
 //yunarch框架相关
-//use yunarch\app\api\controller\Utils as ApiControllerUtils;
 use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
-//use yunarch\app\api\validate\Get as ApiGetValidate;
 use yunarch\app\api\validate\Common as ApiCommonValidate;
 
-class Cards extends Common
+use app\api\controller\Base;
+
+class Cards extends Base
 {
     /**
      * 快速验证并过滤数据
@@ -129,6 +128,7 @@ class Cards extends Common
     //批量操作
     public function BatchOperate()
     {
+
         $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['BatchOperate']);
         if (gettype($params) == 'object') {
             return $params;

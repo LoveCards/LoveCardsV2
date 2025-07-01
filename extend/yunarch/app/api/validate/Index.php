@@ -50,26 +50,4 @@ class Index extends Validate
 
         'order_key.alphaDash' => '排序字段格式错误',
     ];
-
-    protected function searchKey($value, $rule, $data = [])
-    {
-        // 指定字段时，搜索值不能为空
-        if (!isset($data['search_value'])) {
-            return '搜索内容不能为空';
-        }
-        if (!is_array($value)) {
-            return '搜索字段格式错误';
-        }
-        return true;
-    }
-    protected function stringBool($value, $rule, $data = [])
-    {
-        if ($value != null) {
-            if ($value == 'true' || $value == 'false') {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
 }

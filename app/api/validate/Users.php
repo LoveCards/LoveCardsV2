@@ -84,13 +84,4 @@ class Users extends Validate
         return $this->only($this::$all_scene['edit'])
             ->append('id', 'require');
     }
-    
-    protected function password($value)
-    {
-        return RuleUtils::password($value);
-    }
-    protected function arrayJson($value)
-    {
-        return RuleUtils::arrayJson($value);
-    }
 }

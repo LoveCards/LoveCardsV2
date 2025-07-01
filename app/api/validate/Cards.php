@@ -9,6 +9,7 @@ use yunarch\app\api\validate\RuleUtils;
 
 class Cards extends Validate
 {
+
     //参数过滤场景
     static public $all_scene = [
         'user' => [
@@ -52,13 +53,14 @@ class Cards extends Validate
                     'goods',
                     'views',
                     'comments',
+                    'tags',
                 ],
                 'require' => [
                     'id',
                 ],
                 'nonNull' => false,
                 'toNull' => [
-                    'tags',
+
                     'pictures',
                     'data'
                 ],
@@ -125,10 +127,6 @@ class Cards extends Validate
         'pictures.picturesLength' => '图片个数超出上限',
     ];
 
-    protected function arrayJson($value)
-    {
-        return RuleUtils::arrayJson($value);
-    }
     //验证图片个数
     protected function picturesLength($value)
     {
