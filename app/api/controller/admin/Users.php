@@ -18,7 +18,10 @@ use yunarch\app\api\validate\Common as ApiCommonValidate;
 
 use app\common\Export;
 
-class Users
+use \app\api\controller\Base;
+
+
+class Users extends Base
 {
 
     //查询-GET

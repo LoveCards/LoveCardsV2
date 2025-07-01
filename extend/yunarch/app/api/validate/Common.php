@@ -8,6 +8,12 @@ use think\exception\ValidateException;
 //通用
 class Common extends Validate
 {
+    public function __construct()
+    {
+        // 确保执行父类构造
+        parent::__construct();
+    }
+
     //参数过滤场景
     static public $all_scene = [
         // 'example' => [
@@ -153,9 +159,4 @@ class Common extends Validate
         'ids.arrayJson' => 'ID集格式错误',
         'method.alpha' => '方法格式错误',
     ];
-
-    protected function arrayJson($value)
-    {
-        return RuleUtils::arrayJson($value);
-    }
 }
