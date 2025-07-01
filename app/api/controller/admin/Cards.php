@@ -128,11 +128,13 @@ class Cards extends Base
     //批量操作
     public function BatchOperate()
     {
-
         $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['BatchOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }
+
+        $ids = json_decode($params['ids'], true);
+        $result = CardsService::batchOperate($params['method'], $ids);
 
         //返回数据
         return Export::Create(null, 200);

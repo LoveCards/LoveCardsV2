@@ -67,6 +67,54 @@ class Cards
         return CardsModel::update($data, $where, $allowField);
     }
 
+    //批量操作方法
+    static public function batchOperate($method, $ids)
+    {
+        switch ($method) {
+            case 'top':
+                return self::fieldsToggle('is_top', $ids, [0, 1]);
+            case 'ban':
+                return self::fieldsToggle('status', $ids, [0, 1], [2]);
+            case 'hide':
+                return self::fieldsToggle('status', $ids, [0, 2], [1]);
+            case 'delete':
+                return self::deleteCards(false, $ids);
+            default:
+                return Common::mArrayEasyReturnStruct('方法不存在', false);
+        }
+    }
+
+    /**
+     * 字段反转
+     *
+     * @param string $fields 字段名
+     * @param array $ids ID集
+     * @param array $value1 反转值
+     * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
+     * @return void
+     */
+    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false)
+    {
+        //生成命令
+        $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
+        if ($value2) {
+            foreach ($value2 as $item) {
+                $where = $where . "WHEN {$fields} = {$item} THEN {$value1[1]} ";
+            }
+        }
+        $sql = "CASE {$where}END";
+        // 存储事务
+        Db::startTrans();
+        try {
+            CardsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
+            Db::commit(); // 提交事务
+            return Common::mArrayEasyReturnStruct('更新成功', true);
+        } catch (\Throwable $th) {
+            Db::rollback(); // 回滚事务
+            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
+        }
+    }
+
     //更新单张卡片方法
     static public function updateCard($data)
     {
@@ -158,7 +206,7 @@ class Cards
     {
         TagsMapModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }
-    //删除单&多张卡片图片
+    //解绑单&多张卡片图片
     static public function deleteCardsPictures($pids)
     {
         $def_data = [
