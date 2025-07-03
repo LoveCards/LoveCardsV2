@@ -70,7 +70,7 @@ class Cards
     /**
      * 批量操作卡片
      *
-     * @param string $method
+     * @param string $method top：置顶|ban：状态封禁仅自己可见|approve：状态待审核仅自己可见|hide：状态隐藏仅后台可见|delete：删除
      * @param array $ids
      * @return void
      */
@@ -79,10 +79,12 @@ class Cards
         switch ($method) {
             case 'top':
                 return self::fieldsToggle('is_top', $ids, [0, 1]);
+            case 'approve':
+                return self::fieldsToggle('status', $ids, [0, 3], [1, 3]);
             case 'ban':
-                return self::fieldsToggle('status', $ids, [0, 1], [2]);
+                return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':
-                return self::fieldsToggle('status', $ids, [0, 2], [1]);
+                return self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
             case 'delete':
                 return self::deleteCards(false, $ids);
             default:
