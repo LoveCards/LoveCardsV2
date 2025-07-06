@@ -19,9 +19,9 @@ class Comments extends Model
     // 设置字段信息
     protected $schema = [
         'id' => 'INT',
-        'parent_id' => 'INT',
         'aid' => 'INT',
         'pid' => 'INT',
+        'parent_id' => 'INT',
         'is_top' => 'INT',
         'status' => 'INT',
         'user_id' => 'INT',

@@ -4,8 +4,6 @@ namespace app\api\controller\admin;
 
 use think\facade\Request;
 use think\exception\ValidateException;
-use think\facade\Db;
-use think\facade\Config;
 
 //基础应用验证
 use app\api\validate\Cards as CardsValidate;

@@ -25,7 +25,7 @@ Route::group('', function () {
     Route::post('system/templateset', 'admin.System/TemplateSet');
     Route::post('system/geetest', 'admin.System/Geetest');
 
-    Route::post('cards/setting', 'admin.Cards/Setting'); 
+    Route::post('cards/setting', 'admin.Cards/Setting');
 
     //管理员
     Route::get('admin/card', 'admin.Cards/Get');
@@ -43,8 +43,10 @@ Route::group('', function () {
     Route::patch('admin/tags', 'admin.Tags/Patch');
     Route::delete('admin/tags', 'admin.Tags/Delete');
 
+    Route::get('admin/comments', 'admin.Comments/Index');
     Route::patch('admin/comments', 'admin.Comments/Patch');
-    Route::post('admin/comments', 'admin.Comments/Delete');
+    Route::delete('admin/comments', 'admin.Comments/Delete');
+    Route::post('admin/comments/batch-operate', 'admin.Comments/BatchOperate');
 
     //控制台
     Route::get('admin/dashboard', 'admin.Dashboard/Index');
