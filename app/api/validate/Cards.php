@@ -15,29 +15,26 @@ class Cards extends Validate
         'user' => [
             'post' => [
                 'normal' => [
-                    'data',
-                    'cover',
-                    'content',
-                    'pictures',
-                ],
-                'require' => false,
-                'nonNull' => false,
-                'toNull' => false,
-            ],
-            'patch' => [
-                'normal' => [
-                    'data',
-                    'cover',
-                    'content',
-                    'pictures',
+                    'pictures'
                 ],
                 'require' => [
-                    'id',
+                    'content'
                 ],
                 'nonNull' => false,
                 'toNull' => [
-                    'tags',
-                    'pictures',
+                    'data',
+                    'cover',
+                    'tags'
+                ],
+            ],
+            'patch' => [
+                'normal' => false,
+                'require' => [
+                    'id',
+                    'content',
+                ],
+                'nonNull' => false,
+                'toNull' => [
                     'data'
                 ],
             ],
@@ -45,30 +42,32 @@ class Cards extends Validate
         'admin' => [
             'patch' => [
                 'normal' => [
+                    'pictures',
+
+                    'content',
                     'is_top',
                     'status',
+
                     'user_id',
-                    'cover',
-                    'content',
-                    'goods',
-                    'views',
                     'comments',
-                    'tags',
+                    'views',
+                    'goods'
                 ],
                 'require' => [
-                    'id',
+                    'id'
                 ],
                 'nonNull' => false,
                 'toNull' => [
-
-                    'pictures',
+                    'cover',
+                    'tags',
                     'data'
                 ],
             ]
         ],
     ];
     static public $scene_message = [
-        'id.require' => 'ID不能为空'
+        'id.require' => 'ID不能为空',
+        'content.require' => '内容不能为空'
     ];
 
     //定义验证规则
@@ -86,9 +85,9 @@ class Cards extends Validate
         'views' => 'number',
         'comments' => 'number',
         'post_ip' => 'ip|max:39',
-        'created_at' => 'date',
-        'updated_at' => 'date',
-        'deleted_at' => 'date',
+        // 'created_at' => 'date',
+        // 'updated_at' => 'date',
+        // 'deleted_at' => 'date',
 
         //前端
         'pictures' => 'arrayJson|picturesLength',
@@ -114,7 +113,7 @@ class Cards extends Validate
         'tags.arrayJson' => '标签格式错误',
         'tags.tagsLength' => '标签个数超出上限',
 
-        'goods.number' => '商品ID格式错误',
+        'goods.number' => '喜欢数格式错误',
 
         'views.number' => '浏览量格式错误',
 

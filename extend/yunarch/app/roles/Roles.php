@@ -43,8 +43,10 @@ class Roles
                 '/api/admin/cards/batch-operate:post',
 
                 //Comments
+                '/api/admin/comments:get',
                 '/api/admin/comments:patch',
                 '/api/admin/comments:delete',
+                '/api/admin/comments/batch-operate:post',
 
                 //Tags
                 '/api/admin/tags:get',
