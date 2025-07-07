@@ -44,8 +44,8 @@ Route::group('', function () {
     Route::delete('admin/tags', 'admin.Tags/Delete');
 
     Route::get('admin/comments', 'admin.Comments/Index');
-    Route::patch('admin/comments', 'admin.Comments/Patch');
-    Route::delete('admin/comments', 'admin.Comments/Delete');
+    Route::patch('admin/comment', 'admin.Comments/Patch');
+    Route::delete('admin/comment', 'admin.Comments/Delete');
     Route::post('admin/comments/batch-operate', 'admin.Comments/BatchOperate');
 
     //控制台
