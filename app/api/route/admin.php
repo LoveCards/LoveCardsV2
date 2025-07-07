@@ -1,13 +1,8 @@
 <?php
 
 use think\facade\Route;
-use think\facade\Request;
 
 use app\api\middleware\JwtAuthCheck;
-use app\api\middleware\JwtAuthLogout;
-
-use app\api\middleware\SessionDebounce;
-use app\api\middleware\GeetestCheck;
 
 use yunarch\app\roles\middleware\RolesCheck;
 
@@ -39,9 +34,10 @@ Route::group('', function () {
     Route::delete('admin/users', 'admin.Users/Delete');
 
     Route::get('admin/tags', 'admin.Tags/Index');
-    Route::post('admin/tags', 'admin.Tags/Post');
-    Route::patch('admin/tags', 'admin.Tags/Patch');
-    Route::delete('admin/tags', 'admin.Tags/Delete');
+    Route::post('admin/tag', 'admin.Tags/Post');
+    Route::patch('admin/tag', 'admin.Tags/Patch');
+    Route::delete('admin/tag', 'admin.Tags/Delete');
+    Route::post('admin/tags/batch-operate', 'admin.tags/BatchOperate');
 
     Route::get('admin/comments', 'admin.Comments/Index');
     Route::patch('admin/comment', 'admin.Comments/Patch');
