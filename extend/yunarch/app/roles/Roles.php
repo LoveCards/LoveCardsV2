@@ -44,8 +44,8 @@ class Roles
 
                 //Comments
                 '/api/admin/comments:get',
-                '/api/admin/comments:patch',
-                '/api/admin/comments:delete',
+                '/api/admin/comment:patch',
+                '/api/admin/comment:delete',
                 '/api/admin/comments/batch-operate:post',
 
                 //Tags
