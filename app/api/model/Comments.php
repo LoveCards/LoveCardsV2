@@ -12,7 +12,7 @@ class Comments extends Model
     protected $deleteTime = 'deleted_at';
 
     //自动时间戳
-    protected $autoWriteTimestamp = 'datetime';
+    protected $autoWriteTimestamp = 'timestamp';
     protected $createTime = 'created_at';
     protected $updateTime = 'updated_at';
 
@@ -33,13 +33,4 @@ class Comments extends Model
         'updated_at' => 'TIMESTAMP',
         'deleted_at' => 'TIMESTAMP',
     ];
-
-
-    // 默认排除字段
-    // protected static $withoutField = [
-    //     'deleted_at',
-    //     'created_at',
-    //     'updated_at'
-    // ];
-
 }

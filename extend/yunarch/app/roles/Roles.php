@@ -50,9 +50,10 @@ class Roles
 
                 //Tags
                 '/api/admin/tags:get',
-                '/api/admin/tags:post',
-                '/api/admin/tags:patch',
-                '/api/admin/tags:delete',
+                '/api/admin/tag:post',
+                '/api/admin/tag:patch',
+                '/api/admin/tag:delete',
+                '/api/admin/tags/batch-operate:post',
 
                 //Dashboard
                 '/api/admin/dashboard:get',
