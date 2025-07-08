@@ -62,6 +62,6 @@ class Tags extends Validate
         'name.length'     => '标签名超出范围(1-255)',
         'name.chsDash' => '用户名只能为汉字、字母、数字下划线及破折号',
 
-        'status.in'     => '状态不存在',
+        'status.number'     => '状态格式错误',
     ];
 }

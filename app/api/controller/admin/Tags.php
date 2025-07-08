@@ -53,7 +53,7 @@ class Tags extends Base
         // 获取参数并按照规则过滤
         $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
         // search_keys转数组
-        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params);
+        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
 
         //验证参数
         try {
