@@ -209,21 +209,26 @@ class Users
     }
 
     /**
-     * 删除指定ID行
+     * 删除单&多用户方法
+     * * 删除卡片时会同时删除相关的标签、图片和评论
      *
-     * @param int|array $id 单个ID或ID数组
-     * @return array
+     * @param boolean $id 单用户ID
+     * @param array $ids 多用户ID集
+     * @return void
      */
-    public static function Delete($id)
+    static public function deleteUsers($id = false, $ids = [])
     {
+        $data = $id ? $id : $ids;
+        // 存储事务
+        Db::startTrans();
         try {
-            $result = UsersModel::destroy($id);
-            if ($result) {
-                return Common::mArrayEasyReturnStruct(null, true, $result);
-            }
-            return Common::mArrayEasyReturnStruct('删除失败', false);
+            UsersModel::destroy($data);
+
+            Db::commit(); // 提交事务
+            return Common::mArrayEasyReturnStruct('删除成功', true);
         } catch (\Throwable $th) {
-            return Common::mArrayEasyReturnStruct('删除失败', false, $th);
+            Db::rollback(); // 回滚事务
+            return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
         }
     }
 }

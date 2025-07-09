@@ -40,7 +40,7 @@ class Base
         //验证参数
         try {
             //场景参数验证
-            $params = ApiCommonValidate::sceneMessage($result);
+            $params = ApiCommonValidate::sceneMessage($result, $ValidateClass);
             //参数验证
             validate($ValidateClass)
                 ->batch(true)

@@ -32,8 +32,8 @@ class Roles
             'baseUrl' => [
                 //User
                 '/api/admin/users:get',
-                '/api/admin/users:patch',
-                '/api/admin/users:delete',
+                '/api/admin/user:patch',
+                '/api/admin/user:delete',
                 '/api/admin/users/batch-operate:post',
 
                 //Cards
