@@ -23,37 +23,7 @@ use \app\api\controller\Base;
 
 class Users extends Base
 {
-
-    /**
-     * 快速验证并过滤数据
-     *
-     * @param string 对应的验证类
-     * @param array 对应的验证场景
-     * @return array|object
-     */
-    protected function getParams($ValidateClass, $scene)
-    {
-        // 获取参数并按照规则过滤
-        $result = ApiCommonValidate::sceneFilter(Request::param(), $scene);
-
-        //验证参数
-        try {
-            //场景参数验证
-            $params = ApiCommonValidate::sceneMessage($result);
-            //参数验证
-            validate($ValidateClass)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
-
-        return $params;
-    }
-
-    //查询-GET
+    //基础分页数据
     public function Index()
     {
         // 获取参数并按照规则过滤
@@ -77,7 +47,7 @@ class Users extends Base
         return Export::Create($lDef_Result['data'], 200, null);
     }
 
-    //创建-POST
+    //插入
     public function Create()
     {
         //接收参数
@@ -86,7 +56,7 @@ class Users extends Base
         //返回结果
     }
 
-    //编辑-Patch
+    //编辑
     public function Patch()
     {
         //获取参数并按照规则过滤
@@ -120,7 +90,7 @@ class Users extends Base
         return Export::Create(null, 500, $lDef_ErrorMsg);
     }
 
-    //删除-DELETE
+    //删除
     public function Delete()
     {
 
