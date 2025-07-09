@@ -103,7 +103,7 @@ class Tags
     {
         switch ($method) {
             case 'approve':
-                return self::fieldsToggle('status', $ids, [0, 3], [1, 3]);
+                return self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
             case 'ban':
                 return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':

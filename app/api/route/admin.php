@@ -32,12 +32,13 @@ Route::group('', function () {
     Route::get('admin/users', 'admin.Users/Index');
     Route::patch('admin/users', 'admin.Users/Patch');
     Route::delete('admin/users', 'admin.Users/Delete');
+    Route::post('admin/users/batch-operate', 'admin.Users/BatchOperate');
 
     Route::get('admin/tags', 'admin.Tags/Index');
     Route::post('admin/tag', 'admin.Tags/Post');
     Route::patch('admin/tag', 'admin.Tags/Patch');
     Route::delete('admin/tag', 'admin.Tags/Delete');
-    Route::post('admin/tags/batch-operate', 'admin.tags/BatchOperate');
+    Route::post('admin/tags/batch-operate', 'admin.Tags/BatchOperate');
 
     Route::get('admin/comments', 'admin.Comments/Index');
     Route::patch('admin/comment', 'admin.Comments/Patch');
