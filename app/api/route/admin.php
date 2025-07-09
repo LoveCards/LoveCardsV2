@@ -30,8 +30,8 @@ Route::group('', function () {
     Route::post('admin/cards/batch-operate', 'admin.Cards/BatchOperate');
 
     Route::get('admin/users', 'admin.Users/Index');
-    Route::patch('admin/users', 'admin.Users/Patch');
-    Route::delete('admin/users', 'admin.Users/Delete');
+    Route::patch('admin/user', 'admin.Users/Patch');
+    Route::delete('admin/user', 'admin.Users/Delete');
     Route::post('admin/users/batch-operate', 'admin.Users/BatchOperate');
 
     Route::get('admin/tags', 'admin.Tags/Index');

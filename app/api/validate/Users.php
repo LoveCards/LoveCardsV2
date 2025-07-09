@@ -12,6 +12,53 @@ class Users extends Validate
         'edit' => ['id', 'avatar', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
         'register' => ['email', 'phone', 'username', 'password'],
         'login' => ['email', 'phone', 'username', 'password'],
+
+        'user' => [
+            'register' => [
+                'normal' => [
+                    'email',
+                    'phone',
+                    'username',
+                    'password'
+                ],
+                'require' => false,
+                'nonNull' => false,
+                'toNull' => false,
+            ],
+            'login' => [
+                'normal' => [
+                    'email',
+                    'phone',
+                    'username',
+                    'password'
+                ],
+                'require' => false,
+                'nonNull' => false,
+                'toNull' => false,
+            ]
+        ],
+        'admin' => [
+            'patch' => [
+                'normal' => [
+                    'avatar',
+                    'roles_id',
+                    'email',
+                    'phone',
+                    'username',
+                    'status'
+                ],
+                'require' => false,
+                'nonNull' => [
+                    'id',
+                    'password',
+                    'number'
+                ],
+                'toNull' => false,
+            ],
+        ]
+    ];
+    static public $scene_message = [
+        'number.nonNull' => '账号不得为空'
     ];
 
     //定义验证规则
@@ -21,9 +68,9 @@ class Users extends Validate
         'username' => 'length:3,12|chsDash|unique:users',
         'password' => 'length:5,36|password',
 
-        //'avatar' => 'length:3,254|url',
-        'email' => 'length:3,254|email|unique:users',
-        'phone' => 'mobile|unique:users',
+        'avatar' => 'max:255|url',
+        'email' => 'max:320|email|unique:users',
+        'phone' => 'max:20|mobile|unique:users',
 
         'status' => 'number',
 
@@ -46,11 +93,12 @@ class Users extends Validate
         'email.require' => '邮箱不得为空',
         'email.email' => '邮箱格式不正确',
         'email.unique' => '邮箱已存在',
-        'email.length'     => '邮箱超出范围(3-254)',
+        'email.max'     => '邮箱超出最大长度',
 
         'phone.require' => '手机号不得为空',
         'phone.mobile' => '手机号格式不正确',
         'phone.unique' => '手机号已存在',
+        'phone.max' => '手机号超出最大长度',
 
         'username.require' => '用户名不得为空',
         'username.length'     => '用户名超出范围(3-12)',
