@@ -80,7 +80,7 @@ class Cards
             case 'top':
                 return self::fieldsToggle('is_top', $ids, [0, 1]);
             case 'approve':
-                return self::fieldsToggle('status', $ids, [0, 3], [1, 3]);
+                return self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
             case 'ban':
                 return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':

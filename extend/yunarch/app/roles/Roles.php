@@ -34,6 +34,7 @@ class Roles
                 '/api/admin/users:get',
                 '/api/admin/users:patch',
                 '/api/admin/users:delete',
+                '/api/admin/users/batch-operate:post',
 
                 //Cards
                 '/api/admin/card:get',

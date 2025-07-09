@@ -24,13 +24,42 @@ use \app\api\controller\Base;
 class Users extends Base
 {
 
+    /**
+     * 快速验证并过滤数据
+     *
+     * @param string 对应的验证类
+     * @param array 对应的验证场景
+     * @return array|object
+     */
+    protected function getParams($ValidateClass, $scene)
+    {
+        // 获取参数并按照规则过滤
+        $result = ApiCommonValidate::sceneFilter(Request::param(), $scene);
+
+        //验证参数
+        try {
+            //场景参数验证
+            $params = ApiCommonValidate::sceneMessage($result);
+            //参数验证
+            validate($ValidateClass)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
+        }
+
+        return $params;
+    }
+
     //查询-GET
     public function Index()
     {
         // 获取参数并按照规则过滤
         $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
         // search_keys转数组
-        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params);
+        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
 
         //验证参数
         try {
@@ -110,5 +139,19 @@ class Users extends Base
             return Export::Create(null, 200, null);
         }
         return Export::Create(null, 500, $tDef_Result['msg']);
+    }
+
+    //批量操作
+    public function BatchOperate()
+    {
+        $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['BatchOperate']);
+        if (gettype($params) == 'object') {
+            return $params;
+        }
+        $ids = json_decode($params['ids'], true);
+        $result = UsersService::batchOperate($params['method'], $ids);
+
+        //返回数据
+        return Export::Create(null, 200);
     }
 }
