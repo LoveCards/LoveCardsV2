@@ -10,7 +10,6 @@ use app\api\service\Comments as CommentsService;
 
 use app\common\Export;
 
-//yunarch框架相关
 use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
 use yunarch\app\api\validate\Index as ApiIndexValidate;
 use yunarch\app\api\validate\Common as ApiCommonValidate;
@@ -19,37 +18,7 @@ use app\api\controller\Base;
 
 class Comments extends Base
 {
-
-    /**
-     * 快速验证并过滤数据
-     *
-     * @param string 对应的验证类
-     * @param array 对应的验证场景
-     * @return array|object
-     */
-    protected function getParams($ValidateClass, $scene)
-    {
-        // 获取参数并按照规则过滤
-        $result = ApiCommonValidate::sceneFilter(Request::param(), $scene);
-
-        //验证参数
-        try {
-            //场景参数验证
-            $params = ApiCommonValidate::sceneMessage($result);
-            //参数验证
-            validate($ValidateClass)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
-
-        return $params;
-    }
-
-    //读取列表
+    //基础分页数据
     public function Index()
     {
         // 获取参数并按照规则过滤
@@ -73,7 +42,7 @@ class Comments extends Base
         return Export::Create($result['data'], 200, null);
     }
 
-    //编辑-PATCH
+    //编辑
     public function Patch()
     {
         //获取参数
@@ -88,7 +57,7 @@ class Comments extends Base
         return Export::Create($result['data'], 200, null);
     }
 
-    //删除一张卡片
+    //删除
     public function Delete()
     {
         //获取参数
