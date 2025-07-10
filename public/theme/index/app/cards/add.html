@@ -60,7 +60,7 @@
                         <input class="mdui-textfield-input" id="woContact" type="text" />
                     </div>
                     <div class="mdui-textfield">
-                        <label class="mdui-textfield-label">TA的姓名(与谁交流)*</label>
+                        <label class="mdui-textfield-label">{if $TagList.CardModel == 0}TA的姓名(与谁表白)*{else}交流的主题*{/if}</label>
                         <input class="mdui-textfield-input" id="taName" type="text" />
                     </div>
                     {if $TagList.CardModel == 0}
@@ -69,10 +69,6 @@
                         <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>
                     </div>
                     {else}
-                    <div class="mdui-textfield">
-                        <label class="mdui-textfield-label">TA的联系方式</label>
-                        <input class="mdui-textfield-input" id="taContact" type="text" />
-                    </div>
                     <div class="mdui-textfield">
                         <label class="mdui-textfield-label">交流写些什么*</label>
                         <textarea class="mdui-textfield-input" id="content" rows="4" placeholder="必填"></textarea>

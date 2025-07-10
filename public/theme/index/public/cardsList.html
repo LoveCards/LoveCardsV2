@@ -7,6 +7,7 @@
             {if $D['model'] == 0}
             {if $D['woName']}
             <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                <img class="mdui-img-circle mdui-float-left mdui-m-r-1" width="24" height="24" src="{if isset($D['uid']) && $D['uid'] > 0 && isset($D['userAvatar']) && $D['userAvatar']}{$D['userAvatar']}{else}/theme/index/assets/image/guest.png{/if}" />
                 {$D['woName']}的表白卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                 <i class="mdui-icon material-icons mdui-float-right">face</i>
@@ -17,6 +18,7 @@
             </div>
             {else}
             <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                <img class="mdui-img-circle mdui-float-left mdui-m-r-1" width="24" height="24" src="/theme/index/assets/image/guest.png" />
                 匿名的表白卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
             </div>
@@ -27,6 +29,7 @@
             {else}
             {if $D['woName']}
             <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                <img class="mdui-img-circle mdui-float-left mdui-m-r-1" width="24" height="24" src="{if isset($D['uid']) && $D['uid'] > 0 && isset($D['userAvatar']) && $D['userAvatar']}{$D['userAvatar']}{else}/theme/index/assets/image/guest.png{/if}" />
                 {$D['woName']}的交流卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
                 <i class="mdui-icon material-icons mdui-float-right">face</i>
@@ -37,6 +40,7 @@
             </div>
             {else}
             <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                <img class="mdui-img-circle mdui-float-left mdui-m-r-1" width="24" height="24" src="/theme/index/assets/image/guest.png" />
                 匿名的交流卡
                 <i class="js-Shareurl-cardId" value="{$D.id}">&#xe63d;</i>
             </div>
