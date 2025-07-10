@@ -1,49 +1,129 @@
 <!doctype html>
-<html>
+<html lang="zh-CN">
 
 <head>
     <meta charset="utf-8">
-    <title>让我们继续下一步吧😊</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>让我们继续下一步吧 😊</title>
     <style>
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
         .container {
-            width: 60%;
-            margin: 10% auto 0;
-            background-color: #f0f0f0;
-            padding: 2% 5%;
-            border-radius: 10px
+            width: 85%;
+            max-width: 800px;
+            margin: 5% auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-
+        
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h1:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: #42b983;
+            border-radius: 2px;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin: 1.8rem 0 1rem;
+            font-weight: 500;
+        }
+        
         ul {
-            padding-left: 20px;
+            padding-left: 1.2rem;
+            margin: 1.5rem 0;
+            list-style-type: none;
         }
-
+        
         ul li {
-            line-height: 2.3
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
         }
-
+        
+        ul li:before {
+            content: "•";
+            color: #42b983;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        code {
+            background: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9em;
+            color: #e83e8c;
+        }
+        
         a {
-            color: #20a53a
+            color: #42b983;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+        
+        a:hover {
+            color: #2c3e50;
+            border-bottom-color: #42b983;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>让我们继续下一步吧😊</h1>
-        <h3>非常棒👍你已经成功上传并解压代码了，接着执行以下操作进入安装引导！</h3>
+        <h1>让我们继续下一步吧 😊</h1>
+        <h3>非常棒 👍 你已经成功上传并解压代码了，接着执行以下操作进入安装引导！</h3>
         <ul>
-            <li>1️⃣设置伪静态规则，可参照/public目录下<code>.htaccess</code>和<code>nginx.htaccess</code>文件进行设置</li>
-            <li>2️⃣设置运行目录为<code>/public</code>目录，若不可设置运行目录可尝试直接将域名绑定至<code>/public</code></li>
-            <li>3️⃣进入安装引导开始安装</li>
-
+            <li>设置伪静态规则，可参照 <code>/public</code> 目录下 <code>.htaccess</code> 和 <code>nginx.htaccess</code> 文件进行设置</li>
+            <li>设置运行目录为 <code>/public</code> 目录，若不可设置运行目录可尝试直接将域名绑定至 <code>/public</code></li>
+            <li>进入安装引导开始安装</li>
         </ul>
-        <h3>更多：</h3>
+        
+        <h3>更多资源：</h3>
         <ul>
-            <li>📄<a href="https://www.lovecards.cn/">LoveCards 官网</a></li>
-            <li>📄<a href="https://forum.lovecards.cn/">LoveCards 社区</a></li>
-            <li>📄<a href="https://github.com/LoveCards">LoveCards 项目主页</a></li>
-            <li>📄<a href="https://docs.lovecards.cn/">LoveCards 帮助文档</a></li>
-            <li>📄<a href="https://jq.qq.com/?_wv=1027&k=qM8f2RMg">LoveCards QQ交流群</a></li>
+            <li><a href="https://www.lovecards.cn/" target="_blank">LoveCards 官网</a></li>
+            <li><a href="https://forum.lovecards.cn/" target="_blank">LoveCards 社区</a></li>
+            <li><a href="https://github.com/LoveCards" target="_blank">LoveCards 项目主页</a></li>
+            <li><a href="https://docs.lovecards.cn/" target="_blank">LoveCards 帮助文档</a></li>
+            <li><a href="https://qm.qq.com/q/V0kewhvXqM" target="_blank">LoveCards QQ交流群</a></li>
         </ul>
     </div>
 </body>
