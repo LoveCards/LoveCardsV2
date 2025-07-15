@@ -31,7 +31,7 @@ class Comments extends Validate
                     'is_top',
                     'status',
                     'user_id',
-                    'goods',
+                    'good',
                     'content',
                 ],
                 'require' => false,
@@ -60,7 +60,7 @@ class Comments extends Validate
         'user_id' => 'number',
         'data' => 'arrayJson',
         'content' => 'max:140',
-        'goods' => 'number',
+        'good' => 'number',
         'post_ip' => 'ip|max:39',
     ];
 
@@ -83,7 +83,7 @@ class Comments extends Validate
 
         'data.arrayJson' => '自定义字段格式错误',
 
-        'goods.number'     => '喜欢数格式错误',
+        'good.number'     => '喜欢数格式错误',
 
         'post_ip.ip' => 'IP地址格式不正确',
         'post_ip.max' => 'IP地址过长',

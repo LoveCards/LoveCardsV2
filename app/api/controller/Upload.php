@@ -51,8 +51,8 @@ class Upload
 
         $lReq_ParmasArray = [
             'file' => request()->file('file'),
-            'aid' => Request::param('aid'),
-            'pid' => Request::param('pid'),
+            'aid' => 0,
+            'pid' => 0,
             'user_id' => Request::param('user_id'),
         ];
 
@@ -73,7 +73,7 @@ class Upload
 
         //创建数据
         if (!isset($context['aid'])) {
-            $lReq_ParmasArray['uid'] = $context['uid'];
+            $lReq_ParmasArray['user_id'] = $context['uid'];
         }
         $lReq_ParmasArray['url'] =  Request::scheme() . '://' . Request::host() . '/storage/' . $lDef_Result;
         $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);

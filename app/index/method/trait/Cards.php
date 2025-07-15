@@ -15,7 +15,7 @@ use app\index\BaseController;
 
 trait Cards
 {
-    //通用卡片查询
+    //通用卡片查询*
     public function CommonCardList()
     {
         $BaseController = new BaseController;
@@ -31,14 +31,18 @@ trait Cards
             ->field($BaseController::G_Def_DbCardsCommonField)
             ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.status', 0)
-            ->where('CARD.model', $tReq_ParamModel)
+            ->where('CARD.data', '"model": "' . $tReq_ParamModel . '"')
             ->order('CARD.id', 'desc')
             ->paginate($tDef_CardListMax, true);
         $tDef_CardsEasyPagingComponent = $lDef_Result->render();
         $lDef_CardList = $lDef_Result->items();
 
+        //兼容旧的
+        $lDef_CardList = $this->dataToArray($lDef_CardList);
+        $lDef_CardList = $this->dataCompatible($lDef_CardList);
+
         //分配变量
-        return Common::mArrayEasyReturnStruct(null,true,[
+        return Common::mArrayEasyReturnStruct(null, true, [
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
@@ -49,7 +53,7 @@ trait Cards
         ]);
     }
 
-    // 推荐列表
+    // 推荐列表*
     public function HotCardList()
     {
         $BaseController = new BaseController;
@@ -61,7 +65,7 @@ trait Cards
         //查询数据
         $lDef_Result = Db::table('cards')
             ->where('status', 0)
-            ->where('top', 1)
+            ->where('is_top', 1)
             ->order('id', 'desc')
             ->limit(CONST_G_TOP_LISTS_MAX)
             ->select()->toArray();
@@ -69,7 +73,7 @@ trait Cards
         //Cards推荐列表
         //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit(CONST_G_HOT_LISTS_MAX)->select()->toArray();
-        $lDef_Result = Db::query("select * from cards where top = 0 and status = 0 order by IF(ISNULL(woName),1,0),comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
         //合并推荐列表到置顶列表
         $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
         //取Good状态合并到CardList数据
@@ -85,8 +89,12 @@ trait Cards
             }
         }
 
+        //兼容旧的
+        $lDef_CardLists = $this->dataToArray($lDef_CardLists);
+        $lDef_CardLists = $this->dataCompatible($lDef_CardLists);
+
         //分配变量
-        return Common::mArrayEasyReturnStruct(null,true,[
+        return Common::mArrayEasyReturnStruct(null, true, [
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardLists),
                 ['ViewTitle' => '热门']
@@ -94,7 +102,7 @@ trait Cards
         ]);
     }
 
-    // 搜索列表
+    // 搜索列表*
     public function SearchCardList()
     {
         $BaseController = new BaseController;
@@ -150,8 +158,12 @@ trait Cards
             $tDef_CardListMax = [];
         }
 
+        //兼容旧的
+        $lDef_CardList = $this->dataToArray($lDef_CardList);
+        $lDef_CardList = $this->dataCompatible($lDef_CardList);
+
         // 分配变量
-        return Common::mArrayEasyReturnStruct(null,true,[
+        return Common::mArrayEasyReturnStruct(null, true, [
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
@@ -161,7 +173,7 @@ trait Cards
         ]);
     }
 
-    // TAG合集列表
+    // TAG合集列表*
     public function TagCardList()
     {
         $BaseController = new BaseController;
@@ -186,7 +198,7 @@ trait Cards
                     ->join('cards CARD', 'CTM.pid = CARD.id')
                     ->field($BaseController::G_Def_DbCardsCommonField)
                     ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
-                    ->where('CTM.tid', $tReq_TagIdValue)
+                    ->where('CTM.tag_id', $tReq_TagIdValue)
                     ->order('CARD.id', 'desc')
                     ->paginate($tDef_CardListMax, true);
                 $tDef_CardsEasyPagingComponent = $lDef_Result->render();
@@ -201,8 +213,12 @@ trait Cards
             }
         }
 
+        //兼容旧的
+        $lDef_CardList = $this->dataToArray($lDef_CardList);
+        $lDef_CardList = $this->dataCompatible($lDef_CardList);
+
         // 分配变量
-        return Common::mArrayEasyReturnStruct(null,true,[
+        return Common::mArrayEasyReturnStruct(null, true, [
             $tDef_ListName => array_merge(
                 $BaseController->mArrayEasyGetAssignCardList($tDef_ListName, $lDef_CardList, $tDef_CardsEasyPagingComponent, $tDef_CardListMax),
                 [
@@ -220,7 +236,7 @@ trait Cards
         $tReq_ParamModel = Request::param('model');
         // 查询数据
         View::assign($BaseController->mArrayEasyGetAssignCardTagList());
-        return Common::mArrayEasyReturnStruct(null,true,[
+        return Common::mArrayEasyReturnStruct(null, true, [
             'TagList' => [
                 'CardModel' => $tReq_ParamModel
             ]
@@ -289,8 +305,46 @@ trait Cards
             $lDef_AssignData['ViewDescription'] =  '卡片详情';
             $lDef_AssignData['ViewKeywords'] =  '卡片详情,LoveCards,表白卡';
         }
-        return Common::mArrayEasyReturnStruct(null,true,[
+        return Common::mArrayEasyReturnStruct(null, true, [
             $tDef_ListName => $lDef_AssignData
         ]);
+    }
+
+    //适配旧版本方法
+    protected function dataToArray($data)
+    {
+        $result = [
+            'woName' => null,
+            'taName' => null,
+            'woContact' => null,
+            'taContact' => null,
+            'model' => 0,
+        ];
+
+        $return = [];
+        foreach ($data as $item) {
+            if ($item['data']) {
+                $result = json_decode($item['data'], true);
+            }
+            unset($item['data']);
+            $return[] = array_merge($item, $result);
+        }
+        return $return;
+    }
+    protected function dataCompatible($data)
+    {
+        $return = [];
+        foreach ($data as $key => $item) {
+            $data[$key]['top'] = $data[$key]['is_top'];
+            $data[$key]['uid'] = $data[$key]['user_id'];
+            $data[$key]['time'] = $data[$key]['created_at'];
+            $data[$key]['ip'] = $data[$key]['post_ip'];
+            unset($data[$key]['is_top']);
+            unset($data[$key]['user_id']);
+            unset($data[$key]['created_at']);
+            unset($data[$key]['post_ip']);
+        }
+
+        return $return;
     }
 }

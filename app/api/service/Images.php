@@ -23,7 +23,7 @@ class Images
     {
         $result = ImagesModel::where('aid', 1)->where('pid', $params['pid'])->select();
         $result = $result->toArray();
-        function completeUrls(&$array)//Ai临时待完善
+        function completeUrls(&$array) //Ai临时待完善
         {
             // 遍历数组
             foreach ($array as &$item) {

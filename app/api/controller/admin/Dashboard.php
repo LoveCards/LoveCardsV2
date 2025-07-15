@@ -40,13 +40,13 @@ class Dashboard
         $tDef_ViewDataCount = [
             'cards' => CardsModel::count(),
             'comments' => CommentsModel::count(),
-            'goods' => LikesModel::count()
+            'good' => LikesModel::count()
         ];
         //取图表数据
         $tDef_ViewChartJson = [
             [
                 'label' => '卡片',
-                'data' => fArrayGetChartData('new_cards'),
+                'data' => fArrayGetChartData('cards'),
             ],
             [
                 'label' => '评论',

@@ -8,7 +8,7 @@ use think\model\concern\SoftDelete;
 class Cards extends Model
 {
     // 设置当前模型对应的完整数据表名称
-    protected $table = 'new_cards';
+    //protected $table = 'new_cards';
 
     //开启软删除
     use SoftDelete;
@@ -29,7 +29,7 @@ class Cards extends Model
         'cover' => 'VARCHAR',
         'content' => 'TEXT',
         'tags' => 'JSON',
-        'goods' => 'INT',
+        'good' => 'INT',
         'views' => 'INT',
         'comments' => 'INT',
         'post_ip' => 'VARCHAR',
