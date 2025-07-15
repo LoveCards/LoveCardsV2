@@ -15,7 +15,8 @@ use yunarch\app\api\validate\Common as ApiCommonValidate;
 
 class Base
 {
-
+    //基础参数
+    var $SESSION = false;
     var $JWT_SESSION = false;
 
     function __construct()
@@ -23,6 +24,11 @@ class Base
         new RuleUtils(); // 确保加载通用验证类
 
         $this->JWT_SESSION = request()->JwtData; //JWT SESSION
+
+        $this->SESSION = [
+            'data' => date('Y-m-d H:i:s'),
+            'ip' => $this->getIP()
+        ];
     }
 
     /**
@@ -52,5 +58,32 @@ class Base
         }
 
         return $params;
+    }
+
+    /**
+     * 获取IP
+     *
+     * @param integer $type
+     * @return string
+     */
+    public static function getIP($type = 0): string
+    {
+        $type       =  $type ? 1 : 0;
+        static $ip  =   NULL;
+        if ($ip !== NULL) return $ip[$type];
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $arr    =   explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $pos    =   array_search('unknown', $arr);
+            if (false !== $pos) unset($arr[$pos]);
+            $ip     =   trim($arr[0]);
+        } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip     =   $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip     =   $_SERVER['REMOTE_ADDR'];
+        }
+        // IP地址合法验证
+        $long = ip2long($ip);
+        $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
+        return $ip[$type];
     }
 }

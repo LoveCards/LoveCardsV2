@@ -51,7 +51,7 @@ class Cards extends Validate
                     'user_id',
                     'comments',
                     'views',
-                    'goods'
+                    'good'
                 ],
                 'require' => [
                     'id'
@@ -81,7 +81,7 @@ class Cards extends Validate
         'cover' => 'url|max:2083',
         'content' => 'max:5000',
         'tags' => 'arrayJson|tagsLength',
-        'goods' => 'number',
+        'good' => 'number',
         'views' => 'number',
         'comments' => 'number',
         'post_ip' => 'ip|max:39',
@@ -113,7 +113,7 @@ class Cards extends Validate
         'tags.arrayJson' => '标签格式错误',
         'tags.tagsLength' => '标签个数超出上限',
 
-        'goods.number' => '喜欢数格式错误',
+        'good.number' => '喜欢数格式错误',
 
         'views.number' => '浏览量格式错误',
 

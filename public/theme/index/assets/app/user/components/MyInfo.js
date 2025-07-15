@@ -112,8 +112,8 @@ const MyInfo = {
         uploadUserImages(file) {
             let data = {
                 file: file,
-                aid: 0, //用户应用ID
-                pid: 0, //临时条目ID
+                // aid: 0, //用户应用ID
+                // pid: 0, //临时条目ID
                 ReqHeaders: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -126,7 +126,7 @@ const MyInfo = {
                     BaseEntity.commonFunctions.snackbar('上传成功，提交后保存');
                 }
             }, data, 'UserTokenName').then((result) => {
-                this.userInfo.avatar = result.data;
+                this.userInfo.avatar = result.data.url;
             })
         },
     },

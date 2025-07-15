@@ -21,26 +21,25 @@ Route::group('', function () {
     Route::get('tags', 'user.Tags/noPaginateIndex');
 
     //卡片
-    Route::get('cards', 'user.Cards/List');
-    Route::delete('cards', 'user.Cards/DeleteNew');
+    Route::get('card/images', 'admin.Images/CardIndex'); //卡片图集
 
-    //图片
-    Route::get('card/images', 'admin.Images/CardIndex');
+    Route::get('cards', 'user.Cards/list'); //卡片列表
+    Route::post('card/like', 'user.Cards/like'); //喜欢
+    Route::delete('card/like', 'user.Cards/unLike'); //取消喜欢
+    Route::delete('card/comment', 'user.Cards/hideComment'); //删除评论
+    Route::delete('card', 'user.Cards/hideCard'); //删除卡片
 
     //特殊鉴权
     Route::group('', function () {
-        Route::post('cards/add', 'user.Cards/Add');
-        Route::post('comments/add', 'user.Comments/Add');
+        Route::post('card', 'user.Cards/creatCard');
+        Route::post('card/comment', 'user.Cards/creatComment');
     })->middleware([SessionDebounce::class, GeetestCheck::class]);
-    Route::post('cards/good', 'user.Cards/Good');
 
     //评论
-    Route::get('comments', 'user.Comments/List');
-    Route::delete('comments', 'user.Comments/DeleteNew');
-
+    Route::get('comments', 'user.Comments/list');
     //喜欢
-    Route::get('likes', 'user.Likes/List');
-    Route::delete('likes', 'user.Likes/Delete');
+    Route::get('likes', 'user.Likes/list');
+
 
     //用户信息
     Route::patch('user/info', 'user.info/Patch');

@@ -70,7 +70,7 @@ class Cards
     /**
      * 批量操作卡片
      *
-     * @param string $method top：置顶|ban：状态封禁仅自己可见|approve：状态待审核仅自己可见|hide：状态隐藏仅后台可见|delete：删除
+     * @param string $method top：置顶|1ban：状态封禁仅自己可见|2approve：状态待审核仅自己可见|3hide：状态隐藏仅后台可见|delete：删除
      * @param array $ids
      * @return void
      */
