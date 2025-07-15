@@ -31,7 +31,7 @@ trait Cards
             ->field($BaseController::G_Def_DbCardsCommonField)
             ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.status', 0)
-            ->where('CARD.data', '"model": "' . $tReq_ParamModel . '"')
+            ->where('CARD.data', 'like', '%"model": "' . $tReq_ParamModel . '"%')
             ->order('CARD.id', 'desc')
             ->paginate($tDef_CardListMax, true);
         $tDef_CardsEasyPagingComponent = $lDef_Result->render();
@@ -243,7 +243,7 @@ trait Cards
         ]);
     }
 
-    // 卡片详情
+    // 卡片详情*
     public function Card()
     {
         $BaseController = new BaseController;
@@ -261,6 +261,10 @@ trait Cards
             ->where('CARD.id', $tReq_ParamId)
             ->where('CARD.status', 0)
             ->findOrEmpty();
+
+        $lDef_CardData = $this->dataToArray([$lDef_CardData]);
+        $lDef_CardData = $this->dataCompatible($lDef_CardData)[0];
+
         if ($lDef_CardData) {
             // 防止快速刷新网页增加浏览量
             $tDef_PreventClicks = BackEnd::mRemindEasyDebounce('LastGetTimeCardID' . $tReq_ParamId, 60);
@@ -276,10 +280,36 @@ trait Cards
             // 获取图片数据
             $tDef_ImgData = ImagesModel::where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
             // 获取评论列表
-            $lDef_Result = Db::table('comments')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')
-                ->paginate($tDef_CommentsMax, true);
+            $lDef_Result = Db::table('comments')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')->paginate($tDef_CommentsMax, true);
+
+            //兼容旧版数据库写法 评论名称获取合并
+            $comments_data = $lDef_Result->toArray();
+            $user_ids = [];
+            foreach ($comments_data['data'] as $key => $value) {
+                $user_ids[] = $value['user_id'];
+            };
+            $lDef_Result_user = Db::table('users')->whereIn('id', $user_ids)->where('status', 0)->select();
+            $userIndex = [];
+            foreach ($lDef_Result_user as $item) {
+                //键替换为ID
+                $userIndex[$item['id']] = $item;
+            }
+            foreach ($comments_data['data'] as $key => $value) {
+                //处理兼容
+                $comments_data['data'][$key]['time'] = $comments_data['data'][$key]['created_at'];
+                //合并UID
+                $uid = $comments_data['data'][$key]['user_id'];
+                if ($uid == 0) {
+                    $comments_data['data'][$key]['name'] = '匿名';
+                }
+                if (array_key_exists($uid, $userIndex)) {
+                    $comments_data['data'][$key]['name'] = $userIndex[$uid]['username'];
+                }
+                $comments_data['data'][$key]['name'] = '匿名';
+            }
+
             $tDef_CommentsEasyPagingComponent = $lDef_Result->render();
-            $tDef_Comments = $lDef_Result->items();
+            $tDef_Comments = $comments_data['data'];
         } else {
             $tDef_CommentsEasyPagingComponent = [];
             $tDef_Comments = [];
@@ -324,7 +354,7 @@ trait Cards
         $return = [];
         foreach ($data as $item) {
             if ($item['data']) {
-                $result = json_decode($item['data'], true);
+                $result = array_merge($result, json_decode($item['data'], true));
             }
             unset($item['data']);
             $return[] = array_merge($item, $result);
@@ -333,18 +363,23 @@ trait Cards
     }
     protected function dataCompatible($data)
     {
-        $return = [];
         foreach ($data as $key => $item) {
             $data[$key]['top'] = $data[$key]['is_top'];
             $data[$key]['uid'] = $data[$key]['user_id'];
             $data[$key]['time'] = $data[$key]['created_at'];
             $data[$key]['ip'] = $data[$key]['post_ip'];
+            $data[$key]['look'] = $data[$key]['views'];
+            $data[$key]['img'] = $data[$key]['cover'];
+            $data[$key]['tag'] = $data[$key]['tags'];
             unset($data[$key]['is_top']);
             unset($data[$key]['user_id']);
             unset($data[$key]['created_at']);
             unset($data[$key]['post_ip']);
+            unset($data[$key]['views']);
+            unset($data[$key]['cover']);
+            unset($data[$key]['tags']);
         }
 
-        return $return;
+        return $data;
     }
 }

@@ -79,10 +79,11 @@ class Roles
 
                 '/api/likes:get',
                 '/api/likes:delete',
+
                 //游客api
-                '/api/cards/add:post',
-                '/api/comments/add:post',
-                '/api/cards/good:post',
+                '/api/card:post',
+                '/api/comment:post',
+                '/api/card/like:post',
 
                 //新-遵循restful api
                 '/api/user/info:patch',

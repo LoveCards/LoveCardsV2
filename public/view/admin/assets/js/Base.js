@@ -17,12 +17,12 @@ class Base {
 
         //接口
         const apiUrl = {
-            AuthLogin: '/api/auth/login',//登入
-            AuthLogout: '/api/auth/logout',//注销
+            // AuthLogin: '/api/auth/login',//登入
+            // AuthLogout: '/api/auth/logout',//注销
 
-            AdminDelete: '/api/admin/delete',//删除管理员
-            AdminAdd: '/api/admin/add',//添加管理员
-            AdminEdit: '/api/admin/edit',//添加管理员
+            // AdminDelete: '/api/admin/delete',//删除管理员
+            // AdminAdd: '/api/admin/add',//添加管理员
+            // AdminEdit: '/api/admin/edit',//添加管理员
 
             UserAuthLogin: '/api/user/auth/login',//登入
             UserAuthLogout: '/api/user/auth/logout',//注销
@@ -30,10 +30,10 @@ class Base {
             UserAuthMsgCaptcha: '/api/user/auth/captcha',//验证码
             UserAuthCheck: '/api/user/auth/check',//TOKEN校验
 
-            UsersIndex: '/api/users/index',//列出用户
-            UsersDelete: '/api/users/delete',//删除用户
-            UsersAdd: '/api/users/add',//添加用户
-            UsersPatch: '/api/users/patch',//添加用户
+            // UsersIndex: '/api/users/index',//列出用户
+            // UsersDelete: '/api/users/delete',//删除用户
+            // UsersAdd: '/api/users/add',//添加用户
+            // UsersPatch: '/api/users/patch',//添加用户
 
             UserInfo: '/api/user/info',//用户-RF
             UserPassword: '/api/user/password',//设置密码
@@ -41,32 +41,34 @@ class Base {
             UserEmailCaptcha: '/api/user/email-captcha',//获取修改邮箱验证码
             UploadUserImages: '/api/upload/user-images',//用户图片上传
 
-            SystemSite: '/api/system/site',//基本信息设置
-            SystemEmail: '/api/system/email',//系统邮箱设置
-            SystemOther: '/api/system/other',//系统其他设置
-            SystemTemplate: '/api/system/template',//主题设置
-            SystemTemplateSet: '/api/system/TemplateSet',//主题配置
-            SystemGeetest: '/api/system/geetest',//验证码设置
+            // SystemSite: '/api/system/site',//基本信息设置
+            // SystemEmail: '/api/system/email',//系统邮箱设置
+            // SystemOther: '/api/system/other',//系统其他设置
+            // SystemTemplate: '/api/system/template',//主题设置
+            // SystemTemplateSet: '/api/system/TemplateSet',//主题配置
+            // SystemGeetest: '/api/system/geetest',//验证码设置
 
+            Card: '/api/card',
             Cards: '/api/cards',
-            CardsAdd: '/api/cards/add',//添加卡片
-            CardsEdit: '/api/cards/edit',//编辑卡片
-            CardsDelete: '/api/cards/delete',//删除卡片
-            CardsSetting: '/api/cards/setting',//模块设置
-            CardsGood: '/api/cards/good',//点赞
+            // CardsAdd: '/api/cards/add',//添加卡片
+            // CardsEdit: '/api/cards/edit',//编辑卡片
+            // CardsDelete: '/api/cards/delete',//删除卡片
+            // CardsSetting: '/api/cards/setting',//模块设置 
+            // CardsGood: '/api/card/like',//点赞 *
 
             Likes: '/api/Likes',
 
-            TagsAdd: '/api/tags/add',//添加标签
-            TagsEdit: '/api/tags/edit',//编辑标签
-            TagsDelete: '/api/tags/delete',//删除标签
+            // TagsAdd: '/api/tags/add',//添加标签
+            // TagsEdit: '/api/tags/edit',//编辑标签
+            // TagsDelete: '/api/tags/delete',//删除标签
 
-            Comments: '/api/comments',//编辑评论
-            CommentsAdd: '/api/comments/add',//编辑评论
-            CommentsEdit: '/api/comments/edit',//编辑评论
-            CommentsDelete: '/api/comments/delete',//删除评论
+            Comment: '/api/comment',//评论
+            Comments: '/api/comments',//评论
+            // CommentsAdd: '/api/comments/add',//编辑评论
+            // CommentsEdit: '/api/comments/edit',//编辑评论
+            // CommentsDelete: '/api/comments/delete',//删除评论
 
-            ThemeConfig: '/api/theme/config',//主题配置
+            // ThemeConfig: '/api/theme/config',//主题配置
 
             //install
             SystemInstallCheckEnvironment: '/system/Install/GetCheckEnvironment',//验证环境
