@@ -26,7 +26,7 @@ class Base
         $this->JWT_SESSION = request()->JwtData; //JWT SESSION
 
         $this->SESSION = [
-            'data' => date('Y-m-d H:i:s'),
+            'date' => date('Y-m-d H:i:s'),
             'ip' => $this->getIP()
         ];
     }
