@@ -68,7 +68,7 @@ class Base {
             // CommentsEdit: '/api/comments/edit',//编辑评论
             // CommentsDelete: '/api/comments/delete',//删除评论
 
-            // ThemeConfig: '/api/theme/config',//主题配置
+            ThemeConfig: '/api/theme/config',//主题配置
 
             //install
             SystemInstallCheckEnvironment: '/system/Install/GetCheckEnvironment',//验证环境

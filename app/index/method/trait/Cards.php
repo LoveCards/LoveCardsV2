@@ -272,8 +272,8 @@ trait Cards
                 // 获取 Cards 数据库对象
                 $lDef_ResultCards = Db::table('cards')->where('id', $tReq_ParamId);
                 // 更新视图字段
-                if (!$lDef_ResultCards->inc('look')->update()) {
-                    //return Common::create(['cards.look' => 'cards.look更新失败'], '无效浏览', 400);
+                if (!$lDef_ResultCards->inc('views')->update()) {
+                    //return Common::create(['cards.views' => 'cards.views更新失败'], '无效浏览', 400);
                 };
                 $lDef_CardData['look'] = $lDef_CardData['look'] + 1;
             }

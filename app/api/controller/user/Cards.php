@@ -6,6 +6,7 @@ use think\facade\Request;
 use think\facade\Db;
 
 use app\api\service\Cards as CardsService;
+use app\api\service\Likes as LikesService;
 
 use app\common\Export;
 
@@ -15,7 +16,7 @@ class Cards extends Base
 {
     //卡片
     public function list() {}
-    
+
     //创建卡片
     public function creatCard() {}
     //删除卡片
@@ -78,5 +79,14 @@ class Cards extends Base
         return Export::Create([$resultCardsData['good'] + 1], 200, null);
     }
     //取消点赞
-    public function unLike() {}
+    public function unLike()
+    {
+        // try {
+        //     //隐藏
+        //     LikesService::delete($data, $context);
+        // } catch (\Throwable $th) {
+        //     return Export::Create([], $th->getCode(), $th->getMessage());
+        // }
+        // return Export::Create([]);
+    }
 }
