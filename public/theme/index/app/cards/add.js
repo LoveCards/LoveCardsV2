@@ -48,18 +48,34 @@ class Add extends Base {
         //是否存在验证参数
         var data;
         if (CaptchaData) { data = CaptchaData; }
-
-        var data = {
-            ...data,//合并验证参数
-            'content': resData.content,
+        console.log(resData);
+        let pictures = [];
+        resData.img.forEach(element => {
+            pictures.push(element.id);
+        });
+        let dataJson = JSON.stringify({
             'woName': resData.woName,
             'taName': resData.taName,
             'woContact': resData.woContact,
             'taContact': resData.taContact,
             'model': resData.model,
-            'tag': resData.tag,
-            'img': resData.img,
+        });
+
+        var data = {
+            ...data,//合并验证参数
+            'content': resData.content,
         };
-        this.RequestApiUrl('post', 'CardsAdd', 'PostCardsAdd', data, 'UserTokenName');
+        data['data'] = dataJson;
+        if (resData.tag != []) {
+            data['tags'] = JSON.stringify(resData.tag);
+        }
+        if (pictures) {
+            data['pictures'] = JSON.stringify(pictures);
+        }
+        if (resData.img[0]) {
+            data['cover'] = resData.img[0].url;
+        }
+
+        this.RequestApiUrl('post', 'Card', 'PostCardsAdd', data, 'UserTokenName');
     }
 }

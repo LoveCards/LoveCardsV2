@@ -36,7 +36,7 @@ const GithubDateRelesesLatest = () => {
     })
 };
 
-var apiUrlUploadImage = '/api/upload/image'//图片上传
+var apiUrlUploadImage = '/api/upload/user-images'//图片上传
 
 //默认添加卡片上传图片个数
 const DefSetCardsImgNum = 9;

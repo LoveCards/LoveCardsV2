@@ -5,6 +5,8 @@ namespace app\api\controller\user;
 use think\facade\Request;
 use think\facade\Db;
 
+use app\api\validate\Cards as CardsValidate;
+
 use app\api\service\Cards as CardsService;
 use app\api\service\Likes as LikesService;
 
@@ -18,8 +20,24 @@ class Cards extends Base
     public function list() {}
 
     //创建卡片
-    public function creatCard() {}
-    //删除卡片
+    public function createCard()
+    {
+        //获取参数
+        $params = $this->getParams(CardsValidate::class, CardsValidate::$all_scene['user']['create']);
+        if (gettype($params) == 'object') {
+            return $params;
+        }
+
+        //补齐参数
+        $params['user_id'] = $this->JWT_SESSION['uid'];
+        $params['post_ip'] = $this->SESSION['ip'];
+
+        //调用服务
+        $result = CardsService::createCard($params);
+        //返回结果
+        return Export::Create($result['data'], 200, null);
+    }
+    //隐藏卡片(用户删除)
     public function hideCard()
     {
         try {
@@ -33,7 +51,7 @@ class Cards extends Base
 
     //创建评论
     public function creatComment() {}
-    //删除评论
+    //隐藏评论(用户删除)
     public function hideComment() {}
 
     //点赞
