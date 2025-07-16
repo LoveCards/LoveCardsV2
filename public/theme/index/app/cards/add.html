@@ -93,8 +93,10 @@
                                 <div class="mdui-row">
                                     <div class="mdui-col-xs-12 mdui-col-sm-10">
                                         <div class="mdui-textfield">
+                                            <input class="mdui-textfield-input" id="urlUpdataImageId" type="text"
+                                                style="display: none;">
                                             <input class="mdui-textfield-input" id="urlUpdataImage" type="text"
-                                                placeholder="http://">
+                                                style="display: none;">
                                             <div class="mdui-textfield-helper">最大支持上传2M图片*9</div>
                                         </div>
                                     </div>
@@ -141,10 +143,11 @@
             //构建图片url数组并获取
             var jsonImageUrl = [];
             $('#listImageUrl').find('.js-url-UpdataImage').each(function () {
-                jsonImageUrl.push($(this).attr('src'));
+                let picture = { id: $(this).attr('id'), url: $(this).attr('src') }
+                jsonImageUrl.push(picture);
             });
-            img = JSON.stringify(jsonImageUrl);
-            tag = JSON.stringify(checkChooseTagId);//全局变量在cardsEdit.js中 待优化
+            img = jsonImageUrl;
+            tag = checkChooseTagId;//全局变量在cardsEdit.js中 待优化
             data = {
                 'content': $('#content').val(),
                 'woName': $('#woName').val(),
@@ -164,7 +167,7 @@
             if (response.data?.id) {
                 AddEntity.commonFunctions.snackbar('添加成功，正在跳转');
                 AddEntity.JumpUrl('/index/cards/card/id/' + response.data.id);
-            }else{
+            } else {
                 AddEntity.commonFunctions.snackbar('添加成功，等待审核');
                 AddEntity.JumpUrl('/');
             }

@@ -29,31 +29,48 @@ $('.js-btn-delete-UrlUpdataImage').click(function () {
 });
 
 //按钮-图片上传
-$('#btnUploadImage').change(function () {
+$('#btnUploadImage').change(async function () {
     var formData = new FormData();
     formData.append('file', dataUpdataImage.files[0]);
     $('#btnUploadImage').find('span').text('正在上传');
     //提交数据
-    var result = apiAjax1(formData, apiUrlUploadImage, 'POST');
-    if (result) {
+    //var result = apiAjax1(formData, apiUrlUploadImage, 'POST');
+    const BaseEntity = new Base();
+    let data = {
+        file: dataUpdataImage.files[0],
+        ReqHeaders: {
+            'Content-Type': 'multipart/form-data'
+        }
+    };
+    try {
+        var result = await BaseEntity.RequestApiUrl('Post', 'UploadUserImages', {
+            inti: () => { },
+            then: () => { },
+            catch: () => {
+                return false;
+            }
+        }, data, 'UserTokenName');
         //成功
         mdui.snackbar({
             message: '上传成功',
             position: 'left-top'
         });
-        $('#urlUpdataImage').val('/storage/' + result.data);
+        //console.log(result);
+
+        $('#urlUpdataImage').val(result.data.url);
+        $('#urlUpdataImageId').val(result.data.id);
         $('#btnUploadImage').find('span').text('继续上传');
-        return;
-    } else {
+    } catch (error) {
         $('#urlUpdataImage').attr('placeholder', '上传失败，请重试');
-        $('#btnUploadImage').find('span').text('上 传');
-        return;
+        $('#btnUploadImage').find('span').text('上传失败，请重试');
     }
+    return;
 });
 
 //按钮-加载图片组件
 $('#btnUpdataImgUrl').click(function () {
     var urlUpdataImage = $('#urlUpdataImage').val();
+    var urlUpdataImageId = $('#urlUpdataImageId').val();
     console.log(checkChooseTagId)
     if (checkUrl(urlUpdataImage)) {
         //限制图片个数
@@ -69,7 +86,7 @@ $('#btnUpdataImgUrl').click(function () {
             <div class="mdui-col mdui-p-b-1">
                 <div class="mdui-grid-tile">
                     <div class="css-cardsAdd-img">
-                        <img class="js-url-UpdataImage" src="${urlUpdataImage}">
+                        <img class="js-url-UpdataImage" id="${urlUpdataImageId}" src="${urlUpdataImage}">
                         <div class="mdui-cardAdd-menu">
                             <button class="mdui-btn mdui-btn-icon js-btn-delete-UrlUpdataImage">
                                 <i class="mdui-icon material-icons" style="padding:unset;">clear</i>

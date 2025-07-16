@@ -13,7 +13,7 @@ class Cards extends Validate
     //参数过滤场景
     static public $all_scene = [
         'user' => [
-            'post' => [
+            'create' => [
                 'normal' => [
                     'pictures'
                 ],
@@ -27,17 +27,17 @@ class Cards extends Validate
                     'tags'
                 ],
             ],
-            'patch' => [
-                'normal' => false,
-                'require' => [
-                    'id',
-                    'content',
-                ],
-                'nonNull' => false,
-                'toNull' => [
-                    'data'
-                ],
-            ],
+            // 'patch' => [
+            //     'normal' => false,
+            //     'require' => [
+            //         'id',
+            //         'content',
+            //     ],
+            //     'nonNull' => false,
+            //     'toNull' => [
+            //         'data'
+            //     ],
+            // ],
         ],
         'admin' => [
             'patch' => [

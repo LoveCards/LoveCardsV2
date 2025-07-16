@@ -31,8 +31,8 @@ Route::group('', function () {
 
     //特殊鉴权
     Route::group('', function () {
-        Route::post('card', 'user.Cards/creatCard');
-        Route::post('card/comment', 'user.Cards/creatComment');
+        Route::post('card', 'user.Cards/createCard');
+        Route::post('card/comment', 'user.Cards/createComment');
     })->middleware([SessionDebounce::class, GeetestCheck::class]);
 
     //评论

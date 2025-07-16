@@ -45,22 +45,6 @@ class Cards
         return Common::mArrayEasyReturnStruct('查询失败', false);
     }
 
-    //列表-旧的
-    // static public function list()
-    // {
-    //     $context = request()->JwtData;
-
-    //     //$currentPage = 1;
-    //     $pageSize = 15;
-
-    //     $result = CardsModel::where('status', 0)
-    //         ->where('uid', $context['uid'])
-    //         ->order('id', 'desc')
-    //         ->paginate($pageSize);
-
-    //     return $result;
-    // }
-
     //模型更新方法
     static public function updata($data, $where = [], $allowField = [])
     {
@@ -123,6 +107,36 @@ class Cards
         }
     }
 
+
+    /**
+     * 创建单张卡片方法
+     *
+     * @param array $data 卡片数据
+     * @return void
+     */
+    static public function createCard($data)
+    {
+        // 存储事务
+        Db::startTrans();
+        try {
+            $result = CardsModel::create($data);
+            $data['id'] = $result->id;
+            if (isset($data['tags'])) {
+                self::updateCardTags($data, true);
+            }
+            if (isset($data['pictures'])) {
+                self::updateCardPictures($data, true);
+                unset($data['pictures']);
+            }
+
+            Db::commit(); // 提交事务
+            return Common::mArrayEasyReturnStruct('创建成功', true, ['id' => $result->id]);
+        } catch (\Throwable $th) {
+            Db::rollback(); // 回滚事务
+            return Common::mArrayEasyReturnStruct('创建失败', false, $th->getMessage());
+        }
+    }
+
     /**
      * 更新单张卡片方法
      *
@@ -151,14 +165,16 @@ class Cards
             return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
         }
     }
-    //更新单张卡片标签
-    static public function updateCardTags($data)
+    //更新/创建单张卡片标签
+    static public function updateCardTags($data, $create = false)
     {
         $pid = (int) $data['id'];
         $tags = json_decode($data['tags'], true);
 
-        // 删除旧的标签映射
-        TagsMapModel::where('aid', 1)->where('pid', $pid)->delete();
+        if (!$create) {
+            // 删除旧的标签映射
+            TagsMapModel::where('aid', 1)->where('pid', $pid)->delete();
+        }
 
         // 创建新的标签映射
         foreach ($tags as $tag_id) {
@@ -170,19 +186,20 @@ class Cards
             TagsMapModel::create($item);
         }
     }
-    //更新单张卡片图片
-    static public function updateCardPictures($data)
+    //更新/创建单张卡片图集
+    static public function updateCardPictures($data, $create = false)
     {
         $pid = (int) $data['id'];
         $pictures = json_decode($data['pictures'], true);
 
-        // 解绑旧的图片
-        $def_data = [
-            'aid' => 0, // 模块ID
-            'pid' => 0, // 卡片ID
-        ];
-        ImagesModel::where('aid', 1)->where('pid', $pid)->update($def_data);
-
+        if (!$create) {
+            // 解绑旧的图片
+            $def_data = [
+                'aid' => 0, // 模块ID
+                'pid' => 0, // 卡片ID
+            ];
+            ImagesModel::where('aid', 1)->where('pid', $pid)->update($def_data);
+        }
         // 批量绑定图片到卡片
         foreach ($pictures as $picture_id) {
             $item = [

@@ -21,7 +21,8 @@
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
                     <div class="mdui-p-t-2 mdui-p-x-2">
-                        <div class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
+                        <div
+                            class="css-caard-header-title mdui-text-color-theme{if $ThemeConfig.ThemePrimaryDepth}-{$ThemeConfig.ThemePrimaryDepth}{/if}">
                             {$ThemeConfig['ThemeNotifyTitle']}
                             <!-- <i class="mdui-icon material-icons mdui-float-right">vertical_align_top</i> -->
                         </div>
@@ -119,7 +120,7 @@
                     <!-- 卡片的内容 -->
                     <div class="mdui-p-a-2 mdui-typo">
                         {if $D['tag']}
-                        <div class="css-cards-primary-subtitle" value={$D.tag|raw}>
+                        <div class="css-cards-primary-subtitle" value="{$D.tag|raw}">
                             <!-- Tag标签 -->
                         </div>
                         {/if}

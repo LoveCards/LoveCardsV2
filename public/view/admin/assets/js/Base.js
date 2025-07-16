@@ -54,7 +54,7 @@ class Base {
             // CardsEdit: '/api/cards/edit',//编辑卡片
             // CardsDelete: '/api/cards/delete',//删除卡片
             // CardsSetting: '/api/cards/setting',//模块设置 
-            // CardsGood: '/api/card/like',//点赞 *
+            CardsGood: '/api/card/like',//点赞 *
 
             Likes: '/api/Likes',
 
