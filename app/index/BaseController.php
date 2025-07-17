@@ -125,7 +125,8 @@ class BaseController extends Common
     public function mArrayEasyGetAssignCardTagList()
     {
         //获取并赋值CardsTag相关变量
-        $lDef_Result = Db::table('tags')->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->select()->toArray();
+        $lDef_Result = Db::table('tags')->where('aid', $this->attrGReqAppId['cards'])->where('status', 0)->field(['id', 'name'])->select()->toArray();
+
         return [
             'CardsTagsListJson' => json_encode($lDef_Result),
             'CardsTagsList' => $lDef_Result

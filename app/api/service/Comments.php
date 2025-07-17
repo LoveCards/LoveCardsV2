@@ -72,7 +72,7 @@ class Comments
         Db::startTrans();
         try {
             CommentsModel::create($params);
-            CardsModel::where('id', $id)->inc('views')->update();
+            CardsModel::where('id', $id)->where('status', 0)->inc('comments')->update();
 
             Db::commit(); // 提交事务
             return Common::mArrayEasyReturnStruct('创建成功', true);

@@ -301,11 +301,11 @@ trait Cards
                 $uid = $comments_data['data'][$key]['user_id'];
                 if ($uid == 0) {
                     $comments_data['data'][$key]['name'] = '匿名';
-                }
-                if (array_key_exists($uid, $userIndex)) {
+                } else if (array_key_exists($uid, $userIndex)) {
                     $comments_data['data'][$key]['name'] = $userIndex[$uid]['username'];
+                } else {
+                    $comments_data['data'][$key]['name'] = '匿名';
                 }
-                $comments_data['data'][$key]['name'] = '匿名';
             }
 
             $tDef_CommentsEasyPagingComponent = $lDef_Result->render();
