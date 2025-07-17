@@ -6,9 +6,11 @@ use think\facade\Request;
 use think\facade\Db;
 
 use app\api\validate\Cards as CardsValidate;
+use app\api\validate\Comments as CommentsValidate;
 
 use app\api\service\Cards as CardsService;
 use app\api\service\Likes as LikesService;
+use app\api\service\Comments as CommentsService;
 
 use app\common\Export;
 
@@ -50,7 +52,22 @@ class Cards extends Base
     }
 
     //创建评论
-    public function creatComment() {}
+    public function createComment()
+    {
+        //获取参数
+        $params = $this->getParams(CommentsValidate::class, CommentsValidate::$all_scene['user']['create']);
+        if (gettype($params) == 'object') {
+            return $params;
+        }
+
+        //补齐参数
+        $params['user_id'] = $this->JWT_SESSION['uid'];
+        $params['post_ip'] = $this->SESSION['ip'];
+        //调用服务
+        $result = CommentsService::createComment($params);
+        //返回结果
+        return Export::Create($result['data'], 200, null);
+    }
     //隐藏评论(用户删除)
     public function hideComment() {}
 

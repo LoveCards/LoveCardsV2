@@ -70,7 +70,11 @@ class Roles
                 '/api/user/email:post',
                 '/api/user/email-captcha:post',
 
+                '/api/card:post',
                 '/api/card/images:get',
+                '/api/card/like:post',
+                '/api/card/comment:post',
+                
                 '/api/cards:get',
                 '/api/cards:delete',
 
@@ -81,9 +85,9 @@ class Roles
                 '/api/likes:delete',
 
                 //游客api
-                '/api/card:post',
-                '/api/comment:post',
-                '/api/card/like:post',
+                //'/api/card:post',
+                //'/api/comment:post',
+                //'/api/card/like:post',
 
                 //新-遵循restful api
                 '/api/user/info:patch',
