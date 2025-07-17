@@ -15,12 +15,12 @@ class Card extends Base {
     BindPostCommentsAdd = (submitId = undefined, pid, commentsNameId, commentsContentId, aid = 1) => {
 
         const getValue = () => {
-            const name = $('#' + commentsNameId).val();
+            // const name = $('#' + commentsNameId).val();
             const content = $('#' + commentsContentId).val();
             return {
-                aid: aid,
+                // aid: aid,
                 pid: pid,
-                name: name,
+                // name: name,
                 content: content,
             }
         };
@@ -76,12 +76,11 @@ class Card extends Base {
 
         var data = {
             ...data,//合并验证参数
-            'aid': resData.aid,
-            'pid': resData.pid,
-            'name': resData.name,
+            'id': resData.pid,
             'content': resData.content,
+            // 'parent_id': resData.pid,
         };
-        this.RequestApiUrl('post', 'CommentsAdd', 'PostCommentsAdd', data, 'UserTokenName');
+        this.RequestApiUrl('post', 'CreateCardComment', 'PostCommentsAdd', data, 'UserTokenName');
     }
 
 }

@@ -49,6 +49,7 @@ class Base {
             // SystemGeetest: '/api/system/geetest',//验证码设置
 
             Card: '/api/card',
+            CreateCardComment: '/api/card/comment',
             Cards: '/api/cards',
             // CardsAdd: '/api/cards/add',//添加卡片
             // CardsEdit: '/api/cards/edit',//编辑卡片
@@ -62,7 +63,7 @@ class Base {
             // TagsEdit: '/api/tags/edit',//编辑标签
             // TagsDelete: '/api/tags/delete',//删除标签
 
-            Comment: '/api/comment',//评论
+            //Comment: '/api/comment',//评论
             Comments: '/api/comments',//评论
             // CommentsAdd: '/api/comments/add',//编辑评论
             // CommentsEdit: '/api/comments/edit',//编辑评论
