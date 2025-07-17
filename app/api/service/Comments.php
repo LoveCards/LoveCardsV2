@@ -7,6 +7,7 @@ use think\facade\Db;
 use app\common\Common;
 
 use app\api\model\Comments as CommentsModel;
+use app\api\model\Cards as CardsModel;
 
 use yunarch\app\api\service\IndexUtils;
 
@@ -54,19 +55,32 @@ class Comments
         return Common::mArrayEasyReturnStruct('查询失败', false);
     }
 
-    //列表
-    // static public function list($context)
-    // {
-    //     //$currentPage = 1;
-    //     $pageSize = 15;
+    /**
+     * 创建单张评论方法
+     *
+     * @param array $data 评论数据
+     * @return void
+     */
+    static public function createComment($params)
+    {
+        $id = $params['id'];
+        unset($params['id']);
+        $params['aid'] = 1;
+        $params['pid'] = $id;
 
-    //     $result = CommentsModel::where('status', 0)
-    //         ->where('uid', $context['uid'])
-    //         ->order('id', 'desc')
-    //         ->paginate($pageSize);
+        // 存储事务
+        Db::startTrans();
+        try {
+            CommentsModel::create($params);
+            CardsModel::where('id', $id)->inc('views')->update();
 
-    //     return $result;
-    // }
+            Db::commit(); // 提交事务
+            return Common::mArrayEasyReturnStruct('创建成功', true);
+        } catch (\Throwable $th) {
+            Db::rollback(); // 回滚事务
+            return Common::mArrayEasyReturnStruct('创建失败', false, $th->getMessage());
+        }
+    }
 
     /**
      * 更新单张评论方法

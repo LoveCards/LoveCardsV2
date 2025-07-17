@@ -8,13 +8,13 @@ class Comments extends Validate
 {
     static public $all_scene = [
         'user' => [
-            'post' => [
-                'normal' => false,
+            'create' => [
+                'normal' => [
+                    'parent_id'
+                ],
                 'require' => [
-                    'aid',
-                    'pid',
-                    'user_id',
-                    'comments',
+                    'id',
+                    'content',
                 ],
                 'nonNull' => false,
                 'toNull' => [
@@ -43,7 +43,7 @@ class Comments extends Validate
         ],
     ];
     static public $scene_message = [
-        'pid.require' => '项目ID不能为空',
+        'id.require' => '项目ID不能为空',
         'aid.require' => '应用ID不能为空',
         'user_id.require' => '用户ID不能为空',
         'content.require' => '评论不能为空',
