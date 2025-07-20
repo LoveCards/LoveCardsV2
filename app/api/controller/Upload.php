@@ -17,7 +17,7 @@ use app\common\Base as CommonBase;
 class Upload
 {
     //上传图片-POST 这个api要替换掉的
-    public function Image()
+    protected function Image()
     {
         if (empty(request()->file('file'))) {
             return Export::mObjectEasyCreate([], '请提交文件', 400);

@@ -43,7 +43,7 @@ class Tags extends Base
     }
 
     //插入
-    public function Post()
+    public function Create()
     {
         //获取参数
         $params = $this->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['post']);
