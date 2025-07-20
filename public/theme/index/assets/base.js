@@ -9,6 +9,7 @@ function ViewCardsTag(arr) {
     for (let i = 0; i < $(".css-cards-primary-subtitle").length; i++) {
         //jq的坑$()取不到class的对象，取回的是数组，要变对象要套个$();
         var tagList = JSON.parse($($(".css-cards-primary-subtitle")[i])[0].attributes[1].value);
+
         if (tagList.length == 0) { continue; };
         $($(".css-cards-primary-subtitle")[i]).append('Tag：');
         for (let j = 0; j < tagList.length; j++) {
