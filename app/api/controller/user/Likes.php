@@ -21,33 +21,5 @@ class Likes extends Common
 
     //列表
     public function List()
-    {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            return Export::Create([], 401, '请先登入');
-        }
-
-        try {
-            $result = LikesService::list($context);
-        } catch (\Throwable $th) {
-            return Export::Create([], $th->getCode(), $th->getMessage());
-        }
-        return Export::Create($result);
-    }
-
-    //删除
-    public function Delete()
-    {
-        $context = request()->JwtData;
-        if ($context['uid'] == 0) {
-            return Export::Create([], 401, '请先登入');
-        }
-
-        try {
-            LikesService::delete(Request::param('id'), $context);
-        } catch (\Throwable $th) {
-            return Export::Create([], $th->getCode(), $th->getMessage());
-        }
-        return Export::Create([]);
-    }
+    {}
 }

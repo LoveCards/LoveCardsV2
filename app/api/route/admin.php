@@ -35,7 +35,7 @@ Route::group('', function () {
     Route::post('admin/users/batch-operate', 'admin.Users/BatchOperate');
 
     Route::get('admin/tags', 'admin.Tags/Index');
-    Route::post('admin/tag', 'admin.Tags/Post');
+    Route::post('admin/tag', 'admin.Tags/Create');
     Route::patch('admin/tag', 'admin.Tags/Patch');
     Route::delete('admin/tag', 'admin.Tags/Delete');
     Route::post('admin/tags/batch-operate', 'admin.Tags/BatchOperate');
