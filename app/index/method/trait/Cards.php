@@ -128,13 +128,11 @@ trait Cards
 
             if ($tReq_ParamModel != 'false') {
                 $tReq_ParamModel = $tReq_ParamModel == 1 ? 1 : 0;
-                $tDef_Result = Db::table('cards')->where('status', 0)->where('model', $tReq_ParamModel);
-            } else {
-                $tDef_Result = Db::table('cards')->where('status', 0);
+                $tDef_Result = Db::table('cards')->where('status', 0)->where('data', 'like', '%"model": "' . $tReq_ParamModel . '"%');
             }
 
             // 取 Cards 列表
-            $tDef_Result = $tDef_Result->where('id|content|woName|taName', 'like', '%' . $tReq_ParamSearchValue . '%')->order('id', 'desc')
+            $tDef_Result = $tDef_Result->where('id|content|data', 'like', '%' . $tReq_ParamSearchValue . '%')->order('id', 'desc')
                 ->paginate($tDef_CardListMax, true);
             $tDef_CardsEasyPagingComponent = $tDef_Result->render();
             $lDef_CardList = $tDef_Result->items();
