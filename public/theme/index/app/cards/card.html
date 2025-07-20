@@ -235,12 +235,12 @@
         });
 
         //当登入时设置用户名
-        BaseEntity.RequestApiUrl('get', 'UserInfo', undefined, [], 'UserTokenName').then((result) => {
-            var userInfo = { ...result.data };
-            $('#addCommentsDataName').val(userInfo.username);
-        }).catch((err) => {
-            BaseEntity.AxiosErrorHandling(err);
-        });
+        // BaseEntity.RequestApiUrl('get', 'UserInfo', undefined, [], 'UserTokenName').then((result) => {
+        //     var userInfo = { ...result.data };
+        //     $('#addCommentsDataName').val(userInfo.username);
+        // }).catch((err) => {
+        //     BaseEntity.AxiosErrorHandling(err);
+        // });
 
         //悬浮按钮
         $('#jsBtnGreen').click(function () {
