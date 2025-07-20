@@ -42,11 +42,11 @@ class Tags extends Base
         return Export::Create($lDef_Result['data'], 200, null);
     }
 
-    //插入
+    //创建
     public function Create()
     {
         //获取参数
-        $params = $this->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['post']);
+        $params = $this->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['create']);
         if (gettype($params) == 'object') {
             return $params;
         }

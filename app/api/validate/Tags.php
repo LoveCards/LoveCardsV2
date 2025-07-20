@@ -9,7 +9,7 @@ class Tags extends Validate
     //参数过滤场景
     static public $all_scene = [
         'user' => [
-            'post' => [
+            'create' => [
                 'normal' => false,
                 'require' => false,
                 'nonNull' => false,
@@ -17,9 +17,12 @@ class Tags extends Validate
             ]
         ],
         'admin' => [
-            'post' => [
-                'normal' => false,
+            'create' => [
+                'normal' => [
+                    'user_id',
+                ],
                 'require' => [
+                    'aid',
                     'name',
                 ],
                 'nonNull' => false,
