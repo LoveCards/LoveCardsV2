@@ -129,6 +129,8 @@ trait Cards
             if ($tReq_ParamModel != 'false') {
                 $tReq_ParamModel = $tReq_ParamModel == 1 ? 1 : 0;
                 $tDef_Result = Db::table('cards')->where('status', 0)->where('data', 'like', '%"model": "' . $tReq_ParamModel . '"%');
+            } else {
+                $tDef_Result = Db::table('cards')->where('status', 0);
             }
 
             // 取 Cards 列表
