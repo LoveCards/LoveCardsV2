@@ -12,14 +12,16 @@ class Roles
             'name' => '超级管理员',
             //待优化
             'baseUrl' => [
-                '/api/cards/setting',
+                '/api/system/config:get',
+
+                '/api/cards/setting:get',
                 '/api/system/site',
 
-                '/api/system/email',
-                '/api/system/email',
+                '/api/system/email:get',
+                '/api/system/email:patch',
 
-                '/api/system/other',
-                '/api/system/other',
+                '/api/system/other:get',
+                '/api/system/other:patch',
 
                 '/api/system/template',
                 '/api/system/templateset',

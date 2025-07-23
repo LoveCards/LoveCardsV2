@@ -16,6 +16,16 @@ use app\common\ConfigFacade;
 class System
 {
 
+    //读取配置
+    public function config()
+    {
+        $lDef_Result['system'] = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
+        $lDef_Result['master'] = ConfigFacade::mArrayGetMasterConfig();
+        $lDef_Result['mail'] = Config::get('mail');
+        $lDef_Result['lovecards'] = config::get('lovecards');
+        return Export::Create($lDef_Result, 200);
+    }
+
     //基本信息-POST
     public function Site()
     {
@@ -43,13 +53,6 @@ class System
         return Export::Create(null, 200);
     }
 
-    //邮箱配置-Get
-    public function GetEmail()
-    {
-        $lDef_Result = Config::get('mail');
-        return Export::Create($lDef_Result, 200);
-    }
-
     //邮箱配置-PATCH
     public function Email()
     {
@@ -72,13 +75,6 @@ class System
             return Export::Create(null, 200);
         }
         return Export::Create(null, 500, '设置失败');
-    }
-
-    //获取其他配置-Get
-    public function GetOther()
-    {
-        $lDef_Result = ConfigFacade::mArrayGetMasterConfig();
-        return Export::Create($lDef_Result, 200);
     }
 
     //其他配置-PATCH
