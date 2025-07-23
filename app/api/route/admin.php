@@ -8,6 +8,8 @@ use yunarch\app\roles\middleware\RolesCheck;
 
 Route::group('', function () {
     //超管
+    Route::get('system/config', 'admin.System/config');
+
     Route::post('system/site', 'admin.System/Site');
 
     Route::get('system/email', 'admin.System/GetEmail');
