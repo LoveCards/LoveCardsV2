@@ -23,7 +23,7 @@ return [
         'PictureLimit' => env('master.CommentsPictureLimit', 9)
     ],
     'Geetest' => [
-        'Status' => env('master.GeetestApprove', false),
+        'Status' => env('master.GeetestStatus', false),
         'Id' => env('master.GeetestId', ''),
         'Key' => env('master.GeetestKey', '')
     ]
