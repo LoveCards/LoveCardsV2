@@ -1,14 +1,30 @@
 <?php
+
 return [
     'System' => [
-        'VisitorMode' => env('master.SystemVisitorMode', false),
+        'ThemeDirectory' => env('master.SystemThemeDirectory', 'index'),
+        'VisitorMode' => env('master.SystemVisitorMode', false)
     ],
     'Upload' => [
         //最大上传图片大小 单位:M
         'UserImageSize' => env('master.UploadUserImageSize', 2),
-        'UserImageExt' => env('master.UploadUserImageExt', 'jpg,png,gif,webp'),
+        'UserImageExt' => env('master.UploadUserImageExt', 'jpg,png,gif,webp')
     ],
     'UserAuth' => [
-        'Captcha' => env('master.UserAuthCaptcha', false),
+        'Captcha' => env('master.UserAuthCaptcha', false)
+    ],
+    'Cards' => [
+        'Approve' => env('master.CardsApprove', false),
+        'PictureLimit' => env('master.CardsPictureLimit', 9),
+        'TagLimit' => env('master.CardsTagLimit', 3)
+    ],
+    'Comments' => [
+        'Approve' => env('master.CommentsApprove', false),
+        'PictureLimit' => env('master.CommentsPictureLimit', 9)
+    ],
+    'Geetest' => [
+        'Status' => env('master.GeetestApprove', false),
+        'Id' => env('master.GeetestId', ''),
+        'Key' => env('master.GeetestKey', '')
     ]
 ];

@@ -10,7 +10,7 @@ class Gt4 extends Facade
 {
     public static function validate($lotNumber, $captchaOutput, $passToken, $genTime)
     {
-        if (Config::get('lovecards.class.geetest.DefSetValidatesStatus') == 0) {
+        if (Config::get('master.Geetest.Status') == 0) {
             return true;
         }
         error_reporting(0);
@@ -45,8 +45,8 @@ class Gt4 extends Facade
 
         // 1.初始化极验参数信息
         // 1.initialize geetest parameter
-        $captcha_id = Config::get('lovecards.class.geetest.DefSetGeetestId');
-        $captcha_key = Config::get('lovecards.class.geetest.DefSetGeetestKey');
+        $captcha_id = Config::get('master.Geetest.Id');
+        $captcha_key = Config::get('master.Geetest.Key');
         $api_server = "http://gcaptcha4.geetest.com";
 
         // 2.获取用户验证后前端传过来的验证流水号参数

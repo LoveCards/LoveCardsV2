@@ -113,8 +113,8 @@ class Base {
     ThemeInit = () => {
         //获取极验配置
         return this.RequestApiUrl('get', 'ThemeConfig', undefined, [], 'UserTokenName').then((req) => {
-            this.config.geetest4.CaptchaId = req.data.system.config.file.class.geetest.DefSetGeetestId;
-            this.config.geetest4.CaptchaStatus = Number(req.data.system.config.file.class.geetest.DefSetValidatesStatus);
+            this.config.geetest4.CaptchaId = req.data.system.config.file.Geetest.Id;
+            this.config.geetest4.CaptchaStatus = Number(req.data.system.config.file.Geetest.Status);
             //console.log(this.config.geetest4);
             return req;
         }).catch((err) => {

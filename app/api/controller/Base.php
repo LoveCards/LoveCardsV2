@@ -8,6 +8,7 @@ use think\exception\ValidateException;
 
 //旧的
 use app\common\Export;
+use app\common\ConfigFacade;
 
 //yunarch
 use yunarch\app\api\validate\RuleUtils;
@@ -18,6 +19,7 @@ class Base
     //基础参数
     var $SESSION = false;
     var $JWT_SESSION = false;
+    var $SYSTEM_CONFIG = false;
 
     function __construct()
     {
@@ -29,6 +31,8 @@ class Base
             'date' => date('Y-m-d H:i:s'),
             'ip' => $this->getIP()
         ];
+
+        $this->SYSTEM_CONFIG = ConfigFacade::mArrayGetMasterConfig();
     }
 
     /**
