@@ -5,6 +5,7 @@ namespace app\api\validate;
 use think\Validate;
 use think\facade\Config;
 
+
 use yunarch\app\api\validate\RuleUtils;
 
 class Cards extends Validate
@@ -129,14 +130,14 @@ class Cards extends Validate
     //验证图片个数
     protected function picturesLength($value)
     {
-        $config = Config::get('lovecards.api.Cards');
+        $config = Config::get('master.Cards.PictureLimit');
         $decoded = json_decode($value, true);
         return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
     }
     //验证标签个数
     protected function tagsLength($value)
     {
-        $config = Config::get('lovecards.api.Cards');
+        $config = Config::get('master.Cards.TagLimit');
         $decoded = json_decode($value, true);
         return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
     }

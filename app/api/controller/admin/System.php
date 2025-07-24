@@ -13,17 +13,54 @@ use app\common\Theme;
 use app\common\Common;
 use app\common\ConfigFacade;
 
-class System
+use app\api\controller\Base;
+
+class System extends Base
 {
 
     //读取配置
     public function config()
     {
         $lDef_Result['system'] = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
-        $lDef_Result['master'] = ConfigFacade::mArrayGetMasterConfig();
+        $lDef_Result['master'] = $this->SYSTEM_CONFIG;
         $lDef_Result['mail'] = Config::get('mail');
-        $lDef_Result['lovecards'] = config::get('lovecards');
+        //$lDef_Result['lovecards'] = config::get('lovecards');
         return Export::Create($lDef_Result, 200);
+    }
+
+    public function setConfig()
+    {
+
+        $param = Request::param();
+        $lReq_Params = [
+            'System' . 'VisitorMode' => ['value' => $param['System']['VisitorMode'], 'free' => true],
+            'System' . 'ThemeDirectory' => ['value' => $param['System']['ThemeDirectory'], 'free' => false],
+
+            'Upload' . 'UserImageSize' => ['value' => $param['Upload']['UserImageSize'], 'free' => true],
+            'Upload' . 'UserImageExt' => ['value' => $param['Upload']['UserImageExt'], 'free' => false],
+
+            'UserAuth' . 'Captcha' => ['value' => $param['UserAuth']['Captcha'], 'free' => true],
+
+            'Cards' . 'Approve' => ['value' => $param['Cards']['Approve'], 'free' => true],
+            'Cards' . 'PictureLimit' => ['value' => $param['Cards']['PictureLimit'], 'free' => true],
+            'Cards' . 'TagLimit' => ['value' => $param['Cards']['TagLimit'], 'free' => true],
+
+            'Comments' . 'Approve' => ['value' => $param['Comments']['Approve'], 'free' => true],
+            'Comments' . 'PictureLimit' => ['value' => $param['Comments']['PictureLimit'], 'free' => true],
+
+            'Geetest' . 'state' => ['value' => $param['Geetest']['state'], 'free' => true],
+            'Geetest' . 'Id' => ['value' => $param['Geetest']['Id'], 'free' => false],
+            'Geetest' . 'Key' => ['value' => $param['Geetest']['Key'], 'free' => false],
+        ];
+        //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+
+        //更新数据
+        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
+
+        if ($tDef_Result) {
+            return Export::Create(null, 200);
+        }
+        return Export::Create(null, 500, '设置失败');
     }
 
     //基本信息-POST
@@ -78,24 +115,24 @@ class System
     }
 
     //其他配置-PATCH
-    public function Other()
-    {
-        $lReq_Params = [
-            'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
-            'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
-            'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
-            'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
-        ];
-        //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+    // public function Other()
+    // {
+    //     $lReq_Params = [
+    //         'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
+    //         'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
+    //         'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
+    //         'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
+    //     ];
+    //     //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
 
-        //更新数据
-        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
+    //     //更新数据
+    //     $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
-        if ($tDef_Result) {
-            return Export::Create(null, 200);
-        }
-        return Export::Create(null, 500, '设置失败');
-    }
+    //     if ($tDef_Result) {
+    //         return Export::Create(null, 200);
+    //     }
+    //     return Export::Create(null, 500, '设置失败');
+    // }
 
     //主题设置-POST
     public function Template()
@@ -159,18 +196,18 @@ class System
     }
 
     //极验验证码配置-POST
-    public function Geetest()
-    {
-        try {
-            $data = [
-                'DefSetGeetestId' => Request::param('DefSetGeetestId'),
-                'DefSetGeetestKey' => Request::param('DefSetGeetestKey'),
-            ];
-            BackEnd::mBoolCoverConfig('lovecards', $data);
-            BackEnd::mBoolCoverConfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
-            return Export::Create(null, 200);
-        } catch (\Throwable $th) {
-            return Export::Create(null, 400, '修改失败，请重试');
-        }
-    }
+    // public function Geetest()
+    // {
+    //     try {
+    //         $data = [
+    //             'DefSetGeetestId' => Request::param('DefSetGeetestId'),
+    //             'DefSetGeetestKey' => Request::param('DefSetGeetestKey'),
+    //         ];
+    //         BackEnd::mBoolCoverConfig('lovecards', $data);
+    //         BackEnd::mBoolCoverConfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
+    //         return Export::Create(null, 200);
+    //     } catch (\Throwable $th) {
+    //         return Export::Create(null, 400, '修改失败，请重试');
+    //     }
+    // }
 }

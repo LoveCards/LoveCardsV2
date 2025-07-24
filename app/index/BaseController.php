@@ -97,7 +97,7 @@ class BaseController extends Common
             'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
 
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
-            'SystemConfig' => config::get('lovecards'),
+            'SystemConfig' => config::get('master'),
             'SystemControllerName' => strtolower(request()->controller()), //当前控制器名称
             'SystemActionName' => request()->action(), //当前方法名
 

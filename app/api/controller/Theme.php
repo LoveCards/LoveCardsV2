@@ -13,7 +13,9 @@ use think\facade\Config;
 
 use app\common\ConfigFacade;
 
-class Theme
+use app\api\controller\Base;
+
+class Theme extends Base
 {
     function Config()
     {
@@ -41,8 +43,8 @@ class Theme
         //CommonTheme::mObjectEasySetViewConfig(CommonTheme::mArrayGetThemeDirectory()['N']);
 
         //读取系统配置
-        $SyetemFileConfig = Config::get('lovecards');
-        unset($SyetemFileConfig['class']['geetest']['DefSetGeetestKey']);
+        $SyetemFileConfig = $this->SYSTEM_CONFIG;
+        unset($SyetemFileConfig['Geetest']['Key']);
 
         //公共模板变量
         $data = [
@@ -59,7 +61,7 @@ class Theme
             'system' => [
                 'version' => Common::mArrayGetLCVersionInfo(),
                 'config' => [
-                    'file' => array_merge($SyetemFileConfig, ConfigFacade::mArrayGetMasterConfig()),
+                    'file' => $SyetemFileConfig,
                     'db' => Common::mArrayGetDbSystemData(),
                 ],
             ],

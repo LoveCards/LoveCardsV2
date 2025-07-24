@@ -18,7 +18,7 @@ class Theme extends Facade
      */
     protected static function mArrayGetThemeDirectory()
     {
-        $N = Config::get('lovecards.theme_directory', 'index');
+        $N = Config::get('master.System.ThemeDirectory', 'index');
         $P = 'theme/' . $N;
         if (!Is_dir($P)) {
             $N = 'index';
