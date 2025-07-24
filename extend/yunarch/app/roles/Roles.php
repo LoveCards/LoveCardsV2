@@ -13,6 +13,7 @@ class Roles
             //待优化
             'baseUrl' => [
                 '/api/system/config:get',
+                '/api/system/config:post',
 
                 '/api/cards/setting:get',
                 '/api/system/site',

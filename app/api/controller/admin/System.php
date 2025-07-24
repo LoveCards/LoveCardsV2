@@ -30,29 +30,74 @@ class System extends Base
 
     public function setConfig()
     {
+        //AI
+        $params = Request::param();
 
-        $param = Request::param();
-        $lReq_Params = [
-            'System' . 'VisitorMode' => ['value' => $param['System']['VisitorMode'], 'free' => true],
-            'System' . 'ThemeDirectory' => ['value' => $param['System']['ThemeDirectory'], 'free' => false],
+        /* ---------- 1. 递归求差 ---------- */
+        function array_diff_recursive(array $a, array $b): array
+        {
+            $result = [];
+            foreach ($a as $k => $v) {
+                if (!array_key_exists($k, $b)) {
+                    $result[$k] = $v;
+                } elseif (is_array($v) && is_array($b[$k])) {
+                    $diff = array_diff_recursive($v, $b[$k]);
+                    if ($diff) {
+                        $result[$k] = $diff;
+                    }
+                } elseif ($v !== $b[$k]) {
+                    $result[$k] = $v;
+                }
+            }
+            return $result;
+        }
 
-            'Upload' . 'UserImageSize' => ['value' => $param['Upload']['UserImageSize'], 'free' => true],
-            'Upload' . 'UserImageExt' => ['value' => $param['Upload']['UserImageExt'], 'free' => false],
+        $params = array_diff_recursive($params, $this->SYSTEM_CONFIG);
 
-            'UserAuth' . 'Captcha' => ['value' => $param['UserAuth']['Captcha'], 'free' => true],
+        /* ---------- 2. 统一映射表 ---------- */
+        $map = [
+            // 结构:  '一级.二级' => [ 'free' => true/false ]
+            'System.VisitorMode'    => ['free' => true],
+            'System.ThemeDirectory' => ['free' => false],
 
-            'Cards' . 'Approve' => ['value' => $param['Cards']['Approve'], 'free' => true],
-            'Cards' . 'PictureLimit' => ['value' => $param['Cards']['PictureLimit'], 'free' => true],
-            'Cards' . 'TagLimit' => ['value' => $param['Cards']['TagLimit'], 'free' => true],
+            'Upload.UserImageSize'  => ['free' => true],
+            'Upload.UserImageExt'   => ['free' => false],
 
-            'Comments' . 'Approve' => ['value' => $param['Comments']['Approve'], 'free' => true],
-            'Comments' . 'PictureLimit' => ['value' => $param['Comments']['PictureLimit'], 'free' => true],
+            'UserAuth.Captcha'      => ['free' => true],
 
-            'Geetest' . 'state' => ['value' => $param['Geetest']['state'], 'free' => true],
-            'Geetest' . 'Id' => ['value' => $param['Geetest']['Id'], 'free' => false],
-            'Geetest' . 'Key' => ['value' => $param['Geetest']['Key'], 'free' => false],
+            'Cards.Approve'         => ['free' => true],
+            'Cards.PictureLimit'    => ['free' => true],
+            'Cards.TagLimit'        => ['free' => true],
+
+            'Comments.Approve'      => ['free' => true],
+            'Comments.PictureLimit' => ['free' => true],
+
+            'Geetest.Status'        => ['free' => true],
+            'Geetest.Id'            => ['free' => false],
+            'Geetest.Key'           => ['free' => false],
         ];
-        //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+
+        /* ---------- 3. 统一循环生成结果 ---------- */
+        $lReq_Params = [];
+
+        foreach ($map as $dotKey => $meta) {
+            [$top, $sub] = explode('.', $dotKey, 2);
+
+            if (isset($params[$top][$sub])) {
+                $value = $params[$top][$sub];
+                $value = gettype($value) == 'boolean' ? ($value ? 'true' : 'false')  : $value;
+                $lReq_Params[$top . $sub] = [
+                    'value' => $value,
+                    'free'  => $meta['free'],
+                ];
+            }
+        }
+
+        //空值直接停止
+        if (empty($lReq_Params)) {
+            return Export::Create(null, 200);
+        }
+        //dd($lReq_Params);
 
         //更新数据
         $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);

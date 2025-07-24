@@ -17,9 +17,9 @@ use yunarch\app\api\validate\Common as ApiCommonValidate;
 class Base
 {
     //基础参数
-    var $SESSION = false;
-    var $JWT_SESSION = false;
-    var $SYSTEM_CONFIG = false;
+    var $SESSION;
+    var $JWT_SESSION;
+    var $SYSTEM_CONFIG;
 
     function __construct()
     {
