@@ -12,6 +12,8 @@ class Roles
             'name' => '超级管理员',
             //待优化
             'baseUrl' => [
+                '/api/system/themes:get',
+
                 '/api/system/config:get',
                 '/api/system/config:post',
 
@@ -77,7 +79,7 @@ class Roles
                 '/api/card/images:get',
                 '/api/card/like:post',
                 '/api/card/comment:post',
-                
+
                 '/api/cards:get',
                 '/api/cards:delete',
 
