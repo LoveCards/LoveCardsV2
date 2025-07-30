@@ -1,4 +1,5 @@
 <?php
+
 use think\facade\Route;
 
 use app\api\middleware\JwtAuthCheck;
@@ -7,6 +8,8 @@ use yunarch\app\roles\middleware\RolesCheck;
 
 Route::group('', function () {
     //超管
+    Route::get('system/themes', 'admin.System/themes');
+
     Route::get('system/config', 'admin.System/config');
     Route::post('system/config', 'admin.System/setConfig');
 
