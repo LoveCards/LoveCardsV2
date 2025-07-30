@@ -16,7 +16,7 @@ class Roles
                 '/api/system/config:post',
 
                 '/api/cards/setting:get',
-                '/api/system/site',
+                '/api/system/site:post',
 
                 '/api/system/email:get',
                 '/api/system/email:patch',

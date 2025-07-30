@@ -6,7 +6,7 @@
  * 可以配置在 mail.php 或 config.php 文件中, 但要保证能通过 mail.driver, mail.host 访问到配置信息
  */
 return [
-    'driver'          => env('mail.driver', 'smtp'), // 邮件驱动, 支持 smtp|sendmail|mail 三种驱动
+    'driver'          => env('mail.driver', ''), // 邮件驱动, 支持 smtp|sendmail|mail 三种驱动
     'host'            => env('mail.host', ''), // SMTP服务器地址
     'port'            => env('mail.port', ), // SMTP服务器端口号,一般为25
     'addr'            => env('mail.addr', ''), // 发件邮箱地址
@@ -14,7 +14,7 @@ return [
     'name'            => env('mail.name', 'FatDa邮递员'), // 发件邮箱名称
     'content_type'    => 'text/html', // 默认文本内容 text/html|text/plain
     'charset'         => 'utf-8', // 默认字符集
-    'security'        => env('mail.security', 'null'), // 加密方式 null|ssl|tls, QQ邮箱必须使用ssl
+    'security'        => env('mail.security', ''), // 加密方式 null|ssl|tls, QQ邮箱必须使用ssl
     'sendmail'        => '/usr/sbin/sendmail -bs', // 不适用 sendmail 驱动不需要配置
     'debug'           => true, // 开启debug模式会直接抛出异常, 记录邮件发送日志
     'left_delimiter'  => '{', // 模板变量替换左定界符, 可选, 默认为 {
