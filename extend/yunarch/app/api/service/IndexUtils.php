@@ -116,11 +116,11 @@ class IndexUtils
             $searchKey = $this->params['search_keys'];
             $map = [];
             foreach ($searchKey as $key => $value) {
-                $map[] = [$value, 'like', '%' . $this->params['search_value'] . '%'];
+                $map[] = [$value, 'like', $this->params['search_value'] . '%'];
             }
             $this->query = $this->query->whereOr($map);
         } else {
-            $this->query = $this->query->where($default_key, 'like', '%' . $this->params['search_value'] . '%');
+            $this->query = $this->query->where($default_key, 'like', $this->params['search_value'] . '%');
         }
 
         return $this;
