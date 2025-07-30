@@ -159,26 +159,6 @@ class System extends Base
         return Export::Create(null, 500, '设置失败');
     }
 
-    //其他配置-PATCH
-    // public function Other()
-    // {
-    //     $lReq_Params = [
-    //         'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
-    //         'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
-    //         'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
-    //         'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
-    //     ];
-    //     //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
-
-    //     //更新数据
-    //     $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
-
-    //     if ($tDef_Result) {
-    //         return Export::Create(null, 200);
-    //     }
-    //     return Export::Create(null, 500, '设置失败');
-    // }
-
     //主题设置-POST
     public function Template()
     {
@@ -240,6 +220,25 @@ class System extends Base
         }
     }
 
+    //其他配置-PATCH
+    // public function Other()
+    // {
+    //     $lReq_Params = [
+    //         'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
+    //         'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
+    //         'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
+    //         'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
+    //     ];
+    //     //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
+
+    //     //更新数据
+    //     $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
+
+    //     if ($tDef_Result) {
+    //         return Export::Create(null, 200);
+    //     }
+    //     return Export::Create(null, 500, '设置失败');
+    // }
     //极验验证码配置-POST
     // public function Geetest()
     // {
