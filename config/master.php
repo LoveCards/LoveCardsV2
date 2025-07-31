@@ -2,7 +2,7 @@
 
 return [
     'System' => [
-        'ThemeDirectory' => env('master.SystemThemeDirectory', 'index'),
+        'ThemeDirectory' => env('master.SystemThemeDirectory', 'index1'),
         'VisitorMode' => env('master.SystemVisitorMode', false)
     ],
     'Upload' => [

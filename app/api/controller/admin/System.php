@@ -77,7 +77,7 @@ class System extends Base
                 }
             }
         }
-        
+
         $result = [
             "theme_list" => $lDef_ThemeConfigList,
             "theme_config" => $tDef_NowThemeConfig
@@ -125,7 +125,7 @@ class System extends Base
         $map = [
             // 结构:  '一级.二级' => [ 'free' => true/false ]
             'System.VisitorMode'    => ['free' => true],
-            'System.ThemeDirectory' => ['free' => false],
+            // 'System.ThemeDirectory' => ['free' => false],
 
             'Upload.UserImageSize'  => ['free' => true],
             'Upload.UserImageExt'   => ['free' => false],
@@ -227,17 +227,23 @@ class System extends Base
     }
 
     //主题设置-POST
-    public function Template()
+    public function themeSet()
     {
         $tReq_ThemeDirectoryName = Request::param('themeDirectory');
         $tReq_ThemeInfo = json_decode(File::read_file('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
+        if (!$tReq_ThemeInfo) {
+            return Export::Create(null, 400, '修改失败，主题信息不存在');
+        }
         $tDef_LCVersionInfo = Common::mArrayGetLCVersionInfo();
 
         if (!($tDef_LCVersionInfo['VerS'] >= $tReq_ThemeInfo['SysVersionL'] && $tDef_LCVersionInfo['VerS'] < $tReq_ThemeInfo['SysVersionR'])) {
             return Export::Create(null, 400, '修改失败，该主题不适用当前版本');
         }
 
-        $tDef_Result = BackEnd::mBoolCoverConfig('lovecards', ['theme_directory' => $tReq_ThemeDirectoryName]);
+        $lReq_Params = [
+            'SystemThemeDirectory' => ['value' => $tReq_ThemeDirectoryName, 'free' => false],
+        ];
+        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
         if ($tDef_Result == true) {
             return Export::Create(null, 200);
@@ -247,9 +253,9 @@ class System extends Base
     }
 
     //主题配置-POST
-    public function TemplateSet()
+    public function themeConfig()
     {
-        $tDef_ThemeDirectory = Config::get('lovecards.theme_directory', 'index') ?: 'index';
+        $tDef_ThemeDirectory = Config::get('master.System.ThemeDirectory', 'index') ?: 'index';
 
         $lReq_ParamSelect = json_decode(Request::param('select'));
         $lReq_ParamText = json_decode(Request::param('text'));

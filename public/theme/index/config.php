@@ -135,7 +135,7 @@ return [
         'ThemeNotifyUrl' => [
             'Name' => '公告卡图片URL',
             'Introduction' => '请填写一张图片的URL地址,以“http(s)://”开头',
-            'Default' => env('ThemeConfig.TextThemeNotifyUrl', 'https%3A%2F%2Fimg1.imgtp.com%2F2023%2F05%2F05%2FrsGxwTe7.gif')
+            'Default' => env('ThemeConfig.TextThemeNotifyUrl', 'https%3A%2F%2F1041uuu.jp%2FGallery%2Fc%2Fcc01.gif')
         ],
         //公告卡内容
         'ThemeNotifyContent' => [
