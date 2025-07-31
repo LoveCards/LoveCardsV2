@@ -15,17 +15,17 @@ Route::group('', function () {
 
     Route::post('system/site', 'admin.System/Site');
 
-    Route::get('system/email', 'admin.System/GetEmail');
+    //Route::get('system/email', 'admin.System/GetEmail');
     Route::rule('system/email', 'admin.System/Email', 'PUT|PATCH');
 
-    Route::get('system/other', 'admin.System/GetOther');
-    Route::rule('system/other', 'admin.System/Other', 'PUT|PATCH');
+    //Route::get('system/other', 'admin.System/GetOther');
+    //Route::rule('system/other', 'admin.System/Other', 'PUT|PATCH');
 
-    Route::post('system/template', 'admin.System/template');
-    Route::post('system/templateset', 'admin.System/TemplateSet');
-    Route::post('system/geetest', 'admin.System/Geetest');
+    Route::post('system/set-theme', 'admin.System/themeSet');
+    Route::post('system/theme-config', 'admin.System/themeConfig');
+    //Route::post('system/geetest', 'admin.System/Geetest');
 
-    Route::post('cards/setting', 'admin.Cards/Setting');
+    //Route::post('cards/setting', 'admin.Cards/Setting');
 
     //管理员
     Route::get('admin/card', 'admin.Cards/Get');

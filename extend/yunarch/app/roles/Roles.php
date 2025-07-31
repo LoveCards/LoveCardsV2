@@ -20,14 +20,10 @@ class Roles
                 '/api/cards/setting:get',
                 '/api/system/site:post',
 
-                '/api/system/email:get',
                 '/api/system/email:patch',
 
-                '/api/system/other:get',
-                '/api/system/other:patch',
-
-                '/api/system/template',
-                '/api/system/templateset',
+                '/api/system/theme-config:post',
+                '/api/system/set-theme:post',
                 '/api/system/geetest',
             ]
         ],
