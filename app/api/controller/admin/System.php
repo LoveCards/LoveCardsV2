@@ -229,7 +229,7 @@ class System extends Base
     //主题设置-POST
     public function themeSet()
     {
-        $tReq_ThemeDirectoryName = Request::param('themeDirectory');
+        $tReq_ThemeDirectoryName = Request::param('dir');
         $tReq_ThemeInfo = json_decode(File::read_file('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
         if (!$tReq_ThemeInfo) {
             return Export::Create(null, 400, '修改失败，主题信息不存在');
