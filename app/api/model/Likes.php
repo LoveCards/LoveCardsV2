@@ -14,17 +14,17 @@ class Likes extends Model
     protected $table = 'good';
 
     //自动时间戳
-    //protected $autoWriteTimestamp = 'datetime';
-    //protected $createTime = 'created_at';
+    protected $autoWriteTimestamp = 'datetime';
+    protected $createTime = 'created_at';
 
     // 设置字段信息
     protected $schema = [
-        'id' => 'int',
-        'aid' => 'int',
-        'pid' => 'int',
-        'uid' => 'int',
-        'ip' => 'string',
-        'time' => 'string',
+        'id' => 'INT',
+        'aid' => 'INT',
+        'pid' => 'INT',
+        'uid' => 'INT',
+        'ip' => 'VARCHAR',
+        'created_at' => 'TIMESTAMP',
     ];
 
     // 默认排除字段
