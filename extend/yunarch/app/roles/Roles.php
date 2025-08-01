@@ -12,6 +12,8 @@ class Roles
             'name' => '超级管理员',
             //待优化
             'baseUrl' => [
+                '/api/system/updata:get',
+
                 '/api/system/themes:get',
 
                 '/api/system/config:get',
