@@ -5,19 +5,15 @@ namespace app\api\controller\admin;
 use think\facade\Request;
 use think\facade\Db;
 use think\facade\Config;
-use think\facade\View;
+use think\facade\Session;
 
 use app\common\File;
 use app\common\Export;
-use app\common\BackEnd;
 use app\common\Theme;
 use app\common\Common;
 use app\common\ConfigFacade;
-use app\common\FrontEnd;
 
 use app\api\controller\Base;
-
-use function PHPSTORM_META\type;
 
 class System extends Base
 {
@@ -291,6 +287,91 @@ class System extends Base
         } else {
             return Export::Create(null, 400, '修改失败，请重试');
         }
+    }
+
+    public function updata()
+    {
+        /**
+         * 获取公告列表（原生网络请求版）
+         * 1. 先读 Session，存在直接返回
+         * 2. 不存在则用 file_get_contents 请求接口
+         * 3. 成功后写 Session（1 小时过期）
+         *
+         * @return array 公告列表（data 字段）
+         */
+        function getUpdata()
+        {
+            // 1. 从 Session 取
+            $notice = Session::get('Updata');
+            if ($notice !== null) {
+                return $notice;
+            }
+
+            // 2. 原生 GET 请求
+            $url  = 'https://proxy.gitwarp.com/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md';
+            $ctx  = stream_context_create([
+                'http' => [
+                    'method'  => 'GET',
+                    'timeout' => 5,          // 5 秒超时
+                    'header'  => "User-Agent: PHP\r\n",
+                ],
+                'ssl'  => [
+                    'verify_peer'      => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+
+            $jsonStr = @file_get_contents($url, false, $ctx);
+            if ($jsonStr === false) {
+                // 请求失败，返回空数组
+                return [];
+            }
+
+            // 4. 写入 Session 并返回
+            Session::set('Updata', $jsonStr, 3600 * 3);
+            return $jsonStr;
+        }
+        function getLatestVer()
+        {
+            // 1. 从 Session 取
+            $notice = Session::get('LatestVer');
+            if ($notice !== null) {
+                return $notice;
+            }
+
+            // 2. 原生 GET 请求
+            $url  = 'https://api.github.com/repositories/582292948/releases/latest';
+            $ctx  = stream_context_create([
+                'http' => [
+                    'method'  => 'GET',
+                    'timeout' => 5,          // 5 秒超时
+                    'header'  => "User-Agent: PHP\r\n",
+                ],
+                'ssl'  => [
+                    'verify_peer'      => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+
+            $jsonStr = @file_get_contents($url, false, $ctx);
+            if ($jsonStr === false) {
+                // 请求失败，返回空数组
+                return [];
+            }
+
+            // 3. 解析 JSON
+            $json = json_decode($jsonStr, true);
+
+            // 4. 写入 Session 并返回
+            Session::set('LatestVer',  $json, 3600 * 3);
+            return $json;
+        }
+        $result = [
+            'ver' => Common::mArrayGetLCVersionInfo(),
+            'latest' => getLatestVer(),
+            'verlog' => getUpdata()
+        ];
+        return Export::Create($result, 200);
     }
 
     //其他配置-PATCH

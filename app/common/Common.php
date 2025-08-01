@@ -29,7 +29,7 @@ class Common
         return [
             'Name' => 'LoveCards',
             'Url' => '//lovecards.cn',
-            'VerS' => '2.3.3',
+            'VerS' => '2.4.0',
             'Ver' => '20',
             'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
             'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
