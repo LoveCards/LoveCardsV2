@@ -26,19 +26,18 @@ class Roles
 
                 '/api/system/theme-config:post',
                 '/api/system/set-theme:post',
-                '/api/system/geetest',
+
+                //User
+                '/api/admin/users:get',
+                '/api/admin/user:patch',
+                '/api/admin/user:delete',
+                '/api/admin/users/batch-operate:post',
             ]
         ],
         1 => [
             'value' => 'admin',
             'name' => '管理员',
             'baseUrl' => [
-                //User
-                '/api/admin/users:get',
-                '/api/admin/user:patch',
-                '/api/admin/user:delete',
-                '/api/admin/users/batch-operate:post',
-
                 //Cards
                 '/api/admin/card:get',
                 '/api/admin/cards:get',

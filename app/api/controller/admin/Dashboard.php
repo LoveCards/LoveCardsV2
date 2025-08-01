@@ -4,7 +4,6 @@ namespace app\api\controller\admin;
 
 use think\facade\Db;
 use think\facade\Session;
-use think\facade\Http;
 
 use app\api\model\Cards as CardsModel;
 use app\api\model\Likes as LikesModel;
