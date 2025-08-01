@@ -54,7 +54,7 @@ class Dashboard
             ],
             [
                 'label' => '点赞',
-                'data' => [], //fArrayGetChartData('goods')
+                'data' => fArrayGetChartData('good'),
             ],
         ];
 

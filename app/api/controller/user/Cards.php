@@ -12,6 +12,8 @@ use app\api\service\Cards as CardsService;
 use app\api\service\Likes as LikesService;
 use app\api\service\Comments as CommentsService;
 
+use app\api\model\Likes as LikesModel; //需要优化
+
 use app\common\Export;
 
 use app\api\controller\Base;
@@ -79,7 +81,7 @@ class Cards extends Base
         //获取数据
         $id = Request::param('id');
         $ip = $this->SESSION['ip'];
-        $time = $this->SESSION['date'];
+        //$time = $this->SESSION['date'];
 
         //获取Cards数据库对象
         $resultCards = Db::table('cards')->where('id', $id);
@@ -89,7 +91,7 @@ class Cards extends Base
         }
 
         //获取good数据库对象
-        $resultGood = Db::table('good');
+        $resultGood = new LikesModel();
         if ($resultGood->where('pid', $id)->where('ip', $ip)->find()) {
             return Export::Create(['请勿重复点赞'], 400, '点赞失败');
         }
@@ -104,9 +106,9 @@ class Cards extends Base
             'pid' => $id,
             'uid' => $context['uid'],
             'ip' => $ip,
-            'time' => $time
+            // 'time' => $time
         ];
-        if (!$resultGood->insert($data)) {
+        if (!$resultGood->save($data)) {
             return Export::Create(['good写入失败'], 400, '点赞失败');
         };
 
