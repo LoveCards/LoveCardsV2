@@ -124,6 +124,7 @@ class Users
                     'username' => $username,
                     'email' => $email,
                     'phone' => $phone,
+                    'roles_id' => [2],
                     'status' => $status,
                 );
             }
