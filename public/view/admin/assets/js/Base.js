@@ -24,6 +24,7 @@ class Base {
             // AdminAdd: '/api/admin/add',//添加管理员
             // AdminEdit: '/api/admin/edit',//添加管理员
 
+            UserAuthGuest: '/api/user/auth/guest',//访客登入
             UserAuthLogin: '/api/user/auth/login',//登入
             UserAuthLogout: '/api/user/auth/logout',//注销
             UserAuthRegister: '/api/user/auth/register',//注册

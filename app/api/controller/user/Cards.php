@@ -42,10 +42,14 @@ class Cards extends Base
         //补齐参数
         $params['user_id'] = $this->JWT_SESSION['uid'];
         $params['post_ip'] = $this->SESSION['ip'];
+        $params['status'] = $this->SYSTEM_CONFIG['Cards']['Approve'] ? 3 : 0;
 
         //调用服务
         $result = CardsService::createCard($params);
         //返回结果
+        if ($this->SYSTEM_CONFIG['Cards']['Approve']) {
+            return Export::Create([], 201, null);
+        }
         return Export::Create($result['data'], 200, null);
     }
     //隐藏卡片(用户删除)
@@ -72,9 +76,15 @@ class Cards extends Base
         //补齐参数
         $params['user_id'] = $this->JWT_SESSION['uid'];
         $params['post_ip'] = $this->SESSION['ip'];
+        $params['status'] = $this->SYSTEM_CONFIG['Comments']['Approve'] ? 3 : 0;
+
         //调用服务
         $result = CommentsService::createComment($params);
+        
         //返回结果
+        if ($this->SYSTEM_CONFIG['Comments']['Approve']) {
+            return Export::Create([], 201, null);
+        }
         return Export::Create($result['data'], 200, null);
     }
     //隐藏评论(用户删除)

@@ -14,7 +14,7 @@ class SessionDebounce
         $var_t_def_result = BackEnd::mRemindEasyDebounce('LastPostTime');
         if ($var_t_def_result[0] == false) {
             //返回数据
-            return Export::Create([$var_t_def_result[1]], 500, '添加失败');
+            return Export::Create([$var_t_def_result[1]], 500, '操作失败');
         }
 
         return $var_t_def_next($tDef_Request);

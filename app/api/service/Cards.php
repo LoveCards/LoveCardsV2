@@ -20,7 +20,7 @@ class Cards
     {
         $pageSize = 15;
 
-        $result = CardsModel::where('status', 0)
+        $result = CardsModel::whereIn('status', [0, 1, 3])
             ->where('user_id', $context['uid'])
             ->order('id', 'desc')
             ->paginate($pageSize);

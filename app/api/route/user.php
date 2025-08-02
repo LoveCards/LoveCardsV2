@@ -1,10 +1,10 @@
 <?php
 
 use think\facade\Route;
-use think\facade\Request;
+//use think\facade\Request;
 
 use app\api\middleware\JwtAuthCheck;
-use app\api\middleware\JwtAuthLogout;
+//use app\api\middleware\JwtAuthLogout;
 
 use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
@@ -15,6 +15,7 @@ Route::post('user/auth/login', 'user.Auth/Login');
 Route::post('user/auth/logout', 'user.Auth/Logout');
 Route::post('user/auth/register', 'user.Auth/Register');
 Route::post('user/auth/captcha', 'user.Auth/Captcha');
+Route::post('user/auth/guest', 'user.Auth/Guest')->middleware(SessionDebounce::class);
 
 Route::group('', function () {
     //标签
@@ -25,16 +26,16 @@ Route::group('', function () {
 
     Route::get('cards', 'user.Cards/list'); //卡片列表
 
-
+    Route::post('card/like', 'user.Cards/like'); //喜欢卡片
     //特殊鉴权
     Route::group('', function () {
         Route::post('card/comment', 'user.Cards/createComment');
         Route::post('card', 'user.Cards/createCard');
-        Route::post('card/like', 'user.Cards/like'); //喜欢卡片
-        Route::delete('card', 'user.Cards/hideCard'); //删除卡片
-        Route::delete('comment', 'user.Comments/delete'); //删除评论
-        Route::delete('like', 'user.Likes/unLike'); //取消喜欢
     })->middleware([SessionDebounce::class, GeetestCheck::class]);
+
+    Route::delete('card', 'user.Cards/hideCard'); //删除卡片
+    Route::delete('comment', 'user.Comments/delete'); //删除评论
+    Route::delete('like', 'user.Likes/unLike'); //取消喜欢
 
     //评论
     Route::get('comments', 'user.Comments/index');

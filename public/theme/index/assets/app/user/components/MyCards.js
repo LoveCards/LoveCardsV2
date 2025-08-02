@@ -13,6 +13,16 @@ const MyCards = {
         mdui.mutation();
     },
     methods: {
+        viewStatus(status) {
+            if (status == 0) {
+                return "正常";
+            } else if (status == 1) {
+                return "封禁";
+            } else if (status == 3) {
+                return "待审核";
+            }
+            return "未知状态";
+        },
         goCard(id) {
             BaseEntity.JumpUrl('/index/Cards/card/id/' + id);
         },
@@ -91,10 +101,11 @@ const MyCards = {
                     <div class="mdui-p-t-2 mdui-p-x-2" v-if="item.data">
                         
                         <div class="css-caard-header-title" :class="theme.config.ThemePrimaryDepth ? 'mdui-text-color-theme-'+theme.config.ThemePrimaryDepth : 'mdui-text-color-theme'">
-                            {{item.data.woName}}的{{item.data.model ? '交流卡' : '表白卡'}}
+                            {{item.data.woName ? item.data.woName : '匿名'}}的{{item.data.model ? '交流卡' : '表白卡'}}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
-                        <div class="css-caard-header-subtite">{{item.data.woName}}{{item.data.model ? '对' : '表白'}} {{item.taName}} {{item.data.model ? '说' : ''}}
+                        <div class="css-caard-header-subtite">
+                            #{{item.id}} {{item.created_at}} {{viewStatus(item.status)}}
                             <span class="css-caard-header-subtite-liulan">浏览{{item.views}}</span>
                         </div>
                     </div>
@@ -117,8 +128,11 @@ const MyCards = {
 
                     <!-- 卡片的按钮 -->
                     <div class="mdui-card-actions">
-                        <button class="mdui-btn mdui-float-right" @click="deleteCards(index)" :disabled="item.status == 1">
+                        <button  v-if="item.status == 0" class="mdui-btn mdui-float-right" @click="deleteCards(index)" :disabled="item.status == 1">
                             <i class="mdui-icon material-icons">delete</i> {{item.status == 1?'已删除':'删除'}}
+                        </button>
+                        <button  v-if="item.status != 0" class="mdui-btn mdui-float-right" disabled>
+                            <i class="mdui-icon material-icons">delete</i> 不可删除
                         </button>
                     </div>
                 </div>

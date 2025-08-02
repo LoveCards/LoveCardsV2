@@ -234,14 +234,6 @@
             CardEntity.BindPostCommentsAdd('btnAddComments', Number('{$Card.CardData.id}'), 'addCommentsDataName', 'addCommentsDataContent');
         });
 
-        //当登入时设置用户名
-        // BaseEntity.RequestApiUrl('get', 'UserInfo', undefined, [], 'UserTokenName').then((result) => {
-        //     var userInfo = { ...result.data };
-        //     $('#addCommentsDataName').val(userInfo.username);
-        // }).catch((err) => {
-        //     BaseEntity.AxiosErrorHandling(err);
-        // });
-
         //悬浮按钮
         $('#jsBtnGreen').click(function () {
             jumpUrl('/index/cards/add{if $Card.CardData.model == 1}/model/1{/if}', 0);

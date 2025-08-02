@@ -21,6 +21,11 @@
             </div>
         </div>
         <div class="mdui-float-right">
+            {if $SystemConfig['System']['VisitorMode']}
+            <button id="Guest" class="mdui-btn mdui-color-theme">
+                游 客 登 入
+            </button>
+            {/if}
             <button id="Login" class="mdui-btn mdui-color-theme-accent">
                 登 入
             </button>

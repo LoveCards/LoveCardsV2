@@ -62,7 +62,7 @@ class Common extends Base {
      * @param {String} accountId 账户输入框
      * @param {String} passwordId 密码输入框
      */
-    BindLogin = (submitId, accountId, passwordId, remberMeId) => {
+    BindLogin = (submitId, accountId, passwordId, remberMeId, guestBtnId) => {
         //默认回调函数设置
         if (this.hooks.PostLogin?.defultStatus == undefined || this.hooks.PostLogin?.defultStatus == true) {
             this.SetHooksPostLogin({
@@ -94,6 +94,15 @@ class Common extends Base {
                 return;
             }
             this.PostLogin(data);
+        }.bind(this));
+
+        $('#' + guestBtnId).click(function () {
+            let rememberMe = $('#' + remberMeId).prop('checked');
+            if (!rememberMe) {
+                this.commonFunctions.snackbar('请同意隐私政策');
+                return;
+            }
+            this.PostLoginGuest();
         }.bind(this));
     }
     /**
@@ -305,6 +314,14 @@ class Common extends Base {
             'id': resData.id,
         };
         this.RequestApiUrl('post', 'CardsGood', 'CardsGood', data, 'UserTokenName');
+    }
+    /**
+     * 登入请求
+     * @param {Object} resData 
+     * @returns 
+     */
+    PostLoginGuest = () => {
+        this.RequestApiUrl('post', 'UserAuthGuest', 'PostLogin', [], 'UserTokenName');
     }
 
 }
