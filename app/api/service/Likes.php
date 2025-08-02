@@ -23,8 +23,9 @@ class Likes
         $pageSize = 15;
 
         $result = LikesModel::where('uid', $context['uid'])->paginate($pageSize);
-        if($result->isEmpty()){
-            throw new \Exception('没有找到', 204);
+        if ($result->isEmpty()) {
+            //throw new \Exception('没有找到', 204);
+            return [];
         }
 
         $likes = $result->toArray();
@@ -32,7 +33,7 @@ class Likes
             $apps[$items['aid']][] = $items['pid'];
         }
 
-        $result = CardsModel::where('status', 0)->select($apps[1])->toArray();
+        $result = CardsModel::whereIn('status', 0)->select($apps[1])->toArray();
 
         //合并数组
         function matchAndInsert($array1, $array2, $key1, $key2, $insertKey)

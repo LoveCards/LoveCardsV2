@@ -2,24 +2,31 @@
 
 namespace app\api\controller\user;
 
-use think\facade\Request;
-use think\exception\ValidateException;
-use think\facade\Db;
-use think\facade\Config;
-
-use app\api\model\Images as ImagesModel;
+use app\common\Export;
 
 use app\api\service\Likes as LikesService;
 
-use app\common\Common;
-use app\common\Export;
-use app\common\BackEnd;
-use app\common\App;
+use app\api\controller\Base;
+use think\facade\Request;
 
-class Likes extends Common
+class Likes extends Base
 {
-
     //列表
-    public function List()
-    {}
+    public function list()
+    {
+        $result = LikesService::list($this->JWT_SESSION);
+        return Export::Create($result, 200, null);
+    }
+
+    //取消点赞
+    public function unLike()
+    {
+        try {
+            //隐藏
+            LikesService::delete(Request::param('id'), $this->JWT_SESSION);
+        } catch (\Throwable $th) {
+            return Export::Create([], $th->getCode(), $th->getMessage());
+        }
+        return Export::Create([]);
+    }
 }

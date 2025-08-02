@@ -78,13 +78,13 @@ class Roles
                 '/api/card/comment:post',
 
                 '/api/cards:get',
-                '/api/cards:delete',
+                '/api/card:delete',
 
                 '/api/comments:get',
-                '/api/comments:delete',
+                '/api/comment:delete',
 
                 '/api/likes:get',
-                '/api/likes:delete',
+                '/api/like:delete',
 
                 //游客api
                 //'/api/card:post',

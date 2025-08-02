@@ -84,7 +84,7 @@ class Users
             return Common::mArrayEasyReturnStruct('用户不存在', false);
         }
 
-        if ($result['status'] != 0 || $result['status'] != 2) {
+        if ($result['status'] != 0 && $result['status'] != 2) {
             return Common::mArrayEasyReturnStruct('您的账户已被封禁或未激活', false);
         }
 

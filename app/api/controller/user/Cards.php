@@ -20,8 +20,15 @@ use app\api\controller\Base;
 
 class Cards extends Base
 {
-    //卡片
-    public function list() {}
+
+    public function list()
+    {
+        $result = CardsService::list($this->JWT_SESSION);
+        if ($result) {
+            return Export::Create($result->toArray(), 200, null);
+        }
+        return Export::Create([], 400, '查询失败');
+    }
 
     //创建卡片
     public function createCard()
@@ -46,7 +53,7 @@ class Cards extends Base
     {
         try {
             //隐藏
-            CardsService::updata(['status' => 3], ['id' => Request::param('id')]);
+            CardsService::updata(['status' => 2], ['id' => Request::param('id'), 'user_id' => $this->JWT_SESSION['uid']], ['status']);
         } catch (\Throwable $th) {
             return Export::Create([], $th->getCode(), $th->getMessage());
         }
@@ -114,16 +121,5 @@ class Cards extends Base
 
         //返回数据
         return Export::Create([$resultCardsData['good'] + 1], 200, null);
-    }
-    //取消点赞
-    public function unLike()
-    {
-        // try {
-        //     //隐藏
-        //     LikesService::delete($data, $context);
-        // } catch (\Throwable $th) {
-        //     return Export::Create([], $th->getCode(), $th->getMessage());
-        // }
-        // return Export::Create([]);
     }
 }
