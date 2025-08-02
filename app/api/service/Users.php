@@ -108,7 +108,7 @@ class Users
      * @param int $status
      * @return array
      */
-    public static function Register($number, $username, $email, $phone, $password, $status = 0): array
+    public static function Register($number, $username, $email, $phone, $password, $roles_id = [2], $status = 0): array
     {
         if ($password != '') {
             if ($email != '') {
@@ -124,7 +124,7 @@ class Users
                     'username' => $username,
                     'email' => $email,
                     'phone' => $phone,
-                    'roles_id' => [2],
+                    'roles_id' => $roles_id,
                     'status' => $status,
                 );
             }

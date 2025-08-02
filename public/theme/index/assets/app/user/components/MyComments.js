@@ -16,6 +16,16 @@ const MyComments = {
         // goCard(id) {
         //     BaseEntity.JumpUrl("/index/Cards/card/id/" + id);
         // },
+        viewStatus(status) {
+            if (status == 0) {
+                return "正常";
+            } else if (status == 1) {
+                return "封禁";
+            } else if (status == 3) {
+                return "待审核";
+            }
+            return "未知状态";
+        },
         previousPage() {
             if (this.comments.current_page == 1) {
                 return;
@@ -94,11 +104,10 @@ const MyComments = {
                 <template v-for="(item, index) in comments.data" :key="index">
                     <li class="css-list-item">
                         <div class="mdui-list-item-content">
-                            <div class="mdui-list-item-title">{{item.name}}</div>
-                            <div class="mdui-list-item-text">{{item.content}}</div>
-                            <div class="mdui-list-item-text">{{item.id}}# {{item.time}}</div>
+                            <div class="mdui-list-item-title">{{item.content}}</div>
+                            <div class="mdui-list-item-text">#{{item.id}} {{item.created_at}} {{viewStatus(item.status)}}</div>
                         </div>
-                        <button class="mdui-btn mdui-btn-icon mdui-list-item-secondary" @click="deleteComments(index)" :disabled="item.status == 1">
+                        <button v-if="item.status == 0" class="mdui-btn mdui-btn-icon mdui-list-item-secondary" @click="deleteComments(index)" :disabled="item.status == 1">
                             <i class="mdui-icon material-icons">delete</i>
                         </button>
                     </li>

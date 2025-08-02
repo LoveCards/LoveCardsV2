@@ -36,7 +36,7 @@ return [
         'ThemePrimary' => [
             'Name' => '主题主色',
             'Introduction' => '颜色可参考<a href="https://www.mdui.org/docs/color" target="_blank">MDUI颜色与主题</a>',
-            'Default' => env('ThemeConfig.SelectThemePrimary', 9),
+            'Default' => env('ThemeConfig.SelectThemePrimary', 4),
             'Element' => [
                 0 => 'red',
                 1 => 'pink',
@@ -82,7 +82,7 @@ return [
         'ThemeAccent' => [
             'Name' => '主题强调色',
             'Introduction' => '颜色可参考<a href="https://www.mdui.org/docs/color" target="_blank">MDUI颜色与主题</a>',
-            'Default' => env('ThemeConfig.SelectThemeAccent', 2),
+            'Default' => env('ThemeConfig.SelectThemeAccent', 1),
             'Element' => [
                 0 => 'red',
                 1 => 'pink',

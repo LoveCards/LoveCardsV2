@@ -98,6 +98,31 @@ class Roles
                 '/api/tags:get',
             ]
         ],
+        3 => [
+            'value' => 'guest',
+            'name' => '访客',
+            'baseUrl' => [
+                '/api/upload/user-images:post',
+
+                '/api/card:post',
+                '/api/card/images:get',
+                '/api/card/like:post',
+                '/api/card/comment:post',
+
+                '/api/cards:get',
+                '/api/card:delete',
+
+                '/api/comments:get',
+                '/api/comment:delete',
+
+                '/api/likes:get',
+                '/api/like:delete',
+
+                '/api/user/info:get',
+
+                '/api/tags:get',
+            ]
+        ],
     ];
 
     public function getGroup()

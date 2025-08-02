@@ -139,7 +139,7 @@ class Auth extends Base
         $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //验证码校验
-        if(ConfigFacade::mArraySearchConfigKey('Captcha')[0]){
+        if (ConfigFacade::mArraySearchConfigKey('Captcha')[0]) {
             if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
                 return Export::Create(['验证码错误'], 401, '注册失败');
             };
@@ -178,6 +178,40 @@ class Auth extends Base
     //访客登入-POST
     public function Guest()
     {
+        if (!$this->SYSTEM_CONFIG['System']['VisitorMode']) {
+            return Export::Create([], 401, '该站点未开启访客模式');
+        }
+
+        $timekey = (date('YmdH')); //支持一小时内重复登入
+        $ip = $this->SESSION['ip'];
+        $account = strtoupper(substr(md5($ip . $timekey), 0, 9)) . '@g.com';
+        $password = '123456';
+        $username = 'GUEST' . strtoupper(substr(md5($account . $password . time()), 0, 5));
+        $number = $this->generateNumber();
+
+        //判断是手机号还是邮箱
+        $accountArray = $this->mArrayEasyCheckAccountType($account);
+
+        //同IP登入
+        $result = UsersService::Login($account, $password);
+        if ($result['status'] == true) {
+            //如果访客账号已存在，直接返回token
+            $user_id = $result['data']['id'];
+            $result = Jwt::signToken(['uid' => $user_id]);
+            return Export::Create(['token' => $result], 200);
+        }
+
+        //写入数据
+        $result = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
+        if ($result['status'] == false) {
+            return Export::Create([$result['msg']], 401, '访客账户注册失败');
+        }
+
+        //返回令牌
+        $user_id = $result['data'];
+        $result = Jwt::signToken(['uid' => $user_id]);
+
+        return Export::Create(['token' => $result], 200);
     }
 
     //获取验证码-POST

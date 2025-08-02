@@ -28,7 +28,7 @@ class Comments
         //$currentPage = 1;
         $pageSize = 15;
 
-        $result = CommentsModel::where('status', 0)
+        $result = CommentsModel::whereIn('status', [0, 1, 3])
             ->where('user_id', $context['uid'])
             ->order('id', 'desc')
             ->paginate($pageSize);

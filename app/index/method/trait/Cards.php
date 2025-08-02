@@ -261,6 +261,9 @@ trait Cards
             ->where('CARD.id', $tReq_ParamId)
             ->where('CARD.status', 0)
             ->findOrEmpty();
+        if (empty($lDef_CardData)) {
+            return redirect('/404');
+        }
 
         $lDef_CardData = $this->dataToArray([$lDef_CardData]);
         $lDef_CardData = $this->dataCompatible($lDef_CardData)[0];
