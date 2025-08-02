@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2024-10-06 20:12:43
+-- 生成日期： 2025-08-02 18:28:05
 -- 服务器版本： 5.7.44-log
 -- PHP 版本： 8.0.26
 
@@ -18,29 +18,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `chizg_cn`
+-- 数据库： `test4_com`
 --
-
--- --------------------------------------------------------
-
---
--- 表的结构 `admin`
---
-
-CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `power` int(11) NOT NULL DEFAULT '0',
-  `uuid` varchar(64) DEFAULT '' COMMENT '登入凭证'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
-
---
--- 转存表中的数据 `admin`
---
-
-INSERT INTO `admin` (`id`, `userName`, `password`, `power`, `uuid`) VALUES
-(1, 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 0, '');
 
 -- --------------------------------------------------------
 
@@ -49,23 +28,21 @@ INSERT INTO `admin` (`id`, `userName`, `password`, `power`, `uuid`) VALUES
 --
 
 CREATE TABLE `cards` (
-  `id` int(11) NOT NULL COMMENT 'cid/pid/aid:1',
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `content` mediumtext NOT NULL COMMENT '内容',
-  `img` varchar(256) DEFAULT '' COMMENT '封面',
-  `woName` varchar(256) DEFAULT '' COMMENT '发布者名字',
-  `woContact` varchar(256) DEFAULT '' COMMENT '我的联系方式',
-  `taName` varchar(256) DEFAULT '' COMMENT '对方的名字',
-  `taContact` varchar(256) DEFAULT '' COMMENT '对方的联系方式',
-  `good` int(11) NOT NULL DEFAULT '0' COMMENT '点赞数',
-  `comments` int(11) NOT NULL DEFAULT '0' COMMENT '评论数',
-  `look` int(11) NOT NULL DEFAULT '0' COMMENT '浏览量',
-  `tag` varchar(256) DEFAULT '' COMMENT '标签Json',
-  `model` int(11) DEFAULT '0' COMMENT '卡片模式',
-  `time` timestamp NOT NULL COMMENT '发布时间',
-  `ip` varchar(256) DEFAULT '' COMMENT '发布IP',
-  `top` enum('0','1') DEFAULT '0' COMMENT '置顶状态',
-  `status` enum('0','1') DEFAULT '0' COMMENT '封禁状态'
+  `id` int(11) NOT NULL,
+  `is_top` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `data` json DEFAULT NULL,
+  `cover` varchar(2083) DEFAULT NULL,
+  `content` text,
+  `tags` json DEFAULT NULL,
+  `good` int(11) NOT NULL DEFAULT '0',
+  `views` int(11) NOT NULL DEFAULT '0',
+  `comments` int(11) NOT NULL DEFAULT '0',
+  `post_ip` varchar(39) DEFAULT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -75,16 +52,21 @@ CREATE TABLE `cards` (
 --
 
 CREATE TABLE `comments` (
-  `id` int(11) NOT NULL COMMENT 'pid/aid:2',
-  `aid` int(11) NOT NULL COMMENT '应用ID',
-  `pid` varchar(256) NOT NULL COMMENT '条目ID',
-  `uid` int(11) NOT NULL,
-  `content` varchar(256) NOT NULL COMMENT '内容',
-  `name` varchar(256) NOT NULL COMMENT '我的名字',
-  `ip` varchar(256) NOT NULL COMMENT '发布IP',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '发布时间',
-  `status` int(11) NOT NULL COMMENT '封禁状态'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+  `id` int(11) NOT NULL,
+  `aid` int(11) NOT NULL DEFAULT '0',
+  `pid` int(11) NOT NULL DEFAULT '0',
+  `parent_id` int(11) DEFAULT '0',
+  `is_top` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `data` json DEFAULT NULL,
+  `content` text,
+  `goods` int(11) NOT NULL DEFAULT '0',
+  `post_ip` varchar(39) DEFAULT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -98,7 +80,7 @@ CREATE TABLE `good` (
   `pid` int(11) NOT NULL COMMENT '条目ID',
   `uid` int(11) NOT NULL,
   `ip` varchar(32) NOT NULL COMMENT '发布IP',
-  `time` datetime NOT NULL COMMENT '发布时间'
+  `created_at` timestamp NOT NULL COMMENT '发布时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -111,7 +93,7 @@ CREATE TABLE `images` (
   `id` int(11) NOT NULL,
   `aid` int(11) NOT NULL COMMENT '应用ID',
   `pid` int(11) NOT NULL COMMENT '条目ID',
-  `uid` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `url` varchar(256) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -136,7 +118,7 @@ CREATE TABLE `system` (
 
 INSERT INTO `system` (`id`, `name`, `value`) VALUES
 (1, 'siteUrl', 'lovecards.cn'),
-(2, 'siteName', 'LoveCardsV2.3.1'),
+(2, 'siteName', 'LoveCardsV2.4'),
 (3, 'siteICPId', ''),
 (4, 'siteKeywords', ''),
 (5, 'siteDes', ''),
@@ -154,15 +136,14 @@ INSERT INTO `system` (`id`, `name`, `value`) VALUES
 --
 
 CREATE TABLE `tags` (
-  `id` int(11) NOT NULL COMMENT 'tid/pid',
-  `aid` int(11) NOT NULL COMMENT '应用ID',
-  `name` varchar(8) DEFAULT '' COMMENT '标签名',
-  `tip` varchar(64) DEFAULT '' COMMENT '提示',
-  `status` int(11) NOT NULL DEFAULT '0' COMMENT '封禁状态',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '发布时间',
-  `deleted_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL
+  `id` int(11) NOT NULL,
+  `aid` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -172,14 +153,12 @@ CREATE TABLE `tags` (
 --
 
 CREATE TABLE `tags_map` (
-  `id` int(11) NOT NULL COMMENT 'pid',
-  `aid` int(11) NOT NULL COMMENT '应用ID',
-  `pid` int(11) DEFAULT NULL COMMENT 'AID[PID]',
-  `tid` int(11) DEFAULT NULL COMMENT 'TagID',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL
+  `id` int(11) NOT NULL,
+  `aid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `tag_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
@@ -193,24 +172,26 @@ CREATE TABLE `users` (
   `number` varchar(32) NOT NULL,
   `avatar` varchar(255) NOT NULL DEFAULT '',
   `email` varchar(320) NOT NULL,
-  `phone` varchar(32) NOT NULL,
+  `phone` varchar(20) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL,
+  `roles_id` json DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `deleted_at` datetime DEFAULT NULL,
-  `status` int(11) NOT NULL
+  `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+
+--
+-- 转存表中的数据 `users`
+--
+
+INSERT INTO `users` (`id`, `number`, `avatar`, `email`, `phone`, `username`, `password`, `status`, `roles_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '1000000000', '', 'admin@lovecards.cn', '', '超级管理员', '$2y$10$uBowOFgOBNTx1NT1uYJTleEo1r8d91R9iwxRCqncPJUShfsJoMvr6', 0, '[0, 1, 2]', '2023-12-06 20:09:26', '2025-08-01 20:50:25', NULL);
 
 --
 -- 转储表的索引
 --
-
---
--- 表的索引 `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- 表的索引 `cards`
@@ -265,22 +246,16 @@ ALTER TABLE `users`
 --
 
 --
--- 使用表AUTO_INCREMENT `admin`
---
-ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- 使用表AUTO_INCREMENT `cards`
 --
 ALTER TABLE `cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'cid/pid/aid:1';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pid/aid:2';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `good`
@@ -304,19 +279,19 @@ ALTER TABLE `system`
 -- 使用表AUTO_INCREMENT `tags`
 --
 ALTER TABLE `tags`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'tid/pid';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `tags_map`
 --
 ALTER TABLE `tags_map`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pid';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- 使用表AUTO_INCREMENT `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
