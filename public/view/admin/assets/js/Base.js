@@ -57,13 +57,14 @@ class Base {
             // CardsSetting: '/api/cards/setting',//模块设置 
             CardsGood: '/api/card/like',//点赞 *
 
+            Like: '/api/like',
             Likes: '/api/Likes',
 
             // TagsAdd: '/api/tags/add',//添加标签
             // TagsEdit: '/api/tags/edit',//编辑标签
             // TagsDelete: '/api/tags/delete',//删除标签
 
-            //Comment: '/api/comment',//评论
+            Comment: '/api/comment',//评论
             Comments: '/api/comments',//评论
             // CommentsAdd: '/api/comments/add',//编辑评论
             // CommentsEdit: '/api/comments/edit',//编辑评论

@@ -15,6 +15,18 @@ use yunarch\app\api\service\IndexUtils;
 
 class Cards
 {
+    //列表
+    static public function list($context)
+    {
+        $pageSize = 15;
+
+        $result = CardsModel::where('status', 0)
+            ->where('user_id', $context['uid'])
+            ->order('id', 'desc')
+            ->paginate($pageSize);
+
+        return $result;
+    }
 
     /**
      * 读取用户卡片

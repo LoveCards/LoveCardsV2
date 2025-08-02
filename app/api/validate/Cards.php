@@ -132,13 +132,13 @@ class Cards extends Validate
     {
         $config = Config::get('master.Cards.PictureLimit');
         $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsImgNum']);
+        return RuleUtils::checkArrayLength($decoded, $config);
     }
     //验证标签个数
     protected function tagsLength($value)
     {
         $config = Config::get('master.Cards.TagLimit');
         $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config['DefSetCardsTagNum']);
+        return RuleUtils::checkArrayLength($decoded, $config);
     }
 }

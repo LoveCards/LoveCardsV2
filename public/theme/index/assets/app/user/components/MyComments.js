@@ -65,7 +65,7 @@ const MyComments = {
         deleteComments(index) {
             BaseEntity.RequestApiUrl(
                 "delete",
-                "Comments",
+                "Comment",
                 undefined,
                 { id: this.comments.data[index].id },
                 "UserTokenName"

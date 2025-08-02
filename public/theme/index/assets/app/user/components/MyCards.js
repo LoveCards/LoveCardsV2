@@ -38,14 +38,17 @@ const MyCards = {
         },
         getCards(param = []) {
             BaseEntity.RequestApiUrl('get', 'Cards', undefined, param, 'UserTokenName').then((result) => {
+                //console.log(result.data.data);
+                result.data.data.map(element => {
+                    element.data = JSON.parse(element.data);
+                });
                 this.cards = result.data;
-                //console.log(this.cards);
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
             });
         },
         deleteCards(index) {
-            BaseEntity.RequestApiUrl('delete', 'Cards', undefined, { id: this.cards.data[index].id }, 'UserTokenName').then((result) => {
+            BaseEntity.RequestApiUrl('delete', 'Card', undefined, { id: this.cards.data[index].id }, 'UserTokenName').then((result) => {
                 this.cards.data[index].status = 1;
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
@@ -85,21 +88,21 @@ const MyCards = {
             <div v-for="(item, index) in cards.data" class="mdui-col mdui-m-b-2">
                 <div class="mdui-card">
                     <!-- 卡片头部，包含头像、标题、副标题 -->
-                    <div class="mdui-p-t-2 mdui-p-x-2">
+                    <div class="mdui-p-t-2 mdui-p-x-2" v-if="item.data">
                         
                         <div class="css-caard-header-title" :class="theme.config.ThemePrimaryDepth ? 'mdui-text-color-theme-'+theme.config.ThemePrimaryDepth : 'mdui-text-color-theme'">
-                            {{item.woName}}的{{item.model ? '交流卡' : '表白卡'}}
+                            {{item.data.woName}}的{{item.data.model ? '交流卡' : '表白卡'}}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
-                        <div class="css-caard-header-subtite">{{item.woName}}{{item.model ? '对' : '表白'}} {{item.taName}} {{item.model ? '说' : ''}}
-                            <span class="css-caard-header-subtite-liulan">浏览{{item.look}}</span>
+                        <div class="css-caard-header-subtite">{{item.data.woName}}{{item.data.model ? '对' : '表白'}} {{item.taName}} {{item.data.model ? '说' : ''}}
+                            <span class="css-caard-header-subtite-liulan">浏览{{item.views}}</span>
                         </div>
                     </div>
 
-                    <div v-if="item.img">
+                    <div v-if="item.cover">
                         <div style="z-index: 1;" class="mdui-card-media mdui-p-t-2">
                             <div class="css-cards-img mdui-m-x-1" style="cursor:pointer;" @click='goCard(item.id)'>
-                                <img :src="item.img" @load="masonry()"/>
+                                <img :src="item.cover" @load="masonry()"/>
                             </div>
                         </div>
                         <div class="css-cards-img-loading mdui-spinner"></div>

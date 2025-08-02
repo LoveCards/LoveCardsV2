@@ -45,7 +45,7 @@ const MyLikes = {
             });
         },
         deleteLikes(index) {
-            BaseEntity.RequestApiUrl('delete', 'Likes', undefined, { id: this.likes.data[index].id }, 'UserTokenName').then((result) => {
+            BaseEntity.RequestApiUrl('delete', 'Like', undefined, { id: this.likes.data[index].id }, 'UserTokenName').then((result) => {
                 this.likes.data[index].ip = '';
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);

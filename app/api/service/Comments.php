@@ -13,6 +13,28 @@ use yunarch\app\api\service\IndexUtils;
 
 class Comments
 {
+    //更新指定ID的指定字段
+    static public function updata($context, $data, $where = [], $allowField = [])
+    {
+        $where = ['user_id' => $context['uid']] + $where;
+        $result = CommentsModel::update($data, $where, $allowField);
+
+        return $result;
+    }
+
+    //列表
+    static public function list($context)
+    {
+        //$currentPage = 1;
+        $pageSize = 15;
+
+        $result = CommentsModel::where('status', 0)
+            ->where('user_id', $context['uid'])
+            ->order('id', 'desc')
+            ->paginate($pageSize);
+
+        return $result;
+    }
 
     /**
      * 字段反转

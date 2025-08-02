@@ -24,22 +24,23 @@ Route::group('', function () {
     Route::get('card/images', 'admin.Images/CardIndex'); //卡片图集
 
     Route::get('cards', 'user.Cards/list'); //卡片列表
-    Route::post('card/like', 'user.Cards/like'); //喜欢
-    Route::delete('card/like', 'user.Cards/unLike'); //取消喜欢
-    Route::delete('card/comment', 'user.Cards/hideComment'); //删除评论
-    Route::delete('card', 'user.Cards/hideCard'); //删除卡片
+
 
     //特殊鉴权
     Route::group('', function () {
         Route::post('card/comment', 'user.Cards/createComment');
         Route::post('card', 'user.Cards/createCard');
+        Route::post('card/like', 'user.Cards/like'); //喜欢卡片
+        Route::delete('card', 'user.Cards/hideCard'); //删除卡片
+        Route::delete('comment', 'user.Comments/delete'); //删除评论
+        Route::delete('like', 'user.Likes/unLike'); //取消喜欢
     })->middleware([SessionDebounce::class, GeetestCheck::class]);
 
     //评论
-    Route::get('comments', 'user.Comments/list');
+    Route::get('comments', 'user.Comments/index');
+
     //喜欢
     Route::get('likes', 'user.Likes/list');
-
 
     //用户信息
     Route::patch('user/info', 'user.info/Patch');
