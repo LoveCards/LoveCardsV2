@@ -27,27 +27,30 @@ jobs:
           php_version: "8.1"
           version: 2
 
-      - name: 🔎获取前端最新发行版
-        id: find_run
+      # 1. 拿到最新 release 的 tag 和下载 URL
+      - name: 🔎获取最新 release
+        id: get_release
         run: |
-          run_id=$(gh run list --repo LoveCards/v2_frontend_admin \
-                               --workflow=build.yml \
-                               --status=success \
-                               --limit=1 \
-                               --json databaseId \
-                               -q '.[0].databaseId')
-          echo "run_id=$run_id" >> $GITHUB_OUTPUT
+          # 用 gh release view 直接解析 JSON
+          read tag url <<< $(gh release view \
+            --repo LoveCards/v2_frontend_admin \
+            --json tagName,assets \
+            --jq '
+              (.tagName) + " " +
+              (.assets[] | select(.name | test("admin-v\\..*\\.zip$")) | .url)
+            ')
+          echo "tag=$tag"     >> $GITHUB_OUTPUT
+          echo "zip_url=$url" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
 
-      - name: 📥下载前端打包文件
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-dist
-          path: ./public
-          repository: LoveCards/v2_frontend_admin
-          run-id: ${{ steps.find_run.outputs.run_id }}
-          github-token: ${{ secrets.GH_PAT }}
+      # 2. 下载并解压到 ./public
+      - name: 📥下载 admin-v1.x.x.zip
+        run: |
+          mkdir -p public
+          curl -L -o admin.zip ${{ steps.get_release.outputs.zip_url }}
+          unzip -q admin.zip -d public
+          rm admin.zip
 
       - name: ❌删除非必要文件
         run: |
