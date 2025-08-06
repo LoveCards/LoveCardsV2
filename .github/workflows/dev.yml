@@ -1,70 +1,57 @@
 name: dev
 
 on:
-  # 手动触发部署
-  workflow_dispatch:
+    # 手动触发部署
+    workflow_dispatch:
 
 jobs:
-  Dev:
-    runs-on: ubuntu-latest
+    # 调用上游 reusable workflow
+    call-build:
+        uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
+    Dev:
+        needs: call-build # 等上游跑完
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: 🏡拉取代码
-        uses: actions/checkout@v3
-        with:
-          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
-          fetch-depth: 0
+        steps:
+            - name: 🏡拉取代码
+              uses: actions/checkout@v3
+              with:
+                  # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+                  fetch-depth: 0
 
-      - name: 💾缓存 Composer 依赖
-        uses: actions/cache@v3
-        with:
-          path: /tmp/composer-cache
-          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+            - name: 💾缓存 Composer 依赖
+              uses: actions/cache@v3
+              with:
+                  path: /tmp/composer-cache
+                  key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
-      - name: 🛠️安装依赖
-        uses: php-actions/composer@v6
-        with:
-          php_version: "8.1"
-          version: 2
+            - name: 🛠️安装依赖
+              uses: php-actions/composer@v6
+              with:
+                  php_version: "8.1"
+                  version: 2
 
-      # 1. 拿到最新 release 的 tag 和下载 URL
-      - name: 🔎获取最新的前端 release
-        id: get_release
-        run: |
-          read tag url <<< $(gh release view \
-            --repo LoveCards/v2_frontend_admin \
-            --json tagName,assets \
-            --jq '
-              (.tagName) + " " +
-              (.assets[] | select(.name | test("admin-v[0-9]+(\\.[0-9]+)*\\.zip$")) | .url)
-            ')
-          echo "tag=$tag"     >> $GITHUB_OUTPUT
-          echo "zip_url=$url" >> $GITHUB_OUTPUT
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+            # 下载上游生成的打包文件
+            - name: 📥下载前端 zip
+              uses: actions/download-artifact@v4
+              with:
+                  name: admin # 与上游 upload-artifact 的 name 一致
+                  path: ./public
 
-      # 2. 下载并解压到 ./public
-      - name: 📥下载 admin-v1.x.x.zip
-        run: |
-          mkdir -p public
-          curl -L -o admin.zip ${{ steps.get_release.outputs.zip_url }}
-          unzip -q admin.zip -d public
-          rm admin.zip
+            - name: ❌删除非必要文件
+              run: |
+                  rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
 
-      - name: ❌删除非必要文件
-        run: |
-          rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
+            - name: 🏷️设置压缩包名称
+              id: set_zip_name
+              run: echo "zip_name=LoveCardsDev-${commit_sha}.zip" >> $GITHUB_OUTPUT
 
-      - name: 🏷️设置压缩包名称
-        id: set_zip_name
-        run: echo "zip_name=LoveCardsDev-${commit_sha}.zip" >> $GITHUB_OUTPUT
+            - name: 📦压缩为zip
+              run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
 
-      - name: 📦压缩为zip
-        run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
-
-      - name: 🚀上传Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.set_zip_name.outputs.zip_name }}
-          path: ${{ steps.set_zip_name.outputs.zip_name }}
-          if-no-files-found: error
+            - name: 🚀上传Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ steps.set_zip_name.outputs.zip_name }}
+                  path: ${{ steps.set_zip_name.outputs.zip_name }}
+                  if-no-files-found: error
