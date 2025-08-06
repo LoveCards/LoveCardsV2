@@ -6,11 +6,13 @@ on:
 
 jobs:
     # 调用上游 reusable workflow
-    call-build:
+    build-adminFrontEnd:
         uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
-    Dev:
+    build-release:
         needs: call-build # 等上游跑完
         runs-on: ubuntu-latest
+        env:
+            commit_sha: ${{ github.sha }}
 
         steps:
             - name: 🏡拉取代码
@@ -44,7 +46,7 @@ jobs:
 
             - name: 🏷️设置压缩包名称
               id: set_zip_name
-              run: echo "zip_name=LoveCardsDev-${commit_sha}.zip" >> $GITHUB_OUTPUT
+              run: echo "zip_name=LoveCardsDev-${commit_sha:0:7}.zip" >> $GITHUB_OUTPUT
 
             - name: 📦压缩为zip
               run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
