@@ -28,16 +28,15 @@ jobs:
           version: 2
 
       # 1. 拿到最新 release 的 tag 和下载 URL
-      - name: 🔎获取最新 release
+      - name: 🔎获取最新的前端 release
         id: get_release
         run: |
-          # 用 gh release view 直接解析 JSON
           read tag url <<< $(gh release view \
             --repo LoveCards/v2_frontend_admin \
             --json tagName,assets \
             --jq '
               (.tagName) + " " +
-              (.assets[] | select(.name | test("admin-v\\..*\\.zip$")) | .url)
+              (.assets[] | select(.name | test("admin-v[0-9]+(\\.[0-9]+)*\\.zip$")) | .url)
             ')
           echo "tag=$tag"     >> $GITHUB_OUTPUT
           echo "zip_url=$url" >> $GITHUB_OUTPUT
