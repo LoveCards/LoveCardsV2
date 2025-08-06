@@ -27,6 +27,15 @@ jobs:
           php_version: "8.1"
           version: 2
 
+      - name: 📥下载前端最新版本
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./public
+          github-token: ${{ secrets.GH_PAT }}
+          repository: LoveCards/v2_frontend_admin
+          run-id: latest
+
       - name: ❌删除非必要文件
         run: |
           rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
