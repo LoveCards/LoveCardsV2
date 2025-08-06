@@ -33,7 +33,7 @@ jobs:
 
       - name: 🏷️设置压缩包名称
         id: set_zip_name
-        run: echo "zip_name=LoveCardsDev-$(date +%Y%m%d%H%M%S).zip" >> $GITHUB_OUTPUT
+        run: echo "zip_name=LoveCardsDev-${commit_sha}.zip" >> $GITHUB_OUTPUT
 
       - name: 📦压缩为zip
         run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
