@@ -34,14 +34,14 @@ jobs:
                   version: 2
 
             # 下载上游生成的打包文件
-            - name: 📥下载前端 zip
+            - name: 📥获取前端压缩包
               uses: actions/download-artifact@v4
               with:
                   name: admin # 与上游 upload-artifact 的 name 一致
                   path: ./tmp
 
             #解压到 ./public，并去掉外层目录
-            - name: 🔓解压前端到 ./public
+            - name: 🔓解压前端压缩包
               run: |
                 mkdir -p public
                 unzip -q ./tmp/admin.zip -d ./tmp
