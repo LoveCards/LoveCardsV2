@@ -38,7 +38,16 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: admin # 与上游 upload-artifact 的 name 一致
-                  path: ./public
+                  path: ./tmp
+
+            #解压到 ./public，并去掉外层目录
+            - name: 🔓解压前端到 ./public
+              run: |
+                mkdir -p public
+                unzip -q ./tmp/admin.zip -d ./tmp
+                # 如果你的 zip 里面是 admin/ 目录，把内容搬到 public
+                mv ./tmp/admin/* ./public/
+                rm -rf ./tmp
 
             - name: ❌删除非必要文件
               run: |
