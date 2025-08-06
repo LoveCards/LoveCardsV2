@@ -9,7 +9,7 @@ jobs:
     Build_AdminFrontEnd:
         uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
     Build_Release:
-        needs: build-adminFrontEnd # 等上游跑完
+        needs: Build_AdminFrontEnd # 等上游跑完
         runs-on: ubuntu-latest
         env:
             commit_sha: ${{ github.sha }}
