@@ -27,14 +27,27 @@ jobs:
           php_version: "8.1"
           version: 2
 
-      - name: 📥下载前端最新版本
+      - name: 🔎获取前端最新发行版
+        id: find_run
+        run: |
+          run_id=$(gh run list --repo LoveCards/v2_frontend_admin \
+                               --workflow=build.yml \
+                               --status=success \
+                               --limit=1 \
+                               --json databaseId \
+                               -q '.[0].databaseId')
+          echo "run_id=$run_id" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+
+      - name: 📥下载前端打包文件
         uses: actions/download-artifact@v4
         with:
           name: frontend-dist
           path: ./public
-          github-token: ${{ secrets.GH_PAT }}
           repository: LoveCards/v2_frontend_admin
-          run-id: latest
+          run-id: ${{ steps.find_run.outputs.run_id }}
+          github-token: ${{ secrets.GH_PAT }}
 
       - name: ❌删除非必要文件
         run: |
