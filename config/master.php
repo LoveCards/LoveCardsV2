@@ -11,7 +11,7 @@ return [
         'UserImageExt' => env('master.UploadUserImageExt', 'jpg,png,gif,webp')
     ],
     'UserAuth' => [
-        'Captcha' => env('master.UserAuthCaptcha', true)
+        'Captcha' => env('master.UserAuthCaptcha', false)
     ],
     'Cards' => [
         'Approve' => env('master.CardsApprove', true),
