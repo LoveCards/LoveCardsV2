@@ -1,0 +1,77 @@
+name: build-releases
+
+on:
+    # 每当 push 到 main 分支时触发部署
+    # push:
+    #     tags:
+    #         - "v*.*.*"
+    # 手动触发部署
+    workflow_dispatch:
+
+jobs:
+    # 调用上游 reusable workflow
+    Build_AdminFrontEnd:
+        uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
+    Build_Release:
+        needs: Build_AdminFrontEnd # 等上游跑完
+        runs-on: ubuntu-latest
+        env:
+            commit_sha: ${{ github.sha }}
+            file_name: LoveCardsV2-${{ github.ref_name }}
+
+        steps:
+            - name: 🏡拉取代码
+              uses: actions/checkout@v3
+              with:
+                  # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+                  fetch-depth: 0
+
+            - name: 💾缓存 Composer 依赖
+              uses: actions/cache@v3
+              with:
+                  path: /tmp/composer-cache
+                  key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+            - name: 🛠️安装依赖
+              uses: php-actions/composer@v6
+              with:
+                  php_version: "8.1"
+                  version: 2
+
+            # 下载上游生成的打包文件
+            - name: 📥获取前端压缩包
+              uses: actions/download-artifact@v4
+              with:
+                  name: admin # 与上游 upload-artifact 的 name 一致
+                  path: ./tmp
+
+            #解压到 ./public，并去掉外层目录
+            - name: 🔓解压前端压缩包
+              run: |
+                  mkdir -p public
+                  unzip -q ./tmp/admin.zip -d ./tmp
+                  mv ./tmp/admin ./public/
+                  rm -rf ./tmp
+
+            - name: ❌删除非必要文件
+              run: |
+                  rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
+
+            - name: 📦压缩为zip
+              run: zip -r ${{file_name}}.zip ./
+
+            - name: 🎅创建发布并上传压缩包
+              uses: softprops/action-gh-release@v1
+              if: startsWith(github.ref, 'refs/tags/')
+              with:
+                  tag_name: ${{ github.ref_name }} # 创建Tag
+                  name: ${{ github.ref_name }} # 发布名称
+                  body_path: RELEASE.txt # 发布说明
+                  draft: false # 是否为草稿
+                  prerelease: true # 是否为预发布
+                  files: |
+                      ${{file_name}}.zip
+                      LICENSE
+              env:
+                  # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
