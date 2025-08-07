@@ -58,7 +58,7 @@ jobs:
                   rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
 
             - name: 📦压缩为zip
-              run: zip -r ${{file_name}}.zip ./
+              run: zip -r ${{env.file_name}}.zip ./
 
             - name: 🎅创建发布并上传压缩包
               uses: softprops/action-gh-release@v1
@@ -70,7 +70,7 @@ jobs:
                   draft: false # 是否为草稿
                   prerelease: true # 是否为预发布
                   files: |
-                      ${{file_name}}.zip
+                      ${{env.file_name}}.zip
                       LICENSE
               env:
                   # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
