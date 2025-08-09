@@ -1,7 +1,11 @@
-name: Build and Package Docker Image
+name: buildDcoker-frankenphp-call
 
 on:
     push:
+    # 允许下游仓库调用
+    workflow_call:
+    # 也可手动触发
+    workflow_dispatch:
         # branches:
         #     - main
         # tags:
