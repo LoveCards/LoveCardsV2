@@ -6,10 +6,6 @@ on:
     workflow_call:
     # 也可手动触发
     workflow_dispatch:
-        # branches:
-        #     - main
-        # tags:
-        #     - "v*.*.*"
 
 jobs:
     build:
