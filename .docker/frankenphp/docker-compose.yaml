@@ -1,0 +1,28 @@
+services:
+    web:
+        build: .
+        container_name: lovecards-web-frankenphp
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./data/web/config:/app/config
+            - ./data/web/public:/app/public
+        environment:
+            SERVER_NAME: ${WEB_SERVER_NAME}
+        depends_on:
+            - mysql
+
+    mysql:
+        image: mysql:8.0
+        container_name: lovecards-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: lovecards
+            MYSQL_USER: lovecards
+            MYSQL_PASSWORD: 123456
+            TZ: ${MYSQL_TZ}
+        volumes:
+            - ./data/mysql/mysql_data:/var/lib/mysql
+            - ./data/mysql/mysql_conf:/etc/mysql/conf.d
+            - ./data/mysql/mysql_logs:/var/log/mysql

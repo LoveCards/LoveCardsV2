@@ -1,0 +1,34 @@
+{
+	frankenphp {
+		# 指定 worker 脚本（项目根目录下的 work.php）
+		worker ./work.php
+		max_threads 64
+	}
+}
+
+:8089 {
+	root public/
+
+	encode zstd br gzip
+
+    # 静态目录：* 表示匹配前缀 + 子路径
+    handle /admin* {
+        file_server
+    }
+    handle /storage* {
+        file_server
+    }
+    handle /theme* {
+        file_server
+    }
+    handle /view* {
+        file_server
+    }
+    
+	# 伪静态（可选，worker 模式一般不再用 try_files）
+	# 如果一定要保留，可继续用
+	handle {
+		try_files {path} {path}/index.html /index.php?{query}&s={path}
+		php
+	}
+}
