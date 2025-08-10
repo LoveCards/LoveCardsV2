@@ -1,10 +1,10 @@
-name: build-prereleases
+name: 📦构建 发行版
 
 on:
     # 每当 push 到 main 分支时触发部署
-    # push:
-    #     tags:
-    #         - "v*.*.*"
+    push:
+        tags:
+            - "v[0-9]*.[0-9]*.[0-9][0-9]"
     # 手动触发部署
     workflow_dispatch:
 
@@ -17,7 +17,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             commit_sha: ${{ github.sha }}
-            file_name: LoveCardsV2-${{ github.ref_name }}
+            file_name: LoveCardsV2
 
         steps:
             - name: 🏡拉取代码

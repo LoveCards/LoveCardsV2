@@ -1,0 +1,63 @@
+name: 🐳构建 Docker 镜像 (FrankenPHP)
+
+on:
+    # 允许被其他仓库调用
+    workflow_call:
+    # 支持手动触发
+    workflow_dispatch:
+
+jobs:
+    # 调用上游 reusable workflow
+    release_buildWeb:
+        uses: LoveCards/LoveCardsV2/.github/workflows/release-buildWeb.yml@main
+
+    release_buildDocker:
+        name: 🛠️ 构建 Docker 镜像
+        runs-on: ubuntu-latest
+        env:
+            commit_sha: ${{ github.sha }}
+            docker_name: lovecards-web-frankenphp
+            release_buildWeb_file_name: LoveCardsV2
+
+        steps:
+            - name: 🏡 拉取代码
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1
+
+            - name: 🔧 设置 Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: 📥获取项目主体压缩包
+              uses: actions/download-artifact@v4
+              with:
+                  name: ${{env.release_buildWeb_file_name}} # 与上游 upload-artifact 的 name 一致
+                  path: ./tmp
+
+            - name: 🔓解压项目并移入所需配置
+              run: |
+                  unzip -q ./tmp/${{env.release_buildWeb_file_name}}.zip -d ./tmp
+                  mv ./docker/frankenphp/Dockerfile ./tmp
+                  mv ./frankenphp/Caddyfile ./tmp
+
+            - name: 🐳 构建镜像
+              id: docker-build
+              run: |
+                  docker build -t ${{env.docker_name}}:latest ./tmp
+                  docker save ${{env.docker_name}}:latest > ./tmp/a/${{env.docker_name}}.tar
+
+            - name: 🗜️ 压缩镜像
+              run: |
+                  gzip ./tmp/a/${{env.docker_name}}.tar
+
+            - name: 📦 创建最终ZIP
+              run: |
+                  mv ./docker/frankenphp/docker-compose.yaml ./tmp/a
+                  mv ./docker/frankenphp/install.sh ./tmp/a
+                  zip -r ${{env.docker_name}}.zip ./tmp/a
+
+            - name: 📤 上传镜像为构建产物
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{env.docker_name}}
+                  path: ${{env.docker_name}}.zip

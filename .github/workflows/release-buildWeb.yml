@@ -1,24 +1,28 @@
-name: build-dev
+name: 🐘构建 项目主体
 
 on:
     # 手动触发部署
     workflow_dispatch:
+    # 允许被其他仓库调用
+    workflow_call:
 
 jobs:
     # 调用上游 reusable workflow
     Build_AdminFrontEnd:
         uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
-    Build_Release:
+
+    release-buildWeb:
         needs: Build_AdminFrontEnd # 等上游跑完
         runs-on: ubuntu-latest
         env:
             commit_sha: ${{ github.sha }}
+            file_name: LoveCardsV2
+            Build_AdminFrontEnd_file_name: admin
 
         steps:
             - name: 🏡拉取代码
               uses: actions/checkout@v3
               with:
-                  # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
                   fetch-depth: 0
 
             - name: 💾缓存 Composer 依赖
@@ -33,35 +37,29 @@ jobs:
                   php_version: "8.1"
                   version: 2
 
-            # 下载上游生成的打包文件
             - name: 📥获取前端压缩包
               uses: actions/download-artifact@v4
               with:
-                  name: admin # 与上游 upload-artifact 的 name 一致
+                  name: ${{env.Build_AdminFrontEnd_file_name}} # 与上游 upload-artifact 的 name 一致
                   path: ./tmp
 
-            #解压到 ./public，并去掉外层目录
-            - name: 🔓解压前端压缩包
+            - name: 🔓解压前端至Public目录
               run: |
-                mkdir -p public
-                unzip -q ./tmp/admin.zip -d ./tmp
-                mv ./tmp/admin ./public/
-                rm -rf ./tmp
+                  mkdir -p public
+                  unzip -q ./tmp/${{env.Build_AdminFrontEnd_file_name}}.zip -d ./tmp
+                  mv ./tmp/${{env.Build_AdminFrontEnd_file_name}} ./public/
+                  rm -rf ./tmp
 
             - name: ❌删除非必要文件
               run: |
                   rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
 
-            - name: 🏷️设置压缩包名称
-              id: set_zip_name
-              run: echo "zip_name=LoveCardsDev-${commit_sha:0:7}.zip" >> $GITHUB_OUTPUT
-
             - name: 📦压缩为zip
-              run: zip -r ${{ steps.set_zip_name.outputs.zip_name }} ./
+              run: zip -r ${{env.file_name}}.zip ./
 
             - name: 🚀上传Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: ${{ steps.set_zip_name.outputs.zip_name }}
-                  path: ${{ steps.set_zip_name.outputs.zip_name }}
+                  name: ${{env.file_name}}.zip
+                  path: ${{env.file_name}}.zip
                   if-no-files-found: error
