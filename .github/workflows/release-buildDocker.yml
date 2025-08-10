@@ -9,7 +9,7 @@ on:
 jobs:
     # 调用上游 reusable workflow
     release_buildWeb:
-        uses: LoveCards/LoveCardsV2/.github/workflows/release-buildWeb.yml@main
+        uses: LoveCards/LoveCardsV2/.github/workflows/release-buildWeb.yml@dev
 
     release_buildDocker:
         name: 🛠️ 构建 Docker 镜像
