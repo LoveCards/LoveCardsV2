@@ -60,6 +60,6 @@ jobs:
             - name: 🚀上传Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: ${{env.file_name}}.zip
+                  name: ${{env.file_name}}
                   path: ${{env.file_name}}.zip
                   if-no-files-found: error
