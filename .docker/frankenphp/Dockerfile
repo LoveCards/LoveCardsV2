@@ -49,7 +49,6 @@ RUN install-php-extensions \
 	xmlwriter \
 	zip \
 	fileinfo \
-	bt_safe \
 	igbinary \
 	redis \
 	exif 

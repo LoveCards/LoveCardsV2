@@ -11,7 +11,7 @@ on:
 jobs:
     # 调用上游 reusable workflow
     release-buildDocker:
-        uses: LoveCards/LoveCardsV2/.github/workflows/release-buildDocker.yml@main
+        uses: LoveCards/LoveCardsV2/.github/workflows/release-buildDocker.yml@dev
 
     Build_Release:
         needs: release-buildDocker # 等上游跑完
