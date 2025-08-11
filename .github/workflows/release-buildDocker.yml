@@ -44,6 +44,7 @@ jobs:
             - name: 🐳 构建镜像
               id: docker-build
               run: |
+                  mkdir -p ./tmp/a/image
                   docker build -t ${{env.docker_name}}:latest ./tmp
                   docker save ${{env.docker_name}}:latest > ./tmp/a/image/${{env.docker_name}}.tar
 
