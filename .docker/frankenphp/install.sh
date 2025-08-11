@@ -1,2 +1,2 @@
-docker load < lovecards-web-v1.tar.gz
+docker load < ./image/lovecards-web-frankenphp.tar.gz
 docker compose up -d

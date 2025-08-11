@@ -76,7 +76,7 @@ jobs:
 
             - name: 📦 创建最终ZIP
               run: |
-                  mv ./.docker/frankenphp/.env ./tmp/b
+                  mv ./.docker/frankenphp/.env.example ./tmp/b/.env
                   mv ./.docker/frankenphp/docker-compose.yaml ./tmp/b
                   mv ./.docker/frankenphp/install.sh ./tmp/b
                   mv ./tmp/a/public ./tmp/b/data/web
