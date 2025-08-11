@@ -10,8 +10,8 @@ services:
         volumes:
             - ./data/web/config:/app/config
             - ./data/web/public:/app/public
-            - ./data/caddy/data:/data
-            - ./data/caddy/config:/config
+            # - ./data/caddy/data:/data
+            # - ./data/caddy/config:/config
         environment:
             SERVER_NAME: ${WEB_SERVER_NAME}
         depends_on:
@@ -24,7 +24,7 @@ services:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: lovecards
             MYSQL_USER: lovecards
-            MYSQL_PASSWORD: 123456
+            MYSQL_PASSWORD: lovecards
             TZ: ${MYSQL_TZ}
         volumes:
             - ./data/mysql/mysql_data:/var/lib/mysql
