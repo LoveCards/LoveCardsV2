@@ -26,6 +26,16 @@ jobs:
               with:
                   fetch-depth: 1
 
+            - name: 📁 创建所需文件夹
+              run: |
+                  # 构建目录
+                  mkdir -p ./tmp/a
+                  # 导出目录
+                  mkdir -p ./tmp/b/data/web/{public,config}
+                  mkdir -p ./tmp/b/image
+                  # Docker layer 缓存
+                  mkdir -p ./tmp/.buildx-cache
+
             - name: 🔧 设置 Docker Buildx
               uses: docker/setup-buildx-action@v3
 
@@ -37,9 +47,9 @@ jobs:
 
             - name: 🔓 解压项目并移入所需配置
               run: |
-                  unzip -q ./tmp/${{env.release_buildWeb_file_name}}.zip -d ./tmp
-                  mv ./.docker/frankenphp/Dockerfile ./tmp
-                  mv ./.frankenphp/Caddyfile ./tmp
+                  unzip -q ./tmp/${{env.release_buildWeb_file_name}}.zip -d ./tmp/a
+                  mv ./.docker/frankenphp/Dockerfile ./tmp/a
+                  mv ./.frankenphp/Caddyfile ./tmp/a
 
             - name: 📥 缓存 Docker 层
               uses: actions/cache@v4
@@ -52,25 +62,24 @@ jobs:
             - name: 🐳 构建镜像
               id: docker-build
               run: |
-                  mkdir -p ./tmp/a/image
                   docker buildx build \
                     --tag ${{env.docker_name}}:latest \
                     --cache-from=type=local,src=/tmp/.buildx-cache \
                     --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
                     --load \
-                    ./tmp
+                    ./tmp/a
 
             - name: 🗜️ 导出镜像
               run: |
-                  docker save ${{env.docker_name}}:latest | pigz -9 > ./tmp/a/image/${{env.docker_name}}.tar.gz
+                  docker save ${{env.docker_name}}:latest | pigz -9 > ./tmp/b/image/${{env.docker_name}}.tar.gz
 
             - name: 📦 创建最终ZIP
               run: |
-                  mv ./.docker/frankenphp/docker-compose.yaml ./tmp/a
-                  mv ./.docker/frankenphp/install.sh ./tmp/a
-                  mv ./public ./tmp/a/data/web/public
-                  mv ./config ./tmp/a/data/web/config
-                  zip -r ${{env.docker_name}}.zip ./tmp/a
+                  mv ./.docker/frankenphp/docker-compose.yaml ./tmp/b
+                  mv ./.docker/frankenphp/install.sh ./tmp/b
+                  mv ./public ./tmp/b/data/web/public
+                  mv ./config ./tmp/b/data/web/config
+                  zip -r ${{env.docker_name}}.zip ./tmp/b
 
             - name: 📤 上传镜像为构建产物
               uses: actions/upload-artifact@v4
