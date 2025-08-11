@@ -3,7 +3,7 @@ FROM dunglas/frankenphp:1.9-php8-alpine
 # 启用 PHP 生产配置
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# 在此处添加其他扩展：
+# 安装扩展：
 RUN install-php-extensions \
 	Core \
 	date \
@@ -53,5 +53,6 @@ RUN install-php-extensions \
 	redis \
 	exif 
 
-# 复制项目
+# 复制项目及配置文件
 COPY . /app
+COPY ./Caddyfile /etc/frankenphp/Caddyfile
