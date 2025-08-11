@@ -1,4 +1,4 @@
-name: 🐳构建 Docker 镜像 (FrankenPHP)
+name: 2.🐳构建 Docker 镜像 (FrankenPHP)
 
 on:
     # 允许被其他仓库调用
