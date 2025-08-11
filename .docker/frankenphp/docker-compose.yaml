@@ -5,16 +5,19 @@ services:
         ports:
             - "80:80"
             - "443:443"
+            - "443:443/udp" # HTTP/3
         volumes:
             - ./data/web/config:/app/config
             - ./data/web/public:/app/public
+            - ./data/caddy/data:/data
+            - ./data/caddy/config:/config
         environment:
             SERVER_NAME: ${WEB_SERVER_NAME}
         depends_on:
             - mysql
 
     mysql:
-        image: mysql:8.0
+        image: mysql:5.7
         container_name: lovecards-mysql
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

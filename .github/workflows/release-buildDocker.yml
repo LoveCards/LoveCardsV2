@@ -44,7 +44,7 @@ jobs:
               id: docker-build
               run: |
                   docker build -t ${{env.docker_name}}:latest ./tmp
-                  docker save ${{env.docker_name}}:latest > ./tmp/a/${{env.docker_name}}.tar
+                  docker save ${{env.docker_name}}:latest > ./tmp/a/image/${{env.docker_name}}.tar
 
             - name: 🗜️ 压缩镜像
               run: |
@@ -54,6 +54,8 @@ jobs:
               run: |
                   mv ./docker/frankenphp/docker-compose.yaml ./tmp/a
                   mv ./docker/frankenphp/install.sh ./tmp/a
+                  mv ./public ./tmp/a/data/web/public
+                  mv ./config ./tmp/a/data/web/config
                   zip -r ${{env.docker_name}}.zip ./tmp/a
 
             - name: 📤 上传镜像为构建产物
