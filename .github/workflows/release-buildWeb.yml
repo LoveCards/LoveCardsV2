@@ -12,7 +12,7 @@ jobs:
         uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
 
     release-buildWeb:
-        name: 🛠️ 构建 项目 主体
+        name: 📦打包 项目 主体
         needs: Build_AdminFrontEnd # 等上游跑完
         runs-on: ubuntu-latest
         env:
@@ -53,7 +53,7 @@ jobs:
 
             - name: ❌删除非必要文件
               run: |
-                  rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env
+                  rm -rf .gitignore .github .dev ToDo.md .git DOCKER_ENV docker_tag output.log composer.json composer.lock script lock.txt upload.md test.env .frankenphp .docker
 
             - name: 📦压缩为zip
               run: zip -r ${{env.file_name}}.zip ./
