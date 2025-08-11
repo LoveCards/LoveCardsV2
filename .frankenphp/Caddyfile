@@ -1,19 +1,20 @@
-{
-	frankenphp
-}
+:80, :443 {
+    root * /app/public
 
-# 服务器的域名
-:8089 {
-	# 将 webroot 设置为 public/ 目录
-	root public/
-	# 启用压缩(可选)
-	encode zstd br gzip
-	
-    # 伪静态配置
-    handle {
-        try_files {path} {path}/index.html /index.php?{query}&s={path}
+    # ① 先尝试静态文件
+    file_server
+
+    # ② 其余全部交给 index.php（包含 path-info）
+    @notStatic {
+        not file {path}
     }
-	
-	# 执行当前目录中的 PHP 文件并提供资产
-	php_server
+    handle @notStatic {
+        rewrite * /index.php?{query}&s={path}
+    }
+
+    # ③ 让 FrankenPHP 处理 *.php 和 path-info
+    php_server {
+        # 告诉 FrankenPHP 支持 PATH_INFO
+        env PATH_INFO {path}
+    }
 }

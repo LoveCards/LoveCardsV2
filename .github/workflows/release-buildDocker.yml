@@ -78,9 +78,9 @@ jobs:
               run: |
                   mv ./.docker/frankenphp/docker-compose.yaml ./tmp/b
                   mv ./.docker/frankenphp/install.sh ./tmp/b
-                  mv ./public ./tmp/b/data/web/public/*
-                  mv ./config ./tmp/b/data/web/config/*
-                  zip -r ${{env.docker_name}}.zip ./tmp/b/*
+                  mv ./ ./tmp/b/data/web/public
+                  mv ./ ./tmp/b/data/web/config
+                  (cd ./tmp/b && zip -r ../../${{env.docker_name}}.zip .)
 
             - name: 📤 上传镜像为构建产物
               uses: actions/upload-artifact@v4
