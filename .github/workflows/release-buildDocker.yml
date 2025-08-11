@@ -48,6 +48,7 @@ jobs:
             - name: 🔓 解压项目并移入所需配置
               run: |
                   unzip -q ./tmp/${{env.release_buildWeb_file_name}}.zip -d ./tmp/a
+                  ls -l ./tmp/a
                   mv ./.docker/frankenphp/Dockerfile ./tmp/a
                   mv ./.frankenphp/Caddyfile ./tmp/a
 
@@ -77,9 +78,9 @@ jobs:
               run: |
                   mv ./.docker/frankenphp/docker-compose.yaml ./tmp/b
                   mv ./.docker/frankenphp/install.sh ./tmp/b
-                  mv ./public ./tmp/b/data/web/public
-                  mv ./config ./tmp/b/data/web/config
-                  zip -r ${{env.docker_name}}.zip ./tmp/b
+                  mv ./public ./tmp/b/data/web/public/*
+                  mv ./config ./tmp/b/data/web/config/*
+                  zip -r ${{env.docker_name}}.zip ./tmp/b/*
 
             - name: 📤 上传镜像为构建产物
               uses: actions/upload-artifact@v4
