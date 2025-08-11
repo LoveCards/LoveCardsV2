@@ -66,8 +66,8 @@ jobs:
 
             - name: 📦 创建最终ZIP
               run: |
-                  mv ./docker/frankenphp/docker-compose.yaml ./tmp/a
-                  mv ./docker/frankenphp/install.sh ./tmp/a
+                  mv ./.docker/frankenphp/docker-compose.yaml ./tmp/a
+                  mv ./.docker/frankenphp/install.sh ./tmp/a
                   mv ./public ./tmp/a/data/web/public
                   mv ./config ./tmp/a/data/web/config
                   zip -r ${{env.docker_name}}.zip ./tmp/a
