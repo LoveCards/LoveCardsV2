@@ -31,7 +31,7 @@ jobs:
                   # 构建目录
                   mkdir -p ./tmp/a
                   # 导出目录
-                  mkdir -p ./tmp/b/data/web/{public,config}
+                  mkdir -p ./tmp/b/data/web
                   mkdir -p ./tmp/b/image
                   # Docker layer 缓存
                   mkdir -p ./tmp/.buildx-cache
@@ -78,8 +78,8 @@ jobs:
               run: |
                   mv ./.docker/frankenphp/docker-compose.yaml ./tmp/b
                   mv ./.docker/frankenphp/install.sh ./tmp/b
-                  mv ./ ./tmp/b/data/web/public
-                  mv ./ ./tmp/b/data/web/config
+                  mv ./public ./tmp/b/data/web
+                  mv ./config ./tmp/b/data/web
                   (cd ./tmp/b && zip -r ../../${{env.docker_name}}.zip .)
 
             - name: 📤 上传镜像为构建产物

@@ -1,5 +1,6 @@
 services:
     web:
+        # 默认情况下配合脚本使用已构建镜像
         build: .
         container_name: lovecards-web-frankenphp
         ports:
