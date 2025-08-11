@@ -55,4 +55,4 @@ RUN install-php-extensions \
 
 # 复制项目及配置文件
 COPY . /app
-COPY ./Caddyfile /etc/frankenphp/Caddyfile
+COPY ./Caddyfile /etc/frankenphp
