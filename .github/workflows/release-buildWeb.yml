@@ -12,6 +12,7 @@ jobs:
         uses: LoveCards/v2_frontend_admin/.github/workflows/build-call.yml@main
 
     release-buildWeb:
+        name: 🛠️ 构建 项目 主体
         needs: Build_AdminFrontEnd # 等上游跑完
         runs-on: ubuntu-latest
         env:
