@@ -76,10 +76,11 @@ jobs:
 
             - name: 📦 创建最终ZIP
               run: |
+                  mv ./.docker/frankenphp/.env ./tmp/b
                   mv ./.docker/frankenphp/docker-compose.yaml ./tmp/b
                   mv ./.docker/frankenphp/install.sh ./tmp/b
-                  mv ./public ./tmp/b/data/web
-                  mv ./config ./tmp/b/data/web
+                  mv ./tmp/a/public ./tmp/b/data/web
+                  mv ./tmp/a/config ./tmp/b/data/web
                   (cd ./tmp/b && zip -r ../../${{env.docker_name}}.zip .)
 
             - name: 📤 上传镜像为构建产物
