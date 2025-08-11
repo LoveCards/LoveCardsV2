@@ -13,6 +13,7 @@ jobs:
 
     release_buildDocker:
         name: 🛠️ 构建 Docker 镜像
+        needs: release_buildWeb # 等上游跑完
         runs-on: ubuntu-latest
         env:
             commit_sha: ${{ github.sha }}
