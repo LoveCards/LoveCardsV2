@@ -58,7 +58,7 @@ jobs:
                   path: /tmp/.buildx-cache
                   key: ${{ runner.os }}-buildx-${{ hashFiles('tmp/Dockerfile') }}
                   restore-keys: |
-                      ${{ runner.os }}-buildx-
+                      ${{ runner.os }}-buildx-${{ hashFiles('tmp/Dockerfile') }}
 
             - name: 🐳 构建镜像
               id: docker-build
