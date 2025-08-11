@@ -38,13 +38,8 @@ jobs:
             - name: 🔓解压项目并移入所需配置
               run: |
                   unzip -q ./tmp/${{env.release_buildWeb_file_name}}.zip -d ./tmp
-                  pwd                         # 显示当前目录
-                  ls -al                      # 当前目录内容
-                  ls -al docker               # docker 目录是否存在
-                  ls -al docker/frankenphp    # docker/frankenphp 目录
-                  ls -al frankenphp           # frankenphp 目录
-                  mv ./docker/frankenphp/Dockerfile ./tmp
-                  mv ./frankenphp/Caddyfile ./tmp
+                  mv ./.docker/frankenphp/Dockerfile ./tmp
+                  mv ./.frankenphp/Caddyfile ./tmp
 
             - name: 🐳 构建镜像
               id: docker-build
