@@ -1,7 +1,7 @@
 services:
     web:
-        # 默认情况下配合脚本使用已构建镜像
-        build: .
+        # 默认情况下配合脚本使用已构建镜像，测试请改为构建模式
+        image: lovecards-web-frankenphp:latest
         container_name: lovecards-web-frankenphp
         ports:
             - "80:80"
