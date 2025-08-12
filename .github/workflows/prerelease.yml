@@ -14,6 +14,7 @@ jobs:
         uses: LoveCards/LoveCardsV2/.github/workflows/release-buildDocker.yml@dev
 
     Build_Release:
+        name: 🌟 发布预览版
         needs: release-buildDocker # 等上游跑完
         runs-on: ubuntu-latest
         env:
@@ -22,15 +23,24 @@ jobs:
             release_buildWeb_file_name: LoveCardsV2
 
         steps:
-            - name: 📥获取压缩包
+            - name: 🏡 拉取代码
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1
+
+            - name: 📥 获取项目压缩包
               uses: actions/download-artifact@v4
               with:
-                  name: |
-                      ${{env.release_buildDocker_file_name}}
-                      ${{env.release_buildWeb_file_name}}
-                  path: .
+                  name: ${{env.release_buildWeb_file_name}}
+                  path: ./tmp
 
-            - name: 🎅创建发布并上传压缩包
+            - name: 📥 获取Docker(frankenphp)镜像
+              uses: actions/download-artifact@v4
+              with:
+                  name: ${{env.release_buildDocker_file_name}}
+                  path: ./tmp
+
+            - name: 🎅 创建发布并上传压缩包
               uses: softprops/action-gh-release@v1
               if: startsWith(github.ref, 'refs/tags/')
               with:
