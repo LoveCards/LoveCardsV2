@@ -50,8 +50,8 @@ jobs:
                   draft: false # 是否为草稿
                   prerelease: true # 是否为预发布
                   files: |
-                      ${{env.release_buildDocker_file_name}}.zip
-                      ${{env.release_buildWeb_file_name}}.zip
+                      ./tmp/${{env.release_buildDocker_file_name}}.zip
+                      ./tmp/${{env.release_buildWeb_file_name}}.zip
                       LICENSE
               env:
                   # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
