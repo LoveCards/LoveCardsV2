@@ -39,6 +39,9 @@ const MyLikes = {
         getLikes(param = []) {
             BaseEntity.RequestApiUrl('get', 'Likes', undefined, param, 'UserTokenName').then((result) => {
                 this.likes = result.data;
+                this.likes.data.map((item) => {
+                    item.card.data = JSON.parse(item.card.data);
+                })
                 //console.log(this.likes);
             }).catch((err) => {
                 BaseEntity.AxiosErrorHandling(err);
@@ -88,18 +91,18 @@ const MyLikes = {
                     <div class="mdui-p-t-2 mdui-p-x-2">
                         
                         <div class="css-caard-header-title" :class="theme.config.ThemePrimaryDepth ? 'mdui-text-color-theme-'+theme.config.ThemePrimaryDepth : 'mdui-text-color-theme'">
-                            {{item.card.woName}}的{{item.card.model ? '交流卡' : '表白卡'}}
+                            {{item.card.data.woName ? item.card.data.woName : '匿名'}}的{{item.card.data.model == 1 ? '交流卡' : '表白卡'}}
                             <i class="mdui-icon material-icons mdui-float-right">face</i>
                         </div>
-                        <div class="css-caard-header-subtite">{{item.card.woName}}{{item.card.model ? '对' : '表白'}} {{item.card.taName}} {{item.card.model ? '说' : ''}}
-                            <span class="css-caard-header-subtite-liulan">浏览{{item.card.look}}</span>
+                        <div class="css-caard-header-subtite">{{item.card.data.woName}}{{item.card.data.model ? '对' : '表白'}} {{item.card.data.taName}} {{item.card.data.model ? '说' : ''}}
+                            <span class="css-caard-header-subtite-liulan">浏览{{item.card.views}}</span>
                         </div>
                     </div>
 
-                    <div v-if="item.card.img">
+                    <div v-if="item.card.cover">
                         <div style="z-index: 1;" class="mdui-card-media mdui-p-t-2">
                             <div class="css-cards-img mdui-m-x-1" style="cursor:pointer;" @click='goCard(item.card.id)'>
-                                <img :src="item.card.img" @load="masonry()"/>
+                                <img :src="item.card.cover" @load="masonry()"/>
                             </div>
                         </div>
                         <div class="css-cards-img-loading mdui-spinner"></div>
