@@ -129,6 +129,7 @@
     -- 新增. GitHub Actions 工作流，构建并打包 Docker 镜像  
     -- 清理. 删除旧 GitHub Actions 文件，新增支持 FrankenPHP 的构建发布工作流  
     -- 优化. Dockerfile 与 docker-compose.yaml，扩展安装步骤，修复镜像构建路径问题
+    -- 修复. 用户喜欢页面列表
 
 -   2025 年 1 月 25 日 - 2 月 26 日  
     --底层优化. 用户与鉴权模快
