@@ -14,7 +14,7 @@
 [![][github-release-shield]][github-release-link]
 [![][github-action-release-shield]][github-action-release-link]
 [![][github-releasedate-shield]][github-releasedate-link]
-[![][github-contributors-shield]][github-contributors-link]
+[![][github-contributors-shield]][github-contributors-link]<br>
 [![][github-forks-shield]][github-forks-link]
 [![][github-stars-shield]][github-stars-link]
 [![][github-issues-shield]][github-issues-link]
