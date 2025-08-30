@@ -10,6 +10,7 @@ use app\common\Common;
 use app\index\BaseController;
 
 use app\index\method\IndexFacade as IndexFacade;
+use think\facade\Request;
 
 class Index extends BaseController
 {

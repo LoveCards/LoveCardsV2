@@ -31,6 +31,7 @@ trait Cards
             ->field($BaseController::G_Def_DbCardsCommonField)
             ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.status', 0)
+            ->where('CARD.deleted_at', null)
             ->where('CARD.data', 'like', '%"model": "' . $tReq_ParamModel . '"%')
             ->order('CARD.id', 'desc')
             ->paginate($tDef_CardListMax, true);
@@ -66,6 +67,7 @@ trait Cards
         $lDef_Result = Db::table('cards')
             ->where('status', 0)
             ->where('is_top', 1)
+            ->where('deleted_at', null)
             ->order('id', 'desc')
             ->limit(CONST_G_TOP_LISTS_MAX)
             ->select()->toArray();
@@ -73,7 +75,7 @@ trait Cards
         //Cards推荐列表
         //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit(CONST_G_HOT_LISTS_MAX)->select()->toArray();
-        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
         //合并推荐列表到置顶列表
         $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
         //取Good状态合并到CardList数据
@@ -128,9 +130,9 @@ trait Cards
 
             if ($tReq_ParamModel != 'false') {
                 $tReq_ParamModel = $tReq_ParamModel == 1 ? 1 : 0;
-                $tDef_Result = Db::table('cards')->where('status', 0)->where('data', 'like', '%"model": "' . $tReq_ParamModel . '"%');
+                $tDef_Result = Db::table('cards')->where('status', 0)->where('deleted_at', null)->where('data', 'like', '%"model": "' . $tReq_ParamModel . '"%');
             } else {
-                $tDef_Result = Db::table('cards')->where('status', 0);
+                $tDef_Result = Db::table('cards')->where('status', 0)->where('deleted_at', null);
             }
 
             // 取 Cards 列表
@@ -260,6 +262,7 @@ trait Cards
             ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.id', $tReq_ParamId)
             ->where('CARD.status', 0)
+            ->where('CARD.deleted_at', null)
             ->findOrEmpty();
         if (empty($lDef_CardData)) {
             return redirect('/404');
