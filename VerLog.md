@@ -1,7 +1,7 @@
 ## 发行日志
 
 -   ↑2025 年 9 月 14 日  
-    --Ver：22  
+    --Ver：21  
     --VerS：2.4.1.1  
     --commit：详见论坛[forum.lovecards.cn/d/156]
 
