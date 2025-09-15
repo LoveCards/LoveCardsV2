@@ -31,7 +31,6 @@ class Card extends Base {
                 then: (response) => {
                     if (response.status == 201) {
                         this.commonFunctions.snackbar('提交成功，等待审核');
-                        window.location.reload();
                     } else {
                         window.location.reload();
                         //console.log('提交成功刷新页面');
