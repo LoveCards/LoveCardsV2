@@ -67,6 +67,7 @@ class Add extends Base {
         };
         data['data'] = dataJson;
         if (resData.tag != []) {
+            resData.tag = resData.tag.map(Number);
             data['tags'] = JSON.stringify(resData.tag);
         }
         if (pictures) {
