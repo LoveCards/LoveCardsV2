@@ -12,10 +12,12 @@ use app\api\model\Images as ImagesModel;
 use app\api\model\Comments as CommentsModel;
 
 use yunarch\app\api\service\IndexUtils;
+use yunarch\utils\src\ModelList;
 
 class Cards
 {
     protected $CardsModel;
+    protected $ModelListUtil;
 
     public function __construct(CardsModel $CardsModel)
     {
@@ -51,6 +53,24 @@ class Cards
         } catch (\Throwable $th) {
             return Common::mArrayEasyReturnStruct('查询失败', false);
         }
+    }
+
+    //列表
+    public function newList(array $params, int $user_id = -1)
+    {
+        //鉴权
+        if ($user_id === -1) {
+            $params['where'] = ['status' => 0];
+        } else {
+            $params['where'] = ['status' => 0, 'user_id' => $user_id];
+        }
+
+        $params['search_default_key'] = 'content';
+
+        $cards_list = new ModelList($this->CardsModel);
+        $result = $cards_list->getPaginate($params);
+
+        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
     }
 
     //列表
