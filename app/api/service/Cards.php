@@ -15,6 +15,44 @@ use yunarch\app\api\service\IndexUtils;
 
 class Cards
 {
+    protected $CardsModel;
+
+    public function __construct(CardsModel $CardsModel)
+    {
+        $this->CardsModel = $CardsModel;
+    }
+
+    /**
+     * 热门卡片列表
+     *
+     * @return void
+     */
+    public function hotList()
+    {
+        define("CONST_G_TOP_LISTS_MAX", 32); //置顶卡片列表最大个数
+        define("CONST_G_HOT_LISTS_MAX", 8); //热门卡片列表最大个数
+
+        try {
+            //查询数据
+            $lDef_Result = Db::table('cards')
+                ->where('status', 0)
+                ->where('is_top', 1)
+                ->where('deleted_at', null)
+                ->order('id', 'desc')
+                ->limit(CONST_G_TOP_LISTS_MAX)
+                ->select()->toArray();
+            $lDef_CardLists = $lDef_Result;
+
+            $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+
+            $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
+
+            return Common::mArrayEasyReturnStruct(null, true, $lDef_CardLists);
+        } catch (\Throwable $th) {
+            return Common::mArrayEasyReturnStruct('查询失败', false);
+        }
+    }
+
     //列表
     static public function list($context)
     {
