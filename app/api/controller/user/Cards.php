@@ -16,18 +16,47 @@ use app\api\model\Likes as LikesModel; //需要优化
 
 use app\common\Export;
 
+use think\exception\ValidateException;
+
+use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
+use yunarch\app\api\validate\Index as ApiIndexValidate;
+use yunarch\app\api\validate\Common as ApiCommonValidate;
+
 use app\api\controller\Base;
 
 class Cards extends Base
 {
 
+    protected $CardsService;
+
+    public function __construct(CardsService $CardsService)
+    {
+        parent::__construct(); //始化父类
+        $this->CardsService = $CardsService;
+    }
+
     public function list()
     {
-        $result = CardsService::list($this->JWT_SESSION);
-        if ($result) {
-            return Export::Create($result->toArray(), 200, null);
+        // 获取参数并按照规则过滤
+        $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
+        // search_keys转数组
+        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
+
+        //验证参数
+        try {
+            validate(ApiIndexValidate::class)
+                ->batch(true)
+                ->check($params);
+        } catch (ValidateException $e) {
+            // 验证失败 输出错误信息
+            $error = $e->getError();
+            return Export::Create($error, 400, '参数错误');
         }
-        return Export::Create([], 400, '查询失败');
+
+        //调用服务
+        $result = $this->CardsService->newList($params, $this->JWT_SESSION['uid']);
+        //返回结果
+        return Export::Create($result['data'], 200, null);
     }
 
     //创建卡片
@@ -80,7 +109,7 @@ class Cards extends Base
 
         //调用服务
         $result = CommentsService::createComment($params);
-        
+
         //返回结果
         if ($this->SYSTEM_CONFIG['Comments']['Approve']) {
             return Export::Create([], 201, null);

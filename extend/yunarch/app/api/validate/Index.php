@@ -13,14 +13,15 @@ class Index extends Validate
             'normal' => [
                 'page',
                 'list_rows',
-                'search_value',
                 'search_keys',
                 'order_desc',
                 'order_key',
             ],
             'require' => false,
             'nonNull' => false,
-            'toNull' => false,
+            'toNull' => [
+                'search_value'
+            ],
         ]
     ];
 
@@ -53,10 +54,10 @@ class Index extends Validate
 
     protected function searchKey($value, $rule, $data = [])
     {
-        // 指定字段时，搜索值不能为空
-        if (!isset($data['search_value'])) {
-            return '搜索内容不能为空';
-        }
+        // 指定字段时，搜索值不能为空（问题不能查询空值）
+        // if (!isset($data['search_value'])) {
+        //     return '搜索内容不能为空';
+        // }
         if (!is_array($value)) {
             return '搜索字段格式错误';
         }
