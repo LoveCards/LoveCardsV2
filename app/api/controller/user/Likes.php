@@ -6,10 +6,10 @@ use app\common\Export;
 
 use app\api\service\Likes as LikesService;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 use think\facade\Request;
 
-class Likes extends Base
+class Likes extends BaseController
 {
     //列表
     public function list()

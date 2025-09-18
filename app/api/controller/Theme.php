@@ -8,14 +8,13 @@ use app\common\File;
 use app\common\Theme as CommonTheme;
 use app\common\Common;
 use app\common\Export;
-use app\index\BaseController;
 use think\facade\Config;
 
 use app\common\ConfigFacade;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 
-class Theme extends Base
+class Theme extends BaseController
 {
     function Config()
     {

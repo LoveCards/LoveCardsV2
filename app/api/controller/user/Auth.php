@@ -18,9 +18,9 @@ use jwt\Jwt;
 use email\Email;
 use captcha\Code;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 
-class Auth extends Base
+class Auth extends BaseController
 {
     /**
      * 生成账号

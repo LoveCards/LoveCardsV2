@@ -13,9 +13,9 @@ use app\common\Theme;
 use app\common\Common;
 use app\common\ConfigFacade;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 
-class System extends Base
+class System extends BaseController
 {
 
     public function themes()

@@ -2,41 +2,31 @@
 
 namespace app\api\controller\admin;
 
-use think\facade\Request;
-use think\exception\ValidateException;
-
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
-use yunarch\utils\src\ValidateExtend;
-use yunarch\validate\ModelList as ModelListValidate;
 use yunarch\validate\Common as CommonValidate;
 
 use app\common\Export;
 
-use \app\api\controller\Base;
+use \app\api\controller\BaseController;
+use app\api\controller\Params;
 
-
-class Users extends Base
+class Users extends BaseController
 {
-    //基础分页数据
-    public function Index(UsersService $UsersService, ValidateExtend $ValidateExtend)
-    {
-        // 获取参数并按照规则过滤
-        $params = $ValidateExtend->sceneFilter(Request::param(), ModelListValidate::$all_scene['Defult']);
-        // search_keys转数组
-        $params = $ValidateExtend->paramsJsonToArray('search_keys', $params['pass']);
+    var $Params;
 
-        //验证参数
-        try {
-            validate(ModelListValidate::class)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
+    public function __construct()
+    {
+        parent::__construct();
+        $this->Params = new Params();
+    }
+
+    //基础分页数据
+    public function Index(UsersService $UsersService)
+    {
+        //获取过滤参数
+        $params = $this->Params->IndexParams();
         //调用服务
         $lDef_Result = $UsersService->Index($params);
         //返回结果
@@ -47,7 +37,7 @@ class Users extends Base
     public function Patch()
     {
         //获取参数
-        $params = $this->getParams(UsersValidate::class, UsersValidate::$all_scene['admin']['patch']);
+        $params = $this->Params->getParams(UsersValidate::class, UsersValidate::$all_scene['admin']['patch']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -71,7 +61,7 @@ class Users extends Base
     public function Delete()
     {
         //获取参数
-        $params = $this->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -86,7 +76,7 @@ class Users extends Base
     //批量操作
     public function BatchOperate()
     {
-        $params = $this->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }

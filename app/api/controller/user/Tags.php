@@ -6,9 +6,9 @@ use app\api\service\Tags as TagsService;
 
 use app\common\Export;
 
-use \app\api\controller\Base;
+use \app\api\controller\BaseController;
 
-class Tags extends Base
+class Tags extends BaseController
 {
 
     //获取-GET
