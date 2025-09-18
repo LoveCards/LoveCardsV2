@@ -2,9 +2,6 @@
 
 namespace app\api\controller\admin;
 
-use think\facade\Request;
-use think\exception\ValidateException;
-
 use app\api\service\Tags as TagsService;
 use app\api\validate\Tags as TagsValidate;
 

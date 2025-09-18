@@ -2,17 +2,11 @@
 
 namespace app\api\controller;
 
-//thinkphp
-use think\facade\Request;
-use think\exception\ValidateException;
-
 //旧的
-use app\common\Export;
 use app\common\ConfigFacade;
 
 //yunarch
 use yunarch\utils\src\ValidateRuleExtend; // 通用验证规则
-use yunarch\validate\Common as ApiCommonValidate;
 
 class BaseController
 {
