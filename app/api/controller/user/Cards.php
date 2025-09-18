@@ -22,28 +22,23 @@ use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
 use yunarch\validate\ModelList as ApiIndexValidate;
 use yunarch\app\validate\Common as ApiCommonValidate;
 
-use app\api\controller\Base;
-
-class Cards extends Base
+use app\api\controller\BaseController;
+use app\api\controller\Params;
+class Cards extends BaseController
 {
+    var $Params;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->Params = new Params();
+    }
+
     public function list(CardsService $CardsService)
     {
-        // 获取参数并按照规则过滤
-        $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
-        // search_keys转数组
-        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
 
-        //验证参数
-        try {
-            validate(ApiIndexValidate::class)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
-
+        //获取过滤参数
+        $params = $this->Params->IndexParams();
         //调用服务
         $result = $CardsService->newList($params, $this->JWT_SESSION['uid']);
         //返回结果
@@ -54,7 +49,7 @@ class Cards extends Base
     public function createCard()
     {
         //获取参数
-        $params = $this->getParams(CardsValidate::class, CardsValidate::$all_scene['user']['create']);
+        $params = $this->Params->getParams(CardsValidate::class, CardsValidate::$all_scene['user']['create']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -88,7 +83,7 @@ class Cards extends Base
     public function createComment()
     {
         //获取参数
-        $params = $this->getParams(CommentsValidate::class, CommentsValidate::$all_scene['user']['create']);
+        $params = $this->Params->getParams(CommentsValidate::class, CommentsValidate::$all_scene['user']['create']);
         if (gettype($params) == 'object') {
             return $params;
         }

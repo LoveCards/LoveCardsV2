@@ -17,32 +17,26 @@ use app\common\Export;
 use app\common\BackEnd;
 
 //yunarch框架相关
-use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
-use yunarch\validate\ModelList as ApiIndexValidate;
-use yunarch\app\validate\Common as ApiCommonValidate;
+use yunarch\validate\Common as CommonValidate;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
+use app\api\controller\Params;
 
-class Cards extends Base
+class Cards extends BaseController
 {
+    var $Params;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->Params = new Params();
+    }
+
     //基础分页数据
     public function Index(CardsService $CardsService)
     {
-        // 获取参数并按照规则过滤
-        $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
-        // search_keys转数组
-        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
-
-        //验证参数
-        try {
-            validate(ApiIndexValidate::class)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
+        //获取过滤参数
+        $params = $this->Params->IndexParams();
         //调用服务
         $result = $CardsService->newList($params);
         //返回结果
@@ -53,7 +47,7 @@ class Cards extends Base
     public function Get()
     {
         //获取参数
-        $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -68,7 +62,7 @@ class Cards extends Base
     public function Patch()
     {
         //获取参数
-        $params = $this->getParams(CardsValidate::class, CardsValidate::$all_scene['admin']['patch']);
+        $params = $this->Params->getParams(CardsValidate::class, CardsValidate::$all_scene['admin']['patch']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -83,7 +77,7 @@ class Cards extends Base
     public function Delete()
     {
         //获取参数
-        $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -98,7 +92,7 @@ class Cards extends Base
     public function BatchOperate()
     {
 
-        $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['BatchOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }

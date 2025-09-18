@@ -14,9 +14,9 @@ use app\api\validate\Upload as UploadValidate;
 //use think\exception\ValidateException;
 //use app\common\Base as CommonBase;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 
-class Upload extends Base
+class Upload extends BaseController
 {
     //上传图片-POST 这个api要替换掉的
     // protected function Image()

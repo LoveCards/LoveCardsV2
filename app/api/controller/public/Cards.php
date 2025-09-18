@@ -15,9 +15,9 @@ use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
 use yunarch\validate\ModelList as ApiIndexValidate;
 use yunarch\app\validate\Common as ApiCommonValidate;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 
-class Cards extends Base
+class Cards extends BaseController
 {
     protected $CardsService;
 

@@ -14,15 +14,16 @@ use app\common\ConfigFacade;
 use yunarch\utils\src\ValidateRuleExtend; // 通用验证规则
 use yunarch\validate\Common as ApiCommonValidate;
 
-class Base
+class BaseController
 {
     //基础参数
     var $SESSION;
     var $JWT_SESSION;
     var $SYSTEM_CONFIG;
 
-    function __construct(ValidateRuleExtend $ValidateRuleExtend)
+    function __construct()
     {
+        $ValidateRuleExtend = new ValidateRuleExtend;
         $ValidateRuleExtend->maker(); // 加载验证规则到全局
 
         $this->JWT_SESSION = request()->JwtData; //JWT SESSION
@@ -33,35 +34,6 @@ class Base
         ];
 
         $this->SYSTEM_CONFIG = ConfigFacade::mArrayGetMasterConfig();
-    }
-
-    /**
-     * 通用获取验证并过滤
-     *
-     * @param string 对应的验证类
-     * @param array 对应的验证场景
-     * @return array|object
-     */
-    public function getParams($ValidateClass, $scene)
-    {
-        // 获取参数并按照规则过滤
-        $result = ApiCommonValidate::sceneFilter(Request::param(), $scene);
-
-        //验证参数
-        try {
-            //场景参数验证
-            $params = ApiCommonValidate::sceneMessage($result, $ValidateClass);
-            //参数验证
-            validate($ValidateClass)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
-
-        return $params;
     }
 
     /**

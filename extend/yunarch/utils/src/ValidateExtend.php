@@ -76,11 +76,11 @@ class ValidateExtend
     /**
      * 验证场景消息
      *
-     * @param array $filterParams 
+     * @param array $filterParams 前端传入参数集
      * @param string $validateClass 
      * @return array
      */
-    public function sceneMessage(array $filterParams, $validateClass = self::class): array
+    public function sceneMessage(array $filterParams, $validateClass): array
     {
         $result = [];
         // 遍历过滤后的参数，检查是否有必选字段未满足

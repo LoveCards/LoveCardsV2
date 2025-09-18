@@ -13,9 +13,9 @@ use app\api\validate\Comments as CommentsValidate;
 //旧的
 use app\common\Export;
 
-use app\api\controller\Base;
+use app\api\controller\BaseController;
 
-class Comments extends Base
+class Comments extends BaseController
 {
     //列表
     public function index()
