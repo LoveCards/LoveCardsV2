@@ -10,12 +10,12 @@ use yunarch\utils\src\ValidateRuleExtend;
 class Cards extends Validate
 {
 
-    var $validateRule;
+    var $ValidateRuleExtend;
 
-    function __construct(ValidateRule $ValidateRule)
+    function __construct(ValidateRuleExtend $ValidateRuleExtend)
     {
         parent::__construct();
-        $this->validateRule = $ValidateRule;
+        $this->ValidateRuleExtend = $ValidateRuleExtend;
     }
 
     //参数过滤场景
@@ -139,13 +139,13 @@ class Cards extends Validate
     {
         $config = Config::get('master.Cards.PictureLimit');
         $decoded = json_decode($value, true);
-        return $this->validateRule->checkArrayLength($decoded, $config);
+        return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }
     //验证标签个数
     protected function tagsLength($value)
     {
         $config = Config::get('master.Cards.TagLimit');
         $decoded = json_decode($value, true);
-        return $this->validateRule->checkArrayLength($decoded, $config);
+        return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }
 }

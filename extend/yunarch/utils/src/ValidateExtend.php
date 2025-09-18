@@ -14,7 +14,7 @@ class ValidateExtend
      * @param array $specifications 场景标准参数
      * @return array
      */
-    static public function sceneFilter($params, $specifications)
+    public function sceneFilter($params, $specifications)
     {
         $result = [
             'pass' => [],
@@ -80,7 +80,7 @@ class ValidateExtend
      * @param string $validateClass 
      * @return array
      */
-    static public function sceneMessage(array $filterParams, $validateClass = self::class): array
+    public function sceneMessage(array $filterParams, $validateClass = self::class): array
     {
         $result = [];
         // 遍历过滤后的参数，检查是否有必选字段未满足
@@ -120,7 +120,7 @@ class ValidateExtend
      * @param array $params 请求参数数组，包含所有需要处理的参数
      * @return array 处理后的参数数组，其中指定键的值可能已被转换或移除
      */
-    static public function paramsJsonToArray(string $keyName, array $params): array
+    public function paramsJsonToArray(string $keyName, array $params): array
     {
         // 检查指定的键是否存在于参数数组中
         if (array_key_exists($keyName, $params)) {

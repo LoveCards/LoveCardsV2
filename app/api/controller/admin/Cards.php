@@ -18,7 +18,7 @@ use app\common\BackEnd;
 
 //yunarch框架相关
 use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
-use yunarch\app\validate\ModelList as ApiIndexValidate;
+use yunarch\validate\ModelList as ApiIndexValidate;
 use yunarch\app\validate\Common as ApiCommonValidate;
 
 use app\api\controller\Base;

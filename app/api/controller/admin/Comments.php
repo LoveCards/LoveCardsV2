@@ -11,7 +11,7 @@ use app\api\service\Comments as CommentsService;
 use app\common\Export;
 
 use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
-use yunarch\app\validate\ModelList as ApiIndexValidate;
+use yunarch\validate\ModelList as ApiIndexValidate;
 use yunarch\app\validate\Common as ApiCommonValidate;
 
 use app\api\controller\Base;

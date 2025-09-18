@@ -20,9 +20,9 @@ class ExceptionHandle extends Handle
         // }
 
         // 404接管
-        if ($e instanceof HttpException && $e->getStatusCode() == 404) {
-            return redirect('/index/404');
-        }
+        // if ($e instanceof HttpException && $e->getStatusCode() == 404) {
+        //     return redirect('/index/404');
+        // }
 
         // 其他错误交给系统处理
         return parent::render($request, $e);

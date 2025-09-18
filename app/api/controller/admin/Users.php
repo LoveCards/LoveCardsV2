@@ -8,11 +8,9 @@ use think\exception\ValidateException;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
-use yunarch\app\api\utils\Common as UtilsCommon;
-use yunarch\app\api\controller\Utils as ApiControllerUtils;
-use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
-use yunarch\app\validate\ModelList as ApiIndexValidate;
-use yunarch\app\validate\Common as ApiCommonValidate;
+use yunarch\utils\src\ValidateExtend;
+use yunarch\validate\ModelList as ModelListValidate;
+use yunarch\validate\Common as CommonValidate;
 
 use app\common\Export;
 
@@ -22,16 +20,16 @@ use \app\api\controller\Base;
 class Users extends Base
 {
     //基础分页数据
-    public function Index(UsersService $UsersService)
+    public function Index(UsersService $UsersService, ValidateExtend $ValidateExtend)
     {
         // 获取参数并按照规则过滤
-        $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
+        $params = $ValidateExtend->sceneFilter(Request::param(), ModelListValidate::$all_scene['Defult']);
         // search_keys转数组
-        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
+        $params = $ValidateExtend->paramsJsonToArray('search_keys', $params['pass']);
 
         //验证参数
         try {
-            validate(ApiIndexValidate::class)
+            validate(ModelListValidate::class)
                 ->batch(true)
                 ->check($params);
         } catch (ValidateException $e) {
@@ -73,7 +71,7 @@ class Users extends Base
     public function Delete()
     {
         //获取参数
-        $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['SingleOperate']);
+        $params = $this->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -88,7 +86,7 @@ class Users extends Base
     //批量操作
     public function BatchOperate()
     {
-        $params = $this->getParams(ApiCommonValidate::class, ApiCommonValidate::$all_scene['BatchOperate']);
+        $params = $this->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
         if (gettype($params) == 'object') {
             return $params;
         }
