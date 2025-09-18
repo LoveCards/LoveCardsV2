@@ -1,6 +1,6 @@
 <?php
 
-namespace yunarch\app\validate;
+namespace yunarch\validate;
 
 use think\Validate;
 use think\exception\ValidateException;
