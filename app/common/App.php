@@ -44,20 +44,20 @@ class App extends Facade
     }
 
     //检查PID与AID是否存在
-    protected static function mArrayCheckAidAndPid($tReq_Aid, $tReq_Pid): array
-    {
-        //获取并验证PID
-        $tDef_AppTableMapGetValue = self::mArrayGetAppTableMapValue($tReq_Aid);
-        if (!$tDef_AppTableMapGetValue['status']) {
-            return Common::mArrayEasyReturnStruct('aid不存在', false);
-        }
-        $tDef_AppTableName = $tDef_AppTableMapGetValue['data'];
+    // protected static function mArrayCheckAidAndPid($tReq_Aid, $tReq_Pid): array
+    // {
+    //     //获取并验证PID
+    //     $tDef_AppTableMapGetValue = self::mArrayGetAppTableMapValue($tReq_Aid);
+    //     if (!$tDef_AppTableMapGetValue['status']) {
+    //         return Common::mArrayEasyReturnStruct('aid不存在', false);
+    //     }
+    //     $tDef_AppTableName = $tDef_AppTableMapGetValue['data'];
 
-        //查询PID是否存在
-        if (!Db::table($tDef_AppTableName)->where('id', $tReq_Pid)->find()) {
-            return Common::mArrayEasyReturnStruct('PID对应CID不存在', false);
-        }
+    //     //查询PID是否存在
+    //     if (!Db::table($tDef_AppTableName)->where('id', $tReq_Pid)->find()) {
+    //         return Common::mArrayEasyReturnStruct('PID对应CID不存在', false);
+    //     }
 
-        return Common::mArrayEasyReturnStruct('成功');
-    }
+    //     return Common::mArrayEasyReturnStruct('成功');
+    // }
 }

@@ -3,11 +3,7 @@
 namespace app\common;
 
 use think\Facade;
-use think\facade\Db;
 use think\facade\Cookie;
-use think\facade\View;
-
-use app\common\CheckClass;
 
 use jwt\Jwt;
 
@@ -96,70 +92,5 @@ class FrontEnd extends Facade
         } else {
             return Common::mArrayEasyReturnStruct($lDef_GetNowUserAllDataResult['msg'], false);
         }
-    }
-
-    /**
-     * @description: 通用简单分页参数输出
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-06 16:10:06
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $lDef_CommonNowList
-     * @param {*} $tDef_CommonNowListEasyPagingComponent
-     * @param {*} $tDef_CommonNowListMax
-     */
-    public static function mObjectEasyAssignCommonNowList($lDef_CommonNowList, $tDef_CommonNowListEasyPagingComponent, $tDef_CommonNowListMax)
-    {
-        View::assign([
-            'CommonNowList'  => $lDef_CommonNowList,
-            'CommonNowListEasyPagingComponent'  => $tDef_CommonNowListEasyPagingComponent,
-            'CommonNowListMax'  => $tDef_CommonNowListMax
-        ]);
-    }
-
-    /**
-     * @description: 卡片简单分页参数输出
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-06 16:10:24
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $lDef_CardsList
-     * @param {*} $tDef_CardsListEasyPagingComponent
-     * @param {*} $tDef_CardsListMax
-     */
-    public static function mObjectEasyAssignCards($lDef_CardsList, $tDef_CardsListEasyPagingComponent, $tDef_CardsListMax)
-    {
-        //赋值Cards相关变量;
-        View::assign([
-            'CardsList'  => $lDef_CardsList,
-            'CardsListEasyPagingComponent'  => $tDef_CardsListEasyPagingComponent,
-            'CardsListMax'  => $tDef_CardsListMax
-        ]);
-    }
-
-    /**
-     * @description: 标签简单分页参数输出
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-06 16:10:30
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $lDef_AdminMethod
-     */
-    public static function mObjectEasyGetAndAssignCardsTags($lDef_AdminMethod = false)
-    {
-        //获取并赋值CardsTag相关变量
-        if ($lDef_AdminMethod) {
-            $lDef_Result = Db::table('tags')->select()->toArray();
-        } else {
-            $lDef_Result = Db::table('tags')->where('status', 0)->select()->toArray();
-        }
-
-        View::assign([
-            'TagsListJson' => json_encode($lDef_Result),
-            'TagsList' => $lDef_Result
-        ]);
     }
 }
