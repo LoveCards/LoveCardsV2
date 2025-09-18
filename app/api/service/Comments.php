@@ -9,10 +9,19 @@ use app\common\Common;
 use app\api\model\Comments as CommentsModel;
 use app\api\model\Cards as CardsModel;
 
-use yunarch\app\api\service\IndexUtils;
+use yunarch\utils\src\ModelList;
 
 class Comments
 {
+
+    protected $CommentsModel;
+
+    public function __construct(CommentsModel $CommentsModel)
+    {
+        $this->CommentsModel = $CommentsModel;
+    }
+
+
     //更新指定ID的指定字段
     static public function updata($context, $data, $where = [], $allowField = [])
     {
@@ -67,14 +76,23 @@ class Comments
         }
     }
 
-    static public function Index($params)
+    // static public function Index($params)
+    // {
+    //     $index = new (CommentsModel::class, $params);
+    //     $result = $index->common('content', [], true);
+    //     if ($result) {
+    //         return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+    //     }
+    //     return Common::mArrayEasyReturnStruct('查询失败', false);
+    // }
+
+    public function newList(array $params, int $user_id = -1)
     {
-        $index = new IndexUtils(CommentsModel::class, $params);
-        $result = $index->common('content', [], true);
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-        }
-        return Common::mArrayEasyReturnStruct('查询失败', false);
+        $params['search_default_key'] = 'content';
+        $cpmments_list = new ModelList($this->CommentsModel);
+        $result = $cpmments_list->getPaginate($params);
+
+        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
     }
 
     /**

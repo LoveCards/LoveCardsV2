@@ -18,24 +18,15 @@ use app\common\Export;
 
 use think\exception\ValidateException;
 
-use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
-use yunarch\app\api\validate\Index as ApiIndexValidate;
-use yunarch\app\api\validate\Common as ApiCommonValidate;
+use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
+use yunarch\app\validate\ModelList as ApiIndexValidate;
+use yunarch\app\validate\Common as ApiCommonValidate;
 
 use app\api\controller\Base;
 
 class Cards extends Base
 {
-
-    protected $CardsService;
-
-    public function __construct(CardsService $CardsService)
-    {
-        parent::__construct(); //始化父类
-        $this->CardsService = $CardsService;
-    }
-
-    public function list()
+    public function list(CardsService $CardsService)
     {
         // 获取参数并按照规则过滤
         $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
@@ -54,7 +45,7 @@ class Cards extends Base
         }
 
         //调用服务
-        $result = $this->CardsService->newList($params, $this->JWT_SESSION['uid']);
+        $result = $CardsService->newList($params, $this->JWT_SESSION['uid']);
         //返回结果
         return Export::Create($result['data'], 200, null);
     }

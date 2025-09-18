@@ -7,9 +7,6 @@ use think\facade\Request;
 use app\common\Common;
 
 use app\api\model\Images as ImagesModel;
-use app\api\service\Exception;
-
-use yunarch\app\api\service\IndexUtils;
 
 class Images
 {

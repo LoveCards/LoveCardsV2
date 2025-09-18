@@ -1,11 +1,11 @@
 <?php
 
-namespace yunarch\app\api\validate;
+namespace yunarch\app\validate;
 
 use think\Validate;
 
 //通用超级分页查询验证类
-class Index extends Validate
+class ModelList extends Validate
 {
     //参数过滤场景
     static $all_scene = [

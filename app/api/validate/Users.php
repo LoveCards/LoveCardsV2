@@ -3,7 +3,6 @@
 namespace app\api\validate;
 
 use think\Validate;
-use yunarch\app\api\validate\RuleUtils;
 
 class Users extends Validate
 {

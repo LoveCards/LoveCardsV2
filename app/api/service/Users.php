@@ -7,10 +7,16 @@ use app\api\model\Users as UsersModel;
 
 use app\common\Common;
 
-use yunarch\app\api\service\IndexUtils;
+use yunarch\utils\src\ModelList;
 
 class Users
 {
+    protected $UsersModel;
+
+    public function __construct(UsersModel $UsersModel)
+    {
+        $this->UsersModel = $UsersModel;
+    }
 
     /**
      * 字段反转
@@ -147,14 +153,15 @@ class Users
      *
      * @return void
      */
-    public static function Index($params)
+    public function Index($params)
     {
-        $index = new IndexUtils(UsersModel::class, $params);
-        $result = $index->common('username', ['password'], true);
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-        }
-        return Common::mArrayEasyReturnStruct('列表查询失败', false);
+
+        $params['search_default_key'] = 'username';
+        $params['withoutField'] = ['password'];
+        $cards_list = new ModelList($this->UsersModel);
+        $result = $cards_list->getPaginate($params);
+
+        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
     }
 
     /**

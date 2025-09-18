@@ -10,9 +10,9 @@ use app\api\validate\Users as UsersValidate;
 
 use yunarch\app\api\utils\Common as UtilsCommon;
 use yunarch\app\api\controller\Utils as ApiControllerUtils;
-use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
-use yunarch\app\api\validate\Index as ApiIndexValidate;
-use yunarch\app\api\validate\Common as ApiCommonValidate;
+use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
+use yunarch\app\validate\ModelList as ApiIndexValidate;
+use yunarch\app\validate\Common as ApiCommonValidate;
 
 use app\common\Export;
 
@@ -22,7 +22,7 @@ use \app\api\controller\Base;
 class Users extends Base
 {
     //基础分页数据
-    public function Index()
+    public function Index(UsersService $UsersService)
     {
         // 获取参数并按照规则过滤
         $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
@@ -40,7 +40,7 @@ class Users extends Base
             return Export::Create($error, 400, '参数错误');
         }
         //调用服务
-        $lDef_Result = UsersService::Index($params);
+        $lDef_Result = $UsersService->Index($params);
         //返回结果
         return Export::Create($lDef_Result['data'], 200, null);
     }

@@ -8,10 +8,17 @@ use app\common\Common;
 use app\api\model\Tags as TagsModel;
 use app\api\model\TagsMap as TagsMapModel;
 
-use yunarch\app\api\service\IndexUtils;
+use yunarch\utils\src\ModelList;
 
 class Tags
 {
+
+    protected $TagsModel;
+
+    public function __construct(TagsModel $TagsModel)
+    {
+        $this->TagsModel = $TagsModel;
+    }
 
     /**
      * 字段反转
@@ -49,10 +56,12 @@ class Tags
      *
      * @return void
      */
-    static public function noPaginateIndex($params)
+    public function noPaginateIndex($params)
     {
-        $index = new IndexUtils(TagsModel::class, $params);
-        $result = $index->noPaginate('name', [], true);
+        $params['search_default_key'] = 'name';
+        $tags_list = new ModelList($this->TagsModel);
+        $result = $tags_list->getNoPaginate($params);
+
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
@@ -64,10 +73,12 @@ class Tags
      *
      * @return void
      */
-    static public function Index($params)
+    public function Index($params)
     {
-        $index = new IndexUtils(TagsModel::class, $params);
-        $result = $index->common('name', [], true);
+        $params['search_default_key'] = 'name';
+        $tags_list = new ModelList($this->TagsModel);
+        $result = $tags_list->getPaginate($params);
+
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
         }
