@@ -12,10 +12,10 @@ class Cards extends Validate
 
     var $ValidateRuleExtend;
 
-    function __construct(ValidateRuleExtend $ValidateRuleExtend)
+    function __construct()
     {
         parent::__construct();
-        $this->ValidateRuleExtend = $ValidateRuleExtend;
+        $this->ValidateRuleExtend = new ValidateRuleExtend();
     }
 
     //参数过滤场景
