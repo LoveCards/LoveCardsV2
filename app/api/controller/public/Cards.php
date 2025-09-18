@@ -11,9 +11,9 @@ use app\common\Export;
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
-use yunarch\app\api\validate\Index as ApiIndexValidate;
-use yunarch\app\api\validate\Common as ApiCommonValidate;
+use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
+use yunarch\app\validate\ModelList as ApiIndexValidate;
+use yunarch\app\validate\Common as ApiCommonValidate;
 
 use app\api\controller\Base;
 
@@ -23,6 +23,7 @@ class Cards extends Base
 
     public function __construct(CardsService $CardsService)
     {
+        parent::__construct();
         $this->CardsService = $CardsService;
     }
 

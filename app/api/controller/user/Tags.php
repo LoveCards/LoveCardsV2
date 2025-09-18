@@ -12,7 +12,7 @@ class Tags extends Base
 {
 
     //获取-GET
-    public function noPaginateIndex()
+    public function noPaginateIndex(TagsService $TagsService)
     {
         $params = [
             'search_value' => 0,
@@ -20,7 +20,7 @@ class Tags extends Base
         ];
 
         //调用服务
-        $lDef_Result = TagsService::noPaginateIndex($params);
+        $lDef_Result = $TagsService->noPaginateIndex($params);
         //返回结果
         return Export::Create($lDef_Result['data'], 200, null);
     }

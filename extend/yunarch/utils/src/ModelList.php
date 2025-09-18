@@ -2,7 +2,6 @@
 
 namespace yunarch\utils\src;
 
-use BcMath\Number;
 use think\Model;
 
 /**
@@ -39,6 +38,16 @@ class ModelList
     /**
      * 设置模型
      * @param array $params 全部查询参数
+     * @param string $params['search_default_key'] 默认搜索字段
+     * @param array $params['where'] 额外查询条件
+     * @param array $params['withoutField'] 排除字段
+     * @param array $params['search_keys'] 搜索字段
+     * @param string|null $params['search_value'] 搜索值
+     * @param int $params['search_like'] 搜索模式 0前缀匹配|1后缀匹配|2模糊匹配
+     * @param string $params['order_key'] 排序字段
+     * @param bool $params['order_desc'] 排序方式，true为降序，false为升序
+     * @param int $params['page'] 页码
+     * @param int $params['list_rows'] 每页记录数
      * @return object 返回当前对象，支持链式调用
      */
     public function getPaginate(array $params): object

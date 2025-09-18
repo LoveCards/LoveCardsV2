@@ -5,11 +5,18 @@ namespace app\api\validate;
 use think\Validate;
 use think\facade\Config;
 
-
-use yunarch\app\api\validate\RuleUtils;
+use yunarch\utils\src\ValidateRuleExtend;
 
 class Cards extends Validate
 {
+
+    var $validateRule;
+
+    function __construct(ValidateRule $ValidateRule)
+    {
+        parent::__construct();
+        $this->validateRule = $ValidateRule;
+    }
 
     //参数过滤场景
     static public $all_scene = [
@@ -132,13 +139,13 @@ class Cards extends Validate
     {
         $config = Config::get('master.Cards.PictureLimit');
         $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config);
+        return $this->validateRule->checkArrayLength($decoded, $config);
     }
     //验证标签个数
     protected function tagsLength($value)
     {
         $config = Config::get('master.Cards.TagLimit');
         $decoded = json_decode($value, true);
-        return RuleUtils::checkArrayLength($decoded, $config);
+        return $this->validateRule->checkArrayLength($decoded, $config);
     }
 }

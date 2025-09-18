@@ -11,8 +11,8 @@ use app\common\Export;
 use app\common\ConfigFacade;
 
 //yunarch
-use yunarch\app\api\validate\RuleUtils;
-use yunarch\app\api\validate\Common as ApiCommonValidate;
+use yunarch\utils\src\ValidateRuleExtend; // 通用验证规则
+use yunarch\app\validate\Common as ApiCommonValidate;
 
 class Base
 {
@@ -21,9 +21,9 @@ class Base
     var $JWT_SESSION;
     var $SYSTEM_CONFIG;
 
-    function __construct()
+    function __construct(ValidateRule $ValidateRule)
     {
-        new RuleUtils(); // 确保加载通用验证类
+        $ValidateRule->maker(); // 加载验证规则到全局
 
         $this->JWT_SESSION = request()->JwtData; //JWT SESSION
 

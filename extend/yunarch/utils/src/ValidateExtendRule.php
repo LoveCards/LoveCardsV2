@@ -1,39 +1,36 @@
 <?php
 
-namespace yunarch\app\api\validate;
+namespace yunarch\utils\src;
 
 use think\Validate;
 
-use yunarch\app\api\utils\Json as ApiUtilsJson;
-
 //验证规则工具类
-class RuleUtils
+class ValidateRuleExtend
 {
-
-    function __construct()
+    // 加载验证规则到全局
+    public function maker()
     {
-        // 自动加载验证规则到全局
         Validate::maker(function ($validate) {
             $validate->extend('password', function ($value) {
-                return self::password($value);
+                return $this->password($value);
             });
             $validate->extend('arrayJson', function ($value) {
-                return self::arrayJson($value);
+                return $this->arrayJson($value);
             });
             $validate->extend('arrayOrIntJson', function ($value) {
-                return self::arrayOrIntJson($value);
+                return $this->arrayOrIntJson($value);
             });
             $validate->extend('checkArrayLength', function ($value, $rule) {
-                return self::arrayOrIntJson($value, $rule);
+                return $this->arrayOrIntJson($value, $rule);
             });
             $validate->extend('nonNull', function ($value) {
-                return self::nonNull($value);
+                return $this->nonNull($value);
             });
         });
     }
 
     // 通用密码验证规则
-    static public function password($value)
+    public function password($value)
     {
         // 密码包含大写字母、小写字母、数字或特殊字符中的至少一个
         if (!preg_match('/[A-Z]|[a-z]|\d|[@#$%^&+=!]/', $value)) {
@@ -42,28 +39,28 @@ class RuleUtils
         return true;
     }
     // 通用JSON->Array验证规则
-    static public function arrayJson($value)
+    public function arrayJson($value)
     {
         $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
-            return ApiUtilsJson::jsonTypePass($decoded, 'array');
+            return $this->jsonTypePass($decoded, 'array');
         } else {
             return false;
         }
     }
     // 通用JSON->Array||Integer验证规则
-    static public function arrayOrIntJson($value)
+    public function arrayOrIntJson($value)
     {
         $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
-            return (ApiUtilsJson::jsonTypePass($decoded, 'array') || ApiUtilsJson::jsonTypePass($decoded, 'Integer'));
+            return ($this->jsonTypePass($decoded, 'array') || $this->jsonTypePass($decoded, 'Integer'));
         } else {
             return false;
         }
     }
 
     // 验证数组长度
-    static public function checkArrayLength($value, $rule)
+    public function checkArrayLength($value, $rule)
     {
         $length = count($value);
         if ($length <= $rule) {
@@ -73,11 +70,31 @@ class RuleUtils
     }
 
     // 验证数组长度
-    static public function nonNull($value)
+    public function nonNull($value)
     {
         if (!empty($value)) {
             return true;
         }
         return false;
+    }
+
+    // json类型验证方法
+    private function jsonTypePass($value, $rule)
+    {
+        //可以解析为数组
+        if ($rule === 'array' && !is_array($value)) {
+            return false;
+        }
+        //其他
+        if ($rule === 'integer' && !is_int($value)) {
+            return false;
+        }
+        if ($rule === 'string' && !is_string($value)) {
+            return false;
+        }
+        if ($rule === 'bool' && !is_bool($value)) {
+            return false;
+        }
+        return true;
     }
 }

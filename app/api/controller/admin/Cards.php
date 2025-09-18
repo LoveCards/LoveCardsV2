@@ -17,16 +17,16 @@ use app\common\Export;
 use app\common\BackEnd;
 
 //yunarch框架相关
-use yunarch\app\api\controller\IndexUtils as ApiControllerIndexUtils;
-use yunarch\app\api\validate\Index as ApiIndexValidate;
-use yunarch\app\api\validate\Common as ApiCommonValidate;
+use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
+use yunarch\app\validate\ModelList as ApiIndexValidate;
+use yunarch\app\validate\Common as ApiCommonValidate;
 
 use app\api\controller\Base;
 
 class Cards extends Base
 {
     //基础分页数据
-    public function Index()
+    public function Index(CardsService $CardsService)
     {
         // 获取参数并按照规则过滤
         $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
@@ -44,7 +44,7 @@ class Cards extends Base
             return Export::Create($error, 400, '参数错误');
         }
         //调用服务
-        $result = CardsService::Index($params);
+        $result = $CardsService->newList($params);
         //返回结果
         return Export::Create($result['data'], 200, null);
     }
