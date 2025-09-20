@@ -3,59 +3,40 @@
 namespace app\api\controller\public;
 
 use app\api\service\Cards as CardsService;
-use app\api\service\Likes as LikesService;
-use app\api\service\Comments as CommentsService;
 
-use app\common\Export;
-
-use think\facade\Request;
-use think\exception\ValidateException;
-
-use yunarch\utils\src\ValidateExtend as ApiControllerIndexUtils;
-use yunarch\validate\ModelList as ApiIndexValidate;
-use yunarch\app\validate\Common as ApiCommonValidate;
+use app\api\controller\ApiResponse;
 
 use app\api\controller\BaseController;
 
+use app\api\controller\Params;
+
+use think\facade\Request;
+
 class Cards extends BaseController
 {
-    protected $CardsService;
+    var $Params;
 
-    public function __construct(CardsService $CardsService)
+    public function __construct()
     {
         parent::__construct();
-        $this->CardsService = $CardsService;
+        $this->Params = new Params();
     }
 
-    public function index()
+    public function index(CardsService $CardsService)
     {
-        // 获取参数并按照规则过滤
-        $params = ApiCommonValidate::sceneFilter(Request::param(), ApiIndexValidate::$all_scene['Defult']);
-        // search_keys转数组
-        $params = ApiControllerIndexUtils::paramsJsonToArray('search_keys', $params['pass']);
-
-        //验证参数
-        try {
-            validate(ApiIndexValidate::class)
-                ->batch(true)
-                ->check($params);
-        } catch (ValidateException $e) {
-            // 验证失败 输出错误信息
-            $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
-        }
-
+        //获取过滤参数
+        $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = $this->CardsService->newList($params, 1);
+        $result = $CardsService->newList($params);
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createSuccess($result['data']);
     }
 
-    public function hotList()
+    public function hotList(CardsService $CardsService)
     {
         //调用服务
-        $result = $this->CardsService->hotList();
+        $result = $CardsService->hotList();
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createSuccess($result['data']);
     }
 }

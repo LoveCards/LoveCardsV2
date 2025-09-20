@@ -1,4 +1,10 @@
 <?php
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2025-08-15 16:22:13
+ * @Email: 2903074366@qq.com
+ */
 
 namespace app\api\controller\user;
 
@@ -9,10 +15,11 @@ use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\Common;
-use app\common\Export;
 
 use captcha\Code;
 use email\Email;
+
+use app\api\controller\ApiResponse;
 
 class Info
 {
@@ -26,12 +33,12 @@ class Info
     {
         $tDef_Result = UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
         if ($tDef_Result['status']) {
-            return Export::Create(null, 200, null);
+            return ApiResponse::createNoCntent();
         }
 
         //错误返回
         $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
-        return Export::Create(null, 500, $lDef_ErrorMsg);
+        return ApiResponse::createError($lDef_ErrorMsg);
     }
 
     /**
@@ -54,15 +61,15 @@ class Info
             try {
                 $result = Email::SendCaptcha($code, $account);
             } catch (\Exception $e) {
-                return Export::Create(['邮件模块发生错误'], 500, '发送失败');
+                return ApiResponse::createError('发送失败', ['邮件模块发生错误']);
             }
             if ($result['status']) {
-                return Export::Create([$time . 's后失效'], 200);
+                return ApiResponse::createSuccess([$time . 's后失效']);
             } else {
-                return Export::Create([$result['msg']], 500, '发送失败');
+                return ApiResponse::createError('发送失败', [$result['msg']]);
             }
         } else {
-            return Export::Create($errorDetail, 500, '发送失败');
+            return ApiResponse::createError('发送失败', $errorDetail);
         }
     }
 
@@ -83,7 +90,7 @@ class Info
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $uservalidateerror = $e->getError();
-            return Export::Create($uservalidateerror, 400, '编辑失败');
+            return ApiResponse::createBadRequest('编辑失败', $uservalidateerror);
         }
     }
 
@@ -95,10 +102,10 @@ class Info
         $tDef_Result = UsersService::Get($context['uid'], ['id']);
 
         if ($tDef_Result['status']) {
-            return Export::Create($tDef_Result['data'], 200, null);
+            return ApiResponse::createSuccess($tDef_Result['data']);
         }
 
-        return Export::Create(null, 500, $tDef_Result['msg']);
+        return ApiResponse::createError($tDef_Result['msg']);
     }
 
     //编辑资料-Patch
@@ -136,7 +143,7 @@ class Info
         ];
 
         if (!$lDef_ParamData['password']) {
-            return Export::Create(['密码不可为空'], 400, '编辑失败');
+            return ApiResponse::createBadRequest('编辑失败', ['密码不可为空']);
         }
 
         $this->mObjectEasyTryCatchUsersValidate($lDef_ParamData);
@@ -158,7 +165,7 @@ class Info
 
         //验证码与邮箱校验
         if (!Code::CheckCaptcha($lDef_ParamData['email'], strtoupper(Request::param('captcha')), 'Info_BindEmailCaptcha')) {
-            return Export::Create(['验证码错误'], 400, '编辑失败');
+            return ApiResponse::createBadRequest('编辑失败', ['验证码错误']);
         };
 
         //验证邮箱格式

@@ -8,7 +8,8 @@ use yunarch\app\roles\facade\Roles;
 
 //定制部分
 use app\api\service\Users as UsersService;
-use app\common\Export;
+
+use app\api\controller\ApiResponse;
 
 class RolesCheck
 {
@@ -24,7 +25,7 @@ class RolesCheck
             $user_roles_id = json_decode($userData['data']->roles_id);
             //验证权限
             if (!Roles::checkIdBaseUrlPass($user_roles_id)) {
-                return Export::Create(null, 401, '权限不足');
+                return ApiResponse::createUnauthorized('权限不足');
             }
         }
 

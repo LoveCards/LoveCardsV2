@@ -5,7 +5,7 @@ namespace app\api\controller;
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use app\common\Export;
+use app\api\controller\ApiResponse;
 
 use yunarch\utils\src\ValidateExtend;
 use yunarch\validate\ModelList as ModelListValidate;
@@ -13,17 +13,6 @@ use yunarch\validate\Common as CommonValidate;
 
 class Params
 {
-    var $ValidateExtend;
-    var $CommonValidate;
-    var $ModelListValidate;
-
-    function __construct()
-    {
-        $this->ModelListValidate = new ModelListValidate();
-        $this->CommonValidate = new CommonValidate();
-
-        $this->ValidateExtend = new ValidateExtend();
-    }
 
     /**
      * 通用获取验证并过滤
@@ -32,15 +21,15 @@ class Params
      * @param array 对应的验证场景
      * @return array|object
      */
-    public function getParams($ValidateClass, $scene)
+    public function getParams($ValidateClass, $scene, $request_param = []): mixed
     {
         // 获取参数并按照规则过滤
-        $result = $this->ValidateExtend->sceneFilter(Request::param(), $scene);
+        $result = ValidateExtend::sceneFilter($request_param, $scene);
 
         //验证参数
         try {
             //场景参数验证
-            $params = $this->ValidateExtend->sceneMessage($result, $ValidateClass);
+            $params = ValidateExtend::sceneMessage($result, $ValidateClass);
             //参数验证
             validate($ValidateClass)
                 ->batch(true)
@@ -48,7 +37,7 @@ class Params
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
+            return ApiResponse::createBadRequest('参数错误', $error);
         }
 
         return $params;
@@ -59,12 +48,12 @@ class Params
      *
      * @return array|object
      */
-    public function IndexParams()
+    public function IndexParams($request_param = []): mixed
     {
         // 获取参数并按照规则过滤
-        $params = $this->ValidateExtend->sceneFilter(Request::param(), ModelListValidate::$all_scene['Defult']);
+        $params = ValidateExtend::sceneFilter($request_param, ModelListValidate::$all_scene['Defult']);
         // search_keys转数组
-        $params = $this->ValidateExtend->paramsJsonToArray('search_keys', $params['pass']);
+        $params = ValidateExtend::paramsJsonToArray('search_keys', $params['pass']);
 
         //验证参数
         try {
@@ -74,7 +63,7 @@ class Params
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
             $error = $e->getError();
-            return Export::Create($error, 400, '参数错误');
+            return ApiResponse::createBadRequest('参数错误', $error);
         }
 
         return $params;

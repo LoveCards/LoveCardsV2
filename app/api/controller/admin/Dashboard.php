@@ -9,7 +9,7 @@ use app\api\model\Cards as CardsModel;
 use app\api\model\Likes as LikesModel;
 use app\api\model\Comments as CommentsModel;
 
-use app\common\Export;
+use app\api\controller\ApiResponse;
 
 use app\common\Common;
 
@@ -110,6 +110,6 @@ class Dashboard
             'notice' => $notice,
         ];
 
-        return Export::Create($result);
+        return ApiResponse::createSuccess($result);
     }
 }

@@ -2,12 +2,10 @@
 //该类仅供中间件使用
 namespace app\common;
 
-use app\common\Common;
-use app\common\Export;
 use app\common\BackEnd;
 use app\common\FrontEnd;
 
-use think\facade\Cookie;
+use app\api\controller\ApiResponse;
 
 class CheckClass
 {
@@ -28,12 +26,12 @@ class CheckClass
         $TDef_JwtData = request()->JwtData;
         //验证身份并返回数据
         if (!array_key_exists('aid', $TDef_JwtData)) {
-            return Export::Create(null, 401, '身份验证失败');
+            return ApiResponse::createUnauthorized('身份验证失败');
         }
         $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid']);
 
         if (!$this->attrLDefAdminAllData['status']) {
-            return Export::Create(null, 401, $this->attrLDefAdminAllData['msg']);
+            return ApiResponse::createUnauthorized($this->attrLDefAdminAllData['msg']);
         }
         $this->attrLDefAdminAllData = $this->attrLDefAdminAllData['data'];
     }
@@ -47,7 +45,7 @@ class CheckClass
     {
         //权限验证
         if ($this->attrLDefAdminAllData['power'] != 0) {
-            return Export::Create(['power' => 1], 401, '权限不足');
+            return ApiResponse::createUnauthorized('权限不足', ['power' => 1]);
         }
     }
 

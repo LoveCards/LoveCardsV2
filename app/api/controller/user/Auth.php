@@ -2,7 +2,6 @@
 
 namespace app\api\controller\user;
 
-use think\Request as TypeRequest;
 use think\facade\Request;
 use think\exception\ValidateException;
 
@@ -10,8 +9,6 @@ use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\Common;
-use app\common\Export;
-use app\common\BackEnd;
 use app\common\ConfigFacade;
 
 use jwt\Jwt;
@@ -19,6 +16,8 @@ use email\Email;
 use captcha\Code;
 
 use app\api\controller\BaseController;
+
+use app\api\controller\ApiResponse;
 
 class Auth extends BaseController
 {
@@ -75,7 +74,7 @@ class Auth extends BaseController
     //token校验
     public function Check()
     {
-        return Export::Create(null, 200, null);
+        return ApiResponse::createSuccess([]);
     }
 
     //登入-POST
@@ -101,20 +100,20 @@ class Auth extends BaseController
                 ]);
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
-            return Export::Create([$e->getError()], 401, '登录失败');
+            return ApiResponse::createUnauthorized('登录失败', [$e->getError()]);
         }
 
         //账号校验请求
         $result = UsersService::Login($account, $password);
         //常规密码登入
         if ($result['status'] == false) {
-            return Export::Create([$result['msg']], 401, '登录失败');
+            return ApiResponse::createUnauthorized('登录失败', [$result['msg']]);
         }
 
         if ($code != '') {
             //验证码登入(优先)
             if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
-                return Export::Create(['验证码错误'], 401, '登入失败');
+                return ApiResponse::createUnauthorized('登入失败', ['验证码错误']);
             };
             //清除验证码
             Code::DeleteCaptcha($account, 'Auth');
@@ -123,7 +122,7 @@ class Auth extends BaseController
         $uid = $result['data']['id'];
 
         $result = Jwt::signToken(['uid' => $uid]);
-        return Export::Create(['token' => $result], 200);
+        return ApiResponse::createSuccess(['token' => $result]);
     }
 
     //注册-POST
@@ -141,7 +140,7 @@ class Auth extends BaseController
         //验证码校验
         if (ConfigFacade::mArraySearchConfigKey('Captcha')[0]) {
             if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
-                return Export::Create(['验证码错误'], 401, '注册失败');
+                return ApiResponse::createUnauthorized('注册失败', ['验证码错误']);
             };
         }
 
@@ -157,13 +156,13 @@ class Auth extends BaseController
                 ]);
         } catch (ValidateException $e) {
             // 验证失败 输出错误信息
-            return Export::Create([$e->getError()], 401, '注册失败');
+            return ApiResponse::createUnauthorized('注册失败', [$e->getError()]);
         }
 
         //写入数据
         $result = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
         if ($result['status'] == false) {
-            return Export::Create([$result['msg']], 401, '注册失败');
+            return ApiResponse::createUnauthorized('注册失败', [$result['msg']]);
         }
 
         $user_id = $result['data'];
@@ -172,14 +171,14 @@ class Auth extends BaseController
         //清除验证码
         Code::DeleteCaptcha($account, 'Auth');
 
-        return Export::Create(['token' => $result], 200);
+        return ApiResponse::createSuccess(['token' => $result]);
     }
 
     //访客登入-POST
     public function Guest()
     {
         if (!$this->SYSTEM_CONFIG['System']['VisitorMode']) {
-            return Export::Create([], 401, '该站点未开启访客模式');
+            return ApiResponse::createUnauthorized('该站点未开启访客模式');
         }
 
         $timekey = (date('YmdH')); //支持一小时内重复登入
@@ -198,20 +197,20 @@ class Auth extends BaseController
             //如果访客账号已存在，直接返回token
             $user_id = $result['data']['id'];
             $result = Jwt::signToken(['uid' => $user_id]);
-            return Export::Create(['token' => $result], 200);
+            return ApiResponse::createSuccess(['token' => $result]);
         }
 
         //写入数据
         $result = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
         if ($result['status'] == false) {
-            return Export::Create([$result['msg']], 401, '访客账户注册失败');
+            return ApiResponse::createUnauthorized('访客账户注册失败', [$result['msg']]);
         }
 
         //返回令牌
         $user_id = $result['data'];
         $result = Jwt::signToken(['uid' => $user_id]);
 
-        return Export::Create(['token' => $result], 200);
+        return ApiResponse::createSuccess(['token' => $result]);
     }
 
     //获取验证码-POST
@@ -228,21 +227,21 @@ class Auth extends BaseController
             try {
                 $result = Email::SendCaptcha($code, $account);
             } catch (\Exception $e) {
-                return Export::Create(['邮件模块发生错误'], 500, '发送失败');
+                return ApiResponse::createError('发送失败', ['邮件模块发生错误']);
             }
             if ($result['status']) {
-                return Export::Create(null, 200);
+                return ApiResponse::createNoCntent();
             } else {
-                return Export::Create([$result['msg']], 500, '发送失败');
+                return ApiResponse::createError('发送失败', [$result['msg']]);
             }
         } else {
-            return Export::Create(['目前仅支持邮箱验证'], 500, '发送失败');
+            return ApiResponse::createError('发送失败', ['目前仅支持邮箱验证']);
         }
     }
 
     //注销-POST
     public function Logout()
     {
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 }

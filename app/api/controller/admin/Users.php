@@ -7,10 +7,12 @@ use app\api\validate\Users as UsersValidate;
 
 use yunarch\validate\Common as CommonValidate;
 
-use app\common\Export;
+use app\api\controller\ApiResponse;
 
 use \app\api\controller\BaseController;
 use app\api\controller\Params;
+
+use think\facade\Request;
 
 class Users extends BaseController
 {
@@ -26,18 +28,18 @@ class Users extends BaseController
     public function Index(UsersService $UsersService)
     {
         //获取过滤参数
-        $params = $this->Params->IndexParams();
+        $params = $this->Params->IndexParams(Request::param());
         //调用服务
         $lDef_Result = $UsersService->Index($params);
         //返回结果
-        return Export::Create($lDef_Result['data'], 200, null);
+        return ApiResponse::createSuccess($lDef_Result['data']);
     }
 
     //编辑
     public function Patch()
     {
         //获取参数
-        $params = $this->Params->getParams(UsersValidate::class, UsersValidate::$all_scene['admin']['patch']);
+        $params = $this->Params->getParams(UsersValidate::class, UsersValidate::$all_scene['admin']['patch'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -49,19 +51,19 @@ class Users extends BaseController
         //调用服务
         $tDef_Result = UsersService::Patch($params['id'], $params);
         if ($tDef_Result['status']) {
-            return Export::Create(null, 200, null);
+            return ApiResponse::createNoCntent();
         }
 
         //错误返回
         $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
-        return Export::Create(null, 500, $lDef_ErrorMsg);
+        return ApiResponse::createError($lDef_ErrorMsg);
     }
 
     //删除
     public function Delete()
     {
         //获取参数
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -70,13 +72,13 @@ class Users extends BaseController
         $result = UsersService::deleteUsers($params);
 
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 
     //批量操作
     public function BatchOperate()
     {
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -84,6 +86,6 @@ class Users extends BaseController
         $result = UsersService::batchOperate($params['method'], $ids);
 
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 }

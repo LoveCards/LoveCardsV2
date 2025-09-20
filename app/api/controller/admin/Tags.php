@@ -5,12 +5,14 @@ namespace app\api\controller\admin;
 use app\api\service\Tags as TagsService;
 use app\api\validate\Tags as TagsValidate;
 
-use app\common\Export;
+use app\api\controller\ApiResponse;
 
 use yunarch\validate\Common as CommonValidate;
 
 use app\api\controller\BaseController;
 use app\api\controller\Params;
+
+use think\facade\Request;
 
 class Tags extends BaseController
 {
@@ -26,18 +28,18 @@ class Tags extends BaseController
     public function Index(TagsService $TagsService)
     {
         //获取过滤参数
-        $params = $this->Params->IndexParams();
+        $params = $this->Params->IndexParams(Request::param());
         //调用服务
         $lDef_Result = $TagsService->Index($params);
         //返回结果
-        return Export::Create($lDef_Result['data'], 200, null);
+        return ApiResponse::createSuccess($lDef_Result['data']);
     }
 
     //创建
     public function Create()
     {
         //获取参数
-        $params = $this->Params->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['create']);
+        $params = $this->Params->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['create'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -47,14 +49,14 @@ class Tags extends BaseController
         //调用服务
         $result = TagsService::createTag($params);
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createSuccess($result['data']);
     }
 
     //编辑
     public function Patch()
     {
         //获取参数
-        $params = $this->Params->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['patch']);
+        $params = $this->Params->getParams(TagsValidate::class, TagsValidate::$all_scene['admin']['patch'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -62,14 +64,14 @@ class Tags extends BaseController
         //调用服务
         $result = TagsService::updateTag($params);
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createSuccess($result['data']);
     }
 
     //删除
     public function Delete()
     {
         //获取参数
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -77,13 +79,13 @@ class Tags extends BaseController
         //调用服务
         $result = TagsService::deleteTags($params);
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 
     //批量操作
     public function BatchOperate()
     {
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -91,6 +93,6 @@ class Tags extends BaseController
         $result = TagsService::batchOperate($params['method'], $ids);
 
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 }

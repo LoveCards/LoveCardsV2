@@ -1,11 +1,10 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\public;
 
 //use think\facade\Config;
 use think\facade\Filesystem;
 //use app\common\Base;
-use app\common\Export;
 
 use think\facade\Request;
 
@@ -15,6 +14,7 @@ use app\api\validate\Upload as UploadValidate;
 //use app\common\Base as CommonBase;
 
 use app\api\controller\BaseController;
+use app\api\controller\ApiResponse;
 
 class Upload extends BaseController
 {
@@ -64,13 +64,13 @@ class Upload extends BaseController
                 ->scene('CheckUpload')
                 ->check($lReq_ParmasArray);
         } catch (\Exception $e) {
-            return Export::Create($e->getMessage(), 500, '上传失败');
+            return ApiResponse::createError('上传失败', $e->getMessage());
         }
 
         //保存图片
         $lDef_Result = Filesystem::disk('public')->putFile('image', $lReq_ParmasArray['file']);
         if (!$lDef_Result) {
-            return Export::Create('保存文件失败', 500, '上传失败');
+            return ApiResponse::createError('上传失败', ['保存文件失败']);
         }
 
         //创建数据
@@ -81,9 +81,9 @@ class Upload extends BaseController
         $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
         if (!$lDef_CreatData) {
             //待完善-回滚操作，删除文件
-            return Export::Create('数据创建失败', 500, '上传失败');
+            return ApiResponse::createError('上传失败', ['保存数据失败']);
         }
 
-        return Export::Create(['id' => $lDef_CreatData->id, 'url' => $lReq_ParmasArray['url']], 200, null);
+        return ApiResponse::createSuccess(['id' => $lDef_CreatData->id, 'url' => $lReq_ParmasArray['url']]);
     }
 }

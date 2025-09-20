@@ -8,12 +8,13 @@ use think\facade\Config;
 use think\facade\Session;
 
 use app\common\File;
-use app\common\Export;
 use app\common\Theme;
 use app\common\Common;
 use app\common\ConfigFacade;
 
 use app\api\controller\BaseController;
+
+use app\api\controller\ApiResponse;
 
 class System extends BaseController
 {
@@ -78,7 +79,7 @@ class System extends BaseController
             "theme_list" => $lDef_ThemeConfigList,
             "theme_config" => $tDef_NowThemeConfig
         ];
-        return Export::Create($result, 200);
+        return ApiResponse::createSuccess($result);
     }
 
     //读取配置
@@ -88,7 +89,7 @@ class System extends BaseController
         $lDef_Result['master'] = $this->SYSTEM_CONFIG;
         $lDef_Result['mail'] = Config::get('mail');
         //$lDef_Result['lovecards'] = config::get('lovecards');
-        return Export::Create($lDef_Result, 200);
+        return ApiResponse::createSuccess($lDef_Result);
     }
 
     public function setConfig()
@@ -158,7 +159,7 @@ class System extends BaseController
 
         //空值直接停止
         if (empty($lReq_Params)) {
-            return Export::Create(null, 200);
+            return ApiResponse::createNoCntent();
         }
         //dd($lReq_Params);
 
@@ -166,9 +167,9 @@ class System extends BaseController
         $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
         if ($tDef_Result) {
-            return Export::Create(null, 200);
+            return ApiResponse::createNoCntent();
         }
-        return Export::Create(null, 500, '设置失败');
+        return ApiResponse::createError('设置失败');
     }
 
     //基本信息-POST
@@ -176,7 +177,7 @@ class System extends BaseController
     {
         $siteUrl = Request::param('siteUrl');
         if (empty($siteUrl)) {
-            return Export::Create(null, 400, '站点域名不得为空');
+            return ApiResponse::createBadRequest('站点域名不得为空');
         }
         $siteName = Request::param('siteName');
         $siteICPId = Request::param('siteICPId');
@@ -195,7 +196,7 @@ class System extends BaseController
         Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
 
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 
     //邮箱配置-PATCH
@@ -217,9 +218,9 @@ class System extends BaseController
         $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params, 'auto');
 
         if ($tDef_Result) {
-            return Export::Create(null, 200);
+            return ApiResponse::createNoCntent();
         }
-        return Export::Create(null, 500, '设置失败');
+        return ApiResponse::createError('设置失败');
     }
 
     //主题设置-POST
@@ -228,12 +229,12 @@ class System extends BaseController
         $tReq_ThemeDirectoryName = Request::param('dir');
         $tReq_ThemeInfo = json_decode(File::read_file('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
         if (!$tReq_ThemeInfo) {
-            return Export::Create(null, 400, '修改失败，主题信息不存在');
+            return ApiResponse::createBadRequest('修改失败，主题信息不存在');
         }
         $tDef_LCVersionInfo = Common::mArrayGetLCVersionInfo();
 
         if (!($tDef_LCVersionInfo['VerS'] >= $tReq_ThemeInfo['SysVersionL'] && $tDef_LCVersionInfo['VerS'] < $tReq_ThemeInfo['SysVersionR'])) {
-            return Export::Create(null, 400, '修改失败，该主题不适用当前版本');
+            return ApiResponse::createBadRequest('修改失败，该主题不适用当前版本');
         }
 
         $lReq_Params = [
@@ -242,9 +243,9 @@ class System extends BaseController
         $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
         if ($tDef_Result == true) {
-            return Export::Create(null, 200);
+            return ApiResponse::createNoCntent();
         } else {
-            return Export::Create(null, 400, '修改失败，请重试');
+            return ApiResponse::createBadRequest('修改失败，请重试');
         }
     }
 
@@ -263,7 +264,7 @@ class System extends BaseController
         if (!empty($lReq_ParamSelect)) {
             foreach ($lReq_ParamSelect as $key => $value) {
                 if (count($tDef_ThemeConfig['Select'][$key]['Element']) < $value) {
-                    return Export::Create('修改失败，Select存在非法元素', 400);
+                    return ApiResponse::createBadRequest('修改失败，Select存在非法元素');
                 }
                 $lDef_ParamThemeConfig['Select' . $key] = $value;
             }
@@ -273,7 +274,7 @@ class System extends BaseController
         if (!empty($lReq_ParamText)) {
             foreach ($lReq_ParamText as $key => $value) {
                 if (empty($tDef_ThemeConfig['Text'][$key]['Name'])) {
-                    return Export::Create('修改失败，Text存在非法元素', 400);
+                    return ApiResponse::createBadRequest('修改失败，Text存在非法元素');
                 }
                 $lDef_ParamThemeConfig['Text' . $key] = $value;
             }
@@ -283,9 +284,9 @@ class System extends BaseController
         $tDef_Result = Theme::mBoolCoverThemeConfig($tDef_ThemeDirectory, $lDef_ParamThemeConfig);
 
         if ($tDef_Result) {
-            return Export::Create(null, 200);
+            return ApiResponse::createNoCntent();
         } else {
-            return Export::Create(null, 400, '修改失败，请重试');
+            return ApiResponse::createBadRequest('修改失败，请重试');
         }
     }
 
@@ -371,7 +372,7 @@ class System extends BaseController
             'latest' => getLatestVer(),
             'verlog' => getUpdata()
         ];
-        return Export::Create($result, 200);
+        return ApiResponse::createSuccess($result);
     }
 
     //其他配置-PATCH
