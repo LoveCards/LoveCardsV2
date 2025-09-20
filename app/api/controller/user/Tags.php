@@ -4,8 +4,7 @@ namespace app\api\controller\user;
 
 use app\api\service\Tags as TagsService;
 
-use app\common\Export;
-
+use app\api\controller\ApiResponse;
 use \app\api\controller\BaseController;
 
 class Tags extends BaseController
@@ -22,6 +21,6 @@ class Tags extends BaseController
         //调用服务
         $lDef_Result = $TagsService->noPaginateIndex($params);
         //返回结果
-        return Export::Create($lDef_Result['data'], 200, null);
+        return ApiResponse::createSuccess($lDef_Result['data']);
     }
 }

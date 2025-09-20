@@ -89,6 +89,12 @@ class Comments
     public function newList(array $params, int $user_id = -1)
     {
         $params['search_default_key'] = 'content';
+        if ($user_id != -1) {
+            $params['where'] = [
+                'status' => [0, 1, 3],
+                'user_id' => $user_id
+            ];
+        }
         $cpmments_list = new ModelList($this->CommentsModel);
         $result = $cpmments_list->getPaginate($params);
 

@@ -53,6 +53,6 @@ class Images
         if ($result) {
             return Common::mArrayEasyReturnStruct(null, true, $result);
         }
-        return Common::mArrayEasyReturnStruct('查询失败', false);
+        return Common::mArrayEasyReturnStruct('查询失败', false, []);
     }
 }

@@ -1,18 +1,19 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\public;
 
 use think\facade\View;
 
 use app\common\File;
 use app\common\Theme as CommonTheme;
 use app\common\Common;
-use app\common\Export;
+
 use think\facade\Config;
 
 use app\common\ConfigFacade;
 
 use app\api\controller\BaseController;
+use app\api\controller\ApiResponse;
 
 class Theme extends BaseController
 {
@@ -67,6 +68,6 @@ class Theme extends BaseController
             'config' => $lRes_ThemeConfig,
         ];
 
-        return Export::Create($data, 200);
+        return ApiResponse::createSuccess($data);
     }
 }

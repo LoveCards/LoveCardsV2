@@ -13,7 +13,6 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\api\service\Cards as CardsService;
 
 //旧的
-use app\common\Export;
 use app\common\BackEnd;
 
 //yunarch框架相关
@@ -21,6 +20,7 @@ use yunarch\validate\Common as CommonValidate;
 
 use app\api\controller\BaseController;
 use app\api\controller\Params;
+use app\api\controller\ApiResponse;
 
 class Cards extends BaseController
 {
@@ -36,18 +36,18 @@ class Cards extends BaseController
     public function Index(CardsService $CardsService)
     {
         //获取过滤参数
-        $params = $this->Params->IndexParams();
+        $params = $this->Params->IndexParams(Request::param());
         //调用服务
         $result = $CardsService->newList($params);
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createSuccess($result['data']);
     }
 
     //获取
     public function Get()
     {
         //获取参数
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -55,14 +55,14 @@ class Cards extends BaseController
         //调用服务
         $result = CardsService::Get($params['id']);
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createSuccess($result['data']);
     }
 
     //编辑
     public function Patch()
     {
         //获取参数
-        $params = $this->Params->getParams(CardsValidate::class, CardsValidate::$all_scene['admin']['patch']);
+        $params = $this->Params->getParams(CardsValidate::class, CardsValidate::$all_scene['admin']['patch'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -70,14 +70,14 @@ class Cards extends BaseController
         //调用服务
         $result = CardsService::updateCard($params);
         //返回结果
-        return Export::Create($result['data'], 200, null);
+        return ApiResponse::createNoCntent();
     }
 
     //删除
     public function Delete()
     {
         //获取参数
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['SingleOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -85,14 +85,14 @@ class Cards extends BaseController
         //调用服务
         $result = CardsService::deleteCards($params);
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 
     //批量操作
     public function BatchOperate()
     {
 
-        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate']);
+        $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
@@ -100,7 +100,7 @@ class Cards extends BaseController
         $result = CardsService::batchOperate($params['method'], $ids);
 
         //返回数据
-        return Export::Create(null, 200);
+        return ApiResponse::createNoCntent();
     }
 
     //设置
@@ -122,15 +122,15 @@ class Cards extends BaseController
                 ->check($data);
         } catch (ValidateException $e) {
             $validateerror = $e->getError();
-            return Export::Create($validateerror, 400, '修改失败');
+            return ApiResponse::createBadRequest('修改失败', $validateerror);
         }
 
         $result = BackEnd::mBoolCoverConfig('lovecards', $data, true);
 
         if ($result == true) {
-            return Export::Create(null, 200);
+            return ApiResponse::createNoCntent();
         } else {
-            return Export::Create(null, 400, '修改失败，请重试');
+            return ApiResponse::createError('修改失败，请重试');
         }
     }
 }

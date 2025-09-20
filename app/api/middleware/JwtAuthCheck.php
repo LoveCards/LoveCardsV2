@@ -2,10 +2,8 @@
 
 namespace app\api\middleware;
 
-use think\Container;
-
 use app\common\ConfigFacade;
-use app\common\Export;
+use app\api\controller\ApiResponse;
 use jwt\Jwt;
 
 class JwtAuthCheck
@@ -26,7 +24,7 @@ class JwtAuthCheck
             } else {
                 if (!ConfigFacade::mArraySearchConfigKey('VisitorMode')[0]) {
                     //jwt校验不通过
-                    return Export::Create($data['msg'], 401, '登入失效，请重新登入'); //Token未通过校验
+                    return ApiResponse::createUnauthorized('登入失效，请重新登入', $data['msg']); //Token未通过校验
                 } else {
                     //jwt校验通过并传递参数
                     $tDef_Request->JwtData = [
@@ -37,7 +35,7 @@ class JwtAuthCheck
             }
         } else {
             if (!ConfigFacade::mArraySearchConfigKey('VisitorMode')[0]) {
-                return Export::Create(null, 401, '请先登入'); //Token不存在
+                return ApiResponse::createUnauthorized('请先登入'); //Token不存在
             } else {
                 //jwt校验通过并传递参数
                 $tDef_Request->JwtData = [

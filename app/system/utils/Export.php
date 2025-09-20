@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common;
+namespace app\system\utils;
 
 use think\Facade;
 use think\Response;
@@ -39,23 +39,23 @@ class Export extends Facade
      * @param {int} $code
      * @param {string} $type
      */
-    public static function Create($data, int $code = 200, string $error = null, string $type = 'json'): Response
-    {
-        $context = request()->JwtData;
-        if ($error != null) {
-            $data ?: $data = [];
-            $response = self::setHeader(Response::create(['error' => $error, 'detail' => $data], $type)->code($code), $context);
-        } else {
-            if ($data != null) {
-                $response = self::setHeader(Response::create($data, $type)->code($code), $context);
-            } else {
-                $response = self::setHeader(Response::create([], $type)->code($code), $context);
-            }
-        }
+    // public static function Create($data, int $code = 200, string $error = null, string $type = 'json'): Response
+    // {
+    //     $context = request()->JwtData;
+    //     if ($error != null) {
+    //         $data ?: $data = [];
+    //         $response = self::setHeader(Response::create(['error' => $error, 'detail' => $data], $type)->code($code), $context);
+    //     } else {
+    //         if ($data != null) {
+    //             $response = self::setHeader(Response::create($data, $type)->code($code), $context);
+    //         } else {
+    //             $response = self::setHeader(Response::create([], $type)->code($code), $context);
+    //         }
+    //     }
 
-        //返回API接口
-        return $response;
-    }
+    //     //返回API接口
+    //     return $response;
+    // }
 
     /**
      * @description: API格式输出方法
@@ -69,18 +69,18 @@ class Export extends Facade
      * @param {int} $code
      * @param {string} $type
      */
-    public static function mObjectEasyCreate($data, string $msg = '', int $code = 200, string $type = 'json'): Response
-    {
-        $result = [
-            //状态码
-            'ec' => $code,
-            //消息
-            'msg' => $msg,
-            //数据
-            'data' => $data
-        ];
+    // public static function mObjectEasyCreate($data, string $msg = '', int $code = 200, string $type = 'json'): Response
+    // {
+    //     $result = [
+    //         //状态码
+    //         'ec' => $code,
+    //         //消息
+    //         'msg' => $msg,
+    //         //数据
+    //         'data' => $data
+    //     ];
 
-        //返回API接口
-        return Response::create($result, $type);
-    }
+    //     //返回API接口
+    //     return Response::create($result, $type);
+    // }
 }

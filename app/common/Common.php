@@ -89,7 +89,7 @@ class Common
     }
 
     /**
-     * 格式化返回
+     * ---格式化返回
      *
      * @param string|null $msg
      * @param boolean $status
@@ -139,14 +139,14 @@ class Common
      * @param array $array
      * @return array
      */
-    public static function mArrayEasyRemoveEmptyValues($array = [])
-    {
-        // 使用 array_filter 函数过滤数组，只保留非空值的键值对
-        $filteredArray = array_filter($array, function ($value) {
-            // 这里排除空值（null 或者空字符串）
-            return $value !== null && $value !== '';
-        });
+    // public static function mArrayEasyRemoveEmptyValues($array = [])
+    // {
+    //     // 使用 array_filter 函数过滤数组，只保留非空值的键值对
+    //     $filteredArray = array_filter($array, function ($value) {
+    //         // 这里排除空值（null 或者空字符串）
+    //         return $value !== null && $value !== '';
+    //     });
 
-        return $filteredArray;
-    }
+    //     return $filteredArray;
+    // }
 }

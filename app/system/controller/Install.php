@@ -6,7 +6,7 @@ use think\facade\Request;
 use think\facade\Http;
 use think\facade\Cache;
 
-use app\common\Export;
+use app\system\utils\Export;
 
 use app\system\utils\Common;
 use app\system\utils\Database;
