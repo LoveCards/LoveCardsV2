@@ -30,6 +30,7 @@ class Card extends Base {
                 inti: () => { },
                 then: (response) => {
                     if (response.status == 201) {
+                        $('#' + commentsContentId).val('');
                         this.commonFunctions.snackbar('提交成功，等待审核');
                     } else {
                         window.location.reload();
