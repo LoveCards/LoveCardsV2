@@ -31,7 +31,7 @@ class Comments extends BaseController
         //调用服务
         $result = CommentsService::newList($params);
         //返回结果
-        return ApiResponse::createOk($result['data']);
+        return ApiResponse::createOk($result);
     }
 
     //编辑

@@ -30,9 +30,9 @@ class Users extends BaseController
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $lDef_Result = UsersService::Index($params);
+        $list = UsersService::Index($params);
         //返回结果
-        return ApiResponse::createOk($lDef_Result['data']);
+        return ApiResponse::createOk($list);
     }
 
     //编辑
