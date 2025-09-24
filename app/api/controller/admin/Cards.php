@@ -19,8 +19,8 @@ use app\common\BackEnd;
 use yunarch\validate\Common as CommonValidate;
 
 use app\api\controller\BaseController;
-use app\api\controller\Params;
-use app\api\controller\ApiResponse;
+use app\api\Params;
+use app\api\ApiResponse;
 
 class Cards extends BaseController
 {
@@ -33,14 +33,14 @@ class Cards extends BaseController
     }
 
     //基础分页数据
-    public function Index(CardsService $CardsService)
+    public function Index()
     {
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = $CardsService->newList($params);
+        $result = CardsService::newList($params);
         //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk($result);
     }
 
     //获取
@@ -54,8 +54,10 @@ class Cards extends BaseController
 
         //调用服务
         $result = CardsService::Get($params['id']);
-        //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        if ($result) {
+            return ApiResponse::createOk($result);
+        }
+        return ApiResponse::createNotFound();
     }
 
     //编辑
@@ -91,15 +93,14 @@ class Cards extends BaseController
     //批量操作
     public function BatchOperate()
     {
-
         $params = $this->Params->getParams(CommonValidate::class, CommonValidate::$all_scene['BatchOperate'], Request::param());
         if (gettype($params) == 'object') {
             return $params;
         }
         $ids = json_decode($params['ids'], true);
-        $result = CardsService::batchOperate($params['method'], $ids);
 
-        //返回数据
+        CardsService::batchOperate($params['method'], $ids);
+
         return ApiResponse::createNoCntent();
     }
 

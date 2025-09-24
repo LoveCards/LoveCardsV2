@@ -36,6 +36,30 @@ class ModelList
     }
 
     /**
+     * 手动创建实例
+     *
+     * @param mixed $model 模型实例 或 模型类名
+     * @return ModelList
+     * @throws BizException 创建失败
+     */
+    public static function make(mixed $model): ModelList
+    {
+
+        if (is_object($model)) {
+            return new self($model);
+        }
+
+        if (is_string($model) && class_exists($model)) {
+            // 使用 ThinkPHP 的 app() 助手函数来实例化模型
+            // 这样做的好处是能利用到容器，处理依赖注入等
+            $instance = app($model);
+            return new self($instance);
+        }
+        
+        throw new \InvalidArgumentException('参数不可用');
+    }
+
+    /**
      * 设置模型
      * @param array $params 全部查询参数
      * @param string $params['search_default_key'] 默认搜索字段

@@ -5,7 +5,7 @@ namespace app\common;
 use app\common\BackEnd;
 use app\common\FrontEnd;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class CheckClass
 {

@@ -4,8 +4,6 @@ namespace app\api\service;
 
 use think\facade\Db;
 
-use app\common\Common;
-
 use app\api\model\Cards as CardsModel;
 use app\api\model\TagsMap as TagsMapModel;
 use app\api\model\Images as ImagesModel;
@@ -15,46 +13,41 @@ use yunarch\utils\src\ModelList;
 
 class Cards
 {
-    protected $CardsModel;
-
-    public function __construct(CardsModel $CardsModel)
-    {
-        $this->CardsModel = $CardsModel;
-    }
-
     /**
      * 热门卡片列表
      *
-     * @return void
+     * @return array
      */
-    public function hotList()
+    public static function hotList(): array
     {
         define("CONST_G_TOP_LISTS_MAX", 32); //置顶卡片列表最大个数
         define("CONST_G_HOT_LISTS_MAX", 8); //热门卡片列表最大个数
 
-        try {
-            //查询数据
-            $lDef_Result = Db::table('cards')
-                ->where('status', 0)
-                ->where('is_top', 1)
-                ->where('deleted_at', null)
-                ->order('id', 'desc')
-                ->limit(CONST_G_TOP_LISTS_MAX)
-                ->select()->toArray();
-            $lDef_CardLists = $lDef_Result;
+        //查询数据
+        $lDef_Result = Db::table('cards')
+            ->where('status', 0)
+            ->where('is_top', 1)
+            ->where('deleted_at', null)
+            ->order('id', 'desc')
+            ->limit(CONST_G_TOP_LISTS_MAX)
+            ->select()->toArray();
+        $lDef_CardLists = $lDef_Result;
 
-            $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
 
-            $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
+        $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
 
-            return Common::mArrayEasyReturnStruct(null, true, $lDef_CardLists);
-        } catch (\Throwable $th) {
-            return Common::mArrayEasyReturnStruct('查询失败', false);
-        }
+        return $lDef_CardLists;
     }
 
-    //列表
-    public function newList(array $params, int $user_id = -1)
+    /**
+     * 搜索列表
+     *
+     * @param array $params [search_default_key,ModelList[],where[]]
+     * @param integer $user_id 用户id
+     * @return array
+     */
+    public static function newList(array $params, int $user_id = -1): array
     {
         $params['search_default_key'] = 'content';
         if ($user_id != -1) {
@@ -63,10 +56,9 @@ class Cards
                 'user_id' => $user_id
             ];
         }
-        $cards_list = new ModelList($this->CardsModel);
-        $result = $cards_list->getPaginate($params);
+        $result = ModelList::make(CardsModel::class)->getPaginate($params);
 
-        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+        return $result->toArray();
     }
 
     //列表
@@ -83,61 +75,45 @@ class Cards
     }
 
     /**
-     * 读取用户卡片
-     *
-     * @return void
-     */
-    // public function Index($params)
-    // {
-    //     $params['search_default_key'] = 'content';
-    //     $cards_list = new ModelList($this->CardsModel);
-    //     $result = $cards_list->getPaginate($params);
-
-    //     return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-    // }
-
-    /**
      * 读取卡片
      *
-     * @return void
+     * @return array|null
      */
-    static public function Get($id)
+    static public function Get($id): array|null
     {
         $result = CardsModel::where('id', $id)->find();
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-        }
-        return Common::mArrayEasyReturnStruct('查询失败', false);
+        $result = $result ? $result->toArray() : $result;
+        return $result;
     }
 
-    //模型更新方法
+    //模型更新
     static public function updata($data, $where = [], $allowField = [])
     {
         return CardsModel::update($data, $where, $allowField);
     }
 
     /**
-     * 批量操作卡片
+     * 批量操作
      *
      * @param string $method top：置顶|1ban：状态封禁仅自己可见|2approve：状态待审核仅自己可见|3hide：状态隐藏仅后台可见|delete：删除
-     * @param array $ids
+     * @param array $ids [1,2,3]
      * @return void
      */
-    static public function batchOperate($method, $ids)
+    static public function batchOperate($method, $ids): void
     {
         switch ($method) {
             case 'top':
-                return self::fieldsToggle('is_top', $ids, [0, 1]);
+                self::fieldsToggle('is_top', $ids, [0, 1]);
             case 'approve':
-                return self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
             case 'ban':
-                return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':
-                return self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
             case 'delete':
-                return self::deleteCards(false, $ids);
+                self::deleteCards(false, $ids);
             default:
-                return Common::mArrayEasyReturnStruct('方法不存在', false);
+                throw \app\ApiException::createBadRequest('方法不存在', []);
         }
     }
 
@@ -150,7 +126,7 @@ class Cards
      * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
      * @return void
      */
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false)
+    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
     {
         //生成命令
         $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
@@ -160,28 +136,18 @@ class Cards
             }
         }
         $sql = "CASE {$where}END";
-        // 存储事务
-        Db::startTrans();
-        try {
-            CardsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('更新成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
-        }
+        //执行
+        CardsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
-
     /**
-     * 创建单张卡片方法
+     * 创建一条数据
      *
      * @param array $data 卡片数据
-     * @return void
+     * @return string id 返回创建ID
      */
-    static public function createCard($data)
+    static public function createCard($data): string
     {
-        // 存储事务
         Db::startTrans();
         try {
             $result = CardsModel::create($data);
@@ -193,22 +159,21 @@ class Cards
                 self::updateCardPictures($data, true);
                 unset($data['pictures']);
             }
-
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('创建成功', true, ['id' => $result->id]);
+            Db::commit();
+            return $result->id;
         } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('创建失败', false, $th->getMessage());
+            Db::rollback();
+            throw \app\ApiException::createError('创建失败', null, $th);
         }
     }
 
     /**
-     * 更新单张卡片方法
+     * 更新一条数据
      *
-     * @param array $data 卡片数据
+     * @param array $data [Cards[]]
      * @return void
      */
-    static public function updateCard($data)
+    static public function updateCard($data): void
     {
         // 存储事务
         Db::startTrans();
@@ -224,14 +189,19 @@ class Cards
             CardsModel::update($data);
 
             Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('更新成功', true);
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
+            throw \app\ApiException::createError('更新失败', null, $th);
         }
     }
-    //更新/创建单张卡片标签
-    static public function updateCardTags($data, $create = false)
+    /**
+     * 更新/创建一条数据标签
+     *
+     * @param array $data
+     * @param boolean $create
+     * @return void
+     */
+    static public function updateCardTags($data, $create = false): void
     {
         $pid = (int) $data['id'];
         $tags = json_decode($data['tags'], true);
@@ -251,8 +221,14 @@ class Cards
             TagsMapModel::create($item);
         }
     }
-    //更新/创建单张卡片图集
-    static public function updateCardPictures($data, $create = false)
+    /**
+     * 更新/创建一条数据图集
+     *
+     * @param array $data
+     * @param boolean $create
+     * @return void
+     */
+    static public function updateCardPictures($data, $create = false): void
     {
         $pid = (int) $data['id'];
         $pictures = json_decode($data['pictures'], true);
@@ -277,14 +253,14 @@ class Cards
     }
 
     /**
-     * 删除单&多张卡片方法
+     * 删除单&多条数据
      * * 删除卡片时会同时删除相关的标签、图片和评论
      *
-     * @param boolean $id 单张卡片ID
-     * @param array $ids 多张卡片ID集
+     * @param boolean $id 一条数据ID
+     * @param array $ids 多条数据ID集
      * @return void
      */
-    static public function deleteCards($id = false, $ids = [])
+    static public function deleteCards($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
         // 存储事务
@@ -297,19 +273,28 @@ class Cards
             CardsModel::destroy($data);
 
             Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('删除成功', true);
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
+            throw \app\ApiException::createError('删除失败', null, $th);
         }
     }
-    //删除单&多张卡片标签
-    static public function deleteCardsTags($pids)
+    /**
+     * 删除单&多条数据标签
+     *
+     * @param array $pids [1,2,3]
+     * @return void
+     */
+    static public function deleteCardsTags($pids): void
     {
         TagsMapModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }
-    //解绑单&多张卡片图片
-    static public function deleteCardsPictures($pids)
+    /**
+     * 解绑单&多条数据图片
+     *
+     * @param array $pids [1,2,3]
+     * @return void
+     */
+    static public function deleteCardsPictures($pids): void
     {
         $def_data = [
             'aid' => 0,
@@ -317,8 +302,13 @@ class Cards
         ];
         ImagesModel::where('aid', 1)->where('pid', 'in', $pids)->update($def_data);
     }
-    //删除单&多张卡片评论
-    static public function deleteCardsComments($pids)
+    /**
+     * 删除单&多条数据评论
+     *
+     * @param array $pids [1,2,3]
+     * @return void
+     */
+    static public function deleteCardsComments($pids): void
     {
         CommentsModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }

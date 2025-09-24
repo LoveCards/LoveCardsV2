@@ -7,10 +7,10 @@ use app\api\validate\Users as UsersValidate;
 
 use yunarch\validate\Common as CommonValidate;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 use \app\api\controller\BaseController;
-use app\api\controller\Params;
+use app\api\Params;
 
 use think\facade\Request;
 
@@ -25,14 +25,14 @@ class Users extends BaseController
     }
 
     //基础分页数据
-    public function Index(UsersService $UsersService)
+    public function Index()
     {
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $lDef_Result = $UsersService->Index($params);
+        $lDef_Result = UsersService::Index($params);
         //返回结果
-        return ApiResponse::createSuccess($lDef_Result['data']);
+        return ApiResponse::createOk($lDef_Result['data']);
     }
 
     //编辑
@@ -49,14 +49,8 @@ class Users extends BaseController
             $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
         }
         //调用服务
-        $tDef_Result = UsersService::Patch($params['id'], $params);
-        if ($tDef_Result['status']) {
-            return ApiResponse::createNoCntent();
-        }
-
-        //错误返回
-        $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
-        return ApiResponse::createError($lDef_ErrorMsg);
+        UsersService::Patch($params['id'], $params);
+        return ApiResponse::createNoCntent();
     }
 
     //删除
@@ -69,7 +63,7 @@ class Users extends BaseController
         }
 
         //调用服务
-        $result = UsersService::deleteUsers($params);
+        UsersService::deleteUsers($params);
 
         //返回数据
         return ApiResponse::createNoCntent();
@@ -83,7 +77,7 @@ class Users extends BaseController
             return $params;
         }
         $ids = json_decode($params['ids'], true);
-        $result = UsersService::batchOperate($params['method'], $ids);
+        UsersService::batchOperate($params['method'], $ids);
 
         //返回数据
         return ApiResponse::createNoCntent();

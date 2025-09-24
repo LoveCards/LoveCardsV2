@@ -14,7 +14,7 @@ use app\api\validate\Upload as UploadValidate;
 //use app\common\Base as CommonBase;
 
 use app\api\controller\BaseController;
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Upload extends BaseController
 {
@@ -84,6 +84,6 @@ class Upload extends BaseController
             return ApiResponse::createError('上传失败', ['保存数据失败']);
         }
 
-        return ApiResponse::createSuccess(['id' => $lDef_CreatData->id, 'url' => $lReq_ParmasArray['url']]);
+        return ApiResponse::createOk(['id' => $lDef_CreatData->id, 'url' => $lReq_ParmasArray['url']]);
     }
 }

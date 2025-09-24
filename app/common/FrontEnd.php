@@ -84,13 +84,8 @@ class FrontEnd extends Facade
         }
 
         //取用户数据
-        $lDef_GetNowUserAllDataResult = UsersService::Get($lDef_JwtCheckTokenResult['data']['uid']);
-        //判断数据是否存在
-        if ($lDef_GetNowUserAllDataResult['status']) {
-            //返回用户数据
-            return Common::mArrayEasyReturnStruct(null, true, $lDef_GetNowUserAllDataResult['data']);
-        } else {
-            return Common::mArrayEasyReturnStruct($lDef_GetNowUserAllDataResult['msg'], false);
-        }
+        $user = UsersService::Get($lDef_JwtCheckTokenResult['data']['uid']);
+
+        return Common::mArrayEasyReturnStruct(null, true, $user);
     }
 }

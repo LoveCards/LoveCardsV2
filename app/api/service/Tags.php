@@ -13,13 +13,6 @@ use yunarch\utils\src\ModelList;
 class Tags
 {
 
-    protected $TagsModel;
-
-    public function __construct(TagsModel $TagsModel)
-    {
-        $this->TagsModel = $TagsModel;
-    }
-
     /**
      * 字段反转
      *
@@ -39,50 +32,32 @@ class Tags
             }
         }
         $sql = "CASE {$where}END";
-        // 存储事务
-        Db::startTrans();
-        try {
-            TagsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('更新成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
-        }
+
+        TagsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
     /**
      * 读取全部标签列表
      *
-     * @return void
+     * @return array
      */
-    public function noPaginateIndex($params)
+    static public function noPaginateIndex($params): array
     {
         $params['search_default_key'] = 'name';
-        $tags_list = new ModelList($this->TagsModel);
-        $result = $tags_list->getNoPaginate($params);
-
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-        }
-        return Common::mArrayEasyReturnStruct('列表查询失败', false);
+        $result = ModelList::make(TagsModel::class)->getNoPaginate($params);
+        return $result->toArray();
     }
 
     /**
      * 读取全部标签列表
      *
-     * @return void
+     * @return array
      */
-    public function Index($params)
+    static public function Index($params): array
     {
         $params['search_default_key'] = 'name';
-        $tags_list = new ModelList($this->TagsModel);
-        $result = $tags_list->getPaginate($params);
-
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-        }
-        return Common::mArrayEasyReturnStruct('列表查询失败', false);
+        $result = ModelList::make(TagsModel::class)->getPaginate($params);
+        return $result->toArray();
     }
 
     /**
@@ -91,16 +66,10 @@ class Tags
      * @param array $params
      * @return void
      */
-    static public function createTag($params)
+    static public function createTag($params): void
     {
         $params['aid'] = 1;
-
-        try {
-            TagsModel::create($params);
-            return Common::mArrayEasyReturnStruct('创建成功', true);
-        } catch (\Throwable $th) {
-            return Common::mArrayEasyReturnStruct('创建失败', false, $th->getMessage());
-        }
+        TagsModel::create($params);
     }
 
     /**
@@ -110,32 +79,32 @@ class Tags
      * @param array $ids
      * @return void
      */
-    static public function batchOperate($method, $ids)
+    static public function batchOperate($method, $ids): void
     {
         switch ($method) {
             case 'approve':
-                return self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
             case 'ban':
-                return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':
-                return self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
             case 'delete':
-                return self::deleteTags(false, $ids);
+                self::deleteTags(false, $ids);
             default:
-                return Common::mArrayEasyReturnStruct('方法不存在', false);
+                throw \app\ApiException::createBadRequest('方法不存在',[]);
         }
     }
 
 
     /**
-     * 删除单&多张标签方法
+     * 删除单&多条数据方法
      * * 删除标签时会同时删除关联
      *
-     * @param boolean $id 单张标签ID
-     * @param array $ids 多张标签ID集
+     * @param boolean $id 单条数据ID
+     * @param array $ids 多条数据ID集
      * @return void
      */
-    static public function deleteTags($id = false, $ids = [])
+    static public function deleteTags($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
         // 存储事务
@@ -146,31 +115,30 @@ class Tags
             TagsModel::destroy($data);
 
             Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('删除成功', true);
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
+            throw \app\ApiException::createError('删除失败', null, $th);
         }
     }
-    //删除单&多个标签关联
-    static public function deleteTagsMap($ids)
+    /**
+     * 删除单&多个数据关联
+     *
+     * @param array $ids
+     * @return void
+     */
+    static public function deleteTagsMap(array $ids): void
     {
         TagsMapModel::where('id', 'in', $ids)->delete();
     }
 
     /**
-     * 更新单张标签方法
+     * 更新单条数据方法
      *
      * @param array $data 标签数据
      * @return void
      */
-    static public function updateTag($data)
+    static public function updateTag(array $data): TagsModel
     {
-        try {
-            TagsModel::update($data);
-            return Common::mArrayEasyReturnStruct('更新成功', true);
-        } catch (\Throwable $th) {
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
-        }
+        return TagsModel::update($data);
     }
 }

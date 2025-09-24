@@ -3,7 +3,7 @@
 namespace app\api\middleware;
 
 use app\common\ConfigFacade;
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 use jwt\Jwt;
 
 class JwtAuthCheck

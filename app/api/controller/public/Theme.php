@@ -13,7 +13,7 @@ use think\facade\Config;
 use app\common\ConfigFacade;
 
 use app\api\controller\BaseController;
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Theme extends BaseController
 {
@@ -68,6 +68,6 @@ class Theme extends BaseController
             'config' => $lRes_ThemeConfig,
         ];
 
-        return ApiResponse::createSuccess($data);
+        return ApiResponse::createOk($data);
     }
 }
