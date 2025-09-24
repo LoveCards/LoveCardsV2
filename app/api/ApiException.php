@@ -80,7 +80,7 @@ class ApiException extends \Exception
     public static function createNotFound(string $message = "", mixed $data = null, Throwable|null $previous = null): self
     {
         $e = new self($message, self::CODE_DEFAULT, $data, $previous);
-        $e->handle = 'NotFound';
+        $e->handle = 'createNotFound';
         return $e;
     }
     //500
