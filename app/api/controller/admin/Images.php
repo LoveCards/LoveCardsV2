@@ -8,7 +8,7 @@ use app\api\service\Images as ImagesService;
 
 use app\common\Common;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Images extends Common
 {
@@ -21,8 +21,8 @@ class Images extends Common
         }
 
         //调用服务
-        $lDef_Result = ImagesService::CardIndex($params);
+        $result = ImagesService::CardIndex($params);
         //返回结果
-        return ApiResponse::createSuccess($lDef_Result['data']);
+        return ApiResponse::createOk($result);
     }
 }

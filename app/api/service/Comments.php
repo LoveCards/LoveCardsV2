@@ -4,8 +4,6 @@ namespace app\api\service;
 
 use think\facade\Db;
 
-use app\common\Common;
-
 use app\api\model\Comments as CommentsModel;
 use app\api\model\Cards as CardsModel;
 
@@ -13,15 +11,6 @@ use yunarch\utils\src\ModelList;
 
 class Comments
 {
-
-    protected $CommentsModel;
-
-    public function __construct(CommentsModel $CommentsModel)
-    {
-        $this->CommentsModel = $CommentsModel;
-    }
-
-
     //更新指定ID的指定字段
     static public function updata($context, $data, $where = [], $allowField = [])
     {
@@ -54,7 +43,7 @@ class Comments
      * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
      * @return void
      */
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false)
+    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
     {
         //生成命令
         $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
@@ -64,29 +53,18 @@ class Comments
             }
         }
         $sql = "CASE {$where}END";
-        // 存储事务
-        Db::startTrans();
-        try {
-            CommentsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('更新成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
-        }
+        //执行
+        CommentsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
-    // static public function Index($params)
-    // {
-    //     $index = new (CommentsModel::class, $params);
-    //     $result = $index->common('content', [], true);
-    //     if ($result) {
-    //         return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
-    //     }
-    //     return Common::mArrayEasyReturnStruct('查询失败', false);
-    // }
-
-    public function newList(array $params, int $user_id = -1)
+    /**
+     * 搜索列表
+     *
+     * @param array $params [search_default_key,ModelList[],where[]]
+     * @param integer $user_id 用户id
+     * @return array
+     */
+    public static function newList(array $params, int $user_id = -1): array
     {
         $params['search_default_key'] = 'content';
         if ($user_id != -1) {
@@ -95,10 +73,9 @@ class Comments
                 'user_id' => $user_id
             ];
         }
-        $cpmments_list = new ModelList($this->CommentsModel);
-        $result = $cpmments_list->getPaginate($params);
+        $result = ModelList::make(CommentsModel::class)->getPaginate($params);
 
-        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+        return $result->toArray();
     }
 
     /**
@@ -107,7 +84,7 @@ class Comments
      * @param array $data 评论数据
      * @return void
      */
-    static public function createComment($params)
+    static public function createComment($params): void
     {
         $id = $params['id'];
         unset($params['id']);
@@ -121,10 +98,9 @@ class Comments
             CardsModel::where('id', $id)->where('status', 0)->inc('comments')->update();
 
             Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('创建成功', true);
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('创建失败', false, $th->getMessage());
+            throw \app\ApiException::createError('创建失败', null, $th);
         }
     }
 
@@ -134,19 +110,9 @@ class Comments
      * @param array $data 评论数据
      * @return void
      */
-    static public function updateComment($data)
+    static public function updateComment($data): void
     {
-        // 存储事务
-        Db::startTrans();
-        try {
-            CommentsModel::update($data);
-
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('更新成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
-        }
+        CommentsModel::update($data);
     }
 
     /**
@@ -156,21 +122,21 @@ class Comments
      * @param array $ids
      * @return void
      */
-    static public function batchOperate($method, $ids)
+    static public function batchOperate($method, $ids): void
     {
         switch ($method) {
             case 'top':
-                return self::fieldsToggle('is_top', $ids, [0, 1]);
+                self::fieldsToggle('is_top', $ids, [0, 1]);
             case 'approve':
-                return self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
             case 'ban':
-                return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':
-                return self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
             case 'delete':
-                return self::deleteComments(false, $ids);
+                self::deleteComments(false, $ids);
             default:
-                return Common::mArrayEasyReturnStruct('方法不存在', false);
+                throw \app\ApiException::createBadRequest('方法不存在',[]);
         }
     }
 
@@ -182,19 +148,9 @@ class Comments
      * @param array $ids 多张评论ID集
      * @return void
      */
-    static public function deleteComments($id = false, $ids = [])
+    static public function deleteComments($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
-        // 存储事务
-        Db::startTrans();
-        try {
-            CommentsModel::destroy($data);
-
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('删除成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
-        }
+        CommentsModel::destroy($data);
     }
 }

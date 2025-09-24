@@ -5,12 +5,12 @@ namespace app\api\controller\admin;
 use app\api\service\Tags as TagsService;
 use app\api\validate\Tags as TagsValidate;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 use yunarch\validate\Common as CommonValidate;
 
 use app\api\controller\BaseController;
-use app\api\controller\Params;
+use app\api\Params;
 
 use think\facade\Request;
 
@@ -25,14 +25,14 @@ class Tags extends BaseController
     }
 
     //基础分页数据
-    public function Index(TagsService $TagsService)
+    public function Index()
     {
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $lDef_Result = $TagsService->Index($params);
+        $lDef_Result = TagsService::Index($params);
         //返回结果
-        return ApiResponse::createSuccess($lDef_Result['data']);
+        return ApiResponse::createOk($lDef_Result);
     }
 
     //创建
@@ -47,9 +47,9 @@ class Tags extends BaseController
         $params['user_id'] = $this->JWT_SESSION['uid'];
 
         //调用服务
-        $result = TagsService::createTag($params);
+        TagsService::createTag($params);
         //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk();
     }
 
     //编辑
@@ -62,9 +62,9 @@ class Tags extends BaseController
         }
 
         //调用服务
-        $result = TagsService::updateTag($params);
+        TagsService::updateTag($params);
         //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk();
     }
 
     //删除
@@ -77,7 +77,7 @@ class Tags extends BaseController
         }
 
         //调用服务
-        $result = TagsService::deleteTags($params);
+        TagsService::deleteTags($params);
         //返回数据
         return ApiResponse::createNoCntent();
     }
@@ -90,7 +90,7 @@ class Tags extends BaseController
             return $params;
         }
         $ids = json_decode($params['ids'], true);
-        $result = TagsService::batchOperate($params['method'], $ids);
+        TagsService::batchOperate($params['method'], $ids);
 
         //返回数据
         return ApiResponse::createNoCntent();

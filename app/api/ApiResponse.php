@@ -1,23 +1,25 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api;
 
+use think\facade\Request;
 use think\Response;
 
 class ApiResponse
 {
-    public const CODE_SUCCESS = 200; // OK 请求成功
+    public const CODE_OK = 200; // OK 请求成功
     public const CODE_CREATED = 201; // Created 响应头里应带 Location: /新资源永久路径
     public const CODE_ACCEPTED = 202; // Accepted 请求已接受，等待处理
     public const CODE_NO_CONTENT = 204; // No Content 请求成功，但不返回任何内容
 
-    public const CODE_BAD_REQUEST = 400; // Bad Request 请求参数错误
+    public const CODE_BAD_REQUEST = 400; // Bad Request 请求参数错误/客户端错误
     public const CODE_UNAUTHORIZED = 401; // Unauthorized 需要身份验证
     public const CODE_FORBIDDEN = 403; // Forbidden 禁止访问
-    //public const CODE_NOT_FOUND = 404; // Not Found 资源未找到
+    public const CODE_NOT_FOUND = 404; // Not Found 资源未找到
     //public const CODE_METHOD_NOT_ALLOWED = 405; // Method Not Allowed 请求方法不被允许
     //public const CODE_NOT_ACCEPTABLE = 406; // Not Acceptable 请求的格式不被支持
     public const CODE_CONFLICT = 409; // Conflict 请求冲突，例如资源已存在
+    public const CODE_TOO_MANY_REQUEST = 429;
 
     public const CODE_ERROR = 500; // Internal Server Error 服务器内部错误
     //public const CODE_NOT_IMPLEMENTED = 501; // Not Implemented 服务器不支持请求的功能
@@ -41,31 +43,35 @@ class ApiResponse
     /**
      * 200
      *
-     * @param mixed $data
-     * @return object
+     * @param mixed $data 响应内容
+     * @return Response
      */
-    public static function createSuccess($data = []): object
+    public static function createOk($data = []): Response
     {
-        $result = Response::create($data, 'json')->code(self::CODE_SUCCESS);
+        $result = Response::create($data, 'json')->code(self::CODE_OK);
         $result = self::setHeader($result);
         return $result;
     }
-
     /**
      * 201
      *
-     * @return object
+     * @param string $location 新资源永久路径
+     * @return Response
      */
-    public static function createCreated(): object
+    public static function createCreated(string $location = ''): Response
     {
-        $result = Response::create('', 'json')->code(self::CODE_CREATED);
+        $result = Response::create()->code(self::CODE_CREATED);
         $result = self::setHeader($result);
         return $result;
     }
-
-    public static function createNoCntent(): object
+    /**
+     * 204
+     *
+     * @return Response
+     */
+    public static function createNoCntent(): Response
     {
-        $result = Response::create('', 'json')->code(self::CODE_NO_CONTENT);
+        $result = Response::create()->code(self::CODE_NO_CONTENT);
         $result = self::setHeader($result);
         return $result;
     }
@@ -75,36 +81,74 @@ class ApiResponse
      *
      * @param string $error 错误提示
      * @param array $detail 详细信息
-     * @return object
+     * @return Response
      */
-    public static function createBadRequest($error = '', $detail = []): object
+    public static function createBadRequest($error = '', $detail = []): Response
     {
-        $data = ['error' => $error, 'detail' => $detail];
+        $data = self::error($error, $detail);
         $result = Response::create($data, 'json')->code(self::CODE_BAD_REQUEST);
         $result = self::setHeader($result);
         return $result;
     }
-
     /**
      * 401
      *
      * @param string $error 错误提示
      * @param array $detail 详细信息
-     * @return object
+     * @return Response
      */
-    public static function createUnauthorized($error = '', $detail = []): object
+    public static function createUnauthorized($error = '', $detail = []): Response
     {
-        $data = ['error' => $error, 'detail' => $detail];
+        $data = self::error($error, $detail);
         $result = Response::create($data, 'json')->code(self::CODE_UNAUTHORIZED);
         $result = self::setHeader($result);
         return $result;
     }
-
-    public static function createError($error = '', $detail = []): object
+    /**
+     * 404
+     *
+     * @return Response
+     */
+    public static function createNotFound(): Response
     {
-        $data = ['error' => $error, 'detail' => $detail];
+        $result = Response::create()->code(self::CODE_NOT_FOUND);
+        $result = self::setHeader($result);
+        return $result;
+    }
+
+
+    /**
+     * 500
+     *
+     * @param string $error 错误信息
+     * @param array $detail 错误详情
+     * @return Response
+     */
+    public static function createError($error = '', $detail = []): Response
+    {
+        $data = self::error($error, $detail);
         $result = Response::create($data, 'json')->code(self::CODE_ERROR);
         $result = self::setHeader($result);
         return $result;
+    }
+
+    /**
+     * 错误结构
+     *
+     * @param string $message
+     * @param array $detail
+     * @param integer $code
+     * @return array
+     */
+    public static function error($message = '', $detail = [], $code = 0): array
+    {
+        return [
+            'code' => $code, //预留
+            'message' => $message,
+            'error' => $message, //临时兼容
+            'detail' => $detail,
+            // "path" => Request::url(),
+            // "timestamp" => "2025-09-24T08:10:32Z"
+        ];
     }
 }

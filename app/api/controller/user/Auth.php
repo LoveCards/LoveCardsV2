@@ -17,7 +17,7 @@ use captcha\Code;
 
 use app\api\controller\BaseController;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Auth extends BaseController
 {
@@ -74,7 +74,7 @@ class Auth extends BaseController
     //token校验
     public function Check()
     {
-        return ApiResponse::createSuccess([]);
+        return ApiResponse::createOk([]);
     }
 
     //登入-POST
@@ -82,7 +82,7 @@ class Auth extends BaseController
     {
         $account = Request::param('account');
         $password = Request::param('password');
-        $code = Request::param('code');
+        // $code = Request::param('code');
 
         //判断是手机号还是邮箱
         $accountArray = $this->mArrayEasyCheckAccountType($account);
@@ -104,25 +104,24 @@ class Auth extends BaseController
         }
 
         //账号校验请求
-        $result = UsersService::Login($account, $password);
+        $user = UsersService::Login($account, $password);
+
         //常规密码登入
-        if ($result['status'] == false) {
-            return ApiResponse::createUnauthorized('登录失败', [$result['msg']]);
-        }
+        // if ($result['status'] == false) {
+        //     return ApiResponse::createUnauthorized('登录失败', [$result['msg']]);
+        // }
 
-        if ($code != '') {
-            //验证码登入(优先)
-            if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
-                return ApiResponse::createUnauthorized('登入失败', ['验证码错误']);
-            };
-            //清除验证码
-            Code::DeleteCaptcha($account, 'Auth');
-        }
+        // if ($code != '') {
+        //     //验证码登入(优先)
+        //     if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
+        //         return ApiResponse::createUnauthorized('登入失败', ['验证码错误']);
+        //     };
+        //     //清除验证码
+        //     Code::DeleteCaptcha($account, 'Auth');
+        // }
 
-        $uid = $result['data']['id'];
-
-        $result = Jwt::signToken(['uid' => $uid]);
-        return ApiResponse::createSuccess(['token' => $result]);
+        $result = Jwt::signToken(['uid' => $user->id]);
+        return ApiResponse::createOk(['token' => $result]);
     }
 
     //注册-POST
@@ -160,18 +159,14 @@ class Auth extends BaseController
         }
 
         //写入数据
-        $result = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
-        if ($result['status'] == false) {
-            return ApiResponse::createUnauthorized('注册失败', [$result['msg']]);
-        }
+        $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
 
-        $user_id = $result['data'];
-        $result = Jwt::signToken(['uid' => $user_id]);
+        $result = Jwt::signToken(['uid' => $user->id]);
 
         //清除验证码
         Code::DeleteCaptcha($account, 'Auth');
 
-        return ApiResponse::createSuccess(['token' => $result]);
+        return ApiResponse::createOk(['token' => $result]);
     }
 
     //访客登入-POST
@@ -197,20 +192,16 @@ class Auth extends BaseController
             //如果访客账号已存在，直接返回token
             $user_id = $result['data']['id'];
             $result = Jwt::signToken(['uid' => $user_id]);
-            return ApiResponse::createSuccess(['token' => $result]);
+            return ApiResponse::createOk(['token' => $result]);
         }
 
         //写入数据
-        $result = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
-        if ($result['status'] == false) {
-            return ApiResponse::createUnauthorized('访客账户注册失败', [$result['msg']]);
-        }
+        $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
 
         //返回令牌
-        $user_id = $result['data'];
-        $result = Jwt::signToken(['uid' => $user_id]);
+        $result = Jwt::signToken(['uid' => $user->id]);
 
-        return ApiResponse::createSuccess(['token' => $result]);
+        return ApiResponse::createOk(['token' => $result]);
     }
 
     //获取验证码-POST

@@ -9,7 +9,7 @@ use yunarch\app\roles\facade\Roles;
 //定制部分
 use app\api\service\Users as UsersService;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class RolesCheck
 {
@@ -22,7 +22,7 @@ class RolesCheck
             //查询用户数据
             $userData = UsersService::Get($jwtData['uid']);
             //获取用户分组
-            $user_roles_id = json_decode($userData['data']->roles_id);
+            $user_roles_id = json_decode($userData->roles_id);
             //验证权限
             if (!Roles::checkIdBaseUrlPass($user_roles_id)) {
                 return ApiResponse::createUnauthorized('权限不足');

@@ -14,9 +14,9 @@ class Images
     /**
      * 读取用户卡片
      *
-     * @return void
+     * @return array
      */
-    static public function CardIndex($params)
+    static public function CardIndex($params): array
     {
         $result = ImagesModel::where('aid', 1)->where('pid', $params['pid'])->select();
         $result = $result->toArray();
@@ -51,8 +51,8 @@ class Images
         }
         completeUrls($result);
         if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result);
+            return $result;
         }
-        return Common::mArrayEasyReturnStruct('查询失败', false, []);
+        throw \app\ApiException::createError('查询失败');
     }
 }

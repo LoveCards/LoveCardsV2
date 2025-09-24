@@ -19,7 +19,7 @@ use app\common\Common;
 use captcha\Code;
 use email\Email;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Info
 {
@@ -31,14 +31,9 @@ class Info
      */
     public function mObjectEasyUsersServicePatch($lDef_ParamData)
     {
-        $tDef_Result = UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
-        if ($tDef_Result['status']) {
-            return ApiResponse::createNoCntent();
-        }
+        UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
 
-        //错误返回
-        $lDef_ErrorMsg = $tDef_Result['data']->getMessage();
-        return ApiResponse::createError($lDef_ErrorMsg);
+        return ApiResponse::createNoCntent();
     }
 
     /**
@@ -64,7 +59,7 @@ class Info
                 return ApiResponse::createError('发送失败', ['邮件模块发生错误']);
             }
             if ($result['status']) {
-                return ApiResponse::createSuccess([$time . 's后失效']);
+                return ApiResponse::createOk([$time . 's后失效']);
             } else {
                 return ApiResponse::createError('发送失败', [$result['msg']]);
             }
@@ -99,13 +94,9 @@ class Info
     {
         $context = request()->JwtData;
 
-        $tDef_Result = UsersService::Get($context['uid'], ['id']);
+        $user = UsersService::Get($context['uid'], ['id']);
 
-        if ($tDef_Result['status']) {
-            return ApiResponse::createSuccess($tDef_Result['data']);
-        }
-
-        return ApiResponse::createError($tDef_Result['msg']);
+        return ApiResponse::createOk($user->toArray());
     }
 
     //编辑资料-Patch

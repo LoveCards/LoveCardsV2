@@ -1,11 +1,11 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api;
 
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 use yunarch\utils\src\ValidateExtend;
 use yunarch\validate\ModelList as ModelListValidate;
@@ -13,7 +13,6 @@ use yunarch\validate\Common as CommonValidate;
 
 class Params
 {
-
     /**
      * 通用获取验证并过滤
      *

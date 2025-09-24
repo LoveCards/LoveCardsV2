@@ -27,7 +27,7 @@ class Users
      * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
      * @return void
      */
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false)
+    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
     {
         //生成命令
         $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
@@ -37,38 +37,30 @@ class Users
             }
         }
         $sql = "CASE {$where}END";
-        // 存储事务
-        Db::startTrans();
-        try {
-            UsersModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('更新成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th->getMessage());
-        }
+
+        UsersModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
     /**
-     * 批量操作标签
+     * 批量操作
      *
      * @param string $method top：置顶|ban：状态封禁仅自己可见|approve：状态待审核仅自己可见|hide：状态隐藏仅后台可见|delete：删除
      * @param array $ids
      * @return void
      */
-    static public function batchOperate($method, $ids)
+    static public function batchOperate($method, $ids): void
     {
         switch ($method) {
             case 'approve':
-                return self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
             case 'ban':
-                return self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
             case 'hide':
-                return self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
                 // case 'delete':
                 //     return self::deleteTags(false, $ids);
             default:
-                return Common::mArrayEasyReturnStruct('方法不存在', false);
+                throw \app\ApiException::createBadRequest('方法不存在', []);
         }
     }
     /**
@@ -76,9 +68,9 @@ class Users
      *
      * @param string $account 账号、电子邮件或电话号码
      * @param string $password 密码
-     * @return array 登录成功返回用户信息数组，失败返回false
+     * @return UsersModel
      */
-    public static function Login($account, $password): array
+    public static function Login($account, $password): UsersModel
     {
         // 尝试使用账号、电子邮件或电话号码查询用
         $result = UsersModel::where('number', $account)
@@ -87,20 +79,20 @@ class Users
             ->find();
 
         if (!$result) {
-            return Common::mArrayEasyReturnStruct('用户不存在', false);
+            throw \app\api\ApiException::createBadRequest('用户不存在', []);
         }
 
         if ($result['status'] != 0 && $result['status'] != 2) {
-            return Common::mArrayEasyReturnStruct('您的账户已被封禁或未激活', false);
+            throw \app\api\ApiException::createBadRequest('您的账户已被封禁或未激活', []);
         }
 
         // 验证密码是否匹配
         if (!password_verify($password, $result['password'])) {
-            return Common::mArrayEasyReturnStruct('密码不匹配', false, $result->toArray());
+            throw \app\api\ApiException::createBadRequest('密码不匹配', []);
         }
 
         // 密码匹配，返回用户信息
-        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+        return $result;
     }
 
     /**
@@ -112,9 +104,9 @@ class Users
      * @param string $phone
      * @param string $password
      * @param int $status
-     * @return array
+     * @return UsersModel
      */
-    public static function Register($number, $username, $email, $phone, $password, $roles_id = [2], $status = 0): array
+    public static function Register($number, $username, $email, $phone, $password, $roles_id = [2], $status = 0): UsersModel
     {
         if ($password != '') {
             if ($email != '') {
@@ -123,7 +115,7 @@ class Users
                 $result = UsersModel::where('phone', $phone)->find();
             }
             if ($result) {
-                return Common::mArrayEasyReturnStruct('邮箱或手机号已存在', false);
+                throw \app\api\ApiException::createBadRequest('邮箱或手机号已存在', []);
             } else {
                 $data = array(
                     'number' => $number,
@@ -135,33 +127,31 @@ class Users
                 );
             }
         } else {
-            return Common::mArrayEasyReturnStruct('密码不得为空', false);
+            throw \app\api\ApiException::createBadRequest('密码不得为空', []);
         }
 
         $data['password'] = password_hash($password, PASSWORD_DEFAULT);
         $result = UsersModel::create($data);
 
-        if (!$result) {
-            return Common::mArrayEasyReturnStruct('数据插入失败', false);
-        }
+        // if (!$result) {
+        //     return Common::mArrayEasyReturnStruct('数据插入失败', false);
+        // }
 
-        return Common::mArrayEasyReturnStruct(null, true, $result->id);
+        return $result;
     }
 
     /**
      * 读取用户列表
      *
-     * @return void
+     * @return array
      */
-    public function Index($params)
+    public static function Index($params): array
     {
-
         $params['search_default_key'] = 'username';
         $params['withoutField'] = ['password'];
-        $cards_list = new ModelList($this->UsersModel);
-        $result = $cards_list->getPaginate($params);
+        $result = ModelList::make(UsersModel::class)->getPaginate($params);
 
-        return Common::mArrayEasyReturnStruct(null, true, $result->toArray());
+        return $result->toArray();
     }
 
     /**
@@ -169,55 +159,31 @@ class Users
      *
      * @param int|array $id 单个ID或ID数组
      * @param array $data
-     * @return array
+     * @return UsersModel
      */
-    public static function Patch($id, $data)
+    public static function Patch($id, $data): UsersModel
     {
-        try {
-            if (is_array($id)) {
-                $result = UsersModel::whereIn('id', $id)->update($data);
-            } else {
-                $result = UsersModel::update($data, ['id' => $id]);
-            }
-            return Common::mArrayEasyReturnStruct(null, true, $result);
-        } catch (\Throwable $th) {
-            return Common::mArrayEasyReturnStruct('更新失败', false, $th);
+        if (is_array($id)) {
+            $result = UsersModel::whereIn('id', $id)->update($data);
+        } else {
+            $result = UsersModel::update($data, ['id' => $id]);
         }
+        return $result;
     }
 
     /**
-     * 批量更新用户数据
-     *
-     * @param array $data 包含多个用户数据的数组，每个元素必须包含id
-     * @return array
-     */
-    public static function BatchPatch($data)
-    {
-        try {
-            $result = UsersModel::saveAll($data);
-            return Common::mArrayEasyReturnStruct(null, true, $result);
-        } catch (\Throwable $th) {
-            return Common::mArrayEasyReturnStruct('批量更新失败', false, $th);
-        }
-    }
-
-    /**
-     * 读取指定ID行
+     * 读取指定ID行----------------------------------
      *
      * @param int $id
      * @param array $without
      * @return array['status','msg','data'=>object]
      */
-    public static function Get($id, $without = [])
+    public static function Get($id, $without = []): UsersModel
     {
         $withoutField = UsersModel::getWithoutField();
         $withoutField[] = 'password';
         $withoutField = array_merge($withoutField, $without);
-        $result = UsersModel::where('id', $id)->withoutField($withoutField)->findOrEmpty();
-        if ($result) {
-            return Common::mArrayEasyReturnStruct(null, true, $result);
-        }
-        return Common::mArrayEasyReturnStruct('查询失败', false, $result);
+        return UsersModel::where('id', $id)->withoutField($withoutField)->findOrEmpty();
     }
 
     /**
@@ -228,19 +194,9 @@ class Users
      * @param array $ids 多用户ID集
      * @return void
      */
-    static public function deleteUsers($id = false, $ids = [])
+    static public function deleteUsers($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
-        // 存储事务
-        Db::startTrans();
-        try {
-            UsersModel::destroy($data);
-
-            Db::commit(); // 提交事务
-            return Common::mArrayEasyReturnStruct('删除成功', true);
-        } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
-            return Common::mArrayEasyReturnStruct('删除失败', false, $th->getMessage());
-        }
+        UsersModel::destroy($data);
     }
 }

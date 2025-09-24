@@ -4,12 +4,12 @@ namespace app\api\controller\public;
 
 use app\api\service\Cards as CardsService;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 use app\api\controller\BaseController;
 
-use app\api\controller\Params;
-
+use app\api\Params;
+use app\api\ApiException;
 use think\facade\Request;
 
 class Cards extends BaseController
@@ -22,21 +22,21 @@ class Cards extends BaseController
         $this->Params = new Params();
     }
 
-    public function index(CardsService $CardsService)
+    public function index()
     {
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = $CardsService->newList($params);
+        $result = CardsService::newList($params);
         //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk($result);
     }
 
-    public function hotList(CardsService $CardsService)
+    public function hotList()
     {
         //调用服务
-        $result = $CardsService->hotList();
+        $result = CardsService::hotList();
         //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk($result);
     }
 }

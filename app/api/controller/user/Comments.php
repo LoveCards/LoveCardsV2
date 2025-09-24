@@ -7,7 +7,7 @@ use think\facade\Request;
 use app\api\service\Comments as CommentsService;
 
 use app\api\controller\BaseController;
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Comments extends BaseController
 {
@@ -17,7 +17,7 @@ class Comments extends BaseController
         //调用服务
         $result = CommentsService::list($this->JWT_SESSION);
         //返回结果
-        return ApiResponse::createSuccess($result);
+        return ApiResponse::createOk($result);
     }
 
     //删除

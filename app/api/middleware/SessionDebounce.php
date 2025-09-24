@@ -4,7 +4,7 @@ namespace app\api\middleware;
 
 use app\common\BackEnd;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class SessionDebounce
 {

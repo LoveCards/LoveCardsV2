@@ -14,7 +14,7 @@ use app\common\ConfigFacade;
 
 use app\api\controller\BaseController;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class System extends BaseController
 {
@@ -79,7 +79,7 @@ class System extends BaseController
             "theme_list" => $lDef_ThemeConfigList,
             "theme_config" => $tDef_NowThemeConfig
         ];
-        return ApiResponse::createSuccess($result);
+        return ApiResponse::createOk($result);
     }
 
     //读取配置
@@ -89,7 +89,7 @@ class System extends BaseController
         $lDef_Result['master'] = $this->SYSTEM_CONFIG;
         $lDef_Result['mail'] = Config::get('mail');
         //$lDef_Result['lovecards'] = config::get('lovecards');
-        return ApiResponse::createSuccess($lDef_Result);
+        return ApiResponse::createOk($lDef_Result);
     }
 
     public function setConfig()
@@ -372,7 +372,7 @@ class System extends BaseController
             'latest' => getLatestVer(),
             'verlog' => getUpdata()
         ];
-        return ApiResponse::createSuccess($result);
+        return ApiResponse::createOk($result);
     }
 
     //其他配置-PATCH

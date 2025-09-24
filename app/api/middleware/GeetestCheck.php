@@ -6,7 +6,7 @@ use think\facade\Request;
 
 use geetest\Gt4;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class GeetestCheck
 {

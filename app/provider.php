@@ -1,7 +1,8 @@
 <?php
+
 use app\ExceptionHandle;
 
-// 容器Provider定义文件 接管报错
+// 容器Provider定义文件
 return [
-    'think\exception\Handle'    =>  ExceptionHandle::class,
+    'think\exception\Handle' => ExceptionHandle::class,
 ];

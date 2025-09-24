@@ -6,7 +6,6 @@ use app\api\model\Likes as LikesModel;
 use app\api\model\Cards as CardsModel;
 
 use \think\facade\Db;
-use think\db\Query;
 
 class Likes
 {
@@ -24,7 +23,6 @@ class Likes
 
         $result = LikesModel::where('uid', $context['uid'])->paginate($pageSize);
         if ($result->isEmpty()) {
-            //throw new \Exception('没有找到', 204);
             return [];
         }
 
@@ -84,7 +82,7 @@ class Likes
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            return $e;
+            throw \app\ApiException::createError('删除失败', null, $e);
         }
     }
 }

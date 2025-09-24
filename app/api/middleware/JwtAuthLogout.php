@@ -4,7 +4,7 @@ namespace app\api\middleware;
 
 use jwt\Jwt;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class JwtAuthLogout
 {

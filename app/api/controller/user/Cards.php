@@ -15,9 +15,9 @@ use app\api\service\Comments as CommentsService;
 use app\api\model\Likes as LikesModel; //需要优化
 
 use app\api\controller\BaseController;
-use app\api\controller\Params;
+use app\api\Params;
 
-use app\api\controller\ApiResponse;
+use app\api\ApiResponse;
 
 class Cards extends BaseController
 {
@@ -35,9 +35,9 @@ class Cards extends BaseController
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = $CardsService->newList($params, $this->JWT_SESSION['uid']);
+        $result = CardsService::newList($params, $this->JWT_SESSION['uid']);
         //返回结果
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk($result);
     }
 
     //创建卡片
@@ -60,7 +60,7 @@ class Cards extends BaseController
         if ($this->SYSTEM_CONFIG['Cards']['Approve']) {
             return ApiResponse::createCreated();
         }
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk($result['data']);
     }
     //隐藏卡片(用户删除)
     public function hideCard()
@@ -95,7 +95,7 @@ class Cards extends BaseController
         if ($this->SYSTEM_CONFIG['Comments']['Approve']) {
             return ApiResponse::createCreated();
         }
-        return ApiResponse::createSuccess($result['data']);
+        return ApiResponse::createOk($result['data']);
     }
     //隐藏评论(用户删除)
     public function hideComment() {}
@@ -140,6 +140,6 @@ class Cards extends BaseController
         };
 
         //返回数据
-        return ApiResponse::createSuccess([$resultCardsData['good'] + 1]);
+        return ApiResponse::createOk([$resultCardsData['good'] + 1]);
     }
 }

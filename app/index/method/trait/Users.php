@@ -21,9 +21,9 @@ trait Users
                 'MyInfo' => $tDef_UserAllData['data'],
             ]);
         }
-        $tDef_EmptyData = UsersService::Get(0);
+        $user = UsersService::Get(0);
         return Common::mArrayEasyReturnStruct($tDef_UserAllData['msg'], false, [
-            'MyInfo' => $tDef_EmptyData['data'],
+            'MyInfo' => $user,
         ]);
     }
 }
