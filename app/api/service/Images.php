@@ -53,6 +53,6 @@ class Images
         if ($result) {
             return $result;
         }
-        throw \app\ApiException::createError('查询失败');
+        throw \app\api\ApiException::createNotFound('查询失败', []);
     }
 }
