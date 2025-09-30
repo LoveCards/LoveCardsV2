@@ -47,7 +47,7 @@ class Cards
      * @param integer $user_id 用户id
      * @return array
      */
-    public static function newList(array $params, int $user_id = -1): array
+    public static function list(array $params, int $user_id = -1): array
     {
         $params['search_default_key'] = 'content';
         if ($user_id != -1) {
@@ -59,37 +59,6 @@ class Cards
         $result = ModelList::make(CardsModel::class)->getPaginate($params);
 
         return $result->toArray();
-    }
-
-    //列表
-    static public function list($context)
-    {
-        $pageSize = 15;
-
-        $result = CardsModel::whereIn('status', [0, 1, 3])
-            ->where('user_id', $context['uid'])
-            ->order('id', 'desc')
-            ->paginate($pageSize);
-
-        return $result;
-    }
-
-    /**
-     * 读取卡片
-     *
-     * @return array|null
-     */
-    static public function Get($id): array|null
-    {
-        $result = CardsModel::where('id', $id)->find();
-        $result = $result ? $result->toArray() : $result;
-        return $result;
-    }
-
-    //模型更新
-    static public function updata($data, $where = [], $allowField = [])
-    {
-        return CardsModel::update($data, $where, $allowField);
     }
 
     /**

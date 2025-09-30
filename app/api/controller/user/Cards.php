@@ -8,6 +8,8 @@ use think\facade\Db;
 use app\api\validate\Cards as CardsValidate;
 use app\api\validate\Comments as CommentsValidate;
 
+use app\api\model\Cards as CardsModel;
+
 use app\api\service\Cards as CardsService;
 use app\api\service\Likes as LikesService;
 use app\api\service\Comments as CommentsService;
@@ -29,13 +31,13 @@ class Cards extends BaseController
         $this->Params = new Params();
     }
 
-    public function list(CardsService $CardsService)
+    //我的卡片列表
+    public function list()
     {
-
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = CardsService::newList($params, $this->JWT_SESSION['uid']);
+        $result = CardsService::list($params, $this->JWT_SESSION['uid']);
         //返回结果
         return ApiResponse::createOk($result);
     }
@@ -65,11 +67,14 @@ class Cards extends BaseController
     //隐藏卡片(用户删除)
     public function hideCard()
     {
-        try {
-            //隐藏
-            CardsService::updata(['status' => 2], ['id' => Request::param('id'), 'user_id' => $this->JWT_SESSION['uid']], ['status']);
-        } catch (\Throwable $th) {
-            return ApiResponse::createError($th->getMessage());
+        $result = CardsModel::where([
+            'id' => Request::param('id'),
+            'user_id' => $this->JWT_SESSION['uid'],
+            'status' => 0
+        ])->update(['status' => 2]);
+
+        if ($result === 0) {
+            return ApiResponse::createNotFound([]);
         }
         return ApiResponse::createNoCntent([]);
     }
