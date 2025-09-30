@@ -9,6 +9,7 @@ use think\exception\ValidateException;
 use app\api\validate\Cards as CardsValidate;
 use app\api\validate\CardsSetting as CardsValidateSetting;
 
+use app\api\model\Cards as CardsModel;
 //基础应用服务
 use app\api\service\Cards as CardsService;
 
@@ -38,7 +39,7 @@ class Cards extends BaseController
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = CardsService::newList($params);
+        $result = CardsService::list($params);
         //返回结果
         return ApiResponse::createOk($result);
     }
@@ -53,8 +54,8 @@ class Cards extends BaseController
         }
 
         //调用服务
-        $result = CardsService::Get($params['id']);
-        if ($result) {
+        $result = CardsModel::where('id', $params['id'])->find();
+        if ($result !== null) {
             return ApiResponse::createOk($result);
         }
         return ApiResponse::createNotFound();

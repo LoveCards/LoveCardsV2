@@ -20,20 +20,6 @@ class Comments
         return $result;
     }
 
-    //列表
-    static public function list($context)
-    {
-        //$currentPage = 1;
-        $pageSize = 15;
-
-        $result = CommentsModel::whereIn('status', [0, 1, 3])
-            ->where('user_id', $context['uid'])
-            ->order('id', 'desc')
-            ->paginate($pageSize);
-
-        return $result;
-    }
-
     /**
      * 字段反转
      *
@@ -136,7 +122,7 @@ class Comments
             case 'delete':
                 self::deleteComments(false, $ids);
             default:
-                throw \app\ApiException::createBadRequest('方法不存在',[]);
+                throw \app\ApiException::createBadRequest('方法不存在', []);
         }
     }
 

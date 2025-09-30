@@ -27,7 +27,7 @@ class Cards extends BaseController
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = CardsService::newList($params);
+        $result = CardsService::list($params);
         //返回结果
         return ApiResponse::createOk($result);
     }
