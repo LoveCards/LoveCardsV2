@@ -9,7 +9,6 @@ use app\api\ApiResponse;
 use app\api\controller\BaseController;
 
 use app\api\Params;
-use app\api\ApiException;
 use think\facade\Request;
 
 class Cards extends BaseController

@@ -13,6 +13,7 @@ use yunarch\app\roles\middleware\RolesCheck;
 
 Route::get('public/cards', 'public.Cards/index'); //卡片列表
 Route::get('public/hot-cards', 'public.Cards/hotList'); //卡片列表
+Route::get('public/tags', 'public.Tags/list'); //卡片列表
 
 Route::get('theme/config', 'public.theme/Config');
 //Route::post('upload/image', 'public.Upload/Image');
