@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller\user;
+namespace app\api\controller\public;
 
 use app\api\service\Tags as TagsService;
 
@@ -9,9 +9,7 @@ use \app\api\controller\BaseController;
 
 class Tags extends BaseController
 {
-
-    //获取-GET
-    public function noPaginateIndex()
+    public function list()
     {
         $params = [
             'where' => ['status' => 0]
