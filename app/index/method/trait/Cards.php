@@ -197,7 +197,7 @@ trait Cards
             $tReq_TagId = Db::table('tags')->where('id', $tReq_TagIdValue)->where('aid', $BaseController->attrGReqAppId['cards'])->where('status', 0)->findOrEmpty();
             if ($tReq_TagId) {
                 $lDef_Result = Db::table('tags_map')->alias('CTM')
-                    ->join('cards CARD', 'CTM.pid = CARD.id')
+                    ->join('cards CARD', 'CTM.pid = CARD.id AND CARD.status = 0 AND CARD.deleted_at IS NULL')
                     ->field($BaseController::G_Def_DbCardsCommonField)
                     ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
                     ->where('CTM.tag_id', $tReq_TagIdValue)
