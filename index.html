@@ -15,7 +15,7 @@
             color: #333;
             line-height: 1.6;
         }
-        
+
         .container {
             width: 85%;
             max-width: 800px;
@@ -25,7 +25,7 @@
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-        
+
         h1 {
             color: #2c3e50;
             margin-top: 0;
@@ -34,7 +34,7 @@
             position: relative;
             padding-bottom: 0.5rem;
         }
-        
+
         h1:after {
             content: "";
             position: absolute;
@@ -45,25 +45,25 @@
             background: #42b983;
             border-radius: 2px;
         }
-        
+
         h3 {
             color: #34495e;
             margin: 1.8rem 0 1rem;
             font-weight: 500;
         }
-        
+
         ul {
             padding-left: 1.2rem;
             margin: 1.5rem 0;
             list-style-type: none;
         }
-        
+
         ul li {
             margin-bottom: 0.8rem;
             position: relative;
             padding-left: 1.5rem;
         }
-        
+
         ul li:before {
             content: "•";
             color: #42b983;
@@ -71,7 +71,7 @@
             position: absolute;
             left: 0;
         }
-        
+
         code {
             background: #f3f4f6;
             padding: 0.2rem 0.4rem;
@@ -80,7 +80,28 @@
             font-size: 0.9em;
             color: #e83e8c;
         }
-        
+
+        /* 伪静态代码块样式 */
+        .code-block {
+            margin-top: 0.6rem;
+        }
+
+        .code-block--tight {
+            margin-top: 0.4rem;
+        }
+
+        .code-title {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .code-pre {
+            background: #f3f4f6;
+            padding: 0.6rem;
+            border-radius: 6px;
+            overflow: auto;
+        }
+
         a {
             color: #42b983;
             text-decoration: none;
@@ -88,18 +109,18 @@
             transition: all 0.2s ease;
             border-bottom: 1px solid transparent;
         }
-        
+
         a:hover {
             color: #2c3e50;
             border-bottom-color: #42b983;
         }
-        
+
         @media (max-width: 768px) {
             .container {
                 width: 90%;
                 padding: 1.5rem;
             }
-            
+
             h1 {
                 font-size: 1.8rem;
             }
@@ -111,12 +132,43 @@
     <div class="container">
         <h1>让我们继续下一步吧 😊</h1>
         <h3>非常棒 👍 你已经成功上传并解压代码了，接着执行以下操作进入安装引导！</h3>
-        <ul>
-            <li>设置伪静态规则，可参照 <code>/public</code> 目录下 <code>.htaccess</code> 和 <code>nginx.htaccess</code> 文件进行设置</li>
+        <ol>
+            <li>
+                设置伪静态规则
+                <div class="code-block code-block--tight">
+                    <div class="code-title">Nginx</div>
+                    <pre class="code-pre">
+                        <code>
+location ~* (runtime|application)/{
+    return 403;
+}
+location / {
+    if (!-e $request_filename){
+        rewrite  ^(.*)$  /index.php?s=$1  last;   break;
+    }
+}
+                        </code>
+                    </pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-title">Apache</div>
+                    <pre class="code-pre"><code>
+&lt;IfModule mod_rewrite.c&gt;
+    Options +FollowSymlinks -Multiviews
+    RewriteEngine On
+    
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php?/$1 [QSA,PT,L]
+    SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+&lt;/IfModule&gt;
+                    </code></pre>
+                </div>
+            </li>
             <li>设置运行目录为 <code>/public</code> 目录，若不可设置运行目录可尝试直接将域名绑定至 <code>/public</code></li>
-            <li>进入安装引导开始安装</li>
-        </ul>
-        
+            <li>刷新页面，进入安装引导开始安装</li>
+        </ol>
+
         <h3>更多资源：</h3>
         <ul>
             <li><a href="https://www.lovecards.cn/" target="_blank">LoveCards 官网</a></li>
