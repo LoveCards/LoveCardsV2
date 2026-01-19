@@ -9,7 +9,7 @@ use app\api\middleware\JwtAuthLogout;
 use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
 
-use yunarch\app\roles\middleware\RolesCheck;
+use app\api\middleware\PermissionCheck;
 
 Route::get('public/cards', 'public.Cards/index'); //卡片列表
 Route::get('public/hot-cards', 'public.Cards/hotList'); //卡片列表
@@ -20,4 +20,4 @@ Route::get('theme/config', 'public.theme/Config');
 
 Route::group('', function () {
     Route::post('upload/user-images', 'public.upload/UserImages');
-})->middleware([JwtAuthCheck::class, RolesCheck::class]);
+})->middleware([JwtAuthCheck::class, PermissionCheck::class]);

@@ -86,7 +86,7 @@ class Comments
             Db::commit(); // 提交事务
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            throw \app\ApiException::createError('创建失败', null, $th);
+            throw \app\api\ApiException::createError('创建失败', null, $th);
         }
     }
 
@@ -113,16 +113,21 @@ class Comments
         switch ($method) {
             case 'top':
                 self::fieldsToggle('is_top', $ids, [0, 1]);
+                break;
             case 'approve':
                 self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                break;
             case 'ban':
                 self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                break;
             case 'hide':
                 self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                break;
             case 'delete':
                 self::deleteComments(false, $ids);
+                break;
             default:
-                throw \app\ApiException::createBadRequest('方法不存在', []);
+                throw \app\api\ApiException::createBadRequest('方法不存在', []);
         }
     }
 

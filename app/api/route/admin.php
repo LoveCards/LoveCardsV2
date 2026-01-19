@@ -4,7 +4,7 @@ use think\facade\Route;
 
 use app\api\middleware\JwtAuthCheck;
 
-use yunarch\app\roles\middleware\RolesCheck;
+use app\api\middleware\PermissionCheck;
 
 Route::group('', function () {
     //超管
@@ -52,6 +52,29 @@ Route::group('', function () {
     Route::delete('admin/comment', 'admin.Comments/Delete');
     Route::post('admin/comments/batch-operate', 'admin.Comments/BatchOperate');
 
+    //角色管理
+    Route::get('admin/roles', 'admin.Roles/Index');
+    Route::get('admin/role', 'admin.Roles/Get');
+    Route::post('admin/role', 'admin.Roles/Create');
+    Route::patch('admin/role', 'admin.Roles/Patch');
+    Route::delete('admin/role', 'admin.Roles/Delete');
+    Route::post('admin/role/assign-permissions', 'admin.Roles/AssignPermissions');
+    Route::get('admin/role/permissions', 'admin.Roles/GetRolePermissions');
+
+    //权限管理
+    Route::get('admin/permissions', 'admin.Permissions/Index');
+    Route::get('admin/permission', 'admin.Permissions/Get');
+    Route::post('admin/permission', 'admin.Permissions/Create');
+    Route::patch('admin/permission', 'admin.Permissions/Patch');
+    Route::delete('admin/permission', 'admin.Permissions/Delete');
+    Route::get('admin/permissions/all', 'admin.Permissions/All');
+
+    //角色权限关联
+    Route::post('admin/role-permission', 'admin.RolePermissions/Add');
+    Route::delete('admin/role-permission', 'admin.RolePermissions/Remove');
+    Route::post('admin/role-permissions/batch-add', 'admin.RolePermissions/BatchAdd');
+    Route::post('admin/role-permissions/batch-remove', 'admin.RolePermissions/BatchRemove');
+
     //控制台
     Route::get('admin/dashboard', 'admin.Dashboard/Index');
-})->middleware([JwtAuthCheck::class, RolesCheck::class]);
+})->middleware([JwtAuthCheck::class, PermissionCheck::class]);

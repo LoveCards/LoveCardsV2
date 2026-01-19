@@ -9,7 +9,7 @@ use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\SessionDebounce;
 use app\api\middleware\GeetestCheck;
 
-use yunarch\app\roles\middleware\RolesCheck;
+use app\api\middleware\PermissionCheck;
 
 Route::post('user/auth/login', 'user.Auth/Login');
 Route::post('user/auth/logout', 'user.Auth/Logout');
@@ -50,4 +50,4 @@ Route::group('', function () {
     Route::post('user/password', 'user.info/PostPassword');
     Route::post('user/email', 'user.info/PostEmail');
     Route::post('user/email-captcha', 'user.info/PostBindEmailCaptcha');
-})->middleware([JwtAuthCheck::class, RolesCheck::class]);
+})->middleware([JwtAuthCheck::class, PermissionCheck::class]);

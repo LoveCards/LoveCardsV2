@@ -60,7 +60,7 @@ class Users
                 // case 'delete':
                 //     return self::deleteTags(false, $ids);
             default:
-                throw \app\ApiException::createBadRequest('方法不存在', []);
+                throw \app\api\ApiException::createBadRequest('方法不存在', []);
         }
     }
     /**
@@ -106,7 +106,7 @@ class Users
      * @param int $status
      * @return UsersModel
      */
-    public static function Register($number, $username, $email, $phone, $password, $roles_id = [2], $status = 0): UsersModel
+    public static function Register($number, $username, $email, $phone, $password, $roles_id = [3], $status = 0): UsersModel
     {
         if ($password != '') {
             if ($email != '') {
