@@ -53,12 +53,15 @@ class Users
         switch ($method) {
             case 'approve':
                 self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                break;
             case 'ban':
                 self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                break;
             case 'hide':
                 self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
-                // case 'delete':
-                //     return self::deleteTags(false, $ids);
+                break;
+            // case 'delete':
+            //     return self::deleteTags(false, $ids);
             default:
                 throw \app\api\ApiException::createBadRequest('方法不存在', []);
         }
