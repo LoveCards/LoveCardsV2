@@ -53,6 +53,6 @@ class Images
         if ($result) {
             return $result;
         }
-        throw \app\api\ApiException::createNotFound('查询失败', []);
+        throw \app\api\ApiException::notFound('查询失败', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
     }
 }

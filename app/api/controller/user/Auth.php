@@ -187,21 +187,22 @@ class Auth extends BaseController
         $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //同IP登入
-        $result = UsersService::Login($account, $password);
-        if ($result['status'] == true) {
+        try {
+            $result = UsersService::Login($account, $password);
             //如果访客账号已存在，直接返回token
-            $user_id = $result['data']['id'];
-            $result = Jwt::signToken(['uid' => $user_id]);
+            $data = $result->toArray();
+            $result = Jwt::signToken(['uid' => $data['id']]);
             return ApiResponse::createOk(['token' => $result]);
+        } catch (\app\api\ApiException $e) {
+            if ($e->getCode() == \app\api\ApiException::CODE_USER_NOT_FOUND) {
+                //写入数据
+                $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
+                //返回令牌
+                $result = Jwt::signToken(['uid' => $user->id]);
+                return ApiResponse::createOk(['token' => $result]);
+            }
+            throw $e;
         }
-
-        //写入数据
-        $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
-
-        //返回令牌
-        $result = Jwt::signToken(['uid' => $user->id]);
-
-        return ApiResponse::createOk(['token' => $result]);
     }
 
     //获取验证码-POST
@@ -221,7 +222,7 @@ class Auth extends BaseController
                 return ApiResponse::createError('发送失败', ['邮件模块发生错误']);
             }
             if ($result['status']) {
-                return ApiResponse::createNoCntent();
+                return ApiResponse::createNoContent();
             } else {
                 return ApiResponse::createError('发送失败', [$result['msg']]);
             }
@@ -233,6 +234,6 @@ class Auth extends BaseController
     //注销-POST
     public function Logout()
     {
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 }

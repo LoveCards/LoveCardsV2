@@ -87,7 +87,7 @@ class Cards
                 self::deleteCards(false, $ids);
                 break;
             default:
-                throw \app\api\ApiException::createBadRequest('方法不存在', []);
+                throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
     }
 
@@ -137,7 +137,7 @@ class Cards
             return $result->id;
         } catch (\Throwable $th) {
             Db::rollback();
-            throw \app\api\ApiException::createError('创建失败', null, $th);
+            throw \app\api\ApiException::error('创建失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }
 
@@ -165,7 +165,7 @@ class Cards
             Db::commit(); // 提交事务
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            throw \app\api\ApiException::createError('更新失败', null, $th);
+            throw \app\api\ApiException::error('更新失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }
     /**
@@ -249,7 +249,7 @@ class Cards
             Db::commit(); // 提交事务
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            throw \app\api\ApiException::createError('删除失败', null, $th);
+            throw \app\api\ApiException::error('删除失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }
     /**

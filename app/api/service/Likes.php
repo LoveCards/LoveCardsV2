@@ -82,7 +82,7 @@ class Likes
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            throw \app\api\ApiException::createError('删除失败', null, $e);
+            throw \app\api\ApiException::error('删除失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $e);
         }
     }
 }

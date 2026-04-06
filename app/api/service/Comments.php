@@ -86,7 +86,7 @@ class Comments
             Db::commit(); // 提交事务
         } catch (\Throwable $th) {
             Db::rollback(); // 回滚事务
-            throw \app\api\ApiException::createError('创建失败', null, $th);
+            throw \app\api\ApiException::error('创建失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }
 
@@ -127,7 +127,7 @@ class Comments
                 self::deleteComments(false, $ids);
                 break;
             default:
-                throw \app\api\ApiException::createBadRequest('方法不存在', []);
+                throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
     }
 

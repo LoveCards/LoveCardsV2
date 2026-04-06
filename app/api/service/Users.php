@@ -63,7 +63,7 @@ class Users
             // case 'delete':
             //     return self::deleteTags(false, $ids);
             default:
-                throw \app\api\ApiException::createBadRequest('方法不存在', []);
+                throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
     }
     /**
@@ -82,16 +82,16 @@ class Users
             ->find();
 
         if (!$result) {
-            throw \app\api\ApiException::createBadRequest('用户不存在', []);
+            throw \app\api\ApiException::unauthorized('用户不存在', \app\api\ApiException::CODE_USER_NOT_FOUND);
         }
 
         if ($result['status'] != 0 && $result['status'] != 2) {
-            throw \app\api\ApiException::createBadRequest('您的账户已被封禁或未激活', []);
+            throw \app\api\ApiException::forbidden('您的账户已被封禁或未激活', \app\api\ApiException::CODE_USER_BANNED);
         }
 
         // 验证密码是否匹配
         if (!password_verify($password, $result['password'])) {
-            throw \app\api\ApiException::createBadRequest('密码不匹配', []);
+            throw \app\api\ApiException::unauthorized('密码不匹配', \app\api\ApiException::CODE_PASSWORD_MISMATCH);
         }
 
         // 密码匹配，返回用户信息
@@ -118,7 +118,7 @@ class Users
                 $result = UsersModel::where('phone', $phone)->find();
             }
             if ($result) {
-                throw \app\api\ApiException::createBadRequest('邮箱或手机号已存在', []);
+                throw \app\api\ApiException::badRequest('邮箱或手机号已存在', \app\api\ApiException::CODE_USER_ALREADY_EXISTS);
             } else {
                 $data = array(
                     'number' => $number,
@@ -130,7 +130,7 @@ class Users
                 );
             }
         } else {
-            throw \app\api\ApiException::createBadRequest('密码不得为空', []);
+            throw \app\api\ApiException::badRequest('密码不得为空', \app\api\ApiException::CODE_PARAM_INVALID);
         }
 
         $data['password'] = password_hash($password, PASSWORD_DEFAULT);
