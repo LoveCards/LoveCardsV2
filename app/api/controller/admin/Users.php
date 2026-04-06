@@ -50,7 +50,7 @@ class Users extends BaseController
         }
         //调用服务
         UsersService::Patch($params['id'], $params);
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //删除
@@ -66,7 +66,7 @@ class Users extends BaseController
         UsersService::deleteUsers($params);
 
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //批量操作
@@ -80,6 +80,6 @@ class Users extends BaseController
         UsersService::batchOperate($params['method'], $ids);
 
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 }
