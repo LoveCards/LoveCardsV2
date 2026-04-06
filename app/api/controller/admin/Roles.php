@@ -80,7 +80,7 @@ class Roles extends BaseController
         //调用服务
         RolesService::updateRole($id, $params);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //删除
@@ -95,7 +95,7 @@ class Roles extends BaseController
         //调用服务
         RolesService::deleteRoles($params);
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //分配权限
@@ -113,7 +113,7 @@ class Roles extends BaseController
         //调用服务
         RolesService::assignPermissions($roleId, $permissionIds);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //获取角色的权限列表

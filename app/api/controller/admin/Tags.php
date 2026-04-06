@@ -79,7 +79,7 @@ class Tags extends BaseController
         //调用服务
         TagsService::deleteTags($params);
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //批量操作
@@ -93,6 +93,6 @@ class Tags extends BaseController
         TagsService::batchOperate($params['method'], $ids);
 
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 }

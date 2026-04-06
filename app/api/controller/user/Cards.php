@@ -76,7 +76,7 @@ class Cards extends BaseController
         if ($result === 0) {
             return ApiResponse::createNotFound([]);
         }
-        return ApiResponse::createNoCntent([]);
+        return ApiResponse::createNoContent([]);
     }
 
     //创建评论

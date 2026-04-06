@@ -34,7 +34,7 @@ class RolePermissions extends BaseController
         //调用服务
         RolePermissionsService::addPermission($params['role_id'], $params['permission_id']);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //移除权限
@@ -49,7 +49,7 @@ class RolePermissions extends BaseController
         //调用服务
         RolePermissionsService::removePermission($params['role_id'], $params['permission_id']);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //批量添加权限
@@ -66,7 +66,7 @@ class RolePermissions extends BaseController
         //调用服务
         RolePermissionsService::batchAddPermissions($params['role_id'], $permissionIds);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //批量移除权限
@@ -83,7 +83,7 @@ class RolePermissions extends BaseController
         //调用服务
         RolePermissionsService::batchRemovePermissions($params['role_id'], $permissionIds);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 }
 

@@ -73,7 +73,7 @@ class Cards extends BaseController
         //调用服务
         $result = CardsService::updateCard($params);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //删除
@@ -88,7 +88,7 @@ class Cards extends BaseController
         //调用服务
         $result = CardsService::deleteCards($params);
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //批量操作
@@ -102,7 +102,7 @@ class Cards extends BaseController
 
         CardsService::batchOperate($params['method'], $ids);
 
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //设置
@@ -130,7 +130,7 @@ class Cards extends BaseController
         $result = BackEnd::mBoolCoverConfig('lovecards', $data, true);
 
         if ($result == true) {
-            return ApiResponse::createNoCntent();
+            return ApiResponse::createNoContent();
         } else {
             return ApiResponse::createError('修改失败，请重试');
         }

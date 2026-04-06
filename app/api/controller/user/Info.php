@@ -33,7 +33,7 @@ class Info
     {
         UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
 
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     /**

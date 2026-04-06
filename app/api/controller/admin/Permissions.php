@@ -80,7 +80,7 @@ class Permissions extends BaseController
         //调用服务
         PermissionsService::updatePermission($id, $params);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //删除
@@ -95,7 +95,7 @@ class Permissions extends BaseController
         //调用服务
         PermissionsService::deletePermissions($params);
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //获取所有权限（不分页，用于下拉选择等）

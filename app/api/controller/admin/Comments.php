@@ -45,7 +45,7 @@ class Comments extends BaseController
         //调用服务
         CommentsService::updateComment($params);
         //返回结果
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //删除
@@ -60,7 +60,7 @@ class Comments extends BaseController
         //调用服务
         CommentsService::deleteComments($params);
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //批量操作
@@ -75,6 +75,6 @@ class Comments extends BaseController
         //调用服务
         CommentsService::batchOperate($params['method'], $ids);
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 }

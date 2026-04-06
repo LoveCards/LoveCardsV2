@@ -22,6 +22,6 @@ class Likes extends BaseController
     public function unLike()
     {
         LikesService::delete(Request::param('id'), $this->JWT_SESSION);
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 }

@@ -159,7 +159,7 @@ class System extends BaseController
 
         //空值直接停止
         if (empty($lReq_Params)) {
-            return ApiResponse::createNoCntent();
+            return ApiResponse::createNoContent();
         }
         //dd($lReq_Params);
 
@@ -167,7 +167,7 @@ class System extends BaseController
         $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
         if ($tDef_Result) {
-            return ApiResponse::createNoCntent();
+            return ApiResponse::createNoContent();
         }
         return ApiResponse::createError('设置失败');
     }
@@ -196,7 +196,7 @@ class System extends BaseController
         Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
 
         //返回数据
-        return ApiResponse::createNoCntent();
+        return ApiResponse::createNoContent();
     }
 
     //邮箱配置-PATCH
@@ -218,7 +218,7 @@ class System extends BaseController
         $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params, 'auto');
 
         if ($tDef_Result) {
-            return ApiResponse::createNoCntent();
+            return ApiResponse::createNoContent();
         }
         return ApiResponse::createError('设置失败');
     }
@@ -243,7 +243,7 @@ class System extends BaseController
         $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
 
         if ($tDef_Result == true) {
-            return ApiResponse::createNoCntent();
+            return ApiResponse::createNoContent();
         } else {
             return ApiResponse::createBadRequest('修改失败，请重试');
         }
@@ -284,7 +284,7 @@ class System extends BaseController
         $tDef_Result = Theme::mBoolCoverThemeConfig($tDef_ThemeDirectory, $lDef_ParamThemeConfig);
 
         if ($tDef_Result) {
-            return ApiResponse::createNoCntent();
+            return ApiResponse::createNoContent();
         } else {
             return ApiResponse::createBadRequest('修改失败，请重试');
         }
