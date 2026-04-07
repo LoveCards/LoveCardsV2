@@ -99,7 +99,7 @@ class Dashboard
             ],
             [
                 'label' => '点赞',
-                'data' => fArrayGetChartData('good'),
+                'data' => fArrayGetChartData('likes'),
             ],
         ];
 

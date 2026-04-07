@@ -23,7 +23,7 @@ class BaseController extends Common
         'CARD.cover',
         'CARD.content',
         'CARD.tags',
-        'CARD.good',
+        'CARD.goods',
         'CARD.views',
         'CARD.comments',
         'CARD.post_ip',

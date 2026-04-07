@@ -70,12 +70,12 @@ class Likes
                 $Likes = LikesModel::whereIn('id', $data)->where('uid', $context['uid']);
                 $card_pids = $Likes->column('pid');
                 $Likes->delete();
-                CardsModel::whereIn('id', $card_pids)->dec('good')->update();
+                CardsModel::whereIn('id', $card_pids)->dec('goods')->update();
             } else {
                 $Likes = LikesModel::where('id', $data)->where('uid', $context['uid']);
                 $card_pids = $Likes->column('pid');
                 $Likes->delete();
-                CardsModel::where('id', $card_pids[0])->dec('good')->update();
+                CardsModel::where('id', $card_pids[0])->dec('goods')->update();
             }
             // 提交事务
             Db::commit();

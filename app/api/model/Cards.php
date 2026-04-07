@@ -29,7 +29,7 @@ class Cards extends Model
         'cover' => 'VARCHAR',
         'content' => 'TEXT',
         'tags' => 'JSON',
-        'good' => 'INT',
+        'goods' => 'INT',
         'views' => 'INT',
         'comments' => 'INT',
         'post_ip' => 'VARCHAR',

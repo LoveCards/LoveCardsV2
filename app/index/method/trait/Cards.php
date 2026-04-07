@@ -29,7 +29,7 @@ trait Cards
         //查询数据
         $lDef_Result = Db::table('cards')->alias('CARD')
             ->field($BaseController::G_Def_DbCardsCommonField)
-            ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
+            ->leftJoin('likes GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.status', 0)
             ->where('CARD.deleted_at', null)
             ->where('CARD.data', 'like', '%"model": "' . $tReq_ParamModel . '"%')
@@ -75,12 +75,12 @@ trait Cards
         //Cards推荐列表
         //$result = Db::table('cards')->where('status', 0)->where('top', 0)->order(['good','comment'=>'desc'])
         //->limit(CONST_G_HOT_LISTS_MAX)->select()->toArray();
-        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+goods*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
         //合并推荐列表到置顶列表
         $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
         //取Good状态合并到CardList数据
         for ($i = 0; $i < sizeof($lDef_CardLists); $i++) {
-            $lDef_Result = Db::table('good')->where('aid', 1)->where('ip', $BaseController->attrGReqIp);
+            $lDef_Result = Db::table('likes')->where('aid', 1)->where('ip', $BaseController->attrGReqIp);
             //查找对应封面
             if ($lDef_Result->where('pid', $lDef_CardLists[$i]['id'])->findOrEmpty() == []) {
                 //未点赞
@@ -143,7 +143,7 @@ trait Cards
 
             // 组合 Good 状态到 $tListData 列表
             foreach ($lDef_CardList as &$card) {
-                $tResultGood = Db::table('good')->where('aid', $BaseController->attrGReqAppId['cards'])->where('ip', $BaseController->attrGReqIp);
+                $tResultGood = Db::table('likes')->where('aid', $BaseController->attrGReqAppId['cards'])->where('ip', $BaseController->attrGReqIp);
                 // 查找对应封面
                 if ($tResultGood->where('pid', $card['id'])->findOrEmpty() == []) {
                     // 未点赞
@@ -199,7 +199,7 @@ trait Cards
                 $lDef_Result = Db::table('tags_map')->alias('CTM')
                     ->join('cards CARD', 'CTM.pid = CARD.id AND CARD.status = 0 AND CARD.deleted_at IS NULL')
                     ->field($BaseController::G_Def_DbCardsCommonField)
-                    ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
+                    ->leftJoin('likes GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
                     ->where('CTM.tag_id', $tReq_TagIdValue)
                     ->order('CARD.id', 'desc')
                     ->paginate($tDef_CardListMax, true);
@@ -259,7 +259,7 @@ trait Cards
         // 查询数据
         $lDef_CardData = Db::table('cards')->alias('CARD')
             ->field($BaseController::G_Def_DbCardsCommonField)
-            ->leftJoin('good GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
+            ->leftJoin('likes GOOD', $BaseController::G_Def_DbCardsCommonJoin . "'$BaseController->attrGReqIp'")
             ->where('CARD.id', $tReq_ParamId)
             ->where('CARD.status', 0)
             ->where('CARD.deleted_at', null)

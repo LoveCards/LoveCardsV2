@@ -129,8 +129,8 @@ class Cards extends BaseController
         }
 
         //更新视图字段
-        if (!$resultCards->inc('good')->update()) {
-            return ApiResponse::createBadRequest('点赞失败', ['cards.good更新失败']);
+        if (!$resultCards->inc('goods')->update()) {
+            return ApiResponse::createBadRequest('点赞失败', ['cards.goods更新失败']);
         };
 
         $data = [
@@ -145,6 +145,6 @@ class Cards extends BaseController
         };
 
         //返回数据
-        return ApiResponse::createOk([$resultCardsData['good'] + 1]);
+        return ApiResponse::createOk([$resultCardsData['goods'] + 1]);
     }
 }

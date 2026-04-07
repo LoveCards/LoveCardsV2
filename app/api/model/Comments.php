@@ -27,7 +27,7 @@ class Comments extends Model
         'user_id' => 'INT',
         'data' => 'JSON',
         'content' => 'TEXT',
-        'good' => 'INT',
+        'goods' => 'INT',
         'post_ip' => 'VARCHAR',
         'created_at' => 'TIMESTAMP',
         'updated_at' => 'TIMESTAMP',

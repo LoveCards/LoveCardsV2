@@ -33,7 +33,7 @@ class Cards
             ->select()->toArray();
         $lDef_CardLists = $lDef_Result;
 
-        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+good*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
+        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+goods*0.7 desc limit 0," . CONST_G_HOT_LISTS_MAX);
 
         $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
 
