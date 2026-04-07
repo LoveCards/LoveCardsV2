@@ -4,6 +4,7 @@ namespace app\api\controller\user;
 
 use think\facade\Request;
 use think\facade\Db;
+use think\facade\Config;
 
 use app\api\validate\Cards as CardsValidate;
 use app\api\validate\Comments as CommentsValidate;
@@ -54,15 +55,15 @@ class Cards extends BaseController
         //补齐参数
         $params['user_id'] = $this->JWT_SESSION['uid'];
         $params['post_ip'] = $this->SESSION['ip'];
-        $params['status'] = $this->SYSTEM_CONFIG['Cards']['Approve'] ? 3 : 0;
+        $params['status'] = Config::get('master.Cards.Approve') ? 3 : 0;
 
         //调用服务
-        $result = CardsService::createCard($params);
+        $cardId = CardsService::createCard($params);
         //返回结果
-        if ($this->SYSTEM_CONFIG['Cards']['Approve']) {
+        if (Config::get('master.Cards.Approve')) {
             return ApiResponse::createCreated();
         }
-        return ApiResponse::createOk($result['data']);
+        return ApiResponse::createOk(['id' => $cardId]);
     }
     //隐藏卡片(用户删除)
     public function hideCard()
@@ -91,13 +92,13 @@ class Cards extends BaseController
         //补齐参数
         $params['user_id'] = $this->JWT_SESSION['uid'];
         $params['post_ip'] = $this->SESSION['ip'];
-        $params['status'] = $this->SYSTEM_CONFIG['Comments']['Approve'] ? 3 : 0;
+        $params['status'] = Config::get('master.Comments.Approve') ? 3 : 0;
 
         //调用服务
         $result = CommentsService::createComment($params);
 
         //返回结果
-        if ($this->SYSTEM_CONFIG['Comments']['Approve']) {
+        if (Config::get('master.Comments.Approve')) {
             return ApiResponse::createCreated();
         }
         return ApiResponse::createOk($result['data']);

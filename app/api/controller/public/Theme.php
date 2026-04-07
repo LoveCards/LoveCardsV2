@@ -10,8 +10,6 @@ use app\common\Common;
 
 use think\facade\Config;
 
-use app\common\ConfigFacade;
-
 use app\api\controller\BaseController;
 use app\api\ApiResponse;
 
@@ -43,7 +41,7 @@ class Theme extends BaseController
         //CommonTheme::mObjectEasySetViewConfig(CommonTheme::mArrayGetThemeDirectory()['N']);
 
         //读取系统配置
-        $SyetemFileConfig = $this->SYSTEM_CONFIG;
+        $SyetemFileConfig = Config::get('master');
         unset($SyetemFileConfig['Geetest']['Key']);
 
         //公共模板变量

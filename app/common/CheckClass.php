@@ -2,7 +2,7 @@
 //该类仅供中间件使用
 namespace app\common;
 
-use app\common\BackEnd;
+use app\common\Admin;
 use app\common\FrontEnd;
 
 use app\api\ApiResponse;
@@ -28,7 +28,7 @@ class CheckClass
         if (!array_key_exists('aid', $TDef_JwtData)) {
             return ApiResponse::createUnauthorized('身份验证失败');
         }
-        $this->attrLDefAdminAllData = BackEnd::mArrayGetNowAdminAllData($TDef_JwtData['aid']);
+        $this->attrLDefAdminAllData = Admin::mArrayGetNowAdminAllData($TDef_JwtData['aid']);
 
         if (!$this->attrLDefAdminAllData['status']) {
             return ApiResponse::createUnauthorized($this->attrLDefAdminAllData['msg']);

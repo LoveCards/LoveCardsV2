@@ -68,24 +68,24 @@ class Comments
      * 创建单张评论方法
      *
      * @param array $data 评论数据
-     * @return void
+     * @return array
      */
-    static public function createComment($params): void
+    static public function createComment($params): array
     {
         $id = $params['id'];
         unset($params['id']);
         $params['aid'] = 1;
         $params['pid'] = $id;
 
-        // 存储事务
         Db::startTrans();
         try {
-            CommentsModel::create($params);
+            $comment = CommentsModel::create($params);
             CardsModel::where('id', $id)->where('status', 0)->inc('comments')->update();
 
-            Db::commit(); // 提交事务
+            Db::commit();
+            return ['data' => $comment];
         } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
+            Db::rollback();
             throw \app\api\ApiException::error('创建失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }

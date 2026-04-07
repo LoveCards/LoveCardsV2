@@ -3,7 +3,10 @@
 namespace app\api\controller\admin;
 
 use think\facade\Request;
+use think\facade\Config;
 use think\exception\ValidateException;
+
+use app\common\ConfigHelper;
 
 //基础应用验证
 use app\api\validate\Cards as CardsValidate;
@@ -12,9 +15,6 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\api\model\Cards as CardsModel;
 //基础应用服务
 use app\api\service\Cards as CardsService;
-
-//旧的
-use app\common\BackEnd;
 
 //yunarch框架相关
 use yunarch\validate\Common as CommonValidate;
@@ -127,7 +127,7 @@ class Cards extends BaseController
             return ApiResponse::createBadRequest('修改失败', $validateerror);
         }
 
-        $result = BackEnd::mBoolCoverConfig('lovecards', $data, true);
+        $result = ConfigHelper::save('lovecards', $data);
 
         if ($result == true) {
             return ApiResponse::createNoContent();

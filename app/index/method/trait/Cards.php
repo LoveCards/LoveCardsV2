@@ -8,7 +8,7 @@ use think\facade\Request;
 use think\facade\Config;
 
 use app\api\model\Images as ImagesModel;
-use app\common\BackEnd;
+use app\common\Admin;
 use app\common\FrontEnd;
 use app\common\Common;
 use app\index\BaseController;
@@ -273,7 +273,7 @@ trait Cards
 
         if ($lDef_CardData) {
             // 防止快速刷新网页增加浏览量
-            $tDef_PreventClicks = BackEnd::mRemindEasyDebounce('LastGetTimeCardID' . $tReq_ParamId, 60);
+            $tDef_PreventClicks = Admin::mRemindEasyDebounce('LastGetTimeCardID' . $tReq_ParamId, 60);
             if ($tDef_PreventClicks[0] == true) {
                 // 获取 Cards 数据库对象
                 $lDef_ResultCards = Db::table('cards')->where('id', $tReq_ParamId);

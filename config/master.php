@@ -1,30 +1,35 @@
 <?php
 
-return [
-    'System' => [
-        'ThemeDirectory' => env('master.SystemThemeDirectory', 'index'),
-        'VisitorMode' => env('master.SystemVisitorMode', true)
-    ],
-    'Upload' => [
-        //最大上传图片大小 单位:M
-        'UserImageSize' => env('master.UploadUserImageSize', 2),
-        'UserImageExt' => env('master.UploadUserImageExt', 'jpg,png,gif,webp,jpeg')
-    ],
-    'UserAuth' => [
-        'Captcha' => env('master.UserAuthCaptcha', false)
-    ],
-    'Cards' => [
-        'Approve' => env('master.CardsApprove', true),
-        'PictureLimit' => env('master.CardsPictureLimit', 9),
-        'TagLimit' => env('master.CardsTagLimit', 3)
-    ],
-    'Comments' => [
-        'Approve' => env('master.CommentsApprove', true),
-        'PictureLimit' => env('master.CommentsPictureLimit', 9)
-    ],
-    'Geetest' => [
-        'Status' => env('master.GeetestStatus', false),
-        'Id' => env('master.GeetestId', ''),
-        'Key' => env('master.GeetestKey', '')
-    ]
-];
+return array (
+  'System' => 
+  array (
+    'ThemeDirectory' => 'index',
+    'VisitorMode' => true,
+  ),
+  'Upload' => 
+  array (
+    'UserImageSize' => 2,
+    'UserImageExt' => 'jpg,png,gif,webp,jpeg',
+  ),
+  'UserAuth' => 
+  array (
+    'Captcha' => false,
+  ),
+  'Cards' => 
+  array (
+    'Approve' => false,
+    'PictureLimit' => 9,
+    'TagLimit' => 3,
+  ),
+  'Comments' => 
+  array (
+    'Approve' => true,
+    'PictureLimit' => 9,
+  ),
+  'Geetest' => 
+  array (
+    'Status' => false,
+    'Id' => '145e5424cb89698be0c58a1060483735',
+    'Key' => 'e4a515f644b3e14c20d11dc90d326743',
+  ),
+);

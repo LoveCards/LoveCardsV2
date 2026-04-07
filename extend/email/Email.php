@@ -3,11 +3,27 @@
 namespace email;
 
 use think\facade\Cache;
+use think\facade\Config as ThinkConfig;
 use app\common\Common;
 use mailer\tp6\Mailer;
 
 class Email
 {
+    protected static function resetMailerConfig(): void
+    {
+        if (class_exists('\mailer\lib\Config')) {
+            $reflClass = new \ReflectionClass('\mailer\lib\Config');
+            $configProp = $reflClass->getProperty('config');
+            $configProp->setAccessible(true);
+            $isInitProp = $reflClass->getProperty('isInit');
+            $isInitProp->setAccessible(true);
+            
+            $mailConfig = ThinkConfig::get('mail', []);
+            $configProp->setValue(null, $mailConfig);
+            $isInitProp->setValue(null, true);
+        }
+    }
+
     /**
      * 限制发送间隔
      *
@@ -34,16 +50,21 @@ class Email
      */
     public static function SendCaptcha($code, $email): array
     {
-        //限制发送间隔
         $key = hash('md5', $code . $email);
-        if (!self::cacheLog($key)) { //满足发送间隔
-            $mailer = Mailer::instance();
-            $mailer->to($email)
-                ->subject('验证码')
-                ->text('【' . $code . '】5分钟内有效，请勿泄露')
-                ->send();
-            if ($mailer) {
-                return Common::mArrayEasyReturnStruct('验证码发送成功', true);
+        if (!self::cacheLog($key)) {
+            self::resetMailerConfig();
+            
+            try {
+                $mailer = new Mailer();
+                $mailer->to($email)
+                    ->subject('验证码')
+                    ->text('【' . $code . '】5分钟内有效，请勿泄露')
+                    ->send();
+                if ($mailer) {
+                    return Common::mArrayEasyReturnStruct('验证码发送成功', true);
+                }
+            } catch (\Throwable $e) {
+                return Common::mArrayEasyReturnStruct('发送失败: ' . $e->getMessage(), false);
             }
             return Common::mArrayEasyReturnStruct('发送失败', false);
         }

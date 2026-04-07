@@ -3,13 +3,13 @@
 namespace app\api\controller\user;
 
 use think\facade\Request;
+use think\facade\Config;
 use think\exception\ValidateException;
 
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\Common;
-use app\common\ConfigFacade;
 
 use jwt\Jwt;
 use email\Email;
@@ -137,7 +137,7 @@ class Auth extends BaseController
         $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //验证码校验
-        if (ConfigFacade::mArraySearchConfigKey('Captcha')[0]) {
+        if (Config::get('master.UserAuth.Captcha')) {
             if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
                 return ApiResponse::createUnauthorized('注册失败', ['验证码错误']);
             };
@@ -172,7 +172,7 @@ class Auth extends BaseController
     //访客登入-POST
     public function Guest()
     {
-        if (!$this->SYSTEM_CONFIG['System']['VisitorMode']) {
+        if (!Config::get('master.System.VisitorMode')) {
             return ApiResponse::createUnauthorized('该站点未开启访客模式');
         }
 

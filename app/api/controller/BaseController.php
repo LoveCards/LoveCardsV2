@@ -2,9 +2,6 @@
 
 namespace app\api\controller;
 
-//旧的
-use app\common\ConfigFacade;
-
 //yunarch
 use yunarch\utils\src\ValidateRuleExtend; // 通用验证规则
 
@@ -13,7 +10,6 @@ class BaseController
     //基础参数
     var $SESSION;
     var $JWT_SESSION;
-    var $SYSTEM_CONFIG;
 
     function __construct()
     {
@@ -26,8 +22,6 @@ class BaseController
             'date' => date('Y-m-d H:i:s'),
             'ip' => $this->getIP()
         ];
-
-        $this->SYSTEM_CONFIG = ConfigFacade::mArrayGetMasterConfig();
     }
 
     /**

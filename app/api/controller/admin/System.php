@@ -10,7 +10,7 @@ use think\facade\Session;
 use app\common\File;
 use app\common\Theme;
 use app\common\Common;
-use app\common\ConfigFacade;
+use app\common\ConfigHelper;
 
 use app\api\controller\BaseController;
 
@@ -86,7 +86,7 @@ class System extends BaseController
     public function config()
     {
         $lDef_Result['system'] = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
-        $lDef_Result['master'] = $this->SYSTEM_CONFIG;
+        $lDef_Result['master'] = Config::get('master');
         $lDef_Result['mail'] = Config::get('mail');
         //$lDef_Result['lovecards'] = config::get('lovecards');
         return ApiResponse::createOk($lDef_Result);
@@ -94,10 +94,9 @@ class System extends BaseController
 
     public function setConfig()
     {
-        //AI
         $params = Request::param();
 
-        /* ---------- 1. 递归求差 ---------- */
+        /* ---------- 递归求差 ---------- */
         function array_diff_recursive(array $a, array $b): array
         {
             $result = [];
@@ -116,60 +115,33 @@ class System extends BaseController
             return $result;
         }
 
-        $params = array_diff_recursive($params, $this->SYSTEM_CONFIG);
+        $params = array_diff_recursive($params, Config::get('master'));
 
-        /* ---------- 2. 统一映射表 ---------- */
-        $map = [
-            // 结构:  '一级.二级' => [ 'free' => true/false ]
-            'System.VisitorMode'    => ['free' => true],
-            // 'System.ThemeDirectory' => ['free' => false],
-
-            'Upload.UserImageSize'  => ['free' => true],
-            'Upload.UserImageExt'   => ['free' => false],
-
-            'UserAuth.Captcha'      => ['free' => true],
-
-            'Cards.Approve'         => ['free' => true],
-            'Cards.PictureLimit'    => ['free' => true],
-            'Cards.TagLimit'        => ['free' => true],
-
-            'Comments.Approve'      => ['free' => true],
-            'Comments.PictureLimit' => ['free' => true],
-
-            'Geetest.Status'        => ['free' => true],
-            'Geetest.Id'            => ['free' => false],
-            'Geetest.Key'           => ['free' => false],
-        ];
-
-        /* ---------- 3. 统一循环生成结果 ---------- */
-        $lReq_Params = [];
-
-        foreach ($map as $dotKey => $meta) {
-            [$top, $sub] = explode('.', $dotKey, 2);
-
-            if (isset($params[$top][$sub])) {
-                $value = $params[$top][$sub];
-                $value = gettype($value) == 'boolean' ? ($value ? 'true' : 'false')  : $value;
-                $lReq_Params[$top . $sub] = [
-                    'value' => $value,
-                    'free'  => $meta['free'],
-                ];
-            }
-        }
-
-        //空值直接停止
-        if (empty($lReq_Params)) {
+        if (empty($params)) {
             return ApiResponse::createNoContent();
         }
-        //dd($lReq_Params);
 
-        //更新数据
-        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
+        $currentConfig = Config::get('master');
+        $mergedConfig = $this->deepMerge($currentConfig, $params);
+
+        $tDef_Result = ConfigHelper::save('master', $mergedConfig);
 
         if ($tDef_Result) {
             return ApiResponse::createNoContent();
         }
         return ApiResponse::createError('设置失败');
+    }
+
+    protected function deepMerge(array $current, array $new): array
+    {
+        foreach ($new as $key => $value) {
+            if (is_array($value) && isset($current[$key]) && is_array($current[$key])) {
+                $current[$key] = $this->deepMerge($current[$key], $value);
+            } else {
+                $current[$key] = $value;
+            }
+        }
+        return $current;
     }
 
     //基本信息-POST
@@ -202,20 +174,20 @@ class System extends BaseController
     //邮箱配置-PATCH
     public function Email()
     {
-        $lReq_Params = [
-            'driver' => ['value' => Request::param('driver'), 'free' => false],
-            'host' => ['value' => Request::param('host'), 'free' => false],
-            'port' => ['value' => Request::param('port'), 'free' => true],
-            'addr' => ['value' => Request::param('addr'), 'free' => false],
-            'pass' => ['value' => Request::param('pass'), 'free' => false],
-            'name' => ['value' => Request::param('name'), 'free' => false],
-            'security' => ['value' => Request::param('security'), 'free' => false],
-        ];
+        $params = array_filter([
+            'driver' => Request::param('driver'),
+            'host' => Request::param('host'),
+            'port' => Request::param('port'),
+            'addr' => Request::param('addr'),
+            'pass' => Request::param('pass'),
+            'name' => Request::param('name'),
+            'security' => Request::param('security'),
+        ], function($v) { return $v !== null && $v !== '' && $v !== 'null'; });
 
-        //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
-        //dd($lReq_Params);
-        //更新数据
-        $tDef_Result = ConfigFacade::mBoolCoverConfig('mail', $lReq_Params, 'auto');
+        $currentConfig = Config::get('mail');
+        $mergedConfig = array_merge($currentConfig, $params);
+
+        $tDef_Result = ConfigHelper::save('mail', $mergedConfig);
 
         if ($tDef_Result) {
             return ApiResponse::createNoContent();
@@ -237,10 +209,9 @@ class System extends BaseController
             return ApiResponse::createBadRequest('修改失败，该主题不适用当前版本');
         }
 
-        $lReq_Params = [
-            'SystemThemeDirectory' => ['value' => $tReq_ThemeDirectoryName, 'free' => false],
-        ];
-        $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
+        $currentConfig = Config::get('master');
+        $currentConfig['System']['ThemeDirectory'] = $tReq_ThemeDirectoryName;
+        $tDef_Result = ConfigHelper::save('master', $currentConfig);
 
         if ($tDef_Result == true) {
             return ApiResponse::createNoContent();

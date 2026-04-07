@@ -54,7 +54,7 @@ class FrontEnd extends Facade
         }
 
         //取用户数据
-        $lDef_GetNowAdminAllDataResult = BackEnd::mArrayGetNowAdminAllData($lDef_JwtCheckTokenResult['data']['aid']);
+        $lDef_GetNowAdminAllDataResult = Admin::mArrayGetNowAdminAllData($lDef_JwtCheckTokenResult['data']['aid']);
         //判断数据是否存在
         if ($lDef_GetNowAdminAllDataResult['status']) {
             //返回用户数据
