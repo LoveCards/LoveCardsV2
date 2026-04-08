@@ -5,21 +5,14 @@ namespace app\api\validate;
 use think\Validate;
 use think\facade\Config;
 
-use app\common\Base as CommonBase;
-
 class Upload extends Validate
 {
-
     public function __construct()
     {
-        // 确保执行父类构造
         parent::__construct();
 
-        // 动态设置文件大小和扩展名验证规则
-        $lDef_ImageSize = CommonBase::conf()->mArraySearchConfigKey('UserImageSize');
-        $lDef_ImageSize[0] != '' ? $lDef_ImageSize = $lDef_ImageSize[0] : $lDef_ImageSize = 2;
-        $lDef_ImageExt = CommonBase::conf()->mArraySearchConfigKey('UserImageExt');
-        $lDef_ImageExt[0] != '' ? $lDef_ImageExt = $lDef_ImageExt[0] : $lDef_ImageExt = 'jpg,png,gif';
+        $lDef_ImageSize = Config::get('master.Upload.UserImageSize', 2);
+        $lDef_ImageExt = Config::get('master.Upload.UserImageExt', 'jpg,png,gif');
         $this->rule['file'] = $this->rule['file'] . '|fileSize:' . (1024 * 1000 * $lDef_ImageSize) . '|fileExt:' . $lDef_ImageExt;
     }
 
