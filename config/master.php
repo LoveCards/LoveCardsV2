@@ -17,9 +17,11 @@ return array (
   ),
   'Cards' => 
   array (
-    'Approve' => false,
-    'PictureLimit' => 9,
-    'TagLimit' => 3,
+    'PictureLimit' => 10,
+    'TagLimit' => 4,
+    'Approve' => true,
+    'ImageSize' => 3,
+    'CommentsStatus' => true,
   ),
   'Comments' => 
   array (

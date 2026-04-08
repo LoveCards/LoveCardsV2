@@ -27,7 +27,7 @@ Route::group('', function () {
     Route::post('system/theme-config', 'admin.System/themeConfig');
     //Route::post('system/geetest', 'admin.System/Geetest');
 
-    //Route::post('cards/setting', 'admin.Cards/Setting');
+    Route::post('cards/setting', 'admin.Cards/Setting');
 
     //管理员
     Route::get('admin/card', 'admin.Cards/Get');

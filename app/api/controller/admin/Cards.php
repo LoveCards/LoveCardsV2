@@ -127,7 +127,16 @@ class Cards extends BaseController
             return ApiResponse::createBadRequest('修改失败', $validateerror);
         }
 
-        $result = ConfigHelper::save('lovecards', $data);
+        $masterConfig = Config::get('master') ?: [];
+        $masterConfig['Cards'] = [
+            'PictureLimit' => $data['DefSetCardsImgNum'],
+            'TagLimit' => $data['DefSetCardsTagNum'],
+            'Approve' => (bool) $data['DefSetCardsStatus'],
+            'ImageSize' => $data['DefSetCardsImgSize'],
+            'CommentsStatus' => (bool) $data['DefSetCardsCommentsStatus'],
+        ];
+
+        $result = ConfigHelper::save('master', $masterConfig);
 
         if ($result == true) {
             return ApiResponse::createNoContent();
