@@ -4,9 +4,9 @@ namespace app\index\controller;
 
 use think\facade\View;
 
-use app\common\File;
-use app\common\Theme;
-use app\common\Common;
+use app\index\common\File;
+use app\index\common\Theme;
+use app\index\common\Common;
 use app\index\BaseController;
 
 use app\index\method\IndexFacade as IndexFacade;

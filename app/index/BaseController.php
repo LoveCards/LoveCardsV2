@@ -6,10 +6,10 @@ use think\facade\View;
 use think\facade\Db;
 use think\facade\Config;
 
-use app\common\Common;
-use app\common\Theme;
-use app\common\File;
-use app\common\App;
+use app\index\common\Common;
+use app\index\common\Theme;
+use app\index\common\File;
+use app\index\common\App;
 
 class BaseController extends Common
 {

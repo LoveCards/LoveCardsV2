@@ -2,7 +2,7 @@
 
 namespace app\index\method;
 
-use app\common\File;
+use app\index\common\File;
 use think\facade\Request;
 
 trait Base

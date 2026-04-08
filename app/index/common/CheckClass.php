@@ -1,9 +1,9 @@
 <?php
 //该类仅供中间件使用
-namespace app\common;
+namespace app\index\common;
 
-use app\common\Admin;
-use app\common\FrontEnd;
+use app\index\common\Admin;
+use app\index\common\FrontEnd;
 
 use app\api\ApiResponse;
 

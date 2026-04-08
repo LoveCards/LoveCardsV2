@@ -2,8 +2,7 @@
 
 namespace app\api\middleware;
 
-use jwt\Jwt;
-
+use app\common\extend\jwt\Jwt;
 use app\api\ApiResponse;
 
 class JwtAuthLogout
@@ -13,8 +12,7 @@ class JwtAuthLogout
         $token = $tDef_Request->header('authorization');
         if ($token != null) {
             $token = preg_replace('/^Bearer\s+/', '', $token);
-            //删除缓存Token即不可续订
-            Jwt::DeleteToken($token);
+            Jwt::deleteToken($token);
         } else {
             return ApiResponse::createUnauthorized('Unauthorized');
         }

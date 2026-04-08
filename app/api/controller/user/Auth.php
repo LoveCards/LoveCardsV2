@@ -11,9 +11,9 @@ use app\api\validate\Users as UsersValidate;
 
 use app\common\Common;
 
-use jwt\Jwt;
-use email\Email;
-use captcha\Code;
+use app\common\extend\jwt\Jwt;
+use app\common\extend\email\Email;
+use app\common\extend\captcha\Code;
 
 use app\api\controller\BaseController;
 
@@ -212,20 +212,10 @@ class Auth extends BaseController
 
         //判断是手机号还是邮箱
         if (Common::mBoolEasyIsPhoneNumberOrEmail($account) == 'email') {
-            //获取验证码
             $data = Code::CreateCaptcha($account, 'Auth', 300);
             $code = $data['data'];
-            //发送邮件
-            try {
-                $result = Email::SendCaptcha($code, $account);
-            } catch (\Exception $e) {
-                return ApiResponse::createError('发送失败', ['邮件模块发生错误']);
-            }
-            if ($result['status']) {
-                return ApiResponse::createNoContent();
-            } else {
-                return ApiResponse::createError('发送失败', [$result['msg']]);
-            }
+            Email::SendCaptcha($code, $account);
+            return ApiResponse::createNoContent();
         } else {
             return ApiResponse::createError('发送失败', ['目前仅支持邮箱验证']);
         }

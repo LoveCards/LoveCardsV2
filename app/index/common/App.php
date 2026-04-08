@@ -1,12 +1,12 @@
 <?php
 
-namespace app\common;
+namespace app\index\common;
 
 use think\Facade;
 use think\facade\Session;
 use think\facade\Request;
 use think\facade\Db;
-use app\common\Common;
+use app\index\common\Common;
 
 class App extends Facade
 {

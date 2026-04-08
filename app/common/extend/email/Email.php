@@ -1,10 +1,10 @@
 <?php
 
-namespace email;
+namespace app\common\extend\email;
 
 use think\facade\Cache;
 use think\facade\Config as ThinkConfig;
-use app\common\Common;
+use app\api\ApiException;
 use mailer\tp6\Mailer;
 
 class Email
@@ -24,13 +24,6 @@ class Email
         }
     }
 
-    /**
-     * 限制发送间隔
-     *
-     * @param string $key 键名
-     * @param integer $time 过期时间
-     * @return boolean
-     */
     protected static function cacheLog($key, $time = 60): bool
     {
         if (Cache::has($key)) {
@@ -41,14 +34,7 @@ class Email
         }
     }
 
-    /**
-     * 验证码发送(待优化)
-     *
-     * @param string $code 验证码
-     * @param string $email 邮箱
-     * @return array
-     */
-    public static function SendCaptcha($code, $email): array
+    public static function SendCaptcha($code, $email): void
     {
         $key = hash('md5', $code . $email);
         if (!self::cacheLog($key)) {
@@ -60,14 +46,11 @@ class Email
                     ->subject('验证码')
                     ->text('【' . $code . '】5分钟内有效，请勿泄露')
                     ->send();
-                if ($mailer) {
-                    return Common::mArrayEasyReturnStruct('验证码发送成功', true);
-                }
             } catch (\Throwable $e) {
-                return Common::mArrayEasyReturnStruct('发送失败: ' . $e->getMessage(), false);
+                throw ApiException::error('发送失败: ' . $e->getMessage(), ApiException::CODE_SYSTEM_ERROR);
             }
-            return Common::mArrayEasyReturnStruct('发送失败', false);
+            return;
         }
-        return Common::mArrayEasyReturnStruct('刚刚发出，请稍后再试', false);
+        throw ApiException::badRequest('刚刚发出，请稍后再试', ApiException::CODE_PARAM_INVALID);
     }
 }

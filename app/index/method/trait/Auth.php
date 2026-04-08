@@ -2,7 +2,7 @@
 
 namespace app\index\method;
 
-use app\common\FrontEnd;
+use app\index\common\FrontEnd;
 
 trait Auth
 {

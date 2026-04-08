@@ -6,25 +6,7 @@ use think\facade\Db;
 
 class Common
 {
-
-    //基础参数
-    var $attrGReqTime;
-    var $attrGReqIp;
-    public function __construct()
-    {
-        $this->attrGReqTime = date('Y-m-d H:i:s');
-        $this->attrGReqIp = $this->mStringGetIP();
-    }
-
-    /**
-     * @description: 版本信息
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2022-12-29 18:48:48
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    public static function mArrayGetLCVersionInfo()
+    public static function mArrayGetLCVersionInfo(): array
     {
         return [
             'Name' => 'LoveCards',
@@ -46,20 +28,11 @@ class Common
         ];
     }
 
-    /**
-     * @description: 取数据库system数据
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-01-18 18:10:57
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    public static function mArrayGetDbSystemData()
+    public static function mArrayGetDbSystemData(): array
     {
         $result = Db::table('system')->select()->toArray();
         return array_column($result, 'value', 'name');
     }
-
 
     /**
      * 获取IP
@@ -89,24 +62,6 @@ class Common
     }
 
     /**
-     * ---格式化返回
-     *
-     * @param string|null $msg
-     * @param boolean $status
-     * @param object $data
-     * @return array ['status','msg','data':*]
-     */
-    public static function mArrayEasyReturnStruct(string $msg = null, bool $status = true, $data = null): array
-    {
-        return [
-            'status' => $status,
-            'msg' => $msg,
-            'data' => $data,
-        ];
-    }
-
-
-    /**
      * 验证字符串是邮箱还是手机号
      *
      * @param string $input
@@ -132,21 +87,4 @@ class Common
         // 如果都不匹配，则返回未知
         return 'other';
     }
-
-    /**
-     * 去除数组中的空对
-     *
-     * @param array $array
-     * @return array
-     */
-    // public static function mArrayEasyRemoveEmptyValues($array = [])
-    // {
-    //     // 使用 array_filter 函数过滤数组，只保留非空值的键值对
-    //     $filteredArray = array_filter($array, function ($value) {
-    //         // 这里排除空值（null 或者空字符串）
-    //         return $value !== null && $value !== '';
-    //     });
-
-    //     return $filteredArray;
-    // }
 }

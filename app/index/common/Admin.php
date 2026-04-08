@@ -1,10 +1,10 @@
 <?php
 
-namespace app\common;
+namespace app\index\common;
 
 use think\facade\Db;
 use think\facade\Session;
-use app\api\ApiException;
+use app\index\common\Common;
 
 class Admin
 {
@@ -14,15 +14,15 @@ class Admin
      * @param int $id
      * @return array
      */
-    public static function mArrayGetNowAdminAllData($id): array
+    public static function mArrayGetNowAdminAllData($id)
     {
         $result = Db::table('admin')
             ->where('id', $id)
             ->find();
         if (empty($result)) {
-            throw ApiException::notFound('管理员不存在', ApiException::CODE_USER_NOT_FOUND);
-        }
-        return $result;
+            return Common::mArrayEasyReturnStruct('管理员不存在', false);
+        } else
+            return Common::mArrayEasyReturnStruct(null, true, $result);
     }
 
     /**

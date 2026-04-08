@@ -17,7 +17,7 @@ use app\api\validate\Users as UsersValidate;
 use app\common\Common;
 
 use captcha\Code;
-use email\Email;
+use app\common\extend\email\Email;
 
 use app\api\ApiResponse;
 
@@ -47,22 +47,11 @@ class Info
      */
     public function mObjectEasyCodeCreateCaptcha($account = '', $key = '', $errorDetail = ['目前仅支持邮箱验证'], $time = 300)
     {
-        //判断是手机号还是邮箱
         if (Common::mBoolEasyIsPhoneNumberOrEmail($account) == 'email') {
-            //获取验证码
             $data = Code::CreateCaptcha($account, $key, $time);
             $code = $data['data'];
-            //发送邮件
-            try {
-                $result = Email::SendCaptcha($code, $account);
-            } catch (\Exception $e) {
-                return ApiResponse::createError('发送失败', ['邮件模块发生错误']);
-            }
-            if ($result['status']) {
-                return ApiResponse::createOk([$time . 's后失效']);
-            } else {
-                return ApiResponse::createError('发送失败', [$result['msg']]);
-            }
+            Email::SendCaptcha($code, $account);
+            return ApiResponse::createOk([$time . 's后失效']);
         } else {
             return ApiResponse::createError('发送失败', $errorDetail);
         }

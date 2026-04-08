@@ -2,8 +2,8 @@
 
 namespace app\index\method;
 
-use app\common\Common;
-use app\common\FrontEnd;
+use app\index\common\Common;
+use app\index\common\FrontEnd;
 use app\api\service\Users as UsersService;
 
 trait Users

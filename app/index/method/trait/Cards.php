@@ -8,9 +8,9 @@ use think\facade\Request;
 use think\facade\Config;
 
 use app\api\model\Images as ImagesModel;
-use app\common\Admin;
-use app\common\FrontEnd;
-use app\common\Common;
+use app\index\common\Admin;
+use app\index\common\FrontEnd;
+use app\index\common\Common;
 use app\index\BaseController;
 
 trait Cards
