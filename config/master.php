@@ -18,7 +18,7 @@ return array (
   'Cards' => 
   array (
     'PictureLimit' => 10,
-    'TagLimit' => 4,
+    'TagLimit' => 3,
     'Approve' => true,
     'ImageSize' => 3,
     'CommentsStatus' => true,
