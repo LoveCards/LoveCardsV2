@@ -14,8 +14,6 @@ use think\exception\ValidateException;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
-use app\common\Common;
-
 use captcha\Code;
 use app\common\extend\email\Email;
 
@@ -47,7 +45,7 @@ class Info
      */
     public function mObjectEasyCodeCreateCaptcha($account = '', $key = '', $errorDetail = ['目前仅支持邮箱验证'], $time = 300)
     {
-        if (Common::mBoolEasyIsPhoneNumberOrEmail($account) == 'email') {
+        if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
             $data = Code::CreateCaptcha($account, $key, $time);
             $code = $data['data'];
             Email::SendCaptcha($code, $account);

@@ -75,8 +75,9 @@ class Users
      */
     public static function Login($account, $password): UsersModel
     {
-        // 尝试使用账号、电子邮件或电话号码查询用
+        // 尝试使用账号、用户名、电子邮件或电话号码查询用户
         $result = UsersModel::where('number', $account)
+            ->whereOr('username', $account)
             ->whereOr('email', $account)
             ->whereOr('phone', $account)
             ->find();
@@ -112,6 +113,7 @@ class Users
     public static function Register($number, $username, $email, $phone, $password, $roles_id = [3], $status = 0): UsersModel
     {
         if ($password != '') {
+            $result = null;
             if ($email != '') {
                 $result = UsersModel::where('email', $email)->find();
             } elseif ($phone != '') {

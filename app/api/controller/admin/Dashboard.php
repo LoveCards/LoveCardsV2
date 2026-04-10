@@ -11,8 +11,6 @@ use app\api\model\Comments as CommentsModel;
 
 use app\api\ApiResponse;
 
-use app\common\Common;
-
 class Dashboard
 {
 
@@ -106,7 +104,14 @@ class Dashboard
         $result = [
             'count' => $tDef_ViewDataCount,
             'chart' => $tDef_ViewChartJson,
-            'ver' => Common::mArrayGetLCVersionInfo(),
+            'ver' => [
+                'Name' => 'LoveCards',
+                'Url' => '//lovecards.cn',
+                'VerS' => '2.4.1',
+                'Ver' => '21',
+                'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
+                'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
+            ],
             'notice' => $notice,
         ];
 

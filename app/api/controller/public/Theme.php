@@ -3,12 +3,11 @@
 namespace app\api\controller\public;
 
 use think\facade\View;
+use think\facade\Config;
+use think\facade\Db;
 
 use app\common\File;
 use app\common\Theme as CommonTheme;
-use app\common\Common;
-
-use think\facade\Config;
 
 use app\api\controller\BaseController;
 use app\api\ApiResponse;
@@ -17,16 +16,12 @@ class Theme extends BaseController
 {
     function Config()
     {
-        //获取主题配置
         $lRes_ThemeConfig = CommonTheme::mResultGetThemeConfig(CommonTheme::mArrayGetThemeDirectory()['N']);
         if ($lRes_ThemeConfig === false) {
             $lRes_ThemeConfig = [];
         }
-        //获取主题原配置
         $data['config'] = CommonTheme::mResultGetThemeConfig(CommonTheme::mArrayGetThemeDirectory()['N'], true);
 
-        //主题dark模式支持
-        //dd(cookie('ThemeDark'));
         if (array_key_exists('ThemeDark', $lRes_ThemeConfig)) {
             if (cookie('ThemeDark') != null) {
                 if (cookie('ThemeDark') == "false") {
@@ -37,18 +32,13 @@ class Theme extends BaseController
             }
         }
 
-        //根据主题覆盖模板配置
-        //CommonTheme::mObjectEasySetViewConfig(CommonTheme::mArrayGetThemeDirectory()['N']);
-
-        //读取系统配置
         $SyetemFileConfig = Config::get('master');
         unset($SyetemFileConfig['Geetest']['Key']);
 
-        //公共模板变量
         $data = [
             'request' => [
                 'time' => date('Y-m-d H:i:s'),
-                'ip' => Common::mStringGetIP()
+                'ip' => request()->ip()
             ],
             'view' => [
                 'path' => [
@@ -57,10 +47,17 @@ class Theme extends BaseController
                 ]
             ],
             'system' => [
-                'version' => Common::mArrayGetLCVersionInfo(),
+                'version' => [
+                    'Name' => 'LoveCards',
+                    'Url' => '//lovecards.cn',
+                    'VerS' => '2.4.1',
+                    'Ver' => '21',
+                    'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
+                    'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
+                ],
                 'config' => [
                     'file' => $SyetemFileConfig,
-                    'db' => Common::mArrayGetDbSystemData(),
+                    'db' => array_column(Db::table('system')->select()->toArray(), 'value', 'name'),
                 ],
             ],
             'config' => $lRes_ThemeConfig,

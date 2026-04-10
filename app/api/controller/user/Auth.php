@@ -9,8 +9,6 @@ use think\exception\ValidateException;
 use app\api\service\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
-use app\common\Common;
-
 use app\common\extend\jwt\Jwt;
 use app\common\extend\email\Email;
 use app\common\extend\captcha\Code;
@@ -21,11 +19,6 @@ use app\api\ApiResponse;
 
 class Auth extends BaseController
 {
-    /**
-     * 生成账号
-     *
-     * @return string(10位随机数)
-     */
     protected function generateNumber(): string
     {
         $length = 10;
@@ -40,23 +33,15 @@ class Auth extends BaseController
         return $user_id;
     }
 
-    /**
-     * Account检查类型
-     * 校验是否为邮箱手机号或账号
-     * @param string $account
-     * @return array|string
-     */
     protected function mArrayEasyCheckAccountType($account, $defult = ''): array
     {
-        $tDef_Result = Common::mBoolEasyIsPhoneNumberOrEmail($account);
-
-        if ($tDef_Result == 'phone') {
+        if (preg_match('/^\d{11}$/', $account)) {
             return [
                 'phone' => $account,
                 'email' => $defult,
                 'number' => $defult,
             ];
-        } else if ($tDef_Result == 'email') {
+        } else if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
             return [
                 'phone' => $defult,
                 'email' => $account,
@@ -68,7 +53,7 @@ class Auth extends BaseController
                 'email' => $defult,
                 'number' => $account,
             ];
-        };
+        }
     }
 
     //token校验
@@ -210,8 +195,7 @@ class Auth extends BaseController
     {
         $account = Request::param('account');
 
-        //判断是手机号还是邮箱
-        if (Common::mBoolEasyIsPhoneNumberOrEmail($account) == 'email') {
+        if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
             $data = Code::CreateCaptcha($account, 'Auth', 300);
             $code = $data['data'];
             Email::SendCaptcha($code, $account);
