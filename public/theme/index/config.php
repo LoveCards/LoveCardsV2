@@ -26,7 +26,7 @@ return [
         'ThemeDark' => [
             'Name' => '默认暗色开关',
             'Introduction' => '主题为默认暗色的开关',
-            'Default' => env('ThemeConfig.SelectThemeDark', 1),
+            'Default' => env('ThemeConfig.SelectThemeDark', 0),
             'Element' => [
                 0 => false,
                 1 => true
