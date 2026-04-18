@@ -17,10 +17,6 @@ Route::post('user/auth/register', 'user.Auth/Register');
 Route::post('user/auth/captcha', 'user.Auth/Captcha');
 Route::post('user/auth/guest', 'user.Auth/Guest')->middleware(SessionDebounce::class);
 
-Route::post('system/config', 'admin.System/setConfig');
-Route::get('system/config', 'admin.System/config');
-Route::rule('system/email', 'admin.System/Email', 'PUT|PATCH');
-
 Route::group('', function () {
     //标签
     Route::get('tags', 'user.Tags/noPaginateIndex');
