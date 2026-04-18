@@ -12,7 +12,7 @@ class Roles extends Model
     protected $deleteTime = 'deleted_at';
 
     //自动时间戳
-    protected $autoWriteTimestamp = 'datetime';
+    protected $autoWriteTimestamp = 'timestamp';
     protected $createTime = 'created_at';
     protected $updateTime = 'updated_at';
 
@@ -22,9 +22,9 @@ class Roles extends Model
         'name' => 'string',
         'slug' => 'string',
         'description' => 'string',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
+        'created_at' => 'timestamp',
+        'updated_at' => 'timestamp',
+        'deleted_at' => 'timestamp',
     ];
 
     // 默认排除字段

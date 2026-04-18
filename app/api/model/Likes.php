@@ -14,7 +14,7 @@ class Likes extends Model
     protected $table = 'likes';
 
     //自动时间戳
-    protected $autoWriteTimestamp = 'datetime';
+    protected $autoWriteTimestamp = 'timestamp';
     protected $createTime = 'created_at';
 
     // 设置字段信息
