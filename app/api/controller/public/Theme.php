@@ -1,4 +1,10 @@
 <?php
+/*
+ * @Description: 
+ * @Author: github.com/zhiguai
+ * @Date: 2026-04-12 13:34:02
+ * @Email: 2903074366@qq.com
+ */
 
 namespace app\api\controller\public;
 
@@ -6,7 +12,6 @@ use think\facade\View;
 use think\facade\Config;
 use think\facade\Db;
 
-use app\common\File;
 use app\common\Theme as CommonTheme;
 
 use app\api\controller\BaseController;

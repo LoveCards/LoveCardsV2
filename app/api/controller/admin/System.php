@@ -7,7 +7,6 @@ use think\facade\Db;
 use think\facade\Config;
 use think\facade\Session;
 
-use app\common\File;
 use app\common\Theme;
 use app\common\Common;
 use app\common\ConfigHelper;
@@ -23,43 +22,36 @@ class System extends BaseController
     {
         //当前主题
         $tDef_NowThemeDirectory = Theme::mArrayGetThemeDirectory()['N'];
-        $lDef_NowThemeInfo = json_decode(File::read_file('./theme/' . $tDef_NowThemeDirectory . '/info.ini'), true);
-        $lDef_NowThemeInfo['Config'] = Theme::mResultGetThemeConfig($tDef_NowThemeDirectory); //用来给前端判断主题是否可以配置
+        $lDef_NowThemeInfo = json_decode(@file_get_contents('./theme/' . $tDef_NowThemeDirectory . '/info.ini'), true);
+        $lDef_NowThemeInfo['Config'] = Theme::mResultGetThemeConfig($tDef_NowThemeDirectory);
         $lDef_NowThemeInfo['DirectoryName'] = $tDef_NowThemeDirectory;
         $key = $lDef_NowThemeInfo['Name'] . $lDef_NowThemeInfo['Version'] . $lDef_NowThemeInfo['DirectoryName'];
         $lDef_NowThemeInfo['Hash'] = hash('crc32b', $key);
         if (!$lDef_NowThemeInfo) {
-            $lDef_NowThemeInfo = json_decode(File::read_file('./theme/index/info.ini'), true);
+            $lDef_NowThemeInfo = json_decode(@file_get_contents('./theme/index/info.ini'), true);
         }
 
-        //获取所有主题
-        $lDef_ThemeDirectoryList = File::get_dirs('./theme')['dir'];
+        $lDef_ThemeDirectoryList = array_map('basename', array_filter(glob('./theme/*'), 'is_dir'));
         sort($lDef_ThemeDirectoryList);
         $lDef_ThemeConfigList = array();
-        for ($i = 2; $i < count($lDef_ThemeDirectoryList); $i++) {
+        for ($i = 0; $i < count($lDef_ThemeDirectoryList); $i++) {
             $tDef_ThemeBasePath = './theme/' . $lDef_ThemeDirectoryList[$i];
-            if (File::get_size($tDef_ThemeBasePath) != 0) {
-                // 以目录名为键
-                // $lDef_ThemeConfigList[$lDef_ThemeDirectoryList[$i]] = json_decode(File::read_file($tDef_ThemeBasePath . '/info.ini'), true);
-                // $lDef_ThemeConfigList[$lDef_ThemeDirectoryList[$i]]['DirectoryName'] = $lDef_ThemeDirectoryList[$i];
-                // 无键
-                $lDef_ThemeConfigList[$i - 2] = json_decode(File::read_file($tDef_ThemeBasePath . '/info.ini'), true);
-                $lDef_ThemeConfigList[$i - 2]['DirectoryName'] = $lDef_ThemeDirectoryList[$i];
-                //生成一个id
-                $key = $lDef_ThemeConfigList[$i - 2]['Name'] . $lDef_ThemeConfigList[$i - 2]['Version'] . $lDef_ThemeConfigList[$i - 2]['DirectoryName'];
+            if (count(glob($tDef_ThemeBasePath . '/*')) > 0) {
+                $lDef_ThemeConfigList[$i] = json_decode(@file_get_contents($tDef_ThemeBasePath . '/info.ini'), true);
+                $lDef_ThemeConfigList[$i]['DirectoryName'] = $lDef_ThemeDirectoryList[$i];
+                $key = $lDef_ThemeConfigList[$i]['Name'] . $lDef_ThemeConfigList[$i]['Version'] . $lDef_ThemeConfigList[$i]['DirectoryName'];
                 $hash = hash('crc32b', $key);
-                $lDef_ThemeConfigList[$i - 2]['Hash'] = $hash;
-                $lDef_ThemeConfigList[$i - 2]['Cover'] = Request::scheme() . '://' . Request::host() . '/theme/' . $lDef_ThemeDirectoryList[$i] . '/show.png';
-                //状态
+                $lDef_ThemeConfigList[$i]['Hash'] = $hash;
+                $lDef_ThemeConfigList[$i]['Cover'] = Request::scheme() . '://' . Request::host() . '/theme/' . $lDef_ThemeDirectoryList[$i] . '/show.png';
                 if ($lDef_NowThemeInfo['Config']) {
-                    $lDef_ThemeConfigList[$i - 2]['Config'] = true;
+                    $lDef_ThemeConfigList[$i]['Config'] = true;
                 } else {
-                    $lDef_ThemeConfigList[$i - 2]['Config'] = false;
+                    $lDef_ThemeConfigList[$i]['Config'] = false;
                 }
                 if ($hash == $lDef_NowThemeInfo['Hash']) {
-                    $lDef_ThemeConfigList[$i - 2]['Status'] = true; //如果当前主题是这个主题，则状态为true
+                    $lDef_ThemeConfigList[$i]['Status'] = true;
                 } else {
-                    $lDef_ThemeConfigList[$i - 2]['Status'] = false; //否则状态为false
+                    $lDef_ThemeConfigList[$i]['Status'] = false;
                 }
             }
         }
@@ -199,7 +191,7 @@ class System extends BaseController
     public function themeSet()
     {
         $tReq_ThemeDirectoryName = Request::param('dir');
-        $tReq_ThemeInfo = json_decode(File::read_file('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
+        $tReq_ThemeInfo = json_decode(@file_get_contents('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
         if (!$tReq_ThemeInfo) {
             return ApiResponse::createBadRequest('修改失败，主题信息不存在');
         }
