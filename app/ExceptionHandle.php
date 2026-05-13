@@ -72,18 +72,17 @@ class ExceptionHandle extends Handle
             return ApiResponse::createError($e->getMessage(), null, $e->getStatusCode());
         }
 
-        //if (config('app.app_debug')) {
-        $detail = [
-            'error_class' => get_class($e),
-            'message' => $e->getMessage(),
-            'code' => $e->getCode(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => explode("\n", $e->getTraceAsString()) // 格式化 trace
-        ];
-        // 这里可以决定是否要把详细信息暴露给API调用方
-        return ApiResponse::createError('内部服务器错误 (Debug)', $detail, 500);
-        //}
+        if (env('app_debug', false)) {
+            $detail = [
+                'error_class' => get_class($e),
+                'message' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => explode("\n", $e->getTraceAsString())
+            ];
+            return ApiResponse::createError('内部服务器错误 (Debug)', $detail, 500);
+        }
 
         return ApiResponse::createError('服务器繁忙，请稍后再试', null, 500);
 

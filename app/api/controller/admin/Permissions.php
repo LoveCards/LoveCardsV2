@@ -101,11 +101,12 @@ class Permissions extends BaseController
     //获取所有权限（不分页，用于下拉选择等）
     public function All()
     {
-        //获取过滤参数
-        $params = $this->Params->IndexParams(Request::param());
-        //调用服务
+        $params = [];
+        $limit = (int) Request::param('limit', 0);
+        if ($limit > 0) {
+            $params['limit'] = $limit;
+        }
         $result = PermissionsService::noPaginateIndex($params);
-        //返回结果
         return ApiResponse::createOk($result);
     }
 }

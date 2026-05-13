@@ -127,6 +127,26 @@ class ModelList
     }
 
     /**
+     * 包含软删除记录（绕过 SoftDelete 自动过滤）
+     * @return $this 返回当前对象，支持链式调用
+     */
+    public function withTrashed(): self
+    {
+        $this->query = $this->query->withTrashed();
+        return $this;
+    }
+
+    /**
+     * 只查询软删除记录（回收站视图）
+     * @return $this 返回当前对象，支持链式调用
+     */
+    public function onlyTrashed(): self
+    {
+        $this->query = $this->query->onlyTrashed();
+        return $this;
+    }
+
+    /**
      * 排除指定字段
      * @param array $withoutField 需要排除的字段
      * @return $this 返回当前对象，支持链式调用

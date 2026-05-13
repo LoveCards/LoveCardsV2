@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2026-01-19 19:28:37
--- 服务器版本： 5.7.44-log
--- PHP 版本： 8.0.26
+-- 生成日期： 2026-05-14 03:40:31
+-- 服务器版本： 5.7.26
+-- PHP 版本： 7.3.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `test1000`
+-- 数据库： `testtest`
 --
 
 -- --------------------------------------------------------
@@ -36,14 +37,21 @@ CREATE TABLE `cards` (
   `cover` varchar(2083) DEFAULT NULL,
   `content` text,
   `tags` json DEFAULT NULL,
-  `good` int(11) NOT NULL DEFAULT '0',
+  `goods` int(11) NOT NULL DEFAULT '0',
   `views` int(11) NOT NULL DEFAULT '0',
   `comments` int(11) NOT NULL DEFAULT '0',
   `post_ip` varchar(39) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 转存表中的数据 `cards`
+--
+
+INSERT INTO `cards` (`id`, `is_top`, `status`, `user_id`, `data`, `cover`, `content`, `tags`, `goods`, `views`, `comments`, `post_ip`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 0, 0, 1, '{\"model\": \"0\", \"taName\": \"\", \"woName\": \"\", \"woContact\": \"\"}', NULL, '撒旦撒', '[]', 1, 1, 0, '127.0.0.1', '2026-04-18 16:59:59', '2026-04-18 16:59:59', NULL);
 
 -- --------------------------------------------------------
 
@@ -63,25 +71,85 @@ CREATE TABLE `comments` (
   `content` text,
   `goods` int(11) NOT NULL DEFAULT '0',
   `post_ip` varchar(39) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `good`
+-- 表的结构 `files`
 --
 
-CREATE TABLE `good` (
+CREATE TABLE `files` (
   `id` int(11) NOT NULL,
-  `aid` int(11) NOT NULL COMMENT '应用ID',
-  `pid` int(11) NOT NULL COMMENT '条目ID',
-  `uid` int(11) NOT NULL,
-  `ip` varchar(32) NOT NULL COMMENT '发布IP',
-  `created_at` timestamp NOT NULL COMMENT '发布时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `channel_slug` varchar(50) NOT NULL DEFAULT 'local',
+  `user_id` int(11) DEFAULT NULL,
+  `is_public` tinyint(1) DEFAULT '0',
+  `scene` varchar(32) DEFAULT 'direct',
+  `ref_type` varchar(32) DEFAULT NULL,
+  `ref_id` int(11) DEFAULT NULL,
+  `original_name` varchar(255) DEFAULT NULL COMMENT '原始文件名',
+  `file_path` varchar(500) NOT NULL COMMENT '存储路径',
+  `file_url` varchar(1000) NOT NULL COMMENT '访问URL',
+  `file_size` int(11) NOT NULL COMMENT '文件大小(字节)',
+  `file_ext` varchar(20) NOT NULL COMMENT '文件扩展名',
+  `mime_type` varchar(100) DEFAULT NULL COMMENT 'MIME类型',
+  `driver_path` varchar(500) DEFAULT NULL COMMENT '驱动特定标识',
+  `metadata` json DEFAULT NULL COMMENT '额外元数据',
+  `status` tinyint(1) DEFAULT '0' COMMENT '0:上传中 1:已完成 2:失败',
+  `upload_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '上传状态：0=上传中 1=已完成 2=失败',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `expire_at` datetime DEFAULT NULL COMMENT '凭证过期时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件记录表';
+
+--
+-- 转存表中的数据 `files`
+--
+
+INSERT INTO `files` (`id`, `channel_slug`, `user_id`, `is_public`, `scene`, `ref_type`, `ref_id`, `original_name`, `file_path`, `file_url`, `file_size`, `file_ext`, `mime_type`, `driver_path`, `metadata`, `status`, `upload_status`, `created_at`, `updated_at`, `deleted_at`, `expire_at`) VALUES
+(1, 'local', NULL, 1, 'direct', NULL, NULL, '屏幕截图 2025-08-25 002000.png', 'image/images/20260430/69f25c9ae474b.png', 'http://127.0.0.1:8001/storage/image/images/20260430/69f25c9ae474b.png', 393, 'png', 'image/png', 'image/images/20260430/69f25c9ae474b.png', NULL, 3, 1, '2026-04-30 03:31:38', '2026-05-14 00:15:58', '2026-05-14 00:15:58', NULL),
+(2, 'local', NULL, 1, 'direct', NULL, NULL, 'avatar.png', 'image/images/20260509/69fe1f7df1362.png', 'http://127.0.0.1:8001/storage/image/images/20260509/69fe1f7df1362.png', 3999, 'png', 'image/png', 'image/images/20260509/69fe1f7df1362.png', NULL, 3, 1, '2026-05-09 01:38:06', '2026-05-14 00:13:59', '2026-05-14 00:13:59', NULL),
+(3, 'local', NULL, 0, 'direct', NULL, NULL, 'avatar.png', 'image/images/20260509/69fe20dab46e6.png', 'http://127.0.0.1:8001/storage/image/images/20260509/69fe20dab46e6.png', 3999, 'png', 'image/png', 'image/images/20260509/69fe20dab46e6.png', NULL, 3, 2, '2026-05-09 01:43:54', '2026-05-14 00:14:00', NULL, NULL),
+(5, 'cos', NULL, 0, 'direct', NULL, NULL, 'avatar.png', 'images/20260509/69fe25489263c', 'https://test-1253544066.cos.ap-guangzhou.myqcloud.com/images/20260509/69fe25489263c', 3999, 'png', 'image/png', 'images/20260509/69fe25489263c', NULL, 3, 1, '2026-05-09 02:02:49', '2026-05-14 00:12:14', NULL, NULL),
+(9, 'cos', 7, 1, 'direct', NULL, NULL, '屏幕截图 2025-08-25 002000.png', 'images/20260513/6a037879a72be', 'https://test-1253544066.cos.ap-guangzhou.myqcloud.com/images/20260513/6a037879a72be', 393, 'png', 'image/png', 'images/20260513/6a037879a72be', NULL, 0, 2, '2026-05-13 02:59:06', '2026-05-14 02:40:46', '2026-05-14 03:00:11', NULL),
+(10, 'cos', 1, 1, 'direct', NULL, NULL, 'avatar.png', 'images/20260513/6a037abd09094', 'https://test-1253544066.cos.ap-guangzhou.myqcloud.com/images/20260513/6a037abd09094', 3999, 'png', 'image/png', 'images/20260513/6a037abd09094', NULL, 0, 1, '2026-05-13 03:08:45', '2026-05-14 02:56:21', '2026-05-14 03:00:11', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `files_test`
+--
+
+CREATE TABLE `files_test` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '上传用户ID',
+  `disk` varchar(32) NOT NULL DEFAULT 'local' COMMENT '存储驱动: local/oss/cos/chitu',
+  `path` varchar(255) NOT NULL DEFAULT '' COMMENT '存储相对路径/图床标识',
+  `url` varchar(512) NOT NULL DEFAULT '' COMMENT '访问URL',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '原始文件名',
+  `mime_type` varchar(128) NOT NULL DEFAULT '' COMMENT 'MIME类型',
+  `size` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '文件大小(字节)',
+  `hash` varchar(64) NOT NULL DEFAULT '' COMMENT '文件哈希(MD5)',
+  `scene` varchar(32) NOT NULL DEFAULT '' COMMENT '业务场景: avatar/card/comment',
+  `ref_type` varchar(32) NOT NULL DEFAULT '' COMMENT '关联类型: card/comment/user',
+  `ref_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '关联ID',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1正常 0禁用',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件表';
+
+--
+-- 转存表中的数据 `files_test`
+--
+
+INSERT INTO `files_test` (`id`, `user_id`, `disk`, `path`, `url`, `name`, `mime_type`, `size`, `hash`, `scene`, `ref_type`, `ref_id`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(5, 5, 'cos', 'cards/5/20260422/20260422\\a7ee4cfdbbf5d5e94ac45e13b63e4c91.png', 'testt-1253544066.cos.ap-guangzhou.myqcloud.com/cards/5/20260422/20260422\\a7ee4cfdbbf5d5e94ac45e13b63e4c91.png', 'cos_test.png', 'image/png', 8, 'e9dd2797018cad79186e03e8c5aec8dc', 'card', '', 0, 1, '2026-04-22 11:35:39', '2026-04-22 11:35:39', NULL),
+(6, 1, 'cos', 'cards/1/20260422/20260422\\cea4a921af9f0e6bf52f91fa8c7ac5a8.png', 'testt-1253544066.cos.ap-guangzhou.myqcloud.com/cards/1/20260422/20260422\\cea4a921af9f0e6bf52f91fa8c7ac5a8.png', '屏幕截图 2025-08-25 002043.png', 'image/png', 1686, 'afe30f2f9880d1b28cd6d9b512cb5e5d', 'card', 'card', 0, 1, '2026-04-22 11:37:14', '2026-04-22 11:37:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -95,10 +163,32 @@ CREATE TABLE `images` (
   `pid` int(11) NOT NULL COMMENT '条目ID',
   `user_id` int(11) NOT NULL,
   `url` varchar(256) NOT NULL,
-  `created_at` datetime NOT NULL,
+  `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `likes`
+--
+
+CREATE TABLE `likes` (
+  `id` int(11) NOT NULL,
+  `aid` int(11) NOT NULL COMMENT '应用ID',
+  `pid` int(11) NOT NULL COMMENT '条目ID',
+  `uid` int(11) NOT NULL,
+  `ip` varchar(32) NOT NULL COMMENT '发布IP',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT '发布时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 转存表中的数据 `likes`
+--
+
+INSERT INTO `likes` (`id`, `aid`, `pid`, `uid`, `ip`, `created_at`) VALUES
+(1, 1, 1, 1, '127.0.0.1', '2026-04-18 17:00:03');
 
 -- --------------------------------------------------------
 
@@ -188,7 +278,22 @@ INSERT INTO `permissions` (`id`, `name`, `slug`, `path`, `method`, `description`
 (63, '访客-获取评论列表', 'guest-comments-list', '/api/comments', 'GET', '访客获取评论列表', '2026-01-19 04:01:19', '2026-01-19 04:01:19', NULL),
 (64, '访客-获取喜欢列表', 'guest-likes-list', '/api/likes', 'GET', '访客获取喜欢列表', '2026-01-19 04:01:19', '2026-01-19 04:01:19', NULL),
 (65, '访客-获取用户信息', 'guest-user-info', '/api/user/info', 'GET', '访客获取用户信息', '2026-01-19 04:01:19', '2026-01-19 04:01:19', NULL),
-(66, '访客-获取标签列表', 'guest-tags-list', '/api/tags', 'GET', '访客获取标签列表', '2026-01-19 04:01:19', '2026-01-19 04:01:19', NULL);
+(66, '访客-获取标签列表', 'guest-tags-list', '/api/tags', 'GET', '访客获取标签列表', '2026-01-19 04:01:19', '2026-01-19 04:01:19', NULL),
+(67, '上传文件', 'upload-file', '/api/upload/upload', 'POST', '场景化文件上传', '2026-04-22 04:09:10', '2026-04-22 04:09:10', NULL),
+(68, '获取上传凭证', 'upload-credentials', '/api/upload/credentials', 'GET', '获取直传临时凭证', '2026-04-22 04:09:10', '2026-04-22 04:09:10', NULL),
+(69, '确认上传', 'upload-confirm', '/api/upload/confirm', 'POST', '确认直传上传结果', '2026-04-22 04:09:10', '2026-04-22 04:09:10', NULL),
+(70, '删除文件', 'upload-delete', '/api/upload', 'DELETE', '删除已上传文件', '2026-04-22 04:09:10', '2026-04-22 04:09:10', NULL),
+(71, '上传头像', 'upload-avatar', '/api/upload/avatar', 'POST', '上传头像专用', '2026-04-22 04:23:51', '2026-05-13 03:46:04', NULL),
+(72, '上传卡片图片', 'upload-card', '/api/upload/card', 'POST', '上传卡片图片', '2026-04-22 16:40:28', '2026-04-22 16:40:28', NULL),
+(73, '查看文件', 'storage-view', '/api/upload/get-file', 'GET', '查看文件信息', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(74, '文件列表', 'storage-list', '/api/upload/files', 'GET', '获取文件列表', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(75, '删除恢复文件', 'storage-toggle-delete', '/api/upload/toggle-delete', 'POST', '删除或恢复文件', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(76, '设置公开', 'storage-toggle-public', '/api/upload/toggle-public', 'POST', '切换文件公开状态', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(77, '审核文件', 'storage-review', '/api/upload/review', 'POST', '审核文件', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(78, '批量审核', 'storage-batch-review', '/api/upload/batch-review', 'POST', '批量审核文件', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(79, '硬删除文件', 'storage-hard-delete', '/api/upload/hard-delete', 'POST', '硬删除文件', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(80, '清理过期', 'storage-cleanup', '/api/upload/cleanup', 'POST', '清理过期文件', '2026-05-12 21:31:57', '2026-05-12 21:31:57', NULL),
+(82, '批量操作文件', 'storage-batch-operate', '/api/upload/batch-operate', 'POST', '批量操作文件（审核/封禁/公开/恢复/删除）', '2026-05-14 02:51:37', '2026-05-14 02:51:37', NULL);
 
 -- --------------------------------------------------------
 
@@ -214,7 +319,8 @@ INSERT INTO `roles` (`id`, `name`, `slug`, `description`, `created_at`, `updated
 (1, '超级管理员', 'root', NULL, '2026-01-19 03:07:29', '2026-01-19 03:07:29', NULL),
 (2, '管理员', 'admin', NULL, '2026-01-19 03:07:58', '2026-01-19 03:07:58', NULL),
 (3, '用户', 'user', NULL, '2026-01-19 03:08:26', '2026-01-19 03:08:26', NULL),
-(4, '访客', 'guest', NULL, '2026-01-19 03:08:40', '2026-01-19 03:08:40', NULL);
+(4, '访客', 'guest', NULL, '2026-01-19 03:08:40', '2026-01-19 03:08:40', NULL),
+(5, '测试', 'test', '11111', '2026-05-13 04:41:21', '2026-05-13 04:41:43', '2026-05-13 04:41:43');
 
 -- --------------------------------------------------------
 
@@ -226,7 +332,7 @@ CREATE TABLE `role_permissions` (
   `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL COMMENT '角色ID',
   `permission_id` int(11) NOT NULL COMMENT '权限ID',
-  `created_at` timestamp NOT NULL
+  `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限关联表';
 
 --
@@ -300,20 +406,6 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `permission_id`, `created_at`) 
 (64, 1, 64, '2026-01-18 20:01:19'),
 (65, 1, 65, '2026-01-18 20:01:19'),
 (66, 1, 66, '2026-01-18 20:01:19'),
-(67, 1, 67, '2026-01-18 20:01:19'),
-(68, 1, 68, '2026-01-18 20:01:19'),
-(69, 1, 69, '2026-01-18 20:01:19'),
-(70, 1, 70, '2026-01-18 20:01:19'),
-(71, 1, 71, '2026-01-18 20:01:19'),
-(72, 1, 72, '2026-01-18 20:01:19'),
-(73, 1, 73, '2026-01-18 20:01:19'),
-(74, 1, 74, '2026-01-18 20:01:19'),
-(75, 1, 75, '2026-01-18 20:01:19'),
-(76, 1, 76, '2026-01-18 20:01:19'),
-(77, 1, 77, '2026-01-18 20:01:19'),
-(78, 1, 78, '2026-01-18 20:01:19'),
-(79, 1, 79, '2026-01-18 20:01:19'),
-(80, 1, 80, '2026-01-18 20:01:19'),
 (128, 2, 13, '2026-01-18 20:01:19'),
 (129, 2, 15, '2026-01-18 20:01:19'),
 (130, 2, 17, '2026-01-18 20:01:19'),
@@ -350,7 +442,43 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `permission_id`, `created_at`) 
 (175, 4, 63, '2026-01-18 20:01:19'),
 (176, 4, 64, '2026-01-18 20:01:19'),
 (177, 4, 66, '2026-01-18 20:01:19'),
-(178, 4, 65, '2026-01-18 20:01:19');
+(178, 4, 65, '2026-01-18 20:01:19'),
+(181, 1, 67, '2026-04-21 20:09:25'),
+(182, 1, 68, '2026-04-21 20:09:25'),
+(183, 1, 69, '2026-04-21 20:09:25'),
+(184, 1, 70, '2026-04-21 20:09:25'),
+(185, 2, 67, '2026-04-21 20:09:25'),
+(186, 2, 68, '2026-04-21 20:09:25'),
+(187, 2, 69, '2026-04-21 20:09:25'),
+(188, 2, 70, '2026-04-21 20:09:25'),
+(189, 3, 67, '2026-04-21 20:09:25'),
+(190, 3, 68, '2026-04-21 20:09:25'),
+(191, 3, 69, '2026-04-21 20:09:25'),
+(192, 3, 71, '2026-04-21 20:23:54'),
+(193, 3, 70, '2026-04-21 20:28:34'),
+(194, 3, 72, '2026-04-22 08:40:31'),
+(195, 3, 73, '2026-05-12 13:33:36'),
+(196, 3, 74, '2026-05-12 13:33:36'),
+(197, 3, 75, '2026-05-12 13:33:36'),
+(198, 3, 76, '2026-05-12 13:33:36'),
+(199, 2, 73, '2026-05-12 13:33:42'),
+(200, 2, 74, '2026-05-12 13:33:42'),
+(201, 2, 75, '2026-05-12 13:33:42'),
+(202, 2, 76, '2026-05-12 13:33:42'),
+(203, 2, 77, '2026-05-12 13:33:42'),
+(204, 2, 78, '2026-05-12 13:33:42'),
+(205, 2, 79, '2026-05-12 13:33:42'),
+(206, 2, 80, '2026-05-12 13:33:42'),
+(208, 1, 73, '2026-05-12 19:29:55'),
+(209, 1, 74, '2026-05-12 19:29:55'),
+(210, 1, 75, '2026-05-12 19:29:55'),
+(211, 1, 76, '2026-05-12 19:29:55'),
+(212, 1, 77, '2026-05-12 19:29:55'),
+(213, 1, 78, '2026-05-12 19:29:55'),
+(214, 1, 79, '2026-05-12 19:29:55'),
+(215, 1, 80, '2026-05-12 19:29:55'),
+(304, 1, 82, '2026-05-13 18:51:42'),
+(305, 2, 82, '2026-05-13 18:51:42');
 
 -- --------------------------------------------------------
 
@@ -409,7 +537,7 @@ CREATE TABLE `tags_map` (
   `aid` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
@@ -429,9 +557,9 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `status` int(11) NOT NULL,
   `roles_id` json DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `deleted_at` datetime DEFAULT NULL
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 --
@@ -439,7 +567,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `number`, `avatar`, `email`, `phone`, `username`, `password`, `status`, `roles_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '1000000000', '', 'admin@lovecards.cn', '', '超级管理员', '$2y$10$uBowOFgOBNTx1NT1uYJTleEo1r8d91R9iwxRCqncPJUShfsJoMvr6', 0, '[1, 2, 3]', '2023-12-06 20:09:26', '2025-08-01 20:50:25', NULL);
+(1, '1000000000', '', 'admin@lovecards.cn', '', '超级管理员', '$2y$10$uBowOFgOBNTx1NT1uYJTleEo1r8d91R9iwxRCqncPJUShfsJoMvr6', 0, '[1, 2, 3]', '2023-12-06 12:09:26', '2025-08-01 12:50:25', NULL),
+(2, '2841962312', '', '8079E68A9@g.com', '', 'GUEST37C57', '$2y$10$X5Dol3dVmUg71L9Me6lRceD824oPCgG5DnmAK3YGm/WrMynfaBc22', 0, '[3]', '2026-04-21 20:17:46', '2026-04-21 20:17:46', NULL),
+(3, '4542393157', '', '1FCBFFCD9@g.com', '', 'GUEST12655', '$2y$10$kvgGVGAYsw28rejheg58Oe/fcVcrZyKHJUaYykOXE6KrnAxEdKm5G', 0, '[3]', '2026-04-22 08:40:49', '2026-04-22 08:40:49', NULL),
+(4, '6222720845', '', '61A91936D@g.com', '', 'GUESTD9255', '$2y$10$kdbnHAwet9EYyR7OMJEwUeTPc9/jWvCnSqIgSN0AgxSJS8WsV12wq', 0, '[3]', '2026-04-22 10:52:53', '2026-04-22 10:52:53', NULL),
+(5, '6808639375', '', '9D8801C4A@g.com', '', 'GUEST0486A', '$2y$10$oNFTdH4O0X24HN8X/o9I2.KHjx6DhaKYI3pjIsndFren4YcRrdpkO', 0, '[3]', '2026-04-22 11:33:45', '2026-04-22 11:33:45', NULL),
+(6, '1059537860', '', '5848072BA@g.com', '', 'GUEST0BA66', '$2y$10$u3iK8MnSxztxep4vYz9MSuG6TeVgXriEAZ6kGRxChxwKv59GB.KBC', 0, '[3]', '2026-04-29 18:55:31', '2026-04-29 18:55:31', NULL),
+(7, '0424474167', '', 'FD816F879@g.com', '', 'GUEST14DB1', '$2y$10$z8b9veqjJqzLZf/32BkhK.GJc3ceqsj.oWpVrkUjc/bLb1MSS9oVe', 0, '[3]', '2026-05-04 18:49:08', '2026-05-04 18:49:08', NULL);
 
 --
 -- 转储表的索引
@@ -458,15 +592,35 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`);
 
 --
--- 表的索引 `good`
+-- 表的索引 `files`
 --
-ALTER TABLE `good`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_scene` (`scene`),
+  ADD KEY `idx_ref` (`ref_type`,`ref_id`);
+
+--
+-- 表的索引 `files_test`
+--
+ALTER TABLE `files_test`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_hash` (`hash`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_scene` (`scene`),
+  ADD KEY `idx_ref` (`ref_type`,`ref_id`),
+  ADD KEY `idx_disk_path` (`disk`,`path`(191));
 
 --
 -- 表的索引 `images`
 --
 ALTER TABLE `images`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `likes`
+--
+ALTER TABLE `likes`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -525,7 +679,7 @@ ALTER TABLE `users`
 -- 使用表AUTO_INCREMENT `cards`
 --
 ALTER TABLE `cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `comments`
@@ -534,10 +688,16 @@ ALTER TABLE `comments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- 使用表AUTO_INCREMENT `good`
+-- 使用表AUTO_INCREMENT `files`
 --
-ALTER TABLE `good`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- 使用表AUTO_INCREMENT `files_test`
+--
+ALTER TABLE `files_test`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `images`
@@ -546,22 +706,28 @@ ALTER TABLE `images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- 使用表AUTO_INCREMENT `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- 使用表AUTO_INCREMENT `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- 使用表AUTO_INCREMENT `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=306;
 
 --
 -- 使用表AUTO_INCREMENT `system`
@@ -585,7 +751,7 @@ ALTER TABLE `tags_map`
 -- 使用表AUTO_INCREMENT `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- 限制导出的表

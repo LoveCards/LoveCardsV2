@@ -1,23 +1,22 @@
 <?php
 
 use think\facade\Route;
-use think\facade\Request;
 
 use app\api\middleware\JwtAuthCheck;
-use app\api\middleware\JwtAuthLogout;
-
-use app\api\middleware\SessionDebounce;
-use app\api\middleware\GeetestCheck;
-
 use app\api\middleware\PermissionCheck;
 
-Route::get('public/cards', 'public.Cards/index'); //卡片列表
-Route::get('public/hot-cards', 'public.Cards/hotList'); //卡片列表
-Route::get('public/tags', 'public.Tags/list'); //卡片列表
+Route::get('public/cards', 'public.Cards/index');
+Route::get('public/hot-cards', 'public.Cards/hotList');
+Route::get('public/tags', 'public.Tags/list');
 
 Route::get('theme/config', 'public.theme/Config');
-//Route::post('upload/image', 'public.Upload/Image');
 
 Route::group('', function () {
-    Route::post('upload/user-images', 'public.upload/UserImages');
+    Route::post('upload/upload', 'public.Upload/upload');
+    Route::get('upload/files', 'public.Upload/files');
+    Route::get('upload/get-file', 'public.Upload/getFile');
+    Route::post('upload/batch-operate', 'public.Upload/batchOperate');
+    Route::post('upload/direct-upload-credential', 'public.Upload/getDirectUploadCredential');
+    Route::post('upload/direct-upload-confirm', 'public.Upload/confirmDirectUpload');
+    Route::post('upload/cleanup', 'public.Upload/cleanup');
 })->middleware([JwtAuthCheck::class, PermissionCheck::class]);

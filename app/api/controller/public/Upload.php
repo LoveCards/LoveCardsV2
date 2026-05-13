@@ -2,88 +2,167 @@
 
 namespace app\api\controller\public;
 
-//use think\facade\Config;
-use think\facade\Filesystem;
-//use app\common\Base;
-
 use think\facade\Request;
-
-use app\api\model\Images as ImagesModel;
-use app\api\validate\Upload as UploadValidate;
-//use think\exception\ValidateException;
-//use app\common\Base as CommonBase;
-
 use app\api\controller\BaseController;
 use app\api\ApiResponse;
+use app\api\service\Storage\StorageManager;
+use app\api\service\Storage\DirectUpload\DirectUploadManager;
+use app\api\service\Users as UsersService;
+use app\api\model\Files;
+use app\api\Params;
 
 class Upload extends BaseController
 {
-    //上传图片-POST 这个api要替换掉的
-    // protected function Image()
-    // {
-    //     if (empty(request()->file('file'))) {
-    //         return Export::mObjectEasyCreate([], '请提交文件', 400);
-    //     }
-    //     // 获取表单上传文件
-    //     $file = request()->file('file');
-    //     $DefSetCardsImgSize = Config::get('lovecards.api.Upload.DefSetCardsImgSize');
+    protected $Params;
 
-    //     $lDef_ImageExt = CommonBase::conf()->mArraySearchConfigKey('UserImageExt');
-    //     $lDef_ImageExt[0] != '' ? $lDef_ImageExt = $lDef_ImageExt[0] : $lDef_ImageExt = 'jpg,png,gif';
-    //     //验证
-    //     try {
-    //         validate(['file' => [     //file是你自定义的键名，目的是为了对check里数组中的
-    //             'fileSize' => 1024 * 1000 * $DefSetCardsImgSize, //允许文件大小
-    //             'fileExt'  => $lDef_ImageExt,  //文件后缀
-    //             //'fileMime' => array('jpg', 'png'),  //文件类型
-    //         ]])->check(['file' => $file]); //对上传的$file进行验证
-
-    //         $saveName = \think\facade\Filesystem::disk('public')->putFile('image', $file); //保存文件名
-
-    //         return Export::mObjectEasyCreate($saveName, '上传成功', 200);
-    //     } catch (\Exception $e) {
-    //         return Export::mObjectEasyCreate($e->getMessage(), '上传失败', 400);
-    //     }
-    // }
-
-    //上传文件-POST
-    public function UserImages()
+    function __construct()
     {
-        $context = request()->JwtData;
+        parent::__construct();
+        $this->Params = new Params();
+    }
 
-        $lReq_ParmasArray = [
-            'file' => request()->file('file'),
-            'aid' => 0,
-            'pid' => 0,
-            'user_id' => Request::param('user_id'),
-        ];
+    private function isAdmin(): bool
+    {
+        if (isset($this->JWT_SESSION['aid'])) {
+            return true;
+        }
+        $uid = $this->JWT_SESSION['uid'] ?? 0;
+        if ($uid <= 0) return false;
+        $user = UsersService::Get($uid);
+        if (!$user || !$user->id) return false;
+        $roles = json_decode($user->roles_id, true) ?: [];
+        return in_array(1, $roles) || in_array(2, $roles);
+    }
 
-        //校验参数
+    public function upload()
+    {
+        $file = request()->file('file');
+        if (empty($file)) {
+            return ApiResponse::createError('请提交文件');
+        }
+
+        $userId = $this->JWT_SESSION['uid'] ?? 0;
+
+        if (!StorageManager::checkRateLimit((string) $userId)) {
+            return ApiResponse::createTooMany('请求过于频繁');
+        }
+
+        $scene = Request::param('scene', 'direct');
+        $refType = Request::param('ref_type', null);
+        $refId = Request::param('ref_id', null);
+        $isPublic = (int) Request::param('is_public', 0);
+
+        $status = Files::STATUS_NORMAL;
+        $uploadStatus = $scene === 'direct' ? Files::UPLOAD_PENDING : Files::UPLOAD_COMPLETED;
+
+        $path = 'images/' . date('Ymd') . '/' . uniqid();
+
         try {
-            validate(UploadValidate::class)
-                ->scene('CheckUpload')
-                ->check($lReq_ParmasArray);
+            $result = StorageManager::upload($file, $path, [
+                'user_id' => $userId,
+                'scene' => $scene,
+                'ref_type' => $refType,
+                'ref_id' => $refId,
+                'is_public' => $isPublic,
+                'status' => $status,
+                'upload_status' => $uploadStatus,
+            ]);
+
+            return ApiResponse::createOk($result->toArray());
         } catch (\Exception $e) {
             return ApiResponse::createError('上传失败', $e->getMessage());
         }
+    }
 
-        //保存图片
-        $lDef_Result = Filesystem::disk('public')->putFile('image', $lReq_ParmasArray['file']);
-        if (!$lDef_Result) {
-            return ApiResponse::createError('上传失败', ['保存文件失败']);
+    public function files()
+    {
+        $params = $this->Params->IndexParams(Request::param());
+        if (gettype($params) == 'object') {
+            return $params;
         }
 
-        //创建数据
-        if (!isset($context['aid'])) {
-            $lReq_ParmasArray['user_id'] = $context['uid'];
-        }
-        $lReq_ParmasArray['url'] =  Request::scheme() . '://' . Request::host() . '/storage/' . $lDef_Result;
-        $lDef_CreatData = ImagesModel::create($lReq_ParmasArray);
-        if (!$lDef_CreatData) {
-            //待完善-回滚操作，删除文件
-            return ApiResponse::createError('上传失败', ['保存数据失败']);
+        // 这些字段不在 IndexParams scene filter 里，手动提取
+        $params['show_deleted'] = Request::param('show_deleted', 0);
+        $params['status'] = Request::param('status', null);
+        $params['upload_status'] = Request::param('upload_status', null);
+        $params['scene'] = Request::param('scene', null);
+
+        $userId = $this->JWT_SESSION['uid'] ?? 0;
+        $isAdmin = $this->isAdmin();
+
+        $result = StorageManager::list($params, $userId, $isAdmin);
+        return ApiResponse::createOk($result);
+    }
+
+    public function getFile()
+    {
+        $fileId = (int) Request::param('id', 0);
+        $userId = $this->JWT_SESSION['uid'] ?? 0;
+        $isAdmin = $this->isAdmin();
+
+        $file = StorageManager::getFile($fileId, $userId, $isAdmin);
+        return $file ? ApiResponse::createOk($file) : ApiResponse::createNotFound();
+    }
+
+    public function batchOperate()
+    {
+        if (!$this->isAdmin()) {
+            return ApiResponse::createForbidden('需要管理员权限');
         }
 
-        return ApiResponse::createOk(['id' => $lDef_CreatData->id, 'url' => $lReq_ParmasArray['url']]);
+        $ids = json_decode(Request::param('ids', '[]'), true);
+        $method = Request::param('method', '');
+
+        if (empty($ids) || empty($method)) {
+            return ApiResponse::createBadRequest('参数不完整');
+        }
+
+        try {
+            StorageManager::batchOperate($method, $ids);
+            return ApiResponse::createNoContent();
+        } catch (\Throwable $e) {
+            return ApiResponse::createError($e->getMessage());
+        }
+    }
+
+    public function getDirectUploadCredential()
+    {
+        $userId = $this->JWT_SESSION['uid'] ?? 0;
+
+        if (!StorageManager::checkRateLimit((string) $userId)) {
+            return ApiResponse::createError('请求过于频繁');
+        }
+
+        $filename = Request::param('filename', '');
+        $size = (int) Request::param('size', 0);
+        $mime = Request::param('mime', '');
+
+        $path = 'images/' . date('Ymd') . '/' . uniqid();
+
+        try {
+            $result = DirectUploadManager::createPendingRecord($filename, $mime, $size, $path, $userId);
+            return ApiResponse::createOk($result);
+        } catch (\Exception $e) {
+            return ApiResponse::createError('获取凭证失败', $e->getMessage());
+        }
+    }
+
+    public function confirmDirectUpload()
+    {
+        $recordId = (int) Request::param('record_id', 0);
+
+        $result = DirectUploadManager::confirmUpload($recordId);
+        return $result ? ApiResponse::createOk() : ApiResponse::createError('确认失败');
+    }
+
+    public function cleanup()
+    {
+        if (!$this->isAdmin()) {
+            return ApiResponse::createForbidden('需要管理员权限');
+        }
+        $limit = (int) Request::param('limit', 100);
+
+        $cleaned = DirectUploadManager::cleanupExpired($limit);
+        return ApiResponse::createOk(['cleaned' => count($cleaned)]);
     }
 }

@@ -54,20 +54,20 @@ Route::group('', function () {
 
     //角色管理
     Route::get('admin/roles', 'admin.Roles/Index');
+    Route::get('admin/role/permissions', 'admin.Roles/GetRolePermissions');
     Route::get('admin/role', 'admin.Roles/Get');
+    Route::post('admin/role/assign-permissions', 'admin.Roles/AssignPermissions');
     Route::post('admin/role', 'admin.Roles/Create');
     Route::patch('admin/role', 'admin.Roles/Patch');
     Route::delete('admin/role', 'admin.Roles/Delete');
-    Route::post('admin/role/assign-permissions', 'admin.Roles/AssignPermissions');
-    Route::get('admin/role/permissions', 'admin.Roles/GetRolePermissions');
 
     //权限管理
+    Route::get('admin/permissions/all', 'admin.Permissions/All');
     Route::get('admin/permissions', 'admin.Permissions/Index');
     Route::get('admin/permission', 'admin.Permissions/Get');
     Route::post('admin/permission', 'admin.Permissions/Create');
     Route::patch('admin/permission', 'admin.Permissions/Patch');
     Route::delete('admin/permission', 'admin.Permissions/Delete');
-    Route::get('admin/permissions/all', 'admin.Permissions/All');
 
     //角色权限关联
     Route::post('admin/role-permission', 'admin.RolePermissions/Add');

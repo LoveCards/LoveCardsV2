@@ -18,8 +18,6 @@ const MyCards = {
                 return "正常";
             } else if (status == 1) {
                 return "封禁";
-            } else if (status == 3) {
-                return "待审核";
             }
             return "未知状态";
         },
