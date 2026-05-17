@@ -3,10 +3,7 @@
 namespace app\api\controller\admin;
 
 use think\facade\Request;
-use think\facade\Config;
 use think\exception\ValidateException;
-
-use app\common\ConfigHelper;
 
 //基础应用验证
 use app\api\validate\Cards as CardsValidate;
@@ -15,6 +12,7 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\api\model\Cards as CardsModel;
 //基础应用服务
 use app\api\service\Cards as CardsService;
+use app\api\service\Config as ConfigService;
 
 //yunarch框架相关
 use yunarch\validate\Common as CommonValidate;
@@ -127,16 +125,13 @@ class Cards extends BaseController
             return ApiResponse::createBadRequest('修改失败', $validateerror);
         }
 
-        $masterConfig = Config::get('master') ?: [];
-        $masterConfig['Cards'] = [
-            'PictureLimit' => $data['DefSetCardsImgNum'],
-            'TagLimit' => $data['DefSetCardsTagNum'],
-            'Approve' => (bool) $data['DefSetCardsStatus'],
-            'ImageSize' => $data['DefSetCardsImgSize'],
-            'CommentsStatus' => (bool) $data['DefSetCardsCommentsStatus'],
-        ];
-
-        $result = ConfigHelper::save('master', $masterConfig);
+        $result = ConfigService::setGroup('cards', [
+            'picture_limit' => $data['DefSetCardsImgNum'],
+            'tag_limit' => $data['DefSetCardsTagNum'],
+            'approve' => (bool) $data['DefSetCardsStatus'],
+            'image_size' => $data['DefSetCardsImgSize'],
+            'comments_status' => (bool) $data['DefSetCardsCommentsStatus'],
+        ]);
 
         if ($result == true) {
             return ApiResponse::createNoContent();

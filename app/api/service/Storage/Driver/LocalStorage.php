@@ -14,9 +14,8 @@ class LocalStorage extends AbstractStorage
 
     public function doUpload(UploadedFile $file, string $path): array
     {
-        $savePath = Filesystem::disk('public')->putFile('image', $file, function () use ($path) {
-            return rtrim(str_replace('\\', '/', $path), '/');
-        });
+        $savePath = str_replace('\\', '/', $path);
+        Filesystem::disk('public')->putFileAs(dirname($savePath), $file, basename($savePath));
 
         $urlPrefix = $this->config['url_prefix'] ?? '/storage';
         $fullUrl = request()->scheme() . '://' . request()->host() . $urlPrefix . '/' . $savePath;

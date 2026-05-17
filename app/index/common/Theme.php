@@ -3,8 +3,8 @@
 namespace app\index\common;
 
 use think\Facade;
-use think\facade\Config;
 use think\facade\View;
+use app\api\service\Config as ConfigService;
 
 class Theme extends Facade
 {
@@ -18,7 +18,7 @@ class Theme extends Facade
      */
     protected static function mArrayGetThemeDirectory()
     {
-        $N = Config::get('master.System.ThemeDirectory', 'index');
+        $N = ConfigService::get('core.theme_directory', 'index');
         $P = 'theme/' . $N;
         if (!Is_dir($P)) {
             $N = 'index';

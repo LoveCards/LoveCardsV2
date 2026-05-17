@@ -7,25 +7,17 @@ use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\PermissionCheck;
 
 Route::group('', function () {
-    //超管
+    //配置管理
+    Route::get('system/config', 'admin.Config/index');
+    Route::post('system/config', 'admin.Config/save');
+    Route::post('upload/test-channel', 'admin.Config/testChannel');
+    Route::get('upload/channel-stats', 'admin.Config/channelStats');
+
+    //主题管理（保留）
     Route::get('system/updata', 'admin.System/updata');
-
     Route::get('system/themes', 'admin.System/themes');
-
-    Route::get('system/config', 'admin.System/config');
-    Route::post('system/config', 'admin.System/setConfig');
-
-    Route::post('system/site', 'admin.System/Site');
-
-    //Route::get('system/email', 'admin.System/GetEmail');
-    Route::rule('system/email', 'admin.System/Email', 'PUT|PATCH');
-
-    //Route::get('system/other', 'admin.System/GetOther');
-    //Route::rule('system/other', 'admin.System/Other', 'PUT|PATCH');
-
     Route::post('system/set-theme', 'admin.System/themeSet');
     Route::post('system/theme-config', 'admin.System/themeConfig');
-    //Route::post('system/geetest', 'admin.System/Geetest');
 
     Route::post('cards/setting', 'admin.Cards/Setting');
 

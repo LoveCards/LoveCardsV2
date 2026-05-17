@@ -14,6 +14,7 @@ use app\api\model\Cards as CardsModel;
 use app\api\service\Cards as CardsService;
 use app\api\service\Likes as LikesService;
 use app\api\service\Comments as CommentsService;
+use app\api\service\Config as ConfigService;
 
 use app\api\model\Likes as LikesModel; //需要优化
 
@@ -55,12 +56,12 @@ class Cards extends BaseController
         //补齐参数
         $params['user_id'] = $this->JWT_SESSION['uid'];
         $params['post_ip'] = $this->SESSION['ip'];
-        $params['status'] = Config::get('master.Cards.Approve') ? 3 : 0;
+        $params['status'] = ConfigService::get('cards.approve') ? 3 : 0;
 
         //调用服务
         $cardId = CardsService::createCard($params);
         //返回结果
-        if (Config::get('master.Cards.Approve')) {
+        if (ConfigService::get('cards.approve')) {
             return ApiResponse::createCreated();
         }
         return ApiResponse::createOk(['id' => $cardId]);
@@ -92,13 +93,13 @@ class Cards extends BaseController
         //补齐参数
         $params['user_id'] = $this->JWT_SESSION['uid'];
         $params['post_ip'] = $this->SESSION['ip'];
-        $params['status'] = Config::get('master.Comments.Approve') ? 3 : 0;
+        $params['status'] = ConfigService::get('comments.approve') ? 3 : 0;
 
         //调用服务
         $result = CommentsService::createComment($params);
 
         //返回结果
-        if (Config::get('master.Comments.Approve')) {
+        if (ConfigService::get('comments.approve')) {
             return ApiResponse::createCreated();
         }
         return ApiResponse::createOk($result['data']);

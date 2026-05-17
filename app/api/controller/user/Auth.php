@@ -7,6 +7,7 @@ use think\facade\Config;
 use think\exception\ValidateException;
 
 use app\api\service\Users as UsersService;
+use app\api\service\Config as ConfigService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\extend\jwt\Jwt;
@@ -122,7 +123,7 @@ class Auth extends BaseController
         $accountArray = $this->mArrayEasyCheckAccountType($account);
 
         //验证码校验
-        if (Config::get('master.UserAuth.Captcha')) {
+        if (ConfigService::get('user.captcha')) {
             if (!Code::CheckCaptcha($account, strtoupper($code), 'Auth')) {
                 return ApiResponse::createUnauthorized('注册失败', ['验证码错误']);
             };
@@ -157,7 +158,7 @@ class Auth extends BaseController
     //访客登入-POST
     public function Guest()
     {
-        if (!Config::get('master.System.VisitorMode')) {
+        if (!ConfigService::get('core.visitor_mode')) {
             return ApiResponse::createUnauthorized('该站点未开启访客模式');
         }
 

@@ -29,16 +29,15 @@ class OssStorage extends AbstractStorage
     public function doUpload(UploadedFile $file, string $path): array
     {
         $bucket = $this->config['bucket'] ?? '';
-        $object = ($this->config['url_prefix'] ?? '') . '/' . $path;
 
         $content = file_get_contents($file->getPathname());
 
-        $this->getOssClient()->putObject($bucket, $object, $content);
+        $this->getOssClient()->putObject($bucket, $path, $content);
 
         return [
-            'path' => $object,
-            'url' => ($this->config['url_prefix'] ?? '') . '/' . $path,
-            'driver_path' => $object,
+            'path' => $path,
+            'url' => $this->getUrl($path),
+            'driver_path' => $path,
         ];
     }
 

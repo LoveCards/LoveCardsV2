@@ -3,7 +3,7 @@
 namespace app\api\validate;
 
 use think\Validate;
-use think\facade\Config;
+use app\api\service\Config as ConfigService;
 
 use yunarch\utils\src\ValidateRuleExtend;
 
@@ -137,14 +137,14 @@ class Cards extends Validate
     //验证图片个数
     protected function picturesLength($value)
     {
-        $config = Config::get('master.Cards.PictureLimit');
+        $config = ConfigService::get('cards.picture_limit');
         $decoded = json_decode($value, true);
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }
     //验证标签个数
     protected function tagsLength($value)
     {
-        $config = Config::get('master.Cards.TagLimit');
+        $config = ConfigService::get('cards.tag_limit');
         $decoded = json_decode($value, true);
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }

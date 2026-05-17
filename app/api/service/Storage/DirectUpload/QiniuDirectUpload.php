@@ -41,9 +41,7 @@ class QiniuDirectUpload extends AbstractDirectUpload
         $secretKey = $this->config['secret_key'];
         $bucket = $this->config['bucket'];
 
-        $dir = dirname($path) . '/';
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $key = $dir . basename($path) . '.' . $extension;
+        $key = $path;
 
         $deadline = time() + $expire;
 

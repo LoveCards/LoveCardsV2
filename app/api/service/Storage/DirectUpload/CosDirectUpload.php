@@ -45,9 +45,7 @@ class CosDirectUpload extends AbstractDirectUpload
         $secretKey = $this->config['secret_key'];
         $region = $this->config['region'];
 
-        $dir = dirname($path) . '/';
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $key = $dir . basename($path) . '.' . $extension;
+        $key = $path;
 
         $now = time();
         $expireTime = $now + $expire;

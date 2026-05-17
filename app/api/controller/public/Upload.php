@@ -7,6 +7,8 @@ use app\api\controller\BaseController;
 use app\api\ApiResponse;
 use app\api\service\Storage\StorageManager;
 use app\api\service\Storage\DirectUpload\DirectUploadManager;
+use app\api\service\Storage\ChannelManager;
+use app\api\service\Storage\PathGenerator;
 use app\api\service\Users as UsersService;
 use app\api\model\Files;
 use app\api\Params;
@@ -53,9 +55,9 @@ class Upload extends BaseController
         $isPublic = (int) Request::param('is_public', 0);
 
         $status = Files::STATUS_NORMAL;
-        $uploadStatus = $scene === 'direct' ? Files::UPLOAD_PENDING : Files::UPLOAD_COMPLETED;
+        $uploadStatus = Files::UPLOAD_COMPLETED;
 
-        $path = 'images/' . date('Ymd') . '/' . uniqid();
+        $path = PathGenerator::generate(ChannelManager::getDefaultChannel(), $file->getOriginalName());
 
         try {
             $result = StorageManager::upload($file, $path, [
@@ -137,7 +139,7 @@ class Upload extends BaseController
         $size = (int) Request::param('size', 0);
         $mime = Request::param('mime', '');
 
-        $path = 'images/' . date('Ymd') . '/' . uniqid();
+        $path = PathGenerator::generate(ChannelManager::getDefaultChannel(), $filename);
 
         try {
             $result = DirectUploadManager::createPendingRecord($filename, $mime, $size, $path, $userId);

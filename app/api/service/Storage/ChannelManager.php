@@ -2,6 +2,8 @@
 
 namespace app\api\service\Storage;
 
+use app\api\service\Config;
+
 class ChannelManager
 {
     private static ?array $channels = null;
@@ -10,27 +12,12 @@ class ChannelManager
     public static function loadChannels(): array
     {
         if (self::$channels === null) {
-            // 优先使用框架配置加载
-            $config = \think\facade\Config::get('core.storage.channels');
-            if (is_array($config)) {
-                self::$channels = $config;
-            } else {
-                // 手动加载：尝试多个可能路径
-                $basePath = app()->getConfigPath();
-                $possiblePaths = [
-                    $basePath . 'core' . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'channels.php',
-                    $basePath . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'channels.php',
-                ];
-
-                self::$channels = [];
-                foreach ($possiblePaths as $configFile) {
-                    $configFile = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $configFile);
-                    if (file_exists($configFile)) {
-                        self::$channels = include $configFile;
-                        break;
-                    }
-                }
-            }
+            self::$channels = [
+                'local' => array_merge(['type' => 'local'], Config::getGroup('storage_local')),
+                'oss' => array_merge(['type' => 'oss'], Config::getGroup('storage_oss')),
+                'cos' => array_merge(['type' => 'cos'], Config::getGroup('storage_cos')),
+                'qiniu' => array_merge(['type' => 'qiniu'], Config::getGroup('storage_qiniu')),
+            ];
         }
         return self::$channels;
     }
@@ -38,25 +25,7 @@ class ChannelManager
     public static function loadSettings(): array
     {
         if (self::$settings === null) {
-            $config = \think\facade\Config::get('core.storage.settings');
-            if (is_array($config)) {
-                self::$settings = $config;
-            } else {
-                $basePath = app()->getConfigPath();
-                $possiblePaths = [
-                    $basePath . 'core' . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'settings.php',
-                    $basePath . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'settings.php',
-                ];
-
-                self::$settings = [];
-                foreach ($possiblePaths as $configFile) {
-                    $configFile = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $configFile);
-                    if (file_exists($configFile)) {
-                        self::$settings = include $configFile;
-                        break;
-                    }
-                }
-            }
+            self::$settings = Config::getGroup('storage');
         }
         return self::$settings;
     }
@@ -130,7 +99,7 @@ class ChannelManager
         }
 
         $config = self::getBySlug($slug);
-        $type = $config['type'] ?? '';
+        $type = $config['type'] ?? $slug;
 
         switch ($type) {
             case 'local':
@@ -152,9 +121,6 @@ class ChannelManager
                 return !empty($config['access_key'])
                     && !empty($config['secret_key'])
                     && !empty($config['bucket']);
-
-            case 'api':
-                return !empty($config['api_key']);
 
             default:
                 return false;
@@ -191,14 +157,14 @@ class ChannelManager
     {
         $settings = self::loadSettings();
         return [
-            'max' => (int) ($settings['rate_limit']['max'] ?? 10),
-            'window' => (int) ($settings['rate_limit']['window'] ?? 60),
+            'max' => (int) ($settings['rate_limit_max'] ?? 10),
+            'window' => (int) ($settings['rate_limit_window'] ?? 60),
         ];
     }
 
     public static function getDirectUploadExpire(): int
     {
         $settings = self::loadSettings();
-        return (int) ($settings['direct_upload']['expire'] ?? 3600);
+        return (int) ($settings['direct_upload_expire'] ?? 3600);
     }
 }

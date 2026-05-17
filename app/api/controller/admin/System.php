@@ -3,15 +3,13 @@
 namespace app\api\controller\admin;
 
 use think\facade\Request;
-use think\facade\Db;
-use think\facade\Config;
 use think\facade\Session;
 
 use app\common\Theme;
 use app\common\Common;
-use app\common\ConfigHelper;
 
 use app\api\controller\BaseController;
+use app\api\service\Config as ConfigService;
 
 use app\api\ApiResponse;
 
@@ -74,119 +72,6 @@ class System extends BaseController
         return ApiResponse::createOk($result);
     }
 
-    //读取配置
-    public function config()
-    {
-        $lDef_Result['system'] = array_column(Db::table('system')->select()->toArray(), 'value', 'name');
-        $lDef_Result['master'] = Config::get('master');
-        $lDef_Result['mail'] = Config::get('mail');
-        //$lDef_Result['lovecards'] = config::get('lovecards');
-        return ApiResponse::createOk($lDef_Result);
-    }
-
-    public function setConfig()
-    {
-        $params = Request::param();
-
-        /* ---------- 递归求差 ---------- */
-        function array_diff_recursive(array $a, array $b): array
-        {
-            $result = [];
-            foreach ($a as $k => $v) {
-                if (!array_key_exists($k, $b)) {
-                    $result[$k] = $v;
-                } elseif (is_array($v) && is_array($b[$k])) {
-                    $diff = array_diff_recursive($v, $b[$k]);
-                    if ($diff) {
-                        $result[$k] = $diff;
-                    }
-                } elseif ($v !== $b[$k]) {
-                    $result[$k] = $v;
-                }
-            }
-            return $result;
-        }
-
-        $params = array_diff_recursive($params, Config::get('master'));
-
-        if (empty($params)) {
-            return ApiResponse::createNoContent();
-        }
-
-        $currentConfig = Config::get('master');
-        $mergedConfig = $this->deepMerge($currentConfig, $params);
-
-        $tDef_Result = ConfigHelper::save('master', $mergedConfig);
-
-        if ($tDef_Result) {
-            return ApiResponse::createNoContent();
-        }
-        return ApiResponse::createError('设置失败');
-    }
-
-    protected function deepMerge(array $current, array $new): array
-    {
-        foreach ($new as $key => $value) {
-            if (is_array($value) && isset($current[$key]) && is_array($current[$key])) {
-                $current[$key] = $this->deepMerge($current[$key], $value);
-            } else {
-                $current[$key] = $value;
-            }
-        }
-        return $current;
-    }
-
-    //基本信息-POST
-    public function Site()
-    {
-        $siteUrl = Request::param('siteUrl');
-        if (empty($siteUrl)) {
-            return ApiResponse::createBadRequest('站点域名不得为空');
-        }
-        $siteName = Request::param('siteName');
-        $siteICPId = Request::param('siteICPId');
-        $siteKeywords = Request::param('siteKeywords');
-        $siteDes = Request::param('siteDes');
-        $siteTitle = Request::param('siteTitle');
-        $siteCopyright = Request::param('siteCopyright');
-
-        //更新数据
-        Db::table('system')->where('name', 'siteUrl')->update(['value' => $siteUrl]);
-        Db::table('system')->where('name', 'siteName')->update(['value' => $siteName]);
-        Db::table('system')->where('name', 'siteICPId')->update(['value' => $siteICPId]);
-        Db::table('system')->where('name', 'siteKeywords')->update(['value' => $siteKeywords]);
-        Db::table('system')->where('name', 'siteDes')->update(['value' => $siteDes]);
-        Db::table('system')->where('name', 'siteTitle')->update(['value' => $siteTitle]);
-        Db::table('system')->where('name', 'siteCopyright')->update(['value' => $siteCopyright]);
-
-        //返回数据
-        return ApiResponse::createNoContent();
-    }
-
-    //邮箱配置-PATCH
-    public function Email()
-    {
-        $params = array_filter([
-            'driver' => Request::param('driver'),
-            'host' => Request::param('host'),
-            'port' => Request::param('port'),
-            'addr' => Request::param('addr'),
-            'pass' => Request::param('pass'),
-            'name' => Request::param('name'),
-            'security' => Request::param('security'),
-        ], function($v) { return $v !== null && $v !== '' && $v !== 'null'; });
-
-        $currentConfig = Config::get('mail');
-        $mergedConfig = array_merge($currentConfig, $params);
-
-        $tDef_Result = ConfigHelper::save('mail', $mergedConfig);
-
-        if ($tDef_Result) {
-            return ApiResponse::createNoContent();
-        }
-        return ApiResponse::createError('设置失败');
-    }
-
     //主题设置-POST
     public function themeSet()
     {
@@ -201,21 +86,15 @@ class System extends BaseController
             return ApiResponse::createBadRequest('修改失败，该主题不适用当前版本');
         }
 
-        $currentConfig = Config::get('master');
-        $currentConfig['System']['ThemeDirectory'] = $tReq_ThemeDirectoryName;
-        $tDef_Result = ConfigHelper::save('master', $currentConfig);
+        ConfigService::set('core.theme_directory', $tReq_ThemeDirectoryName);
 
-        if ($tDef_Result == true) {
-            return ApiResponse::createNoContent();
-        } else {
-            return ApiResponse::createBadRequest('修改失败，请重试');
-        }
+        return ApiResponse::createNoContent();
     }
 
     //主题配置-POST
     public function themeConfig()
     {
-        $tDef_ThemeDirectory = Config::get('master.System.ThemeDirectory', 'index') ?: 'index';
+        $tDef_ThemeDirectory = ConfigService::get('core.theme_directory', 'index') ?: 'index';
 
         $lReq_ParamSelect = json_decode(Request::param('select'));
         $lReq_ParamText = json_decode(Request::param('text'));
@@ -337,39 +216,4 @@ class System extends BaseController
         ];
         return ApiResponse::createOk($result);
     }
-
-    //其他配置-PATCH
-    // public function Other()
-    // {
-    //     $lReq_Params = [
-    //         'System' . 'VisitorMode' => ['value' => Request::param('VisitorMode'), 'free' => true],
-    //         'Upload' . 'UserImageSize' => ['value' => Request::param('UserImageSize'), 'free' => true],
-    //         'Upload' . 'UserImageExt' => ['value' => Request::param('UserImageExt'), 'free' => false],
-    //         'UserAuth' . 'Captcha' => ['value' => Request::param('UserAuthCaptcha'), 'free' => true],
-    //     ];
-    //     //$lReq_Params = Common::mArrayEasyRemoveEmptyValues($lReq_Params);
-
-    //     //更新数据
-    //     $tDef_Result = ConfigFacade::mBoolSetMasterConfig($lReq_Params);
-
-    //     if ($tDef_Result) {
-    //         return Export::Create(null, 200);
-    //     }
-    //     return Export::Create(null, 500, '设置失败');
-    // }
-    //极验验证码配置-POST
-    // public function Geetest()
-    // {
-    //     try {
-    //         $data = [
-    //             'DefSetGeetestId' => Request::param('DefSetGeetestId'),
-    //             'DefSetGeetestKey' => Request::param('DefSetGeetestKey'),
-    //         ];
-    //         BackEnd::mBoolCoverConfig('lovecards', $data);
-    //         BackEnd::mBoolCoverConfig('lovecards', ['DefSetValidatesStatus' => Request::param('DefSetValidatesStatus')], true);
-    //         return Export::Create(null, 200);
-    //     } catch (\Throwable $th) {
-    //         return Export::Create(null, 400, '修改失败，请重试');
-    //     }
-    // }
 }

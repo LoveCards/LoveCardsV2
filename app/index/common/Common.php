@@ -3,7 +3,7 @@
 namespace app\index\common;
 
 use app\common\Common as BaseCommon;
-use think\facade\Db;
+use app\api\service\Config as ConfigService;
 
 class Common extends BaseCommon
 {
@@ -31,8 +31,7 @@ class Common extends BaseCommon
 
     public static function mArrayGetDbSystemData(): array
     {
-        $result = Db::table('system')->select()->toArray();
-        return array_column($result, 'value', 'name');
+        return ConfigService::getGroup('core');
     }
 
     public static function mStringGetIP($type = 0): string

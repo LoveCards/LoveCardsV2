@@ -6,7 +6,6 @@ use app\api\service\Storage\Driver\LocalStorage;
 use app\api\service\Storage\Driver\OssStorage;
 use app\api\service\Storage\Driver\CosStorage;
 use app\api\service\Storage\Driver\QiniuStorage;
-use app\api\service\Storage\Driver\SmmsStorage;
 use app\api\service\Storage\Contract\StorageInterface;
 
 class StorageFactory
@@ -16,7 +15,6 @@ class StorageFactory
         'oss' => OssStorage::class,
         'cos' => CosStorage::class,
         'qiniu' => QiniuStorage::class,
-        'smms' => SmmsStorage::class,
     ];
 
     public static function make(string $slug): StorageInterface

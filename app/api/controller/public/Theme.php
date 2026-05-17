@@ -9,10 +9,9 @@
 namespace app\api\controller\public;
 
 use think\facade\View;
-use think\facade\Config;
-use think\facade\Db;
 
 use app\common\Theme as CommonTheme;
+use app\api\service\Config as ConfigService;
 
 use app\api\controller\BaseController;
 use app\api\ApiResponse;
@@ -37,8 +36,7 @@ class Theme extends BaseController
             }
         }
 
-        $SyetemFileConfig = Config::get('master');
-        unset($SyetemFileConfig['Geetest']['Key']);
+        $coreConfig = ConfigService::getGroup('core');
 
         $data = [
             'request' => [
@@ -61,8 +59,8 @@ class Theme extends BaseController
                     'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
                 ],
                 'config' => [
-                    'file' => $SyetemFileConfig,
-                    'db' => array_column(Db::table('system')->select()->toArray(), 'value', 'name'),
+                    'file' => $coreConfig,
+                    'db' => $coreConfig,
                 ],
             ],
             'config' => $lRes_ThemeConfig,

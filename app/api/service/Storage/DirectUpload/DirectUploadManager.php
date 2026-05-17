@@ -71,7 +71,6 @@ class DirectUploadManager
         $fileModel->updated_at = date('Y-m-d H:i:s');
         $fileModel->save();
 
-        $path = $fileModel->file_path . '.' . $fileModel->file_ext;
         $credential = $provider->getUploadCredential($filename, $mime, $size, $path, $expire);
 
         return [
@@ -99,7 +98,7 @@ class DirectUploadManager
         }
 
         // 服务端推导 driver_path，不信任客户端
-        $driverPath = $fileModel->file_path . '.' . $fileModel->file_ext;
+        $driverPath = $fileModel->file_path;
 
         try {
             $provider = self::getProvider($fileModel->channel_slug);

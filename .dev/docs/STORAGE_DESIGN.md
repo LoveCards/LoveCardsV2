@@ -1,7 +1,7 @@
 # Storage 模块设计文档
 
 > 本文档基于实际代码实现生成，描述 Storage 模块的完整架构与使用方法。
-> 最后更新：2026-05-14
+> 最后更新：2026-05-17
 
 ---
 
@@ -21,7 +21,9 @@ Storage 是系统级文件存储模块，为整个系统提供统一的文件上
 
 ### 设计原则
 
-- **配置驱动**：渠道配置存储在 `config/core/storage/` 目录
+- **抽象层**：Storage 是底层存储抽象层，统一上游接口能力，调用方不关心后端是对象存储、图床还是本地存储
+- **配置驱动**：渠道配置通过 admin 后台管理，存储在 `configs` 表（通用 key-value），每个渠道可独立配置
+- **路径统一**：通过 `PathGenerator` 统一生成存储路径，模板可在渠道配置中自定义
 - **驱动可扩展**：新增存储渠道只需实现驱动，无需修改上层代码
 - **接口统一**：StorageManager 提供统一的 API 入口
 - **记录追踪**：所有文件操作都有数据库记录
@@ -41,8 +43,7 @@ app/api/service/Storage/
 │   ├── LocalStorage.php          # 本地存储 (type=local)
 │   ├── OssStorage.php           # 阿里云 OSS (type=oss)
 │   ├── CosStorage.php           # 腾讯云 COS (type=cos)
-│   ├── QiniuStorage.php         # 七牛云 (type=qiniu)
-│   └── SmmsStorage.php          # SM.MS 图床 (type=api)
+│   └── QiniuStorage.php         # 七牛云 (type=qiniu)
 ├── DirectUpload/
 │   ├── DirectUploadManager.php   # 直传管理器
 │   ├── DirectUploadProvider.php  # 直传提供者接口
@@ -52,14 +53,18 @@ app/api/service/Storage/
 │   └── QiniuDirectUpload.php     # 七牛直传
 ├── ChannelManager.php            # 渠道配置管理
 ├── StorageFactory.php            # 驱动工厂
+├── PathGenerator.php             # 统一路径生成
 └── StorageManager.php            # 统一入口
 
 app/api/model/
 └── Files.php                     # 文件模型（SoftDelete）
 
-config/core/storage/
-├── channels.php                  # 渠道配置
-└── settings.php                 # 存储设置
+config/apps/storage/
+├── settings.php                  # 全局设置
+├── local.php                     # 本地存储默认配置
+├── oss.php                       # OSS 默认配置
+├── cos.php                       # COS 默认配置
+└── qiniu.php                     # 七牛默认配置
 ```
 
 ---
@@ -68,17 +73,25 @@ config/core/storage/
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    StorageManager (门面)                      │
-│              统一入口，编排上传/删除/查询/批量操作逻辑            │
+│                    Controller (Upload.php)                    │
+│         调用方，不关心后端存储细节，只调统一接口                │
 └───────────────────────────┬─────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    ChannelManager (配置)                     │
-│              加载渠道配置，提供可用性检查                      │
+│                    StorageManager (门面)                      │
+│              统一入口，编排上传/删除/查询/批量操作逻辑            │
 └───────────────────────────┬─────────────────────────────────┘
                             │
-                            ▼
+              ┌─────────────┼─────────────┐
+              ▼                           ▼
+┌───────────────────────────┐ ┌───────────────────────────────┐
+│  PathGenerator (路径生成)  │ │  ChannelManager (配置)         │
+│  统一模板：                │ │  加载渠道配置，可用性检查        │
+│  storage/{date}/{uuid}.{ext}│ │  配置来源：文件默认→DB→.env    │
+└───────────────────────────┘ └───────────────┬───────────────┘
+                                              │
+                                              ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    StorageFactory (工厂)                    │
 │              根据渠道 slug 实例化对应驱动                      │
@@ -93,82 +106,69 @@ config/core/storage/
         ┌───────────────────┼───────────────────┐
         ▼                   ▼                   ▼
 ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│ LocalStorage   │   │ CloudStorage  │   │  ApiStorage   │
-│  (type=local) │   │(oss/cos/qiniu)│   │   (smms)     │
+│ LocalStorage   │   │ CloudStorage  │   │             │
+│  (type=local) │   │(oss/cos/qiniu)│   │             │
 └───────────────┘   └───────────────┘   └───────────────┘
+
+两条上传路径：
+  代理上传：Controller → StorageManager → Driver->doUpload() → 文件由服务端传到云端
+  客户端直传：Controller → DirectUploadManager → Provider->getUploadCredential() → 前端自行上传 → confirmUpload()
 ```
 
 ---
 
 ## 四、配置说明
 
-### 4.1 channels.php - 渠道配置
+### 4.1 配置体系
+
+渠道配置使用三层优先级：**文件默认值 → 数据库覆盖 → .env 最高优先**
+
+| 层 | 来源 | 说明 |
+|----|------|------|
+| Layer 1 | `config/apps/storage/{slug}.php` | 文件默认值，随代码部署 |
+| Layer 2 | `configs` 表（group=`storage_{slug}`） | admin 后台编辑，通用 key-value |
+| Layer 3 | `.env` | 环境变量，最高优先级 |
+
+### 4.2 渠道配置字段
+
+每个渠道的配置文件（`config/apps/storage/{slug}.php`）定义默认值：
 
 ```php
+// 示例：config/apps/storage/oss.php
 return [
-    'local' => [
-        'type' => 'local',
-        'root' => 'public/storage',
-        'url_prefix' => '/storage',
-        'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp,...',
-        'max_file_size' => 10485760,
-    ],
-
-    'oss' => [
-        'type' => 'oss',
-        'access_key' => env('OSS_ACCESS_KEY', ''),
-        'secret_key' => env('OSS_SECRET_KEY', ''),
-        'bucket' => env('OSS_BUCKET', ''),
-        'endpoint' => env('OSS_ENDPOINT', ''),
-        'url_prefix' => env('OSS_URL_PREFIX', ''),
-        'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp',
-        'max_file_size' => 52428800,
-    ],
-
-    'cos' => [
-        'type' => 'cos',
-        'secret_id' => env('COS_SECRET_ID', ''),
-        'secret_key' => env('COS_SECRET_KEY', ''),
-        'bucket' => 'xxx',
-        'region' => 'ap-guangzhou',
-        'cdn_url' => 'https://xxx.cos.ap-guangzhou.myqcloud.com',
-        'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp',
-        'max_file_size' => 52428800,
-    ],
-
-    'qiniu' => [
-        'type' => 'qiniu',
-        'access_key' => env('QINIU_ACCESS_KEY', ''),
-        'secret_key' => env('QINIU_SECRET_KEY', ''),
-        'bucket' => env('QINIU_BUCKET', ''),
-        'domain' => env('QINIU_DOMAIN', ''),
-        'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp',
-        'max_file_size' => 52428800,
-    ],
-
-    'smms' => [
-        'type' => 'api',
-        'api_key' => env('SMMS_API_KEY', ''),
-        'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp',
-        'max_file_size' => 10485760,
-    ],
+    'access_key' => '',
+    'secret_key' => '',
+    'bucket' => '',
+    'endpoint' => '',
+    'url_prefix' => '',           // 访问 URL 前缀
+    'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp',
+    'max_file_size' => 52428800,
+    'path_template' => 'storage/{date}/{uuid}.{ext}',  // 路径模板
 ];
 ```
 
-### 4.2 settings.php - 全局设置
+**通用字段（所有渠道都有）：**
+
+| 字段 | 说明 |
+|------|------|
+| `allow_mime_types` | 允许的 MIME 类型（逗号分隔），白名单模式 |
+| `max_file_size` | 最大文件大小（字节） |
+| `path_template` | 路径模板，支持 `{date}`、`{uuid}`、`{ext}` 占位符 |
+
+**OSS 特有：** `access_key`、`secret_key`、`bucket`、`endpoint`、`url_prefix`
+**COS 特有：** `secret_id`、`secret_key`、`bucket`、`region`、`cdn_url`
+**七牛特有：** `access_key`、`secret_key`、`bucket`、`domain`
+**本地特有：** `root`、`url_prefix`
+
+### 4.3 settings.php - 全局设置
 
 ```php
+// config/apps/storage/settings.php
 return [
-    'default' => 'cos',  // 默认存储渠道
-
-    'rate_limit' => [
-        'max' => 10,      // 每窗口最大请求数
-        'window' => 60,   // 时间窗口（秒）
-    ],
-
-    'direct_upload' => [
-        'expire' => 3600, // 直传凭证有效期（秒）
-    ],
+    'default' => 'local',          // 默认存储渠道
+    'rate_limit_max' => 10,        // 每窗口最大请求数
+    'rate_limit_window' => 60,     // 时间窗口（秒）
+    'direct_upload_expire' => 3600,// 直传凭证有效期（秒）
 ];
 ```
 
@@ -184,19 +184,19 @@ CREATE TABLE `files` (
   `channel_slug` varchar(50) NOT NULL COMMENT '存储渠道标识',
   `user_id` int(11) DEFAULT NULL COMMENT '上传者ID',
   `is_public` tinyint(1) DEFAULT 0 COMMENT '是否公开：0=私有 1=公开',
-  `scene` varchar(32) DEFAULT 'direct' COMMENT '场景：card/comment/avatar/direct',
+  `scene` varchar(32) DEFAULT 'direct' COMMENT '业务场景：card/comment/avatar/direct',
   `ref_type` varchar(32) DEFAULT NULL COMMENT '关联类型：card/comment',
   `ref_id` int(11) DEFAULT NULL COMMENT '关联ID',
   `original_name` varchar(255) DEFAULT NULL COMMENT '原始文件名',
-  `file_path` varchar(500) NOT NULL COMMENT '存储路径',
-  `file_url` varchar(1000) NOT NULL COMMENT '访问URL',
+  `file_path` varchar(500) NOT NULL COMMENT '存储路径（含扩展名，如 storage/20260517/uuid.jpg）',
+  `file_url` varchar(1000) NOT NULL COMMENT '访问URL（完整可访问地址）',
   `file_size` int(11) NOT NULL COMMENT '文件大小(字节)',
   `file_ext` varchar(20) NOT NULL COMMENT '文件扩展名',
   `mime_type` varchar(100) DEFAULT NULL COMMENT 'MIME类型',
-  `driver_path` varchar(500) DEFAULT NULL COMMENT '驱动特定标识（API 响应中隐藏）',
+  `driver_path` varchar(500) DEFAULT NULL COMMENT '驱动路径（= file_path，API 响应中隐藏）',
   `metadata` json DEFAULT NULL COMMENT '额外元数据（预留字段）',
-  `status` tinyint(1) DEFAULT 0 COMMENT '审核状态: 0=正常 1=封禁',
-  `upload_status` tinyint(1) DEFAULT 1 COMMENT '上传状态: 0=上传中 1=已完成 2=失败',
+  `status` tinyint(1) DEFAULT 0 COMMENT '业务状态: 0=正常 1=封禁（仅控制业务层封禁）',
+  `upload_status` tinyint(1) DEFAULT 1 COMMENT '上传状态: 0=上传中 1=已完成 2=失败（仅控制上传流程）',
   `expire_at` datetime DEFAULT NULL COMMENT '过期时间(用于直传)',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -210,22 +210,30 @@ CREATE TABLE `files` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-### 5.2 审核状态（status 字段）
+> `file_path` 和 `driver_path` 统一存储相对路径+扩展名（如 `storage/20260517/a1b2c3d4-e5f6-4c89-abcd-ef1234567890.jpg`）。
+> `file_url` 存完整可访问 URL（如 `https://cdn.example.com/storage/20260517/uuid.jpg`）。
+> `driver_path` 在 API 响应中隐藏（`Files` 模型 `$hidden`），不暴露给前端。
+
+### 5.2 业务状态（status 字段）
 
 | 状态值 | 常量 | 说明 |
 |--------|------|------|
 | 0 | STATUS_NORMAL | 正常 |
 | 1 | STATUS_BANNED | 封禁 |
 
-> 注：v2.5 之前存在 status=3（待审核），已在 v2.5 中移除。所有上传统一为 STATUS_NORMAL(0)。
+> `status` 仅控制业务层封禁，与上传流程无关。
 
 ### 5.3 上传状态（upload_status 字段）
 
 | 状态值 | 常量 | 说明 |
 |--------|------|------|
-| 0 | UPLOAD_PENDING | 上传中（直传场景，已获取凭证但未确认） |
-| 1 | UPLOAD_COMPLETED | 上传完成 |
+| 0 | UPLOAD_PENDING | 上传中（仅直传场景：已获取凭证但未确认） |
+| 1 | UPLOAD_COMPLETED | 上传完成（代理上传始终为此状态） |
 | 2 | UPLOAD_FAILED | 上传失败（直传过期/异常） |
+
+> `upload_status` 仅控制上传流程，与业务封禁无关。
+> **代理上传**（服务端上传）：`upload_status` 始终为 `COMPLETED`，因为文件已经由服务端传到云端。
+> **客户端直传**：先 `PENDING` → 前端上传成功后 `confirmUpload()` → `COMPLETED`。
 
 ### 5.4 场景说明
 
@@ -360,7 +368,6 @@ class StorageResult
 | oss | oss | OSS SDK | ✅ | 阿里云 |
 | cos | cos | cURL + V4签名 | ✅ | 腾讯云 |
 | qiniu | qiniu | 七牛 SDK | ✅ | 七牛云 |
-| smms | api | SMMS API | ❌ | 图床 |
 
 ### 8.2 AbstractStorage 基类
 
@@ -369,6 +376,22 @@ class StorageResult
 - MIME 类型校验（基于 `allow_mime_types` 配置，使用 `finfo` 检测真实 MIME）
 - 文件大小校验（基于 `max_file_size` 配置）
 - 文件记录创建（`files` 表）
+
+### 8.3 driver_path 统一规范
+
+所有驱动的 `doUpload()` 返回值统一：
+
+```php
+return [
+    'path' => $path,           // 相对路径+扩展名（如 storage/20260517/uuid.jpg）
+    'url'  => $this->getUrl($path),  // 完整访问 URL
+    'driver_path' => $path,    // = path，统一语义
+];
+```
+
+- `path` 和 `driver_path` 存相对路径+扩展名，不含域名/前缀
+- `url` 存完整可访问 URL（通过 `getUrl()` 从 driver_path + url_prefix 拼接）
+- SM.MS 特殊：`url` 存 API 返回的 URL，`driver_path` 存我们生成的路径，`getUrl()` 查数据库取 `file_url`
 
 ### 8.3 LocalStorage 路径安全
 
@@ -432,9 +455,21 @@ DirectUploadManager::confirmUpload($recordId);
 
 ### 安全设计
 
-- `driver_path` 由服务端推导：`file_path . '.' . file_ext`，不信任客户端
+- `driver_path` 由服务端推导：直接使用 `file_path`（已含扩展名），不信任客户端
 - `confirmUpload` 内部校验 `upload_status == UPLOAD_PENDING`，防止重复确认
 - 过期记录通过 `cleanupExpired()` 标记为 `UPLOAD_FAILED`
+
+### PathGenerator - 统一路径生成
+
+```php
+// app/api/service/Storage/PathGenerator.php
+PathGenerator::generate($channelConfig, $originalFilename);
+// 返回如：storage/20260517/a1b2c3d4-e5f6-4c89-abcd-ef1234567890.jpg
+```
+
+- 模板从渠道配置 `path_template` 读取，默认 `storage/{date}/{uuid}.{ext}`
+- `{date}` → `date('Ymd')`，`{uuid}` → UUID v4，`{ext}` → 文件扩展名
+- 代理上传和直传共用同一个 PathGenerator，Controller 层统一调用
 
 ---
 
@@ -471,18 +506,22 @@ DirectUploadManager::confirmUpload($recordId);
 
 ## 十一、使用示例
 
-### 11.1 基本上传
+### 11.1 基本上传（代理上传）
 
 ```php
 use app\api\service\Storage\StorageManager;
+use app\api\service\Storage\PathGenerator;
+use app\api\service\Storage\ChannelManager;
 
 $file = request()->file('file');
-$path = 'images/' . date('Ymd') . '/' . uniqid();
+$channelConfig = ChannelManager::getDefaultChannel();
+$path = PathGenerator::generate($channelConfig, $file->getOriginalName());
+
 $result = StorageManager::upload($file, $path, [
     'user_id' => $userId,
-    'scene' => 'direct',
-    'status' => 0,           // STATUS_NORMAL
-    'upload_status' => 1,    // UPLOAD_COMPLETED
+    'scene' => 'card',        // 业务场景
+    'status' => 0,            // STATUS_NORMAL（业务状态）
+    'upload_status' => 1,     // UPLOAD_COMPLETED（代理上传始终为 COMPLETED）
 ]);
 
 echo $result->id;        // 文件记录ID
@@ -576,6 +615,8 @@ $result = StorageManager::list([
 | toggle_public 原子操作 | 使用 `Db::raw('1 - is_public')` 避免竞态 |
 | trash/restore 用模型方法 | 走 SoftDelete 生命周期，不用原生 SQL |
 | cleanup admin 守卫 | 需要管理员权限 |
+| 路径统一生成 | PathGenerator 统一收口，模板可配置，UUID v4 |
+| status/upload_status 分离 | status 仅控制业务封禁，upload_status 仅控制上传流程 |
 
 ### 待处理
 
@@ -583,11 +624,10 @@ $result = StorageManager::list([
 |---|--------|------|
 | S1 | CRITICAL | `confirmDirectUpload` 无归属校验（IDOR） |
 | S4 | HIGH | Visitor `getFile` 枚举（uid=0 跳过 visible 过滤） |
-| S5 | HIGH | COS/SMMS 驱动禁用 SSL 验证（MITM 风险） |
+| S5 | HIGH | COS 驱动禁用 SSL 验证（MITM 风险） |
 | S6 | HIGH | `scene`/`ref_type`/`ref_id` 无输入校验 |
 | S8 | MEDIUM | 文件存储在公开 webroot，无访问控制 |
 | S9 | LOW | COS 错误信息泄露 bucket URL |
-| F1 | MEDIUM | 存储配置页面使用硬编码静态数据 |
 
 ---
 
@@ -603,8 +643,9 @@ $result = StorageManager::list([
 
 ### 存储配置（/apps/storage/config）
 
-- 只读展示渠道配置和基础设置
-- 数据来自前端硬编码（后端无配置读写 API）
+- admin 后台可编辑渠道配置（`path_template`、`url_prefix`、`allow_mime_types`、`max_file_size` 等）
+- 配置通过 `Config::setGroup()` 存入 `configs` 表（通用 key-value）
+- 前端表单字段定义在 `FrontEnd-Admin/utils/storage.ts` 的 `channelFieldDefs`
 
 ---
 
@@ -630,8 +671,6 @@ QINIU_SECRET_KEY=your-secret-key
 QINIU_BUCKET=your-bucket
 QINIU_DOMAIN=https://cdn.example.com
 
-# SMMS
-SMMS_API_KEY=your-api-key
 ```
 
 ### B. 路由注册（当前版本）
@@ -653,7 +692,7 @@ Route::group('', function () {
 
 | 方法 | 说明 | 调用方 |
 |------|------|--------|
-| `upload($file, $path, $options)` | 上传文件 | Upload::upload() |
+| `upload($file, $path, $options)` | 上传文件（代理上传，upload_status 始终 COMPLETED） | Upload::upload() |
 | `list($params, $userId, $isAdmin)` | 文件列表（支持回收站） | Upload::files() |
 | `getFile($fileId, $userId, $isAdmin)` | 获取单个文件 | Upload::getFile() |
 | `batchOperate($method, $ids)` | 统一批量操作 | Upload::batchOperate() |
@@ -681,3 +720,4 @@ INSERT INTO permissions (id, name, slug, path, method, description) VALUES
 | 1.0 | 2026-05-12 | 初始版本，基本上传/删除功能 |
 | 2.0 | 2026-05-12 | 新增权限控制、软删除/硬删除、审核机制、文件关联 |
 | 3.0 | 2026-05-14 | 重大重构：统一 batchOperate 接口、status 简化为 0/1、upload_status 新增、回收站视图、安全加固（速率限制/路径遍历防护/driver_path 隐藏/服务端推导） |
+| 4.0 | 2026-05-17 | 路径重构：PathGenerator 统一路径生成（UUID v4 + 模板可配置）、driver_path 语义统一、OSS url_prefix 不再作为 object key 前缀、upload_status 与 scene 解耦（代理上传始终 COMPLETED）、渠道配置新增 path_template、前端 admin 配置页更新 |

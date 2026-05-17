@@ -3,7 +3,7 @@
 namespace app\api\validate;
 
 use think\Validate;
-use think\facade\Config;
+use app\api\service\Config as ConfigService;
 
 class Upload extends Validate
 {
@@ -11,8 +11,8 @@ class Upload extends Validate
     {
         parent::__construct();
 
-        $lDef_ImageSize = Config::get('master.Upload.UserImageSize', 2);
-        $lDef_ImageExt = Config::get('master.Upload.UserImageExt', 'jpg,png,gif');
+        $lDef_ImageSize = ConfigService::get('upload.user_image_size', 2);
+        $lDef_ImageExt = ConfigService::get('upload.user_image_ext', 'jpg,png,gif');
         $this->rule['file'] = $this->rule['file'] . '|fileSize:' . (1024 * 1000 * $lDef_ImageSize) . '|fileExt:' . $lDef_ImageExt;
     }
 

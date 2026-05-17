@@ -45,9 +45,7 @@ class OssDirectUpload extends AbstractDirectUpload
         $accessKeySecret = $this->config['secret_key'];
         $endpoint = $this->config['endpoint'];
 
-        $dir = dirname($path) . '/';
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $key = $dir . basename($path) . '.' . $extension;
+        $key = $path;
 
         $policy = base64_encode(json_encode([
             'expiration' => $this->getExpireTime($expire),

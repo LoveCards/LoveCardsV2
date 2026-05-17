@@ -2,7 +2,7 @@
 
 namespace app\api\middleware;
 
-use think\facade\Config;
+use app\api\service\Config as ConfigService;
 use app\api\ApiResponse;
 use app\common\extend\jwt\Jwt;
 
@@ -17,7 +17,7 @@ class JwtAuthCheck
                 $data = Jwt::checkToken($token);
                 $tDef_Request->JwtData = $data['data'];
             } catch (\app\api\ApiException $e) {
-                if (!Config::get('master.System.VisitorMode')) {
+                if (!ConfigService::get('core.visitor_mode')) {
                     return $e->exceptionHandle();
                 }
                 $tDef_Request->JwtData = [
@@ -26,7 +26,7 @@ class JwtAuthCheck
                 ];
             }
         } else {
-            if (!Config::get('master.System.VisitorMode')) {
+            if (!ConfigService::get('core.visitor_mode')) {
                 return ApiResponse::createUnauthorized('请先登入');
             } else {
                 $tDef_Request->JwtData = [
