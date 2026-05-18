@@ -36,7 +36,7 @@ class Roles extends Validate
                 'normal' => false,
                 'require' => [
                     'id',
-                    'permission_ids'
+                    'permission_hashes'
                 ],
                 'nonNull' => false,
                 'toNull' => false,
@@ -47,7 +47,7 @@ class Roles extends Validate
         'id.require' => '角色ID不能为空',
         'name.require' => '角色名称不能为空',
         'slug.require' => '角色标识不能为空',
-        'permission_ids.require' => '权限ID集不能为空',
+        'permission_hashes.require' => '权限hash集不能为空',
     ];
 
     //定义验证规则
@@ -56,7 +56,7 @@ class Roles extends Validate
         'name' => 'length:1,50|chsDash',
         'slug' => 'length:1,50|alphaDash|unique:roles',
         'description' => 'max:255',
-        'permission_ids' => 'arrayJson',
+        'permission_hashes' => 'arrayJson',
     ];
 
     //定义错误信息
@@ -75,8 +75,8 @@ class Roles extends Validate
 
         'description.max' => '角色描述超出最大长度(255)',
 
-        'permission_ids.arrayJson' => '权限ID集格式错误',
-        'permission_ids.require' => '权限ID集不能为空',
+        'permission_hashes.arrayJson' => '权限hash集格式错误',
+        'permission_hashes.require' => '权限hash集不能为空',
     ];
 }
 

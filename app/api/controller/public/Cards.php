@@ -2,7 +2,7 @@
 
 namespace app\api\controller\public;
 
-use app\api\service\Cards as CardsService;
+use app\api\service\Content\Cards as CardsService;
 
 use app\api\ApiResponse;
 

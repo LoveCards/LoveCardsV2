@@ -2,7 +2,7 @@
 
 namespace app\api\controller\admin;
 
-use app\api\service\Tags as TagsService;
+use app\api\service\Content\Tags as TagsService;
 use app\api\validate\Tags as TagsValidate;
 
 use app\api\ApiResponse;

@@ -6,7 +6,7 @@ use think\facade\Request;
 
 
 use app\api\model\Comments as CommentsModel;
-use app\api\service\Comments as CommentsService;
+use app\api\service\Content\Comments as CommentsService;
 
 use app\api\controller\BaseController;
 use app\api\ApiResponse;

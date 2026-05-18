@@ -4,7 +4,7 @@ namespace app\api\controller\admin;
 
 use think\facade\Request;
 
-use app\api\service\Images as ImagesService;
+use app\api\service\Content\Images as ImagesService;
 
 use app\common\Common;
 

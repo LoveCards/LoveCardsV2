@@ -182,7 +182,7 @@ class Auth extends BaseController
         } catch (\app\api\ApiException $e) {
             if ($e->getCode() == \app\api\ApiException::CODE_USER_NOT_FOUND) {
                 //写入数据
-                $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [3]);
+                $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [4]);
                 //返回令牌
                 $result = Jwt::signToken(['uid' => $user->id]);
                 return ApiResponse::createOk(['token' => $result]);

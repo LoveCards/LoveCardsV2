@@ -2,7 +2,7 @@
 
 namespace app\api\controller\admin;
 
-use app\api\service\Roles as RolesService;
+use app\api\service\RBAC\Roles as RolesService;
 use app\api\validate\Roles as RolesValidate;
 
 use app\api\ApiResponse;
@@ -108,15 +108,15 @@ class Roles extends BaseController
         }
 
         $roleId = $params['id'];
-        $permissionIds = json_decode($params['permission_ids'], true);
+        $permissionHashes = json_decode($params['permission_hashes'], true);
 
         //调用服务
-        RolesService::assignPermissions($roleId, $permissionIds);
+        RolesService::assignPermissions($roleId, $permissionHashes);
         //返回结果
         return ApiResponse::createNoContent();
     }
 
-    //获取角色的权限列表
+    //获取角色的权限 hash 列表
     public function GetRolePermissions()
     {
         //获取参数
@@ -126,7 +126,7 @@ class Roles extends BaseController
         }
 
         //调用服务
-        $result = RolesService::getRolePermissions($params['id']);
+        $result = RolesService::getRolePermissionHashes($params['id']);
         //返回结果
         return ApiResponse::createOk($result);
     }

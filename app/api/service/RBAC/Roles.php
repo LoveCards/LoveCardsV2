@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service;
+namespace app\api\service\RBAC;
 
 use think\facade\Db;
 use app\api\model\Roles as RolesModel;
@@ -44,6 +44,11 @@ class Roles
     {
         Db::startTrans();
         try {
+            $role = RolesModel::find($id);
+            if ($role && $role->is_system && isset($data['slug']) && $data['slug'] !== $role->slug) {
+                throw ApiException::badRequest('系统角色不可修改标识', ApiException::CODE_PARAM_INVALID);
+            }
+
             if (isset($data['slug'])) {
                 $exists = RolesModel::where('slug', $data['slug'])
                     ->where('id', '<>', $id)
@@ -80,19 +85,37 @@ class Roles
         } else {
             $data = $id ? (is_array($id) ? $id : [$id]) : $ids;
         }
-        
+
+        $systemRoles = RolesModel::whereIn('id', $data)
+            ->where('is_system', 1)
+            ->select();
+        if ($systemRoles->isNotEmpty()) {
+            $names = $systemRoles->column('name');
+            throw ApiException::badRequest('系统角色不可删除：' . implode(', ', $names), ApiException::CODE_PARAM_INVALID);
+        }
+
         Db::startTrans();
         try {
             RolePermissionsModel::where('role_id', 'in', $data)->delete();
             RolesModel::destroy($data);
             Db::commit();
+
+            foreach ($data as $roleId) {
+                RBAC::clearCache($roleId);
+            }
         } catch (\Throwable $th) {
             Db::rollback();
+            if ($th instanceof ApiException) {
+                throw $th;
+            }
             throw ApiException::error('删除角色失败', ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }
 
-    public static function assignPermissions(int $roleId, array $permissionIds): void
+    /**
+     * 分配权限（用 permission_hash 数组）
+     */
+    public static function assignPermissions(int $roleId, array $permissionHashes): void
     {
         Db::startTrans();
         try {
@@ -103,14 +126,15 @@ class Roles
 
             RolePermissionsModel::where('role_id', $roleId)->delete();
 
-            foreach ($permissionIds as $permissionId) {
+            foreach ($permissionHashes as $hash) {
                 RolePermissionsModel::create([
                     'role_id' => $roleId,
-                    'permission_id' => $permissionId
+                    'permission_hash' => $hash,
                 ]);
             }
 
             Db::commit();
+            RBAC::clearCache($roleId);
         } catch (\Throwable $th) {
             Db::rollback();
             if ($th instanceof ApiException) {
@@ -120,22 +144,17 @@ class Roles
         }
     }
 
-    public static function getRolePermissions(int $roleId): array
+    /**
+     * 获取角色的权限 hash 列表
+     */
+    public static function getRolePermissionHashes(int $roleId): array
     {
         $role = RolesModel::find($roleId);
         if (!$role) {
             throw ApiException::notFound('角色不存在', ApiException::CODE_ROLE_NOT_FOUND);
         }
 
-        $permissions = Db::table('role_permissions')
-            ->alias('rp')
-            ->join('permissions p', 'rp.permission_id = p.id')
-            ->where('rp.role_id', $roleId)
-            ->where('p.deleted_at', null)
-            ->field('p.*')
-            ->select()
-            ->toArray();
-
-        return $permissions;
+        return RolePermissionsModel::where('role_id', $roleId)
+            ->column('permission_hash') ?: [];
     }
 }

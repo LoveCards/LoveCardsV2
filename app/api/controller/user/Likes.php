@@ -2,7 +2,7 @@
 
 namespace app\api\controller\user;
 
-use app\api\service\Likes as LikesService;
+use app\api\service\Content\Likes as LikesService;
 
 use app\api\controller\BaseController;
 use think\facade\Request;

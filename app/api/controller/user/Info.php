@@ -12,6 +12,8 @@ use think\facade\Request;
 use think\exception\ValidateException;
 
 use app\api\service\Users as UsersService;
+use app\api\service\RBAC\RBAC;
+use app\api\model\Roles as RolesModel;
 use app\api\validate\Users as UsersValidate;
 
 use captcha\Code;
@@ -82,8 +84,17 @@ class Info
         $context = request()->JwtData;
 
         $user = UsersService::Get($context['uid'], ['id']);
+        $userData = $user->toArray();
 
-        return ApiResponse::createOk($user->toArray());
+        $rolesId = request()->rolesId ?? (json_decode($user->roles_id, true) ?: []);
+        $userData['roles'] = RolesModel::whereIn('id', $rolesId)
+            ->whereNull('deleted_at')
+            ->field('id,name,slug')
+            ->select()
+            ->toArray();
+        $userData['permissions'] = RBAC::getUserPermissions($rolesId);
+
+        return ApiResponse::createOk($userData);
     }
 
     //编辑资料-Patch

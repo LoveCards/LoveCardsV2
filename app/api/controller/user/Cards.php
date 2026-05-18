@@ -11,9 +11,9 @@ use app\api\validate\Comments as CommentsValidate;
 
 use app\api\model\Cards as CardsModel;
 
-use app\api\service\Cards as CardsService;
-use app\api\service\Likes as LikesService;
-use app\api\service\Comments as CommentsService;
+use app\api\service\Content\Cards as CardsService;
+use app\api\service\Content\Likes as LikesService;
+use app\api\service\Content\Comments as CommentsService;
 use app\api\service\Config as ConfigService;
 
 use app\api\model\Likes as LikesModel; //需要优化

@@ -2,7 +2,7 @@
 
 namespace app\api\controller\user;
 
-use app\api\service\Tags as TagsService;
+use app\api\service\Content\Tags as TagsService;
 
 use app\api\ApiResponse;
 use \app\api\controller\BaseController;

@@ -3,7 +3,7 @@
 namespace app\api\controller\admin;
 
 use app\api\validate\Comments as CommentsValidate;
-use app\api\service\Comments as CommentsService;
+use app\api\service\Content\Comments as CommentsService;
 
 use yunarch\validate\Common as CommonValidate;
 

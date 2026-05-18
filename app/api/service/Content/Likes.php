@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service;
+namespace app\api\service\Content;
 
 use app\api\model\Likes as LikesModel;
 use app\api\model\Cards as CardsModel;

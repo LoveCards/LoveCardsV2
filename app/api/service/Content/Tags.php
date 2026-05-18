@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service;
+namespace app\api\service\Content;
 
 use think\facade\Db;
 use app\common\Common;

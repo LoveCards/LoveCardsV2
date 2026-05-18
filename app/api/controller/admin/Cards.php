@@ -11,7 +11,7 @@ use app\api\validate\CardsSetting as CardsValidateSetting;
 
 use app\api\model\Cards as CardsModel;
 //基础应用服务
-use app\api\service\Cards as CardsService;
+use app\api\service\Content\Cards as CardsService;
 use app\api\service\Config as ConfigService;
 
 //yunarch框架相关

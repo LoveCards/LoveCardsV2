@@ -22,6 +22,7 @@ class Roles extends Model
         'name' => 'string',
         'slug' => 'string',
         'description' => 'string',
+        'is_system' => 'int',
         'created_at' => 'timestamp',
         'updated_at' => 'timestamp',
         'deleted_at' => 'timestamp',
