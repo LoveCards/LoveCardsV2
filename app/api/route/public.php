@@ -12,11 +12,14 @@ Route::get('public/tags', 'public.Tags/list');
 Route::get('theme/config', 'public.theme/Config');
 
 Route::group('', function () {
-    Route::post('upload/upload', 'public.Upload/upload');
-    Route::get('upload/files', 'public.Upload/files');
-    Route::get('upload/get-file', 'public.Upload/getFile');
-    Route::post('upload/batch-operate', 'public.Upload/batchOperate');
-    Route::post('upload/direct-upload-credential', 'public.Upload/getDirectUploadCredential');
-    Route::post('upload/direct-upload-confirm', 'public.Upload/confirmDirectUpload');
-    Route::post('upload/cleanup', 'public.Upload/cleanup');
+    // 文件资源
+    Route::post('storage/files', 'public.Upload/upload')->name('storage.files.store');
+    Route::get('storage/files', 'public.Upload/files')->name('storage.files.index');
+    Route::delete('storage/files/expired', 'public.Upload/cleanup')->name('storage.files.cleanup');
+    Route::get('storage/files/{id}', 'public.Upload/getFile')->name('storage.files.show');
+    Route::post('storage/files/batch', 'public.Upload/batchOperate')->name('storage.files.batch');
+
+    // 直传
+    Route::post('storage/files/direct', 'public.Upload/getDirectUploadCredential')->name('storage.files.direct');
+    Route::patch('storage/files/{id}/confirm', 'public.Upload/confirmDirectUpload')->name('storage.files.confirm');
 })->middleware([JwtAuthCheck::class, PermissionCheck::class]);

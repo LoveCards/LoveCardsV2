@@ -2,50 +2,72 @@
 
 namespace app\api\service\Storage;
 
-use app\api\service\Storage\Driver\LocalStorage;
-use app\api\service\Storage\Driver\OssStorage;
-use app\api\service\Storage\Driver\CosStorage;
-use app\api\service\Storage\Driver\QiniuStorage;
-use app\api\service\Storage\Contract\StorageInterface;
+use app\api\service\Storage\Contract\DriverInterface;
 
 class StorageFactory
 {
-    private static array $drivers = [
-        'local' => LocalStorage::class,
-        'oss' => OssStorage::class,
-        'cos' => CosStorage::class,
-        'qiniu' => QiniuStorage::class,
-    ];
+    private static array $drivers = [];
+    private static bool $scanned = false;
 
-    public static function make(string $slug): StorageInterface
+    private static function scanDrivers(): void
     {
-        $channel = ChannelManager::getBySlug($slug);
+        if (self::$scanned) {
+            return;
+        }
+        self::$scanned = true;
 
-        $driverClass = self::$drivers[$slug] ?? null;
+        $driverDir = __DIR__ . '/Driver/';
+        $files = glob($driverDir . '*Driver.php');
+
+        foreach ($files as $file) {
+            $className = 'app\\api\\service\\Storage\\Driver\\' . basename($file, '.php');
+
+            if (!is_subclass_of($className, DriverInterface::class)) {
+                continue;
+            }
+
+            $meta = $className::meta();
+            $type = $meta['type'] ?? strtolower(str_replace('Driver', '', basename($file, '.php')));
+            self::$drivers[$type] = $className;
+        }
+    }
+
+    public static function make(string $slug): DriverInterface
+    {
+        self::scanDrivers();
+
+        $channel = ChannelManager::getBySlug($slug);
+        $type = $channel['type'] ?? $slug;
+
+        $driverClass = self::$drivers[$type] ?? null;
 
         if ($driverClass === null) {
-            throw new \app\api\ApiException('不支持的存储渠道: ' . $slug);
+            throw new \app\api\ApiException('不支持的存储渠道: ' . $type);
         }
 
         return new $driverClass($slug, $channel);
     }
 
-    public static function register(string $slug, string $driverClass): void
+    public static function getRegisteredTypes(): array
     {
-        if (!in_array(StorageInterface::class, class_implements($driverClass))) {
-            throw new \app\api\ApiException('驱动类必须实现 StorageInterface 接口');
-        }
-
-        self::$drivers[$slug] = $driverClass;
-    }
-
-    public static function getDrivers(): array
-    {
+        self::scanDrivers();
         return array_keys(self::$drivers);
     }
 
-    public static function has(string $slug): bool
+    public static function getDriverClass(string $type): ?string
     {
-        return isset(self::$drivers[$slug]);
+        self::scanDrivers();
+        return self::$drivers[$type] ?? null;
+    }
+
+    public static function register(string $type, string $driverClass): void
+    {
+        self::$drivers[$type] = $driverClass;
+    }
+
+    public static function has(string $type): bool
+    {
+        self::scanDrivers();
+        return isset(self::$drivers[$type]);
     }
 }

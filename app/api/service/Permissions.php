@@ -27,12 +27,12 @@ class Permissions
                 }
             }
 
-            if (isset($data['path']) && isset($data['method'])) {
-                $exists = PermissionsModel::where('path', $data['path'])
+            if (isset($data['route_name']) && isset($data['method'])) {
+                $exists = PermissionsModel::where('route_name', $data['route_name'])
                     ->where('method', $data['method'])
                     ->find();
                 if ($exists) {
-                    throw ApiException::badRequest('该路径和方法的权限已存在', ApiException::CODE_PARAM_INVALID);
+                    throw ApiException::badRequest('该路由和方法的权限已存在', ApiException::CODE_PARAM_INVALID);
                 }
             }
 
@@ -61,13 +61,13 @@ class Permissions
                 }
             }
 
-            if (isset($data['path']) && isset($data['method'])) {
-                $exists = PermissionsModel::where('path', $data['path'])
+            if (isset($data['route_name']) && isset($data['method'])) {
+                $exists = PermissionsModel::where('route_name', $data['route_name'])
                     ->where('method', $data['method'])
                     ->where('id', '<>', $id)
                     ->find();
                 if ($exists) {
-                    throw ApiException::badRequest('该路径和方法的权限已存在', ApiException::CODE_PARAM_INVALID);
+                    throw ApiException::badRequest('该路由和方法的权限已存在', ApiException::CODE_PARAM_INVALID);
                 }
             }
 
@@ -98,27 +98,20 @@ class Permissions
         } else {
             $data = $id ? (is_array($id) ? $id : [$id]) : $ids;
         }
-        
+
         Db::startTrans();
         try {
             Db::table('role_permissions')
                 ->where('permission_id', 'in', $data)
                 ->delete();
-            
+
             PermissionsModel::destroy($data);
-            
+
             Db::commit();
         } catch (\Throwable $th) {
             Db::rollback();
             throw ApiException::error('删除权限失败', ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
-    }
-
-    public static function findByPathAndMethod(string $path, string $method): ?PermissionsModel
-    {
-        return PermissionsModel::where('path', $path)
-            ->where('method', $method)
-            ->find();
     }
 
     public static function noPaginateIndex(array $params = []): array

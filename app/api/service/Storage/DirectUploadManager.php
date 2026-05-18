@@ -1,41 +1,12 @@
 <?php
 
-namespace app\api\service\Storage\DirectUpload;
+namespace app\api\service\Storage;
 
-use app\api\service\Storage\ChannelManager;
+use app\api\service\Storage\Contract\HasDirectUpload;
 use app\api\model\Files;
 
 class DirectUploadManager
 {
-    private static array $providers = [];
-
-    public static function getProvider(string $slug): DirectUploadProvider
-    {
-        if (!isset(self::$providers[$slug])) {
-            $channel = ChannelManager::getBySlug($slug);
-            self::$providers[$slug] = self::createProvider($slug, $channel);
-        }
-        return self::$providers[$slug];
-    }
-
-    private static function createProvider(string $slug, array $config): DirectUploadProvider
-    {
-        $type = $config['type'] ?? '';
-
-        return match ($type) {
-            'oss' => new OssDirectUpload($slug, $config),
-            'cos' => new CosDirectUpload($slug, $config),
-            'qiniu' => new QiniuDirectUpload($slug, $config),
-            default => throw new \app\api\ApiException('不支持的直传通道: ' . $slug),
-        };
-    }
-
-    public static function getDefaultProvider(): DirectUploadProvider
-    {
-        $default = ChannelManager::getDefaultChannel();
-        return self::getProvider($default['slug']);
-    }
-
     public static function createPendingRecord(
         string $filename,
         string $mime,
@@ -44,17 +15,18 @@ class DirectUploadManager
         ?int $userId = null,
         ?int $expire = null
     ): array {
-        $provider = self::getDefaultProvider();
+        $defaultChannel = ChannelManager::getDefaultChannel();
+        $driver = StorageFactory::make($defaultChannel['slug']);
 
-        if (!$provider->isAvailable()) {
-            throw new \app\api\ApiException('默认直传通道不可用');
+        if (!$driver instanceof HasDirectUpload) {
+            throw new \app\api\ApiException('该渠道不支持直传');
         }
 
         $expire = $expire ?? ChannelManager::getDirectUploadExpire();
         $expireAt = date('Y-m-d H:i:s', time() + $expire);
 
         $fileModel = new Files();
-        $fileModel->channel_slug = $provider->getType();
+        $fileModel->channel_slug = $defaultChannel['slug'];
         $fileModel->user_id = $userId;
         $fileModel->original_name = $filename;
         $fileModel->file_path = $path;
@@ -71,13 +43,15 @@ class DirectUploadManager
         $fileModel->updated_at = date('Y-m-d H:i:s');
         $fileModel->save();
 
-        $credential = $provider->getUploadCredential($filename, $mime, $size, $path, $expire);
+        $credential = $driver->getUploadCredential($filename, $mime, $size, $path, $expire);
 
         return [
             'record_id' => $fileModel->id,
-            'upload_url' => $credential['upload_url'],
-            'form_data' => $credential['form_data'],
-            'expire' => $credential['expire'],
+            'upload_url' => $credential->url,
+            'method' => $credential->method,
+            'headers' => $credential->headers,
+            'form_data' => $credential->formData,
+            'expire' => $credential->expire,
         ];
     }
 
@@ -97,14 +71,11 @@ class DirectUploadManager
             return false;
         }
 
-        // 服务端推导 driver_path，不信任客户端
-        $driverPath = $fileModel->file_path;
-
         try {
-            $provider = self::getProvider($fileModel->channel_slug);
-            $url = $provider->getFileUrl($driverPath);
+            $driver = StorageFactory::make($fileModel->channel_slug);
+            $url = $driver->getUrl($fileModel->file_path);
 
-            $fileModel->markAsCompleted($url, $driverPath);
+            $fileModel->markAsCompleted($url, $fileModel->file_path);
             return true;
         } catch (\Exception $e) {
             $fileModel->markAsFailed();

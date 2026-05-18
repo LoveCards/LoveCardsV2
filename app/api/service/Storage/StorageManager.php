@@ -15,19 +15,7 @@ class StorageManager
         $defaultChannel = ChannelManager::getDefaultChannel();
         $driver = StorageFactory::make($defaultChannel['slug']);
 
-        $mime = $driver->detectMimeType($file->getPathname());
-
-        $allowedMimes = $driver->supportedMimeTypes();
-        if (!empty($allowedMimes) && !in_array($mime, $allowedMimes)) {
-            throw new \app\api\ApiException('不支持的文件类型: ' . $mime);
-        }
-
-        $maxSize = $driver->maxFileSize();
-        if ($maxSize > 0 && $file->getSize() > $maxSize) {
-            throw new \app\api\ApiException('文件大小超出限制');
-        }
-
-        $result = $driver->doUpload($file, $path);
+        $result = $driver->upload($file, $path);
 
         $fileRecord = Files::create([
             'channel_slug' => $defaultChannel['slug'],
@@ -36,27 +24,19 @@ class StorageManager
             'scene' => $options['scene'] ?? 'direct',
             'ref_type' => $options['ref_type'] ?? null,
             'ref_id' => $options['ref_id'] ?? null,
-            'original_name' => $file->getOriginalName(),
-            'file_path' => $result['path'],
-            'file_url' => $result['url'],
-            'file_size' => $file->getSize(),
-            'file_ext' => strtolower(pathinfo($file->getOriginalName(), PATHINFO_EXTENSION)),
-            'mime_type' => $mime,
-            'driver_path' => $result['driver_path'],
+            'original_name' => $result->originalName,
+            'file_path' => $result->path,
+            'file_url' => $result->url,
+            'file_size' => $result->size,
+            'file_ext' => strtolower(pathinfo($result->originalName, PATHINFO_EXTENSION)),
+            'mime_type' => $result->mimeType,
+            'driver_path' => $result->driverPath,
             'status' => $options['status'] ?? Files::STATUS_NORMAL,
             'upload_status' => $options['upload_status'] ?? Files::UPLOAD_COMPLETED,
         ]);
 
-        return new StorageResult([
-            'id' => $fileRecord->id,
-            'url' => $result['url'],
-            'path' => $result['path'],
-            'driver_path' => $result['driver_path'],
-            'size' => $file->getSize(),
-            'mime_type' => $mime,
-            'original_name' => $file->getOriginalName(),
-            'channel_slug' => $defaultChannel['slug'],
-        ]);
+        $result->id = $fileRecord->id;
+        return $result;
     }
 
     public static function channel(string $slug): ChannelUploader
@@ -70,7 +50,6 @@ class StorageManager
 
         $modelList = ModelList::make(Files::class);
 
-        // 管理员查看回收站：只返回已删除的记录
         $showDeleted = !empty($params['show_deleted']);
         if ($isAdmin && $showDeleted) {
             $modelList->onlyTrashed();
@@ -79,7 +58,6 @@ class StorageManager
         $where = $params['where'] ?? [];
 
         if (!$isAdmin) {
-            // 普通用户：只看自己或公开的（SoftDelete 框架自动过滤 deleted_at）
             if ($userId > 0) {
                 $where[] = function ($q) use ($userId) {
                     $q->where('user_id', $userId)->whereOr('is_public', 1);

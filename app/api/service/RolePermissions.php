@@ -106,9 +106,9 @@ class RolePermissions
         return $exists ? true : false;
     }
 
-    public static function checkPermissionByPath(int $roleId, string $path, string $method): bool
+    public static function checkPermission(int $roleId, string $routeName, string $method): bool
     {
-        $permission = PermissionsModel::where('path', $path)
+        $permission = PermissionsModel::where('route_name', $routeName)
             ->where(function ($query) use ($method) {
                 $query->where('method', $method)
                     ->whereOr('method', '*');

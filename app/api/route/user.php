@@ -19,35 +19,35 @@ Route::post('user/auth/guest', 'user.Auth/Guest')->middleware(SessionDebounce::c
 
 Route::group('', function () {
     //标签
-    Route::get('tags', 'user.Tags/noPaginateIndex');
+    Route::get('tags', 'user.Tags/noPaginateIndex')->name('user.tags.index');
 
     //卡片
-    Route::get('card/images', 'admin.Images/CardIndex'); //卡片图集
+    Route::get('card/images', 'admin.Images/CardIndex')->name('user.card-images.index');
 
-    Route::get('cards', 'user.Cards/list'); //卡片列表
+    Route::get('cards', 'user.Cards/list')->name('user.cards.index');
 
-    Route::post('card/like', 'user.Cards/like'); //喜欢卡片
+    Route::post('card/like', 'user.Cards/like')->name('user.cards.like');
     //特殊鉴权
     Route::group('', function () {
-        Route::post('card/comment', 'user.Cards/createComment');
-        Route::post('card', 'user.Cards/createCard');
+        Route::post('card/comment', 'user.Cards/createComment')->name('user.cards.comment');
+        Route::post('card', 'user.Cards/createCard')->name('user.cards.store');
     })->middleware([SessionDebounce::class, GeetestCheck::class]);
 
-    Route::delete('card', 'user.Cards/hideCard'); //删除卡片
-    Route::delete('comment', 'user.Comments/delete'); //删除评论
-    Route::delete('like', 'user.Likes/unLike'); //取消喜欢
+    Route::delete('card', 'user.Cards/hideCard')->name('user.cards.destroy');
+    Route::delete('comment', 'user.Comments/delete')->name('user.comments.destroy');
+    Route::delete('like', 'user.Likes/unLike')->name('user.likes.destroy');
 
     //评论
-    Route::get('comments', 'user.Comments/index');
+    Route::get('comments', 'user.Comments/index')->name('user.comments.index');
 
     //喜欢
-    Route::get('likes', 'user.Likes/list');
+    Route::get('likes', 'user.Likes/list')->name('user.likes.index');
 
     //用户信息
-    Route::patch('user/info', 'user.info/Patch');
-    Route::get('user/info', 'user.info/Get');
+    Route::patch('user/info', 'user.info/Patch')->name('user.info.update');
+    Route::get('user/info', 'user.info/Get')->name('user.info.show');
 
-    Route::post('user/password', 'user.info/PostPassword');
-    Route::post('user/email', 'user.info/PostEmail');
-    Route::post('user/email-captcha', 'user.info/PostBindEmailCaptcha');
+    Route::post('user/password', 'user.info/PostPassword')->name('user.info.password');
+    Route::post('user/email', 'user.info/PostEmail')->name('user.info.email');
+    Route::post('user/email-captcha', 'user.info/PostBindEmailCaptcha')->name('user.info.email-captcha');
 })->middleware([JwtAuthCheck::class, PermissionCheck::class]);

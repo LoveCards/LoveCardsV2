@@ -12,12 +12,14 @@ class ChannelManager
     public static function loadChannels(): array
     {
         if (self::$channels === null) {
-            self::$channels = [
-                'local' => array_merge(['type' => 'local'], Config::getGroup('storage_local')),
-                'oss' => array_merge(['type' => 'oss'], Config::getGroup('storage_oss')),
-                'cos' => array_merge(['type' => 'cos'], Config::getGroup('storage_cos')),
-                'qiniu' => array_merge(['type' => 'qiniu'], Config::getGroup('storage_qiniu')),
-            ];
+            self::$channels = [];
+            foreach (StorageFactory::getRegisteredTypes() as $type) {
+                $group = 'storage_' . $type;
+                self::$channels[$type] = array_merge(
+                    ['type' => $type],
+                    Config::getGroup($group)
+                );
+            }
         }
         return self::$channels;
     }
@@ -120,10 +122,11 @@ class ChannelManager
             case 'qiniu':
                 return !empty($config['access_key'])
                     && !empty($config['secret_key'])
-                    && !empty($config['bucket']);
+                    && !empty($config['bucket'])
+                    && !empty($config['domain']);
 
             default:
-                return false;
+                return !empty($config);
         }
     }
 

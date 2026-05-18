@@ -6,7 +6,6 @@ use think\Validate;
 
 class Permissions extends Validate
 {
-    //参数过滤场景
     static public $all_scene = [
         'admin' => [
             'create' => [
@@ -16,7 +15,7 @@ class Permissions extends Validate
                 'require' => [
                     'name',
                     'slug',
-                    'path',
+                    'route_name',
                     'method'
                 ],
                 'nonNull' => false,
@@ -26,7 +25,7 @@ class Permissions extends Validate
                 'normal' => [
                     'name',
                     'slug',
-                    'path',
+                    'route_name',
                     'method',
                     'description'
                 ],
@@ -42,21 +41,19 @@ class Permissions extends Validate
         'id.require' => '权限ID不能为空',
         'name.require' => '权限名称不能为空',
         'slug.require' => '权限标识不能为空',
-        'path.require' => '权限路径不能为空',
+        'route_name.require' => '路由标识不能为空',
         'method.require' => 'HTTP方法不能为空',
     ];
 
-    //定义验证规则
     protected $rule = [
         'id' => 'number',
         'name' => 'length:1,100|chsDash',
         'slug' => 'length:1,100|alphaDash|unique:permissions',
-        'path' => 'max:255',
+        'route_name' => 'max:255',
         'method' => 'in:GET,POST,PUT,PATCH,DELETE,*',
         'description' => 'max:255',
     ];
 
-    //定义错误信息
     protected $message = [
         'id.number' => '权限ID格式错误',
         'id.require' => '权限ID不能为空',
@@ -70,8 +67,8 @@ class Permissions extends Validate
         'slug.unique' => '权限标识已存在',
         'slug.require' => '权限标识不能为空',
 
-        'path.max' => '权限路径超出最大长度(255)',
-        'path.require' => '权限路径不能为空',
+        'route_name.max' => '路由标识超出最大长度(255)',
+        'route_name.require' => '路由标识不能为空',
 
         'method.in' => 'HTTP方法只能是: GET,POST,PUT,PATCH,DELETE,*',
         'method.require' => 'HTTP方法不能为空',
@@ -79,4 +76,3 @@ class Permissions extends Validate
         'description.max' => '权限描述超出最大长度(255)',
     ];
 }
-

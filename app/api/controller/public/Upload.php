@@ -6,7 +6,7 @@ use think\facade\Request;
 use app\api\controller\BaseController;
 use app\api\ApiResponse;
 use app\api\service\Storage\StorageManager;
-use app\api\service\Storage\DirectUpload\DirectUploadManager;
+use app\api\service\Storage\DirectUploadManager;
 use app\api\service\Storage\ChannelManager;
 use app\api\service\Storage\PathGenerator;
 use app\api\service\Users as UsersService;
@@ -72,7 +72,7 @@ class Upload extends BaseController
 
             return ApiResponse::createOk($result->toArray());
         } catch (\Exception $e) {
-            return ApiResponse::createError('上传失败', $e->getMessage());
+            return ApiResponse::createError('上传失败', ['detail' => $e->getMessage()]);
         }
     }
 
@@ -96,9 +96,9 @@ class Upload extends BaseController
         return ApiResponse::createOk($result);
     }
 
-    public function getFile()
+    public function getFile($id = 0)
     {
-        $fileId = (int) Request::param('id', 0);
+        $fileId = (int) ($id ?: Request::param('id', 0));
         $userId = $this->JWT_SESSION['uid'] ?? 0;
         $isAdmin = $this->isAdmin();
 
@@ -145,13 +145,13 @@ class Upload extends BaseController
             $result = DirectUploadManager::createPendingRecord($filename, $mime, $size, $path, $userId);
             return ApiResponse::createOk($result);
         } catch (\Exception $e) {
-            return ApiResponse::createError('获取凭证失败', $e->getMessage());
+            return ApiResponse::createError('获取凭证失败', ['detail' => $e->getMessage()]);
         }
     }
 
-    public function confirmDirectUpload()
+    public function confirmDirectUpload($id = 0)
     {
-        $recordId = (int) Request::param('record_id', 0);
+        $recordId = (int) ($id ?: Request::param('record_id', 0));
 
         $result = DirectUploadManager::confirmUpload($recordId);
         return $result ? ApiResponse::createOk() : ApiResponse::createError('确认失败');

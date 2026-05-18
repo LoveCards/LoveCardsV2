@@ -7,24 +7,28 @@ use think\facade\Db;
 use app\api\controller\BaseController;
 use app\api\service\Config as ConfigService;
 use app\api\service\Storage\ChannelManager;
+use app\api\service\Storage\StorageFactory;
 use app\api\ApiResponse;
 
 class Config extends BaseController
 {
-    protected $allowedGroups = [
-        'core', 'upload', 'cards', 'comments', 'user', 'geetest',
-        'mail',
-        'storage', 'storage_local', 'storage_oss', 'storage_cos',
-        'storage_qiniu',
-    ];
+    protected function getAllowedGroups(): array
+    {
+        $groups = ['core', 'upload', 'cards', 'comments', 'user', 'geetest', 'mail', 'storage'];
+        foreach (StorageFactory::getRegisteredTypes() as $type) {
+            $groups[] = 'storage_' . $type;
+        }
+        return $groups;
+    }
 
     public function index()
     {
         $group = Request::param('group', '');
+        $allowedGroups = $this->getAllowedGroups();
 
         if (empty($group)) {
             $result = [];
-            foreach ($this->allowedGroups as $g) {
+            foreach ($allowedGroups as $g) {
                 $result[$g] = ConfigService::getGroup($g);
             }
             return ApiResponse::createOk($result);
@@ -33,7 +37,7 @@ class Config extends BaseController
         $groupList = array_map('trim', explode(',', $group));
         $result = [];
         foreach ($groupList as $g) {
-            if (in_array($g, $this->allowedGroups)) {
+            if (in_array($g, $allowedGroups)) {
                 $result[$g] = ConfigService::getGroup($g);
             }
         }
@@ -43,9 +47,10 @@ class Config extends BaseController
     public function save()
     {
         $params = Request::param();
+        $allowedGroups = $this->getAllowedGroups();
 
         foreach ($params as $group => $config) {
-            if (!in_array($group, $this->allowedGroups)) {
+            if (!in_array($group, $allowedGroups)) {
                 continue;
             }
             if (!is_array($config)) {
@@ -57,9 +62,28 @@ class Config extends BaseController
         return ApiResponse::createNoContent();
     }
 
-    public function testChannel()
+    public function storageChannels()
     {
-        $channel = Request::param('channel', '');
+        $result = [];
+        foreach (StorageFactory::getRegisteredTypes() as $type) {
+            $driverClass = StorageFactory::getDriverClass($type);
+            if ($driverClass === null) {
+                continue;
+            }
+            $meta = $driverClass::meta();
+            $result[] = [
+                'slug' => $type,
+                'name' => $meta['name'] ?? $type,
+                'icon' => $meta['icon'] ?? 'mdi-cloud',
+                'fields' => $meta['fields'] ?? [],
+            ];
+        }
+        return ApiResponse::createOk($result);
+    }
+
+    public function testChannel($channel = '')
+    {
+        $channel = $channel ?: Request::param('channel', '');
         if (empty($channel)) {
             return ApiResponse::createBadRequest('请指定渠道');
         }
@@ -212,7 +236,7 @@ class Config extends BaseController
         try {
             $url = "https://rs.qiniu.com/mgr?bucket={$bucket}";
 
-            $token = $this->getQiniuToken($accessKey, $secretKey, '/mgr');
+            $token = $this->getQiniuToken($accessKey, $secretKey, $bucket, '/mgr');
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -244,7 +268,7 @@ class Config extends BaseController
         }
     }
 
-    private function getQiniuToken($accessKey, $secretKey, $path): string
+    private function getQiniuToken($accessKey, $secretKey, $bucket, $path): string
     {
         $expire = time() + 3600;
         $policy = json_encode(['scope' => $bucket, 'deadline' => $expire]);
@@ -256,7 +280,7 @@ class Config extends BaseController
 
     public function channelStats()
     {
-        $channels = ['local', 'oss', 'cos', 'qiniu'];
+        $channels = StorageFactory::getRegisteredTypes();
         $result = [];
 
         foreach ($channels as $slug) {
