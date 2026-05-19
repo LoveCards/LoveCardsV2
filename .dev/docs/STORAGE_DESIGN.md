@@ -498,11 +498,18 @@ public static function meta(): array
 ### 12.3 权限校验流程
 
 ```
+请求 → JwtAuthCheck 中间件
+  → 解析 JWT token，注入 uid/rolesId
+
 请求 → PermissionCheck 中间件
-  → request()->rule()->getName() 获取路由名
-  → RolePermissions::checkPermission($roleId, $routeName, $method)
-  → Permissions 表 WHERE route_name = ? AND (method = ? OR method = '*')
-  → role_permissions 表检查角色是否拥有该权限
+  → request()->rule()->getName() 获取路由名 (如 storage.channels.index)
+  → request()->method() 获取 HTTP 方法 (如 GET)
+  → RBAC::checkAccess(rolesId, routeName, method)
+     - root(1) in rolesId? → true 直接放行
+     - hash = md5(routeName:method)
+     - 查 role_permissions 单表 (带缓存)
+     - in_array(hash, set)? → 放行
+     - 不匹配 → 403 Forbidden
 ```
 
 ### 12.4 配置管理路由
@@ -512,19 +519,7 @@ public static function meta(): array
 | `GET` | `/api/system/config` | `system.config.index` | 获取配置 |
 | `POST` | `/api/system/config` | `system.config.save` | 保存配置 |
 | `GET` | `/api/storage/channels` | `storage.channels.index` | 渠道列表 |
-| `POST` | `/api/storage/channels/{channel}/test` | `storage.channels.test` | 测试连通性 |
 | `GET` | `/api/storage/channels/stats` | `storage.channels.stats` | 渠道统计 |
+| `POST` | `/api/storage/channels/{channel}/test` | `storage.channels.test` | 测试连通性 |
 
 ---
-
-## 版本历史
-
-| 版本 | 日期 | 说明 |
-|------|------|------|
-| 1.0 | 2026-05-12 | 初始版本 |
-| 2.0 | 2026-05-12 | 新增权限控制、软删除/硬删除、审核机制 |
-| 3.0 | 2026-05-14 | 统一 batchOperate、upload_status 新增、安全加固 |
-| 4.0 | 2026-05-17 | 路径重构：PathGenerator、driver_path 统一、upload_status 与 scene 解耦 |
-| 5.0 | 2026-05-17 | 驱动层高内聚重构：DriverInterface、HasDirectUpload、instanceof、自动扫描、前端动态化、移除 SM.MS |
-| 5.1 | 2026-05-18 | AbstractDriver 移至 Contract/、meta() 新增 type 键、修复审计问题 |
-| 6.0 | 2026-05-18 | RESTful API 重构 + RBAC 路由名匹配 |

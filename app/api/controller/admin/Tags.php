@@ -44,7 +44,7 @@ class Tags extends BaseController
             return $params;
         }
 
-        $params['user_id'] = $this->JWT_SESSION['uid'];
+        $params['user_id'] = request()->uid;
 
         //调用服务
         TagsService::createTag($params);

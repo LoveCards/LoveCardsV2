@@ -22,7 +22,7 @@ class Jwt
     public static function SignToken($data): string
     {
         $jwt_config = Config::get('jwt');
-        $privateKey = file_get_contents('..' . $jwt_config['privateKey']);
+        $privateKey = file_get_contents(app()->getRootPath() . $jwt_config['privateKey']);
 
         $payload = array(
             "iss" => $jwt_config['iss'],        //签发者 可以为空
@@ -41,7 +41,7 @@ class Jwt
     public static function CheckToken($token): array
     {
         $jwt_config = Config::get('jwt');
-        $publicKey = file_get_contents('..' . $jwt_config['publicKey']);
+        $publicKey = file_get_contents(app()->getRootPath() . $jwt_config['publicKey']);
 
         try {
             //FBJWT::$leeway = 60; //当前时间减去60，把时间留点余地

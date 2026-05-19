@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\extend\email;
+namespace app\common\email;
 
 use think\facade\Cache;
 use think\facade\Config as ThinkConfig;

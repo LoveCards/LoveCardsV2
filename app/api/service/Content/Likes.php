@@ -13,15 +13,15 @@ class Likes
     /**
      * 列表
      *
-     * @param array $context
+     * @param int $uid
      * @return array
      */
-    static public function list($context)
+    static public function list(int $uid)
     {
         //$currentPage = 1;
         $pageSize = 15;
 
-        $result = LikesModel::where('uid', $context['uid'])->paginate($pageSize);
+        $result = LikesModel::where('uid', $uid)->paginate($pageSize);
         if ($result->isEmpty()) {
             return [];
         }
@@ -57,22 +57,22 @@ class Likes
      * 删除喜欢
      *
      * @param int|array $data
-     * @param array $context
+     * @param int $uid
      * @return void
      */
-    static public function delete($data, $context)
+    static public function delete($data, int $uid)
     {
         // 启动事务
         Db::startTrans();
         try {
             if (is_array($data)) {
                 //批量
-                $Likes = LikesModel::whereIn('id', $data)->where('uid', $context['uid']);
+                $Likes = LikesModel::whereIn('id', $data)->where('uid', $uid);
                 $card_pids = $Likes->column('pid');
                 $Likes->delete();
                 CardsModel::whereIn('id', $card_pids)->dec('goods')->update();
             } else {
-                $Likes = LikesModel::where('id', $data)->where('uid', $context['uid']);
+                $Likes = LikesModel::where('id', $data)->where('uid', $uid);
                 $card_pids = $Likes->column('pid');
                 $Likes->delete();
                 CardsModel::where('id', $card_pids[0])->dec('goods')->update();

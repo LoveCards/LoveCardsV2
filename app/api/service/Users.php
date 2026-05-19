@@ -11,13 +11,6 @@ use yunarch\utils\src\ModelList;
 
 class Users
 {
-    protected $UsersModel;
-
-    public function __construct(UsersModel $UsersModel)
-    {
-        $this->UsersModel = $UsersModel;
-    }
-
     /**
      * 字段反转
      *

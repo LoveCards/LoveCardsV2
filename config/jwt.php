@@ -1,7 +1,7 @@
 <?php
 return [
-    'privateKey' => '/config/rsa/private.pem',
-    'publicKey' => '/config/rsa/public.pem',
+    'privateKey' => 'config/rsa/private.pem',
+    'publicKey' => 'config/rsa/public.pem',
     'alg' => 'RS256',
     'exp' => 3600 * 24 * 10, // token过期时间，单位秒
     'iss' => 'http://serverhub.com',

@@ -39,7 +39,7 @@ class Cards extends BaseController
         //获取过滤参数
         $params = $this->Params->IndexParams(Request::param());
         //调用服务
-        $result = CardsService::list($params, $this->JWT_SESSION['uid']);
+        $result = CardsService::list($params, request()->uid);
         //返回结果
         return ApiResponse::createOk($result);
     }
@@ -54,8 +54,8 @@ class Cards extends BaseController
         }
 
         //补齐参数
-        $params['user_id'] = $this->JWT_SESSION['uid'];
-        $params['post_ip'] = $this->SESSION['ip'];
+        $params['user_id'] = request()->uid;
+        $params['post_ip'] = request()->ip();
         $params['status'] = ConfigService::get('cards.approve') ? 3 : 0;
 
         //调用服务
@@ -71,7 +71,7 @@ class Cards extends BaseController
     {
         $result = CardsModel::where([
             'id' => Request::param('id'),
-            'user_id' => $this->JWT_SESSION['uid'],
+            'user_id' => request()->uid,
             'status' => 0
         ])->update(['status' => 2]);
 
@@ -91,8 +91,8 @@ class Cards extends BaseController
         }
 
         //补齐参数
-        $params['user_id'] = $this->JWT_SESSION['uid'];
-        $params['post_ip'] = $this->SESSION['ip'];
+        $params['user_id'] = request()->uid;
+        $params['post_ip'] = request()->ip();
         $params['status'] = ConfigService::get('comments.approve') ? 3 : 0;
 
         //调用服务
@@ -110,12 +110,9 @@ class Cards extends BaseController
     //点赞
     public function like()
     {
-        $context = request()->JwtData;
-
         //获取数据
         $id = Request::param('id');
-        $ip = $this->SESSION['ip'];
-        //$time = $this->SESSION['date'];
+        $ip = request()->ip();
 
         //获取Cards数据库对象
         $resultCards = Db::table('cards')->where('id', $id);
@@ -138,7 +135,7 @@ class Cards extends BaseController
         $data = [
             'aid' => '1',
             'pid' => $id,
-            'uid' => $context['uid'],
+            'uid' => request()->uid,
             'ip' => $ip,
             // 'time' => $time
         ];

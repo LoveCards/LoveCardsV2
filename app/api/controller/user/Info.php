@@ -16,8 +16,8 @@ use app\api\service\RBAC\RBAC;
 use app\api\model\Roles as RolesModel;
 use app\api\validate\Users as UsersValidate;
 
-use captcha\Code;
-use app\common\extend\email\Email;
+use app\common\captcha\Code;
+use app\common\email\Email;
 
 use app\api\ApiResponse;
 
@@ -81,9 +81,7 @@ class Info
     //获取资料-GET
     public function Get()
     {
-        $context = request()->JwtData;
-
-        $user = UsersService::Get($context['uid'], ['id']);
+        $user = UsersService::Get(request()->uid, ['id']);
         $userData = $user->toArray();
 
         $rolesId = request()->rolesId ?? (json_decode($user->roles_id, true) ?: []);
@@ -100,11 +98,9 @@ class Info
     //编辑资料-Patch
     public function Patch()
     {
-        $context = request()->JwtData;
-
         //传入必要参数
         $lDef_ParamData = [
-            'id' => $context['uid'],
+            'id' => request()->uid,
             'avatar' => Request::param('avatar'),
             'username' => Request::param('username'),
             'password' => Request::param('password'),
@@ -123,11 +119,9 @@ class Info
     //修改密码-Post
     public function PostPassword()
     {
-        $context = request()->JwtData;
-
         //传入必要参数
         $lDef_ParamData = [
-            'id' => $context['uid'],
+            'id' => request()->uid,
             'password' => Request::param('password'),
         ];
 
@@ -145,10 +139,8 @@ class Info
     //修改邮箱-Post
     public function PostEmail()
     {
-        $context = request()->JwtData;
-
         $lDef_ParamData = [
-            'id' => $context['uid'],
+            'id' => request()->uid,
             'email' => Request::param('email')
         ];
 
@@ -172,22 +164,4 @@ class Info
         return $this->mObjectEasyCodeCreateCaptcha($account, 'Info_BindEmailCaptcha', ['邮箱格式错误']);
     }
 
-    //获取身份校验验证码-POST
-    // public function PostAuthCaptcha()
-    // {
-    //     $context = request()->JwtData;
-    //     $tDef_Result = UsersService::Get($context['uid'], ['id']);
-    //     //优先邮箱
-    //     $tDef_Result['email'] ? $account = $tDef_Result['email'] : $account = $tDef_Result['phone'];
-
-    //     //验证并发送验证码
-    //     return $this->mObjectEasyCodeCreateCaptcha($account, 'Info_AuthCaptcha');
-    // }
-
-
-    //电话绑定验证码-POST
-    // public function PostBindPhoneCaptcha()
-    // {
-    //     return Export::Create(['目前仅支持邮箱验证'], 500, '发送失败');
-    // }
 }

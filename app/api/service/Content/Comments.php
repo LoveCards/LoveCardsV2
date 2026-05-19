@@ -12,9 +12,9 @@ use yunarch\utils\src\ModelList;
 class Comments
 {
     //更新指定ID的指定字段
-    static public function updata($context, $data, $where = [], $allowField = [])
+    static public function update(int $uid, $data, $where = [], $allowField = [])
     {
-        $where = ['user_id' => $context['uid']] + $where;
+        $where = ['user_id' => $uid] + $where;
         $result = CommentsModel::update($data, $where, $allowField);
 
         return $result;

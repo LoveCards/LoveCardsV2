@@ -10,7 +10,7 @@ namespace app\api\controller\public;
 
 use think\facade\View;
 
-use app\common\Theme as CommonTheme;
+use app\api\service\Theme as CommonTheme;
 use app\api\service\Config as ConfigService;
 
 use app\api\controller\BaseController;

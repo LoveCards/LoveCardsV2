@@ -30,7 +30,7 @@ Route::group('', function () {
         ->setOption('meta', ['name' => '测试存储渠道', 'group' => 'storage.channels']);
 
     //主题管理
-    Route::get('system/updata', 'admin.System/updata')
+    Route::get('system/update', 'admin.System/updata')
         ->name('system.update')
         ->setOption('meta', ['name' => '系统更新检查', 'group' => 'system']);
 

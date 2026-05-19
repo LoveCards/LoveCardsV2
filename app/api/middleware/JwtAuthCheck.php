@@ -5,7 +5,7 @@ namespace app\api\middleware;
 use app\api\service\Config as ConfigService;
 use app\api\service\Users as UsersService;
 use app\api\ApiResponse;
-use app\common\extend\jwt\Jwt;
+use app\common\jwt\Jwt;
 
 class JwtAuthCheck
 {
@@ -16,8 +16,8 @@ class JwtAuthCheck
         if ($token != null) {
             $token = preg_replace('/^Bearer\s+/', '', $token);
             try {
-                $data = Jwt::checkToken($token);
-                $uid = $data['data']['uid'];
+                $data = Jwt::verify($token);
+                $uid = $data['uid'];
                 $user = UsersService::Get($uid);
 
                 if (!$user || !$user->id) {
@@ -27,10 +27,9 @@ class JwtAuthCheck
                 $request->uid = (int) $uid;
                 $request->user = $user;
                 $request->rolesId = json_decode($user->roles_id, true) ?: [];
-                $request->JwtData = $data['data'];
 
-                if (isset($data['data']['token']) && $data['data']['token'] !== null) {
-                    $request->newToken = $data['data']['token'];
+                if (isset($data['_new_token'])) {
+                    $request->newToken = $data['_new_token'];
                 }
             } catch (\app\api\ApiException $e) {
                 if (!ConfigService::get('core.visitor_mode')) {
@@ -59,9 +58,5 @@ class JwtAuthCheck
         $request->uid = 0;
         $request->user = null;
         $request->rolesId = [4];
-        $request->JwtData = [
-            'uid' => '0',
-            'token' => null,
-        ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\extend\captcha;
+namespace app\common\captcha;
 
 use think\facade\Cache;
 

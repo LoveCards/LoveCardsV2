@@ -14,14 +14,14 @@ class Likes extends BaseController
     //列表
     public function list()
     {
-        $result = LikesService::list($this->JWT_SESSION);
+        $result = LikesService::list(request()->uid);
         return ApiResponse::createOk($result);
     }
 
     //取消点赞
     public function unLike()
     {
-        LikesService::delete(Request::param('id'), $this->JWT_SESSION);
+        LikesService::delete(Request::param('id'), request()->uid);
         return ApiResponse::createNoContent();
     }
 }

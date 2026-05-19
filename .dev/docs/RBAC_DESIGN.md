@@ -67,11 +67,11 @@ app/api/
 │   └── PermissionCheck.php 授权：读 routeName + 调 RBAC::checkAccess
 ├── model/
 │   ├── Roles.php          角色模型 (含 is_system)
-│   └── RolePermissions.php 角色权限关联模型 (permission_hash)
+│   └── RolePermissions.php 角色权限关联模型 (permission_hash，无业务逻辑)
 └── route/
-    ├── admin.php          管理端路由 (42 条，全部有 name + meta)
+    ├── admin.php          管理端路由 (36 条，全部有 name + meta)
     ├── user.php           用户端路由 (21 条，全部有 name + meta)
-    └── public.php         公开路由 (11 条，全部有 name + meta)
+    └── public.php         公开路由 (13 条，全部有 name + meta)
 ```
 
 ## 3. 数据库
@@ -207,10 +207,10 @@ RBAC::clearCache(int $roleId): void
 
 ```php
 职责:
-  1. 解析 JWT token
+  1. 解析 JWT token (Jwt::verify)
   2. 加载用户 (UsersService::Get)
   3. 解析 roles_id
-  4. 注入 request: uid, user, rolesId, JwtData
+  4. 注入 request: uid, user, rolesId
   5. visitor 模式: uid=0, user=null, rolesId=[4]
   6. token 续期: 写入响应头 X-New-Token
 
@@ -218,7 +218,7 @@ RBAC::clearCache(int $roleId): void
   - uid: int          用户 ID (0 = visitor)
   - user: object|null 用户模型对象
   - rolesId: array    角色 ID 数组 [1, 2, 3]
-  - JwtData: array    JWT payload 的 data 字段
+  - 注意: 不再注入 JwtData，控制器用 request()->uid 代替
 ```
 
 ## 7. 授权中间件 (PermissionCheck)
@@ -354,9 +354,9 @@ UPDATE users SET roles_id = '[2, 3]' WHERE id = 5;
 | controller/admin/Permissions.php | 权限列表 (读路由扫描，只读) |
 | controller/user/Info.php | Get() 返回 roles + permissions |
 | controller/user/Auth.php | Guest() role [4] |
-| route/admin.php | 管理端路由 (42 条) |
+| route/admin.php | 管理端路由 (36 条) |
 | route/user.php | 用户端路由 (21 条) |
-| route/public.php | 公开路由 (11 条) |
+| route/public.php | 公开路由 (13 条) |
 | validate/Roles.php | 角色验证 (permission_hashes) |
 
 ### 前端
@@ -371,17 +371,3 @@ UPDATE users SET roles_id = '[2, 3]' WHERE id = 5;
 | api/types/roles.ts | AssignPermissions 类型 (permission_hashes) |
 | pages/apps/permissions.vue | 权限列表 (只读，分组展示) |
 | components/apps/roles/AssignPermissionsDialog.vue | 分配权限 (按 group 分组，存 hash) |
-
-## 13. 与之前设计的对比
-
-| 维度 | 之前 (v1) | 现在 (v2) |
-|------|----------|----------|
-| 表数量 | 3 (roles + permissions + role_permissions) | 2 (roles + role_permissions) |
-| 查询方式 | JOIN 两张表 | 单表 hash 查找 + 内存缓存 |
-| 权限定义 | 手动 INSERT 到 permissions 表 | 路由 ->setOption('meta') 自动扫描 |
-| 新增路由 | INSERT permissions + 分配角色 | 加 meta -> 重启 -> 分配角色 |
-| 删除路由 | 删 permissions 记录 + 清关联 | 自动消失 (路由没了 hash 不匹配) |
-| 权限 CRUD | 管理后台新建/编辑/删除 | 只读列表 (权限由路由决定) |
-| 分组 | 无 | meta.group 显式声明 |
-| URL 展示 | 无 | path 字段从路由扫描获取 |
-| 潜在问题 | 孤儿记录、路由不同步 | 路由名变更需重新分配权限 |

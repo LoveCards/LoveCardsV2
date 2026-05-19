@@ -20,7 +20,7 @@ class Comments extends BaseController
         //获取过滤参数
         $params = Params::listParams(Request::param());
         //调用服务
-        $result = CommentsService::newList($params, $this->JWT_SESSION['uid']);
+        $result = CommentsService::newList($params, request()->uid);
         //返回结果
         return ApiResponse::createOk($result);
     }
@@ -30,7 +30,7 @@ class Comments extends BaseController
     {
         $result = CommentsModel::where([
             'id' => Request::param('id'),
-            'user_id' => $this->JWT_SESSION['uid'],
+            'user_id' => request()->uid,
             'status' => 0
         ])->update(['status' => 2]);
 

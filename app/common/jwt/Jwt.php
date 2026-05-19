@@ -1,15 +1,12 @@
 <?php
 
-namespace app\common\extend\jwt;
+namespace app\common\jwt;
 
 use Firebase\JWT\JWT as FBJWT;
-use Firebase\JWT\JWK;
 use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
 use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\ExpiredException;
-use DomainException;
-use InvalidArgumentException;
 use UnexpectedValueException;
 
 use think\facade\Config;
@@ -18,47 +15,41 @@ use app\api\ApiException;
 
 class Jwt
 {
-    public static function signToken($data): string
+    public static function sign(array $data): string
     {
         $jwt_config = Config::get('jwt');
-        $privateKey = file_get_contents('..' . $jwt_config['privateKey']);
+        $privateKey = file_get_contents(app()->getRootPath() . $jwt_config['privateKey']);
 
-        $payload = array(
+        $payload = [
             "iss" => $jwt_config['iss'],
-            "aud" => '',
             "iat" => time(),
             "nbf" => time(),
             "data" => $data
-        );
+        ];
         $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
         Cache::set('token_' . $token, time(), $jwt_config['cacheTime']);
         return $token;
     }
 
-    public static function checkToken($token): array
+    public static function verify(string $token): array
     {
         $jwt_config = Config::get('jwt');
-        $publicKey = file_get_contents('..' . $jwt_config['publicKey']);
+        $publicKey = file_get_contents(app()->getRootPath() . $jwt_config['publicKey']);
 
         try {
-            $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']));
+            $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']), [$jwt_config['alg']]);
             $exp = $decoded->iat + $jwt_config['exp'];
             $data = (array) $decoded->data;
-            $data['token'] = null;
 
             if (time() > $exp) {
-                $request = self::renewToken($token, $data);
-                if (!$request['status']) {
-                    throw ApiException::unauthorized($request['msg'], ApiException::CODE_TOKEN_EXPIRED);
+                $newToken = self::_renew($token);
+                if ($newToken === null) {
+                    throw ApiException::unauthorized('token失效', ApiException::CODE_TOKEN_EXPIRED);
                 }
-                $data['token'] = $request['data'];
+                $data['_new_token'] = $newToken;
             }
 
-            return [
-                'status' => true,
-                'msg' => null,
-                'data' => $data,
-            ];
+            return $data;
         } catch (SignatureInvalidException $e) {
             throw ApiException::unauthorized('签名不正确', ApiException::CODE_TOKEN_INVALID);
         } catch (BeforeValidException $e) {
@@ -70,26 +61,23 @@ class Jwt
         }
     }
 
-    public static function renewToken($token, $data): array
+    private static function _renew(string $token): ?string
     {
         if (Cache::has('token_' . $token)) {
             Cache::delete('token_' . $token);
-            $token = self::signToken($data);
-            return [
-                'status' => true,
-                'msg' => null,
-                'data' => $token,
-            ];
+            $jwt_config = Config::get('jwt');
+            $privateKey = file_get_contents(app()->getRootPath() . $jwt_config['privateKey']);
+
+            $decoded = FBJWT::decode($token, new Key(file_get_contents(app()->getRootPath() . $jwt_config['publicKey']), $jwt_config['alg']), [$jwt_config['alg']]);
+            $data = (array) $decoded->data;
+
+            return self::sign($data);
         }
 
-        return [
-            'status' => false,
-            'msg' => 'token失效',
-            'data' => null,
-        ];
+        return null;
     }
 
-    public static function deleteToken($token): void
+    public static function invalidate(string $token): void
     {
         if (Cache::has('token_' . $token)) {
             Cache::delete('token_' . $token);
@@ -103,7 +91,7 @@ class Jwt
 
         try {
             $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
-            $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']));
+            $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']), [$jwt_config['alg']]);
             if ($decoded->Test == $payload['Test']) {
                 return true;
             }

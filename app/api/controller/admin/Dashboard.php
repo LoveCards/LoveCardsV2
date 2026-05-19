@@ -3,7 +3,7 @@
 namespace app\api\controller\admin;
 
 use think\facade\Db;
-use think\facade\Session;
+use think\facade\Cache;
 
 use app\api\model\Cards as CardsModel;
 use app\api\model\Likes as LikesModel;
@@ -28,7 +28,7 @@ class Dashboard
         function getNotice(): array
         {
             // 1. 从 Session 取
-            $notice = Session::get('Notice');
+            $notice = Cache::get('Notice');
             if ($notice !== null) {
                 return $notice;
             }
@@ -40,10 +40,6 @@ class Dashboard
                     'method'  => 'GET',
                     'timeout' => 5,          // 5 秒超时
                     'header'  => "User-Agent: PHP\r\n",
-                ],
-                'ssl'  => [
-                    'verify_peer'      => false,
-                    'verify_peer_name' => false,
                 ],
             ]);
 
@@ -60,7 +56,7 @@ class Dashboard
             }
 
             // 4. 写入 Session 并返回
-            Session::set('Notice', $json['data'], 3600 * 3);
+            Cache::set('Notice', $json['data'], 3600 * 3);
             return $json['data'];
         }
         $notice = getNotice();

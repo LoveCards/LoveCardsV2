@@ -3,9 +3,9 @@
 namespace app\api\controller\admin;
 
 use think\facade\Request;
-use think\facade\Session;
+use think\facade\Cache;
 
-use app\common\Theme;
+use app\api\service\Theme;
 use app\common\Common;
 
 use app\api\controller\BaseController;
@@ -136,16 +136,16 @@ class System extends BaseController
     {
         /**
          * 获取公告列表（原生网络请求版）
-         * 1. 先读 Session，存在直接返回
+         * 1. 先读 Cache，存在直接返回
          * 2. 不存在则用 file_get_contents 请求接口
-         * 3. 成功后写 Session（1 小时过期）
+         * 3. 成功后写 Cache（3 小时过期）
          *
          * @return array 公告列表（data 字段）
          */
         function getUpdata()
         {
-            // 1. 从 Session 取
-            $notice = Session::get('Updata');
+            // 1. 从 Cache 取
+            $notice = Cache::get('Updata');
             if ($notice !== null) {
                 return $notice;
             }
@@ -155,10 +155,10 @@ class System extends BaseController
             $ctx  = stream_context_create([
                 'http' => [
                     'method'  => 'GET',
-                    'timeout' => 5,          // 5 秒超时
+                    'timeout' => 5,
                     'header'  => "User-Agent: PHP\r\n",
                 ],
-                'ssl'  => [
+                'ssl' => [
                     'verify_peer'      => false,
                     'verify_peer_name' => false,
                 ],
@@ -166,18 +166,16 @@ class System extends BaseController
 
             $jsonStr = @file_get_contents($url, false, $ctx);
             if ($jsonStr === false) {
-                // 请求失败，返回空数组
                 return [];
             }
 
-            // 4. 写入 Session 并返回
-            Session::set('Updata', $jsonStr, 3600 * 3);
+            Cache::set('Updata', $jsonStr, 3600 * 3);
             return $jsonStr;
         }
         function getLatestVer()
         {
-            // 1. 从 Session 取
-            $notice = Session::get('LatestVer');
+            // 1. 从 Cache 取
+            $notice = Cache::get('LatestVer');
             if ($notice !== null) {
                 return $notice;
             }
@@ -187,10 +185,10 @@ class System extends BaseController
             $ctx  = stream_context_create([
                 'http' => [
                     'method'  => 'GET',
-                    'timeout' => 5,          // 5 秒超时
+                    'timeout' => 5,
                     'header'  => "User-Agent: PHP\r\n",
                 ],
-                'ssl'  => [
+                'ssl' => [
                     'verify_peer'      => false,
                     'verify_peer_name' => false,
                 ],
@@ -198,15 +196,14 @@ class System extends BaseController
 
             $jsonStr = @file_get_contents($url, false, $ctx);
             if ($jsonStr === false) {
-                // 请求失败，返回空数组
                 return [];
             }
 
             // 3. 解析 JSON
             $json = json_decode($jsonStr, true);
 
-            // 4. 写入 Session 并返回
-            Session::set('LatestVer',  $json, 3600 * 3);
+            // 4. 写入 Cache 并返回
+            Cache::set('LatestVer',  $json, 3600 * 3);
             return $json;
         }
         $result = [

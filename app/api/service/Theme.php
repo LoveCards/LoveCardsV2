@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common;
+namespace app\api\service;
 
 use think\Facade;
 use think\facade\View;

@@ -10,9 +10,9 @@ use app\api\service\Users as UsersService;
 use app\api\service\Config as ConfigService;
 use app\api\validate\Users as UsersValidate;
 
-use app\common\extend\jwt\Jwt;
-use app\common\extend\email\Email;
-use app\common\extend\captcha\Code;
+use app\common\jwt\Jwt;
+use app\common\email\Email;
+use app\common\captcha\Code;
 
 use app\api\controller\BaseController;
 
@@ -106,7 +106,7 @@ class Auth extends BaseController
         //     Code::DeleteCaptcha($account, 'Auth');
         // }
 
-        $result = Jwt::signToken(['uid' => $user->id]);
+        $result = Jwt::sign(['uid' => $user->id]);
         return ApiResponse::createOk(['token' => $result]);
     }
 
@@ -147,7 +147,7 @@ class Auth extends BaseController
         //写入数据
         $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password);
 
-        $result = Jwt::signToken(['uid' => $user->id]);
+        $result = Jwt::sign(['uid' => $user->id]);
 
         //清除验证码
         Code::DeleteCaptcha($account, 'Auth');
@@ -163,7 +163,7 @@ class Auth extends BaseController
         }
 
         $timekey = (date('YmdH')); //支持一小时内重复登入
-        $ip = $this->SESSION['ip'];
+        $ip = request()->ip();
         $account = strtoupper(substr(md5($ip . $timekey), 0, 9)) . '@g.com';
         $password = '123456';
         $username = 'GUEST' . strtoupper(substr(md5($account . $password . time()), 0, 5));
@@ -177,14 +177,14 @@ class Auth extends BaseController
             $result = UsersService::Login($account, $password);
             //如果访客账号已存在，直接返回token
             $data = $result->toArray();
-            $result = Jwt::signToken(['uid' => $data['id']]);
+            $result = Jwt::sign(['uid' => $data['id']]);
             return ApiResponse::createOk(['token' => $result]);
         } catch (\app\api\ApiException $e) {
             if ($e->getCode() == \app\api\ApiException::CODE_USER_NOT_FOUND) {
                 //写入数据
                 $user = UsersService::Register($number, $username, $accountArray['email'], $accountArray['phone'], $password, [4]);
                 //返回令牌
-                $result = Jwt::signToken(['uid' => $user->id]);
+                $result = Jwt::sign(['uid' => $user->id]);
                 return ApiResponse::createOk(['token' => $result]);
             }
             throw $e;
