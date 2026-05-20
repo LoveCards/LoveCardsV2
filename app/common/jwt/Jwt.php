@@ -10,6 +10,7 @@ use Firebase\JWT\ExpiredException;
 use UnexpectedValueException;
 
 use think\facade\Config;
+use think\facade\Cache;
 use app\common\cache\CacheManager;
 use app\api\ApiException;
 
@@ -24,6 +25,7 @@ class Jwt
             "iss" => $jwt_config['iss'],
             "iat" => time(),
             "nbf" => time(),
+            "exp" => time() + $jwt_config['exp'],
             "data" => $data
         ];
         $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
@@ -38,24 +40,18 @@ class Jwt
 
         try {
             $decoded = FBJWT::decode($token, new Key($publicKey, $jwt_config['alg']), [$jwt_config['alg']]);
-            $exp = $decoded->iat + $jwt_config['exp'];
             $data = (array) $decoded->data;
-
-            if (time() > $exp) {
-                $newToken = self::_renew($token);
-                if ($newToken === null) {
-                    throw ApiException::unauthorized('token失效', ApiException::CODE_TOKEN_EXPIRED);
-                }
-                $data['_new_token'] = $newToken;
-            }
-
             return $data;
+        } catch (ExpiredException $e) {
+            $newToken = self::_renew($token);
+            if ($newToken === null) {
+                throw ApiException::unauthorized('token已失效', ApiException::CODE_TOKEN_EXPIRED);
+            }
+            return ['_new_token' => $newToken];
         } catch (SignatureInvalidException $e) {
             throw ApiException::unauthorized('签名不正确', ApiException::CODE_TOKEN_INVALID);
         } catch (BeforeValidException $e) {
             throw ApiException::unauthorized('token未生效', ApiException::CODE_TOKEN_INVALID);
-        } catch (ExpiredException $e) {
-            throw ApiException::unauthorized('token已失效', ApiException::CODE_TOKEN_EXPIRED);
         } catch (UnexpectedValueException $e) {
             throw ApiException::unauthorized('未知错误:' . $e->getMessage(), ApiException::CODE_UNKNOWN);
         }
@@ -63,8 +59,9 @@ class Jwt
 
     private static function _renew(string $token): ?string
     {
-        if (CacheManager::has('token_' . $token)) {
-            CacheManager::delete('token_' . $token);
+        $cacheKey = 'token_' . $token;
+        if (Cache::tag('jwt')->get($cacheKey) !== null) {
+            Cache::tag('jwt')->delete($cacheKey);
             $jwt_config = Config::get('jwt');
             $privateKey = file_get_contents(app()->getRootPath() . $jwt_config['privateKey']);
 
@@ -79,9 +76,7 @@ class Jwt
 
     public static function invalidate(string $token): void
     {
-        if (CacheManager::has('token_' . $token)) {
-            CacheManager::delete('token_' . $token);
-        }
+        Cache::tag('jwt')->delete('token_' . $token);
     }
 
     public static function verifyRsa($publicKey, $privateKey): bool
