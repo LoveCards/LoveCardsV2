@@ -7,39 +7,35 @@ use think\Validate;
 class Comments extends Validate
 {
     static public $all_scene = [
-        'user' => [
-            'create' => [
-                'normal' => [
-                    'parent_id'
-                ],
-                'require' => [
-                    'id',
-                    'content',
-                ],
-                'nonNull' => false,
-                'toNull' => [
-                    'data'
-                ],
+        'create' => [
+            'normal' => [
+                'parent_id'
+            ],
+            'require' => [
+                'id',
+                'content',
+            ],
+            'nonNull' => false,
+            'toNull' => [
+                'data'
             ],
         ],
-        'admin' => [
-            'patch' => [
-                'normal' => [
-                    'id',
-                    'aid',
-                    'pid',
-                    'is_top',
-                    'status',
-                    'user_id',
-                    'good',
-                    'content',
-                ],
-                'require' => false,
-                'nonNull' => false,
-                'toNull' => [
-                    'data'
-                ],
-            ]
+        'allUpdate' => [
+            'normal' => [
+                'id',
+                'aid',
+                'pid',
+                'is_top',
+                'status',
+                'user_id',
+                'good',
+                'content',
+            ],
+            'require' => false,
+            'nonNull' => false,
+            'toNull' => [
+                'data'
+            ],
         ],
     ];
     static public $scene_message = [
@@ -49,7 +45,6 @@ class Comments extends Validate
         'content.require' => '评论不能为空',
     ];
 
-    //定义验证规则
     protected $rule =   [
         'id' => 'number',
         'aid' => 'number',
@@ -64,7 +59,6 @@ class Comments extends Validate
         'post_ip' => 'ip|max:39',
     ];
 
-    //定义错误信息
     protected $message  =   [
 
         'id.number'     => 'ID格式错误',

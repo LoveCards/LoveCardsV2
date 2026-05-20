@@ -13,7 +13,7 @@ use InvalidArgumentException;
 use UnexpectedValueException;
 
 use think\facade\Config;
-use think\facade\Cache;
+use app\common\cache\CacheManager;
 use app\index\common\Common;
 
 class Jwt
@@ -33,7 +33,7 @@ class Jwt
             "data" => $data           //记录的userid的信息，这里是自已添加上去的，如果有其它信息，可以再添加数组的键值对
         );
         $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
-        Cache::set('token_' . $token, time(), $jwt_config['cacheTime']); //设置缓存
+        CacheManager::set('jwt', 'token_' . $token, time(), $jwt_config['cacheTime']); //设置缓存
         return $token; //根据参数生成了token，可选：HS256、HS384、HS512、RS256、ES256等
     }
 
@@ -83,9 +83,9 @@ class Jwt
     //刷新Token
     public static function RenewToken($token, $data): array
     {
-        if (Cache::has('token_' . $token)) {
+        if (CacheManager::has('token_' . $token)) {
             //删除原token
-            Cache::delete('token_' . $token);
+            CacheManager::delete('token_' . $token);
             //更新token
             $token = self::SignToken($data);
             //返回token
@@ -98,8 +98,8 @@ class Jwt
     //删除Token
     public static function DeleteToken($token): array
     {
-        if (Cache::has('token_' . $token)) {
-            Cache::delete('token_' . $token);
+        if (CacheManager::has('token_' . $token)) {
+            CacheManager::delete('token_' . $token);
         };
         return Common::mArrayEasyReturnStruct(null, true);
     }

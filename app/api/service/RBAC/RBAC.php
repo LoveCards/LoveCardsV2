@@ -3,8 +3,8 @@
 namespace app\api\service\RBAC;
 
 use think\facade\Db;
-use think\facade\Cache;
 use think\facade\Route;
+use app\common\cache\CacheManager;
 
 class RBAC
 {
@@ -18,15 +18,21 @@ class RBAC
      */
     public static function checkAccess(array $rolesId, string $routeName, string $method): bool
     {
+        $hash = md5($routeName . ':' . $method);
+        $meta = self::getRouteMeta();
+
+        // 公开路由 — 直接放行
+        if (isset($meta[$hash]) && ($meta[$hash]['public'] ?? false)) {
+            return true;
+        }
+
         if (empty($rolesId)) {
             return false;
         }
 
-        if (in_array(1, $rolesId)) {
+        if (in_array(config('roles.system_roles.root'), $rolesId)) {
             return true;
         }
-
-        $hash = md5($routeName . ':' . $method);
 
         foreach ($rolesId as $roleId) {
             $set = self::getRoleHashSet($roleId);
@@ -46,33 +52,32 @@ class RBAC
      */
     public static function getUserPermissions(array $rolesId): array
     {
-        if (empty($rolesId)) {
-            return [];
-        }
+        $cacheKey = CacheManager::key('rbac', 'perms', md5(implode(',', $rolesId)));
 
-        $cacheKey = 'rbac:perms:' . md5(implode(',', $rolesId));
-        $cached = Cache::get($cacheKey);
-
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $hashes = Db::table('role_permissions')
-            ->whereIn('role_id', $rolesId)
-            ->column('permission_hash');
-        $hashes = array_values(array_unique($hashes));
-
-        $routeMeta = self::getRouteMeta();
-        $permissions = [];
-        foreach ($hashes as $hash) {
-            if (isset($routeMeta[$hash])) {
-                $permissions[] = $routeMeta[$hash]['route_name'];
+        return CacheManager::get('rbac', $cacheKey, function () use ($rolesId) {
+            $routeMeta = self::getRouteMeta();
+            $permissions = [];
+            foreach ($routeMeta as $hash => $meta) {
+                if ($meta['public'] ?? false) {
+                    $permissions[] = $meta['route_name'];
+                }
             }
-        }
-        $permissions = array_values(array_unique($permissions));
 
-        Cache::set($cacheKey, $permissions, 3600);
-        return $permissions;
+            if (!empty($rolesId)) {
+                $dbHashes = Db::table('role_permissions')
+                    ->whereIn('role_id', $rolesId)
+                    ->column('permission_hash');
+                $dbHashes = array_values(array_unique($dbHashes));
+
+                foreach ($dbHashes as $hash) {
+                    if (isset($routeMeta[$hash])) {
+                        $permissions[] = $routeMeta[$hash]['route_name'];
+                    }
+                }
+            }
+
+            return array_values(array_unique($permissions));
+        }, CacheManager::TTL_LONG);
     }
 
     /**
@@ -89,48 +94,43 @@ class RBAC
     /**
      * 扫描路由定义，返回所有权限元数据
      *
-     * @return array hash => {route_name, method, name}
+     * @return array hash => {route_name, method, name, public, ...}
      */
     public static function getRouteMeta(): array
     {
-        $cacheKey = 'rbac:route_meta';
-        $cached = Cache::get($cacheKey);
+        return CacheManager::get('rbac', 'rbac:route_meta', function () {
+            $result = [];
+            $ruleList = Route::getRuleName()->getRuleList();
 
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $result = [];
-        $ruleList = Route::getRuleName()->getRuleList();
-
-        foreach ($ruleList as $rule) {
-            $name = $rule['name'] ?? '';
-            if (empty($name)) {
-                continue;
-            }
-
-            $methods = $rule['method'] ?? 'GET';
-            $meta = $rule['option']['meta'] ?? [];
-
-            foreach ((array) $methods as $method) {
-                $method = strtoupper($method);
-                if ($method === 'HEAD' || $method === 'OPTIONS') {
+            foreach ($ruleList as $rule) {
+                $name = $rule['name'] ?? '';
+                if (empty($name)) {
                     continue;
                 }
-                $hash = md5($name . ':' . $method);
-                $result[$hash] = [
-                    'hash'       => $hash,
-                    'route_name' => $name,
-                    'method'     => $method,
-                    'name'       => $meta['name'] ?? $name,
-                    'group'      => $meta['group'] ?? '',
-                    'path'       => '/' . ltrim($rule['rule'] ?? '', '/'),
-                ];
-            }
-        }
 
-        Cache::set($cacheKey, $result, 3600);
-        return $result;
+                $methods = $rule['method'] ?? 'GET';
+                $meta = $rule['option']['meta'] ?? [];
+
+                foreach ((array) $methods as $method) {
+                    $method = strtoupper($method);
+                    if ($method === 'HEAD' || $method === 'OPTIONS') {
+                        continue;
+                    }
+                    $hash = md5($name . ':' . $method);
+                    $result[$hash] = [
+                        'hash'       => $hash,
+                        'route_name' => $name,
+                        'method'     => $method,
+                        'name'       => $meta['name'] ?? $name,
+                        'group'      => $meta['group'] ?? '',
+                        'path'       => '/' . ltrim($rule['rule'] ?? '', '/'),
+                        'public'     => $meta['public'] ?? false,
+                    ];
+                }
+            }
+
+            return $result;
+        }, CacheManager::TTL_LONG);
     }
 
     /**
@@ -138,19 +138,13 @@ class RBAC
      */
     private static function getRoleHashSet(int $roleId): array
     {
-        $cacheKey = 'rbac:set:' . $roleId;
-        $cached = Cache::get($cacheKey);
+        $cacheKey = CacheManager::key('rbac', 'set', $roleId);
 
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $set = Db::table('role_permissions')
-            ->where('role_id', $roleId)
-            ->column('permission_hash');
-
-        Cache::set($cacheKey, $set, 3600);
-        return $set;
+        return CacheManager::get('rbac', $cacheKey, function () use ($roleId) {
+            return Db::table('role_permissions')
+                ->where('role_id', $roleId)
+                ->column('permission_hash');
+        }, CacheManager::TTL_LONG);
     }
 
     /**
@@ -158,6 +152,6 @@ class RBAC
      */
     public static function clearCache(int $roleId): void
     {
-        Cache::clear();
+        CacheManager::clearDomain('rbac');
     }
 }

@@ -126,6 +126,12 @@ class Roles
 
             RolePermissionsModel::where('role_id', $roleId)->delete();
 
+            // 过滤公开路由 hash（公开路由不依赖 role_permissions，无需写入）
+            $routeMeta = RBAC::getRouteMeta();
+            $permissionHashes = array_filter($permissionHashes, function ($hash) use ($routeMeta) {
+                return !($routeMeta[$hash]['public'] ?? false);
+            });
+
             foreach ($permissionHashes as $hash) {
                 RolePermissionsModel::create([
                     'role_id' => $roleId,

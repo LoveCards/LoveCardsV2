@@ -2,7 +2,7 @@
 
 namespace app\common\email;
 
-use think\facade\Cache;
+use app\common\cache\CacheManager;
 use think\facade\Config as ThinkConfig;
 use app\api\ApiException;
 use mailer\tp6\Mailer;
@@ -26,10 +26,10 @@ class Email
 
     protected static function cacheLog($key, $time = 60): bool
     {
-        if (Cache::has($key)) {
+        if (CacheManager::has($key)) {
             return true;
         } else {
-            Cache::set($key, 1, $time);
+            CacheManager::set('email', $key, 1, $time);
             return false;
         }
     }

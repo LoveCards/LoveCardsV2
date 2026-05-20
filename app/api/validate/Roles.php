@@ -6,42 +6,39 @@ use think\Validate;
 
 class Roles extends Validate
 {
-    //参数过滤场景
     static public $all_scene = [
-        'admin' => [
-            'create' => [
-                'normal' => [
-                    'description'
-                ],
-                'require' => [
-                    'name',
-                    'slug'
-                ],
-                'nonNull' => false,
-                'toNull' => false,
+        'create' => [
+            'normal' => [
+                'description'
             ],
-            'patch' => [
-                'normal' => [
-                    'name',
-                    'slug',
-                    'description'
-                ],
-                'require' => [
-                    'id'
-                ],
-                'nonNull' => false,
-                'toNull' => false,
+            'require' => [
+                'name',
+                'slug'
             ],
-            'assignPermissions' => [
-                'normal' => false,
-                'require' => [
-                    'id',
-                    'permission_hashes'
-                ],
-                'nonNull' => false,
-                'toNull' => false,
-            ]
+            'nonNull' => false,
+            'toNull' => false,
         ],
+        'update' => [
+            'normal' => [
+                'name',
+                'slug',
+                'description'
+            ],
+            'require' => [
+                'id'
+            ],
+            'nonNull' => false,
+            'toNull' => false,
+        ],
+        'assignPermissions' => [
+            'normal' => false,
+            'require' => [
+                'id',
+                'permission_hashes'
+            ],
+            'nonNull' => false,
+            'toNull' => false,
+        ]
     ];
     static public $scene_message = [
         'id.require' => '角色ID不能为空',
@@ -50,7 +47,6 @@ class Roles extends Validate
         'permission_hashes.require' => '权限hash集不能为空',
     ];
 
-    //定义验证规则
     protected $rule = [
         'id' => 'number',
         'name' => 'length:1,50|chsDash',
@@ -59,7 +55,6 @@ class Roles extends Validate
         'permission_hashes' => 'arrayJson',
     ];
 
-    //定义错误信息
     protected $message = [
         'id.number' => '角色ID格式错误',
         'id.require' => '角色ID不能为空',
@@ -79,4 +74,3 @@ class Roles extends Validate
         'permission_hashes.require' => '权限hash集不能为空',
     ];
 }
-

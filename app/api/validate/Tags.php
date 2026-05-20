@@ -6,41 +6,36 @@ use think\Validate;
 
 class Tags extends Validate
 {
-    //参数过滤场景
     static public $all_scene = [
-        'user' => [
-            'create' => [
-                'normal' => false,
-                'require' => false,
-                'nonNull' => false,
-                'toNull' => false,
-            ]
+        'create' => [
+            'normal' => false,
+            'require' => false,
+            'nonNull' => false,
+            'toNull' => false,
         ],
-        'admin' => [
-            'create' => [
-                'normal' => [
-                    'user_id',
-                ],
-                'require' => [
-                    'aid',
-                    'name',
-                ],
-                'nonNull' => false,
-                'toNull' => false,
+        'allCreate' => [
+            'normal' => [
+                'user_id',
             ],
-            'patch' => [
-                'normal' => [
-                    'aid',
-                    'user_id',
-                    'name',
-                    'status',
-                ],
-                'require' => [
-                    'id',
-                ],
-                'nonNull' => false,
-                'toNull' => false,
-            ]
+            'require' => [
+                'aid',
+                'name',
+            ],
+            'nonNull' => false,
+            'toNull' => false,
+        ],
+        'allUpdate' => [
+            'normal' => [
+                'aid',
+                'user_id',
+                'name',
+                'status',
+            ],
+            'require' => [
+                'id',
+            ],
+            'nonNull' => false,
+            'toNull' => false,
         ],
     ];
     static public $scene_message = [
@@ -48,7 +43,6 @@ class Tags extends Validate
         'name.require' => '标签名不得为空',
     ];
 
-    //定义验证规则
     protected $rule =   [
         'id'  => 'number',
         'aid'  => 'number',
@@ -57,7 +51,6 @@ class Tags extends Validate
         'status'   => 'number',
     ];
 
-    //定义错误信息
     protected $message  =   [
         'aid.number'     => '应用ID格式错误',
         'user_id.number'     => '用户ID格式错误',

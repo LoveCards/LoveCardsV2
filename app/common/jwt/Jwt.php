@@ -10,7 +10,7 @@ use Firebase\JWT\ExpiredException;
 use UnexpectedValueException;
 
 use think\facade\Config;
-use think\facade\Cache;
+use app\common\cache\CacheManager;
 use app\api\ApiException;
 
 class Jwt
@@ -27,7 +27,7 @@ class Jwt
             "data" => $data
         ];
         $token = FBJWT::encode($payload, $privateKey, $jwt_config['alg']);
-        Cache::set('token_' . $token, time(), $jwt_config['cacheTime']);
+        CacheManager::set('jwt', 'token_' . $token, time(), $jwt_config['cacheTime']);
         return $token;
     }
 
@@ -63,8 +63,8 @@ class Jwt
 
     private static function _renew(string $token): ?string
     {
-        if (Cache::has('token_' . $token)) {
-            Cache::delete('token_' . $token);
+        if (CacheManager::has('token_' . $token)) {
+            CacheManager::delete('token_' . $token);
             $jwt_config = Config::get('jwt');
             $privateKey = file_get_contents(app()->getRootPath() . $jwt_config['privateKey']);
 
@@ -79,8 +79,8 @@ class Jwt
 
     public static function invalidate(string $token): void
     {
-        if (Cache::has('token_' . $token)) {
-            Cache::delete('token_' . $token);
+        if (CacheManager::has('token_' . $token)) {
+            CacheManager::delete('token_' . $token);
         }
     }
 

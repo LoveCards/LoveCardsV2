@@ -9,6 +9,40 @@ use \think\facade\Db;
 
 class Likes
 {
+    /**
+     * 点赞（事务保护，防竞态）
+     */
+    public static function like(int $cardId, int $uid, string $ip): int
+    {
+        Db::startTrans();
+        try {
+            $card = CardsModel::lock(true)->find($cardId);
+            if (!$card) {
+                throw \app\api\ApiException::badRequest('卡片不存在');
+            }
+
+            $exists = LikesModel::where('pid', $cardId)->where('ip', $ip)->find();
+            if ($exists) {
+                throw \app\api\ApiException::badRequest('请勿重复点赞');
+            }
+
+            LikesModel::create([
+                'aid' => 1,
+                'pid' => $cardId,
+                'uid' => $uid,
+                'ip' => $ip,
+            ]);
+
+            CardsModel::where('id', $cardId)->inc('goods')->update();
+
+            Db::commit();
+
+            return CardsModel::where('id', $cardId)->value('goods');
+        } catch (\Throwable $e) {
+            Db::rollback();
+            throw $e;
+        }
+    }
 
     /**
      * 列表

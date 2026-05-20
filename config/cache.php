@@ -8,6 +8,9 @@ return [
     // 默认缓存驱动
     'default' => env('cache.driver', 'file'),
 
+    // 全局缓存 key 前缀
+    'prefix' => 'lc:',
+
     // 缓存连接方式配置
     'stores'  => [
         'file' => [

@@ -4,6 +4,7 @@ namespace app\api\service\Storage;
 
 use think\file\UploadedFile;
 use think\facade\Db;
+use app\common\cache\CacheManager;
 use app\api\model\Files;
 use app\api\service\Storage\Contract\StorageResult;
 use yunarch\utils\src\ModelList;
@@ -177,7 +178,7 @@ class StorageManager
         $window = $settings['window'];
 
         $key = 'rate_limit_upload_' . $uid;
-        $timestamps = cache($key) ?? [];
+        $timestamps = CacheManager::get('storage', $key) ?? [];
 
         $now = time();
         $timestamps = array_filter($timestamps, fn($t) => $t > $now - $window);
@@ -187,7 +188,7 @@ class StorageManager
         }
 
         $timestamps[] = $now;
-        cache($key, array_values($timestamps), $window);
+        CacheManager::set('storage', $key, array_values($timestamps), $window);
 
         return true;
     }

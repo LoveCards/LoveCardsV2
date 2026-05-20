@@ -1,0 +1,108 @@
+<?php
+
+namespace app\api\controller;
+
+use think\facade\Request;
+
+use app\api\validate\Comments as CommentsValidate;
+use app\api\service\Content\Comments as CommentsService;
+
+use yunarch\validate\Common as CommonValidate;
+
+use app\api\ApiResponse;
+
+class Comments extends BaseController
+{
+    use BatchOperateTrait;
+
+    protected function getBatchService(): string
+    {
+        return \app\api\service\Content\Comments::class;
+    }
+
+    public function cardList($cardId)
+    {
+        $params = $this->paramIndex(Request::param());
+        $params['where'] = ['aid' => 1, 'pid' => $cardId];
+        $result = CommentsService::listAll($params);
+        return ApiResponse::createOk($result);
+    }
+
+    public function create($cardId)
+    {
+        $params = $this->param(CommentsValidate::class, CommentsValidate::$all_scene['create'], Request::param());
+        $params['id'] = $cardId;
+
+        $params['user_id'] = request()->uid;
+        $params['post_ip'] = request()->ip();
+        $params['status'] = \app\api\service\Config::get('comments.approve') ? 3 : 0;
+
+        $result = CommentsService::createComment($params);
+
+        if (\app\api\service\Config::get('comments.approve')) {
+            return ApiResponse::createCreated();
+        }
+        return ApiResponse::createOk($result['data']);
+    }
+
+    public function get($id)
+    {
+        $result = CommentsService::get((int) $id);
+        return ApiResponse::createOk($result);
+    }
+
+    public function update($id)
+    {
+        $params = $this->param(CommentsValidate::class, CommentsValidate::$all_scene['create'], Request::param());
+        CommentsService::update(request()->uid, $params, ['id' => $id]);
+        return ApiResponse::createNoContent();
+    }
+
+    public function delete($id)
+    {
+        $result = \app\api\model\Comments::where([
+            'id' => $id,
+            'user_id' => request()->uid,
+            'status' => 0
+        ])->update(['status' => 2]);
+
+        if ($result === 0) {
+            return ApiResponse::createNotFound([]);
+        }
+        return ApiResponse::createNoContent([]);
+    }
+
+    public function listOwn()
+    {
+        $params = $this->paramIndex(Request::param());
+        $result = CommentsService::newList($params, request()->uid);
+        return ApiResponse::createOk($result);
+    }
+
+    public function allList()
+    {
+        $params = $this->paramIndex(Request::param());
+        $result = CommentsService::listAll($params);
+        return ApiResponse::createOk($result);
+    }
+
+    public function allGet($id)
+    {
+        $result = CommentsService::getAny((int) $id);
+        return ApiResponse::createOk($result);
+    }
+
+    public function allUpdate($id)
+    {
+        $params = $this->param(CommentsValidate::class, CommentsValidate::$all_scene['allUpdate'], Request::param());
+        $params['id'] = (int) $id;
+        CommentsService::updateAny($params);
+        return ApiResponse::createNoContent();
+    }
+
+    public function allDelete($id)
+    {
+        CommentsService::deleteAny((int) $id);
+        return ApiResponse::createNoContent();
+    }
+}

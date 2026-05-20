@@ -11,18 +11,8 @@ use yunarch\utils\src\ModelList;
 
 class Users
 {
-    /**
-     * 字段反转
-     *
-     * @param string $fields 字段名
-     * @param array $ids ID集
-     * @param array $value1 反转值
-     * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
-     * @return void
-     */
     static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
     {
-        //生成命令
         $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
         if ($value2) {
             foreach ($value2 as $item) {
@@ -34,13 +24,6 @@ class Users
         UsersModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
-    /**
-     * 批量操作
-     *
-     * @param string $method top：置顶|ban：状态封禁仅自己可见|approve：状态待审核仅自己可见|hide：状态隐藏仅后台可见|delete：删除
-     * @param array $ids
-     * @return void
-     */
     static public function batchOperate($method, $ids): void
     {
         switch ($method) {
@@ -53,22 +36,16 @@ class Users
             case 'hide':
                 self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
                 break;
-            // case 'delete':
-            //     return self::deleteTags(false, $ids);
+            case 'delete':
+                self::deleteUsers(false, $ids);
+                break;
             default:
                 throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
     }
-    /**
-     * 用户登录验证函数
-     *
-     * @param string $account 账号、电子邮件或电话号码
-     * @param string $password 密码
-     * @return UsersModel
-     */
+
     public static function Login($account, $password): UsersModel
     {
-        // 尝试使用账号、用户名、电子邮件或电话号码查询用户
         $result = UsersModel::where('number', $account)
             ->whereOr('username', $account)
             ->whereOr('email', $account)
@@ -83,28 +60,18 @@ class Users
             throw \app\api\ApiException::forbidden('您的账户已被封禁或未激活', \app\api\ApiException::CODE_USER_BANNED);
         }
 
-        // 验证密码是否匹配
         if (!password_verify($password, $result['password'])) {
             throw \app\api\ApiException::unauthorized('密码不匹配', \app\api\ApiException::CODE_PASSWORD_MISMATCH);
         }
 
-        // 密码匹配，返回用户信息
         return $result;
     }
 
-    /**
-     * 注册用户
-     *
-     * @param string $number
-     * @param string $username
-     * @param string $email
-     * @param string $phone
-     * @param string $password
-     * @param int $status
-     * @return UsersModel
-     */
-    public static function Register($number, $username, $email, $phone, $password, $roles_id = [3], $status = 0): UsersModel
+    public static function Register($number, $username, $email, $phone, $password, $roles_id = null, $status = 0): UsersModel
     {
+        if ($roles_id === null) {
+            $roles_id = [config('roles.system_roles.user')];
+        }
         if ($password != '') {
             $result = null;
             if ($email != '') {
@@ -131,18 +98,9 @@ class Users
         $data['password'] = password_hash($password, PASSWORD_DEFAULT);
         $result = UsersModel::create($data);
 
-        // if (!$result) {
-        //     return Common::mArrayEasyReturnStruct('数据插入失败', false);
-        // }
-
         return $result;
     }
 
-    /**
-     * 读取用户列表
-     *
-     * @return array
-     */
     public static function Index($params): array
     {
         $params['search_default_key'] = 'username';
@@ -152,14 +110,12 @@ class Users
         return $result->toArray();
     }
 
-    /**
-     * 更新指定ID行
-     *
-     * @param int|array $id 单个ID或ID数组
-     * @param array $data
-     * @return UsersModel
-     */
-    public static function Patch($id, $data): UsersModel
+    public static function listAll($params): array
+    {
+        return self::Index($params);
+    }
+
+    public static function Patch($id, $data): UsersModel|int
     {
         if (is_array($id)) {
             $result = UsersModel::whereIn('id', $id)->update($data);
@@ -169,13 +125,11 @@ class Users
         return $result;
     }
 
-    /**
-     * 读取指定ID行----------------------------------
-     *
-     * @param int $id
-     * @param array $without
-     * @return array['status','msg','data'=>object]
-     */
+    public static function updateAny($id, $data): UsersModel|int
+    {
+        return self::Patch($id, $data);
+    }
+
     public static function Get($id, $without = []): UsersModel
     {
         $withoutField = UsersModel::getWithoutField();
@@ -184,17 +138,14 @@ class Users
         return UsersModel::where('id', $id)->withoutField($withoutField)->findOrEmpty();
     }
 
-    /**
-     * 删除单&多用户方法
-     * * 删除卡片时会同时删除相关的标签、图片和评论
-     *
-     * @param boolean $id 单用户ID
-     * @param array $ids 多用户ID集
-     * @return void
-     */
     static public function deleteUsers($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
         UsersModel::destroy($data);
+    }
+
+    static public function deleteAny($id = false, $ids = []): void
+    {
+        self::deleteUsers($id, $ids);
     }
 }

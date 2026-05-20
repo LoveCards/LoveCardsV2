@@ -12,19 +12,8 @@ use yunarch\utils\src\ModelList;
 
 class Tags
 {
-
-    /**
-     * 字段反转
-     *
-     * @param string $fields 字段名
-     * @param array $ids ID集
-     * @param array $value1 反转值
-     * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
-     * @return void
-     */
     static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false)
     {
-        //生成命令
         $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
         if ($value2) {
             foreach ($value2 as $item) {
@@ -36,11 +25,6 @@ class Tags
         TagsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
-    /**
-     * 读取全部标签列表
-     *
-     * @return array
-     */
     static public function noPaginateIndex($params): array
     {
         $params['search_default_key'] = 'name';
@@ -48,11 +32,6 @@ class Tags
         return $result->toArray();
     }
 
-    /**
-     * 读取全部标签列表
-     *
-     * @return array
-     */
     static public function Index($params): array
     {
         $params['search_default_key'] = 'name';
@@ -60,25 +39,22 @@ class Tags
         return $result->toArray();
     }
 
-    /**
-     * 创建标签
-     *
-     * @param array $params
-     * @return void
-     */
+    static public function listAll($params): array
+    {
+        return self::Index($params);
+    }
+
     static public function createTag($params): void
     {
         $params['aid'] = 1;
         TagsModel::create($params);
     }
 
-    /**
-     * 批量操作标签
-     *
-     * @param string $method top：置顶|ban：状态封禁仅自己可见|approve：状态待审核仅自己可见|hide：状态隐藏仅后台可见|delete：删除
-     * @param array $ids
-     * @return void
-     */
+    static public function allCreate($params): void
+    {
+        self::createTag($params);
+    }
+
     static public function batchOperate($method, $ids): void
     {
         switch ($method) {
@@ -99,50 +75,39 @@ class Tags
         }
     }
 
-
-    /**
-     * 删除单&多条数据方法
-     * * 删除标签时会同时删除关联
-     *
-     * @param boolean $id 单条数据ID
-     * @param array $ids 多条数据ID集
-     * @return void
-     */
     static public function deleteTags($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
-        // 存储事务
         Db::startTrans();
         try {
             self::deleteTagsMap($data);
 
             TagsModel::destroy($data);
 
-            Db::commit(); // 提交事务
+            Db::commit();
         } catch (\Throwable $th) {
-            Db::rollback(); // 回滚事务
+            Db::rollback();
             throw \app\api\ApiException::error('删除失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
         }
     }
-    /**
-     * 删除单&多个数据关联
-     *
-     * @param array $ids
-     * @return void
-     */
+
     static public function deleteTagsMap(array $ids): void
     {
-        TagsMapModel::where('id', 'in', $ids)->delete();
+        TagsMapModel::where('tag_id', 'in', $ids)->delete();
     }
 
-    /**
-     * 更新单条数据方法
-     *
-     * @param array $data 标签数据
-     * @return void
-     */
-    static public function updateTag(array $data): TagsModel
+    static public function updateTag(array $data): int
     {
         return TagsModel::update($data);
+    }
+
+    static public function updateAny(array $data): int
+    {
+        return self::updateTag($data);
+    }
+
+    static public function deleteAny($id = false, $ids = []): void
+    {
+        self::deleteTags($id, $ids);
     }
 }

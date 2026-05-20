@@ -6,61 +6,55 @@ use think\Validate;
 
 class Users extends Validate
 {
-    //场景-规则
     static public $all_scene = [
         'edit' => ['id', 'avatar', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
         'register' => ['email', 'phone', 'username', 'password'],
         'login' => ['email', 'phone', 'username', 'password'],
 
-        'user' => [
-            'register' => [
-                'normal' => [
-                    'email',
-                    'phone',
-                    'username',
-                    'password'
-                ],
-                'require' => false,
-                'nonNull' => false,
-                'toNull' => false,
+        'userRegister' => [
+            'normal' => [
+                'email',
+                'phone',
+                'username',
+                'password'
             ],
-            'login' => [
-                'normal' => [
-                    'email',
-                    'phone',
-                    'username',
-                    'password'
-                ],
-                'require' => false,
-                'nonNull' => false,
-                'toNull' => false,
-            ]
+            'require' => false,
+            'nonNull' => false,
+            'toNull' => false,
         ],
-        'admin' => [
-            'patch' => [
-                'normal' => [
-                    'avatar',
-                    'roles_id',
-                    'email',
-                    'phone',
-                    'username',
-                    'status'
-                ],
-                'require' => false,
-                'nonNull' => [
-                    'id',
-                    'password',
-                    'number'
-                ],
-                'toNull' => false,
+        'userLogin' => [
+            'normal' => [
+                'email',
+                'phone',
+                'username',
+                'password'
             ],
-        ]
+            'require' => false,
+            'nonNull' => false,
+            'toNull' => false,
+        ],
+        'allUpdate' => [
+            'normal' => [
+                'avatar',
+                'roles_id',
+                'email',
+                'phone',
+                'username',
+                'status'
+            ],
+            'require' => false,
+            'nonNull' => [
+                'id',
+                'password',
+                'number'
+            ],
+            'toNull' => false,
+        ],
     ];
     static public $scene_message = [
         'number.nonNull' => '账号不得为空'
     ];
 
-    //定义验证规则
     protected $rule =   [
         'id' => 'number',
         'number' => 'length:3,20|alphaDash|unique:users',
@@ -76,7 +70,6 @@ class Users extends Validate
         'roles_id' => 'arrayJson',
     ];
 
-    //定义错误信息
     protected $message  =   [
         'id.require' => 'ID不得为空',
         'id.number' => 'ID格式错误',
@@ -111,7 +104,6 @@ class Users extends Validate
         'roles_id.arrayJson' => '权限组格式错误',
     ];
 
-    //场景-登入
     protected function sceneLogin()
     {
         return $this->only($this::$all_scene['login'])
@@ -119,13 +111,11 @@ class Users extends Validate
             ->remove('phone', 'unique')
             ->remove('username', 'unique');
     }
-    //场景-注册
     protected function sceneRegister()
     {
         return $this->only($this::$all_scene['register'])
             ->append('require');
     }
-    //场景-编辑
     protected function sceneEdit()
     {
         return $this->only($this::$all_scene['edit'])

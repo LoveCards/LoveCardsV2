@@ -2,7 +2,7 @@
 
 namespace app\common\captcha;
 
-use think\facade\Cache;
+use app\common\cache\CacheManager;
 
 class Code
 {
@@ -24,12 +24,12 @@ class Code
         $status = true;
         $key = 'Captcha_' . $app . '_' . $key;
 
-        if (!Cache::has($key)) {
-            Cache::set($key, $code, $time);
+        if (!CacheManager::has($key)) {
+            CacheManager::set('captcha', $key, $code, $time);
         } else {
             $msg = '验证码未过期';
             $status = false;
-            $code = Cache::get($key);
+            $code = CacheManager::get('captcha', $key);
         }
 
         return [
@@ -41,7 +41,7 @@ class Code
 
     public static function CheckCaptcha($key, $code, $app = 'public'): bool
     {
-        $result = Cache::get('Captcha_' . $app . '_' . $key);
+        $result = CacheManager::get('captcha', 'Captcha_' . $app . '_' . $key);
         if ($result) {
             if ($result == $code) {
                 return true;
@@ -52,7 +52,7 @@ class Code
 
     public static function DeleteCaptcha($key, $app = 'public'): bool
     {
-        Cache::delete('Captcha_' . $app . '_' . $key);
+        CacheManager::delete('Captcha_' . $app . '_' . $key);
         return true;
     }
 }

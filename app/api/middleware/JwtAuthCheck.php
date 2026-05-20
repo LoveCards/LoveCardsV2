@@ -26,7 +26,7 @@ class JwtAuthCheck
 
                 $request->uid = (int) $uid;
                 $request->user = $user;
-                $request->rolesId = json_decode($user->roles_id, true) ?: [];
+                $request->rolesId = is_array($user->roles_id) ? $user->roles_id : (json_decode($user->roles_id, true) ?: []);
 
                 if (isset($data['_new_token'])) {
                     $request->newToken = $data['_new_token'];
@@ -57,6 +57,6 @@ class JwtAuthCheck
     {
         $request->uid = 0;
         $request->user = null;
-        $request->rolesId = [4];
+        $request->rolesId = [config('roles.system_roles.guest')];
     }
 }

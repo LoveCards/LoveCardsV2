@@ -12,7 +12,7 @@ class PermissionCheck
         $routeName = request()->rule() ? request()->rule()->getName() : '';
 
         if (empty($routeName)) {
-            return $next($request);
+            return ApiResponse::createForbidden('路由未定义');
         }
 
         $rolesId = $request->rolesId ?? [];

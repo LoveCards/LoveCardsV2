@@ -18,59 +18,43 @@ class Cards extends Validate
         $this->ValidateRuleExtend = new ValidateRuleExtend();
     }
 
-    //参数过滤场景
     static public $all_scene = [
-        'user' => [
-            'create' => [
-                'normal' => [
-                    'pictures'
-                ],
-                'require' => [
-                    'content'
-                ],
-                'nonNull' => false,
-                'toNull' => [
-                    'data',
-                    'cover',
-                    'tags'
-                ],
+        'create' => [
+            'normal' => [
+                'pictures'
             ],
-            // 'patch' => [
-            //     'normal' => false,
-            //     'require' => [
-            //         'id',
-            //         'content',
-            //     ],
-            //     'nonNull' => false,
-            //     'toNull' => [
-            //         'data'
-            //     ],
-            // ],
+            'require' => [
+                'content'
+            ],
+            'nonNull' => false,
+            'toNull' => [
+                'data',
+                'cover',
+                'tags'
+            ],
         ],
-        'admin' => [
-            'patch' => [
-                'normal' => [
-                    'pictures',
+        'allUpdate' => [
+            'normal' => [
+                'pictures',
 
-                    'content',
-                    'is_top',
-                    'status',
+                'content',
+                'is_top',
+                'status',
 
-                    'user_id',
-                    'comments',
-                    'views',
-                    'good'
-                ],
-                'require' => [
-                    'id'
-                ],
-                'nonNull' => false,
-                'toNull' => [
-                    'cover',
-                    'tags',
-                    'data'
-                ],
-            ]
+                'user_id',
+                'comments',
+                'views',
+                'good'
+            ],
+            'require' => [
+                'id'
+            ],
+            'nonNull' => false,
+            'toNull' => [
+                'cover',
+                'tags',
+                'data'
+            ],
         ],
     ];
     static public $scene_message = [
@@ -78,9 +62,7 @@ class Cards extends Validate
         'content.require' => '内容不能为空'
     ];
 
-    //定义验证规则
     protected $rule =   [
-        //数据库
         'id' => 'number',
         'is_top' => 'number',
         'status' => 'number',
@@ -93,15 +75,10 @@ class Cards extends Validate
         'views' => 'number',
         'comments' => 'number',
         'post_ip' => 'ip|max:39',
-        // 'created_at' => 'date',
-        // 'updated_at' => 'date',
-        // 'deleted_at' => 'date',
 
-        //前端
         'pictures' => 'arrayJson|picturesLength',
     ];
 
-    //定义错误信息
     protected $message  =   [
         'id.number' => 'ID格式错误',
 
@@ -115,8 +92,6 @@ class Cards extends Validate
 
         'cover.url' => '封面图片格式不正确',
         'cover.max' => '封面图片地址过长',
-
-        //'content.require' => '内容不得为空',
 
         'tags.arrayJson' => '标签格式错误',
         'tags.tagsLength' => '标签个数超出上限',
@@ -134,14 +109,12 @@ class Cards extends Validate
         'pictures.picturesLength' => '图片个数超出上限',
     ];
 
-    //验证图片个数
     protected function picturesLength($value)
     {
         $config = ConfigService::get('cards.picture_limit');
         $decoded = json_decode($value, true);
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }
-    //验证标签个数
     protected function tagsLength($value)
     {
         $config = ConfigService::get('cards.tag_limit');

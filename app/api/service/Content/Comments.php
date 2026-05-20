@@ -11,7 +11,6 @@ use yunarch\utils\src\ModelList;
 
 class Comments
 {
-    //更新指定ID的指定字段
     static public function update(int $uid, $data, $where = [], $allowField = [])
     {
         $where = ['user_id' => $uid] + $where;
@@ -20,18 +19,8 @@ class Comments
         return $result;
     }
 
-    /**
-     * 字段反转
-     *
-     * @param string $fields 字段名
-     * @param array $ids ID集
-     * @param array $value1 反转值
-     * @param array $value2 其他值 比如选项是1 2 3 4那么想要反转3,4那v2就填1,2
-     * @return void
-     */
     static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
     {
-        //生成命令
         $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
         if ($value2) {
             foreach ($value2 as $item) {
@@ -39,17 +28,9 @@ class Comments
             }
         }
         $sql = "CASE {$where}END";
-        //执行
         CommentsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
-    /**
-     * 搜索列表
-     *
-     * @param array $params [search_default_key,ModelList[],where[]]
-     * @param integer $user_id 用户id
-     * @return array
-     */
     public static function newList(array $params, int $user_id = -1): array
     {
         $params['search_default_key'] = 'content';
@@ -64,12 +45,33 @@ class Comments
         return $result->toArray();
     }
 
-    /**
-     * 创建单张评论方法
-     *
-     * @param array $data 评论数据
-     * @return array
-     */
+    public static function listAll(array $params): array
+    {
+        $params['search_default_key'] = 'content';
+        $result = ModelList::make(CommentsModel::class)->getPaginate($params);
+
+        return $result->toArray();
+    }
+
+    public static function get(int $id): array
+    {
+        $result = CommentsModel::where('id', $id)->findOrEmpty();
+        if ($result->isEmpty()) {
+            throw \app\api\ApiException::notFound('评论不存在', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
+        }
+        return $result->toArray();
+    }
+
+    public static function getAny(int $id): array
+    {
+        return self::get($id);
+    }
+
+    public static function updateAny($data): void
+    {
+        CommentsModel::update($data);
+    }
+
     static public function createComment($params): array
     {
         $id = $params['id'];
@@ -90,24 +92,11 @@ class Comments
         }
     }
 
-    /**
-     * 更新单张评论方法
-     *
-     * @param array $data 评论数据
-     * @return void
-     */
     static public function updateComment($data): void
     {
         CommentsModel::update($data);
     }
 
-    /**
-     * 批量操作评论
-     *
-     * @param string $method top：置顶|ban：状态封禁仅自己可见|approve：状态待审核仅自己可见|hide：状态隐藏仅后台可见|delete：删除
-     * @param array $ids
-     * @return void
-     */
     static public function batchOperate($method, $ids): void
     {
         switch ($method) {
@@ -131,17 +120,14 @@ class Comments
         }
     }
 
-    /**
-     * 删除单&多张评论方法
-     * * 删除评论时会同时删除相关的标签、图片和评论
-     *
-     * @param boolean $id 单张评论ID
-     * @param array $ids 多张评论ID集
-     * @return void
-     */
     static public function deleteComments($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
         CommentsModel::destroy($data);
+    }
+
+    static public function deleteAny($id = false, $ids = []): void
+    {
+        self::deleteComments($id, $ids);
     }
 }
