@@ -6,7 +6,7 @@ use think\facade\Config;
 
 class Common
 {
-    public static function mArrayGetLCVersionInfo(): array
+    public static function getVersionInfo(): array
     {
         $config = Config::get('apps.version');
         if ($config === null) {

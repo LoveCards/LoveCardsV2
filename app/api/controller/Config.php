@@ -59,7 +59,18 @@ class Config extends BaseController
             if (!is_array($config)) {
                 continue;
             }
-            ConfigService::setGroup($group, $config);
+
+            $schema = ConfigService::getSchema($group);
+            $validated = [];
+            foreach ($config as $key => $value) {
+                if (isset($schema[$key])) {
+                    $validated[$key] = $value;
+                }
+            }
+
+            if (!empty($validated)) {
+                ConfigService::setGroup($group, $validated);
+            }
         }
 
         return ApiResponse::createNoContent();

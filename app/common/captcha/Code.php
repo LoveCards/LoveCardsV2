@@ -6,13 +6,12 @@ use app\common\cache\CacheManager;
 
 class Code
 {
-    protected static function getCode($l): string
+    protected static function getCode(int $length): string
     {
-        $length = $l;
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $code = '';
         for ($i = 0; $i < $length; $i++) {
-            $code .= $characters[rand(0, strlen($characters) - 1)];
+            $code .= $characters[random_int(0, strlen($characters) - 1)];
         }
         return strtoupper($code);
     }

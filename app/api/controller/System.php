@@ -15,169 +15,152 @@ class System extends BaseController
 {
     public function themes()
     {
-        $tDef_NowThemeDirectory = Theme::mArrayGetThemeDirectory()['N'];
-        $lDef_NowThemeInfo = json_decode(@file_get_contents('./theme/' . $tDef_NowThemeDirectory . '/info.ini'), true);
-        $lDef_NowThemeInfo['Config'] = Theme::mResultGetThemeConfig($tDef_NowThemeDirectory);
-        $lDef_NowThemeInfo['DirectoryName'] = $tDef_NowThemeDirectory;
-        $key = $lDef_NowThemeInfo['Name'] . $lDef_NowThemeInfo['Version'] . $lDef_NowThemeInfo['DirectoryName'];
-        $lDef_NowThemeInfo['Hash'] = hash('crc32b', $key);
-        if (!$lDef_NowThemeInfo) {
-            $lDef_NowThemeInfo = json_decode(@file_get_contents('./theme/index/info.ini'), true);
+        $currentThemeDir = Theme::getThemeDirectory()['N'];
+        $currentThemeInfo = json_decode(@file_get_contents('./theme/' . $currentThemeDir . '/info.ini'), true);
+        $currentThemeInfo['Config'] = Theme::getThemeConfig($currentThemeDir);
+        $currentThemeInfo['DirectoryName'] = $currentThemeDir;
+        $hashKey = $currentThemeInfo['Name'] . $currentThemeInfo['Version'] . $currentThemeInfo['DirectoryName'];
+        $currentThemeInfo['Hash'] = hash('crc32b', $hashKey);
+        if (!$currentThemeInfo) {
+            $currentThemeInfo = json_decode(@file_get_contents('./theme/index/info.ini'), true);
         }
 
-        $lDef_ThemeDirectoryList = array_map('basename', array_filter(glob('./theme/*'), 'is_dir'));
-        sort($lDef_ThemeDirectoryList);
-        $lDef_ThemeConfigList = array();
-        for ($i = 0; $i < count($lDef_ThemeDirectoryList); $i++) {
-            $tDef_ThemeBasePath = './theme/' . $lDef_ThemeDirectoryList[$i];
-            if (count(glob($tDef_ThemeBasePath . '/*')) > 0) {
-                $lDef_ThemeConfigList[$i] = json_decode(@file_get_contents($tDef_ThemeBasePath . '/info.ini'), true);
-                $lDef_ThemeConfigList[$i]['DirectoryName'] = $lDef_ThemeDirectoryList[$i];
-                $key = $lDef_ThemeConfigList[$i]['Name'] . $lDef_ThemeConfigList[$i]['Version'] . $lDef_ThemeConfigList[$i]['DirectoryName'];
-                $hash = hash('crc32b', $key);
-                $lDef_ThemeConfigList[$i]['Hash'] = $hash;
-                $lDef_ThemeConfigList[$i]['Cover'] = Request::scheme() . '://' . Request::host() . '/theme/' . $lDef_ThemeDirectoryList[$i] . '/show.png';
-                if ($lDef_NowThemeInfo['Config']) {
-                    $lDef_ThemeConfigList[$i]['Config'] = true;
-                } else {
-                    $lDef_ThemeConfigList[$i]['Config'] = false;
-                }
-                if ($hash == $lDef_NowThemeInfo['Hash']) {
-                    $lDef_ThemeConfigList[$i]['Status'] = true;
-                } else {
-                    $lDef_ThemeConfigList[$i]['Status'] = false;
-                }
+        $themeDirList = array_map('basename', array_filter(glob('./theme/*'), 'is_dir'));
+        sort($themeDirList);
+        $themeConfigList = [];
+        foreach ($themeDirList as $i => $dirName) {
+            $basePath = './theme/' . $dirName;
+            if (count(glob($basePath . '/*')) <= 0) continue;
+
+            $info = json_decode(@file_get_contents($basePath . '/info.ini'), true);
+            if (!$info) continue;
+
+            $info['DirectoryName'] = $dirName;
+            $key = $info['Name'] . $info['Version'] . $info['DirectoryName'];
+            $hash = hash('crc32b', $key);
+            $info['Hash'] = $hash;
+            $info['Cover'] = Request::scheme() . '://' . Request::host() . '/theme/' . $dirName . '/show.png';
+            $info['Config'] = $currentThemeInfo['Config'] ? true : false;
+            $info['Status'] = ($hash == $currentThemeInfo['Hash']);
+
+            $themeConfigList[$i] = $info;
+        }
+
+        $themeConfig = Theme::getThemeConfig(Theme::getThemeDirectory()['N'], true);
+        if ($themeConfig && !empty($themeConfig['Text'])) {
+            foreach ($themeConfig['Text'] as $key => $value) {
+                $themeConfig['Text'][$key]['Default'] = urldecode($value['Default']);
             }
         }
 
-        $tDef_NowThemeConfig = Theme::mResultGetThemeConfig(Theme::mArrayGetThemeDirectory()['N'], true);
-        if ($tDef_NowThemeConfig) {
-            if (!empty($tDef_NowThemeConfig['Text'])) {
-                foreach ($tDef_NowThemeConfig['Text'] as $key => $value) {
-                    $tDef_NowThemeConfig['Text'][$key]['Default'] = urldecode($value['Default']);
-                }
-            }
-        }
-
-        $result = [
-            "theme_list" => $lDef_ThemeConfigList,
-            "theme_config" => $tDef_NowThemeConfig
-        ];
-        return ApiResponse::createOk($result);
+        return ApiResponse::createOk([
+            'theme_list' => $themeConfigList,
+            'theme_config' => $themeConfig
+        ]);
     }
 
     public function themeSet()
     {
-        $tReq_ThemeDirectoryName = Request::param('dir');
-        $tReq_ThemeInfo = json_decode(@file_get_contents('./theme/' . $tReq_ThemeDirectoryName . '/info.ini'), true);
-        if (!$tReq_ThemeInfo) {
+        $themeDir = Request::param('dir');
+        $themeInfo = json_decode(@file_get_contents('./theme/' . $themeDir . '/info.ini'), true);
+        if (!$themeInfo) {
             return ApiResponse::createBadRequest('修改失败，主题信息不存在');
         }
-        $tDef_LCVersionInfo = Common::mArrayGetLCVersionInfo();
 
-        if (!($tDef_LCVersionInfo['VerS'] >= $tReq_ThemeInfo['SysVersionL'] && $tDef_LCVersionInfo['VerS'] < $tReq_ThemeInfo['SysVersionR'])) {
+        $versionInfo = Common::getVersionInfo();
+        if (!($versionInfo['VerS'] >= $themeInfo['SysVersionL'] && $versionInfo['VerS'] < $themeInfo['SysVersionR'])) {
             return ApiResponse::createBadRequest('修改失败，该主题不适用当前版本');
         }
 
-        ConfigService::set('core.theme_directory', $tReq_ThemeDirectoryName);
+        ConfigService::set('core.theme_directory', $themeDir);
 
         return ApiResponse::createNoContent();
     }
 
     public function themeConfig()
     {
-        $tDef_ThemeDirectory = ConfigService::get('core.theme_directory', 'index') ?: 'index';
+        $themeDir = ConfigService::get('core.theme_directory', 'index') ?: 'index';
 
-        $lReq_ParamSelect = json_decode(Request::param('select'));
-        $lReq_ParamText = json_decode(Request::param('text'));
+        $selectData = json_decode(Request::param('select'), true);
+        $textData = json_decode(Request::param('text'), true);
 
-        $tDef_ThemeConfig = Theme::mResultGetThemeConfig($tDef_ThemeDirectory, true);
+        $themeConfig = Theme::getThemeConfig($themeDir, true);
 
-        $lDef_ParamThemeConfig = [];
-        if (!empty($lReq_ParamSelect)) {
-            foreach ($lReq_ParamSelect as $key => $value) {
-                if (count($tDef_ThemeConfig['Select'][$key]['Element']) < $value) {
+        $config = [];
+        if (!empty($selectData)) {
+            foreach ($selectData as $key => $value) {
+                if (count($themeConfig['Select'][$key]['Element']) < $value) {
                     return ApiResponse::createBadRequest('修改失败，Select存在非法元素');
                 }
-                $lDef_ParamThemeConfig['Select' . $key] = $value;
+                $config['Select' . $key] = $value;
             }
         }
 
-        if (!empty($lReq_ParamText)) {
-            foreach ($lReq_ParamText as $key => $value) {
-                if (empty($tDef_ThemeConfig['Text'][$key]['Name'])) {
+        if (!empty($textData)) {
+            foreach ($textData as $key => $value) {
+                if (empty($themeConfig['Text'][$key]['Name'])) {
                     return ApiResponse::createBadRequest('修改失败，Text存在非法元素');
                 }
-                $lDef_ParamThemeConfig['Text' . $key] = $value;
+                $config['Text' . $key] = $value;
             }
         }
 
-        $tDef_Result = Theme::mBoolCoverThemeConfig($tDef_ThemeDirectory, $lDef_ParamThemeConfig);
+        $result = Theme::coverThemeConfig($themeDir, $config);
 
-        if ($tDef_Result) {
+        if ($result) {
             return ApiResponse::createNoContent();
-        } else {
-            return ApiResponse::createBadRequest('修改失败，请重试');
         }
+        return ApiResponse::createBadRequest('修改失败，请重试');
     }
 
     public function update()
     {
-        $result = [
-            'ver' => Common::mArrayGetLCVersionInfo(),
+        return ApiResponse::createOk([
+            'ver' => Common::getVersionInfo(),
             'latest' => $this->getLatestVer(),
             'verlog' => $this->getUpdata()
-        ];
-        return ApiResponse::createOk($result);
+        ]);
     }
 
     private function getUpdata()
     {
         return CacheManager::get('system', 'Updata', function () {
-            $url  = 'https://proxy.gitwarp.com/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md';
-            $ctx  = stream_context_create([
+            $url = 'https://proxy.gitwarp.com/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md';
+            $ctx = stream_context_create([
                 'http' => [
-                    'method'  => 'GET',
+                    'method' => 'GET',
                     'timeout' => 5,
-                    'header'  => "User-Agent: PHP\r\n",
+                    'header' => "User-Agent: PHP\r\n",
                 ],
                 'ssl' => [
-                    'verify_peer'      => false,
+                    'verify_peer' => false,
                     'verify_peer_name' => false,
                 ],
             ]);
 
-            $jsonStr = @file_get_contents($url, false, $ctx);
-            if ($jsonStr === false) {
-                return [];
-            }
-
-            return $jsonStr;
+            $result = @file_get_contents($url, false, $ctx);
+            return $result === false ? [] : $result;
         }, CacheManager::TTL_LONG * 3);
     }
 
     private function getLatestVer()
     {
         return CacheManager::get('system', 'LatestVer', function () {
-            $url  = 'https://api.github.com/repositories/582292948/releases/latest';
-            $ctx  = stream_context_create([
+            $url = 'https://api.github.com/repositories/582292948/releases/latest';
+            $ctx = stream_context_create([
                 'http' => [
-                    'method'  => 'GET',
+                    'method' => 'GET',
                     'timeout' => 5,
-                    'header'  => "User-Agent: PHP\r\n",
+                    'header' => "User-Agent: PHP\r\n",
                 ],
                 'ssl' => [
-                    'verify_peer'      => false,
+                    'verify_peer' => false,
                     'verify_peer_name' => false,
                 ],
             ]);
 
-            $jsonStr = @file_get_contents($url, false, $ctx);
-            if ($jsonStr === false) {
-                return [];
-            }
-
-            return json_decode($jsonStr, true);
+            $result = @file_get_contents($url, false, $ctx);
+            return $result === false ? [] : json_decode($result, true);
         }, CacheManager::TTL_LONG * 3);
     }
 }

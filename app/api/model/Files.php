@@ -19,6 +19,21 @@ class Files extends Model
 
     protected $hidden = ['deleted_at', 'driver_path'];
 
+    public function scopeByHash($query, string $hash)
+    {
+        return $query->where('hash', $hash);
+    }
+
+    public function scopeByHashes($query, array $hashes)
+    {
+        return $query->whereIn('hash', $hashes);
+    }
+
+    public static function generateHash(): string
+    {
+        return substr(str_replace('-', '', md5(uniqid((string) mt_rand(), true))), 0, 16);
+    }
+
     const SCENE_CARD = 'card';
     const SCENE_COMMENT = 'comment';
     const SCENE_AVATAR = 'avatar';

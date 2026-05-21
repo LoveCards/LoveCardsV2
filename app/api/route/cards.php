@@ -8,7 +8,6 @@ use app\api\middleware\PermissionCheck;
 Route::get('cards', 'Cards/list')->name('cards.list')->setOption('meta', ['name' => '卡片列表', 'group' => '卡片', 'public' => true]);
 Route::get('cards/hot', 'Cards/hotList')->name('cards.hot')->setOption('meta', ['name' => '热门卡片', 'group' => '卡片', 'public' => true]);
 Route::get('cards/:id', 'Cards/get')->name('cards.get')->setOption('meta', ['name' => '卡片详情', 'group' => '卡片', 'public' => true]);
-Route::get('cards/:id/images', 'Cards/images')->name('cards.images')->setOption('meta', ['name' => '卡片图集', 'group' => '卡片', 'public' => true]);
 
 Route::group('cards', function () {
     Route::post('', 'Cards/create')->name('cards.create')->setOption('meta', ['name' => '创建卡片', 'group' => '卡片']);

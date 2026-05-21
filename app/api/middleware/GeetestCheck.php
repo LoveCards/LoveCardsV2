@@ -10,15 +10,19 @@ use app\api\ApiResponse;
 
 class GeetestCheck
 {
-    public function handle($tDef_Request, \Closure $tDef_next)
+    public function handle($request, \Closure $next)
     {
+        $result = Gt4::validate(
+            Request::param('lot_number'),
+            Request::param('captcha_output'),
+            Request::param('pass_token'),
+            Request::param('gen_time')
+        );
 
-        //实现gt4鉴权
-        $tDef_result = gt4::validate(Request::param('lot_number'), Request::param('captcha_output'), Request::param('pass_token'), Request::param('gen_time'));
-        if (!$tDef_result) {
+        if (!$result) {
             return ApiResponse::createUnauthorized('人机验证失败');
         }
 
-        return $tDef_next($tDef_Request);
+        return $next($request);
     }
 }

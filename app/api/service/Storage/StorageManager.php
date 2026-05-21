@@ -19,6 +19,7 @@ class StorageManager
         $result = $driver->upload($file, $path);
 
         $fileRecord = Files::create([
+            'hash' => Files::generateHash(),
             'channel_slug' => $defaultChannel['slug'],
             'user_id' => $options['user_id'] ?? null,
             'is_public' => $options['is_public'] ?? 0,
@@ -169,6 +170,42 @@ class StorageManager
 
         $driver = StorageFactory::make($file->channel_slug);
         return $driver->delete($file->driver_path);
+    }
+
+    public static function getByHash(string $hash, int $userId = -1, bool $isAdmin = false): ?array
+    {
+        $query = Files::withTrashed()->where('hash', $hash);
+
+        if (!$isAdmin) {
+            $query->whereNull('deleted_at');
+            if ($userId > 0) {
+                $query->visible($userId);
+            }
+        }
+
+        $file = $query->find();
+        return $file ? $file->toArray() : null;
+    }
+
+    public static function getByHashes(array $hashes, int $userId = -1, bool $isAdmin = false): array
+    {
+        if (empty($hashes)) return [];
+
+        $query = Files::withTrashed()->whereIn('hash', $hashes);
+
+        if (!$isAdmin) {
+            $query->whereNull('deleted_at');
+            if ($userId > 0) {
+                $query->visible($userId);
+            }
+        }
+
+        $files = $query->select();
+        $result = [];
+        foreach ($files as $file) {
+            $result[] = $file->toArray();
+        }
+        return $result;
     }
 
     public static function checkRateLimit(string $uid): bool

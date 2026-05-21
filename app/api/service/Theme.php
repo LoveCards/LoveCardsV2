@@ -9,151 +9,99 @@ use app\api\service\Config as ConfigService;
 
 class Theme extends Facade
 {
-    /**
-     * @description: 获取模板目录
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-07-18 15:17:52
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     */
-    protected static function mArrayGetThemeDirectory()
+    protected static function getThemeDirectory(): array
     {
-        $N = ConfigService::get('core.theme_directory', 'index');
-        $P = 'theme/' . $N;
-        if (!Is_dir($P)) {
-            $N = 'index';
-            $P = 'theme/index';
+        $name = ConfigService::get('core.theme_directory', 'index');
+        $path = 'theme/' . $name;
+        if (!is_dir($path)) {
+            $name = 'index';
+            $path = 'theme/index';
         }
-        return ['P' => $P, 'N' => $N];
+        return ['P' => $path, 'N' => $name];
     }
 
-    /**
-     * @description: 编辑配置文件
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-07 15:52:36
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $fileName
-     * @param {*} $Select
-     * @param {*} $Text
-     */
-    protected static function mBoolCoverThemeConfig($fileName, $data)
+    protected static function coverThemeConfig(string $themeDir, array $data): bool
     {
-        $fileName = '../public/theme/' . $fileName . '/config.php';
-        $str_file = file_get_contents($fileName);
+        $filePath = '../public/theme/' . $themeDir . '/config.php';
+        $content = file_get_contents($filePath);
         $env = 'ThemeConfig';
 
         foreach ($data as $key => $value) {
-            //构建正则匹配
             $pattern = "/env\('" . $env . "\." . $key . "',\s*([^']*)\)/";
-            $replacement =  "env('" . $env . "." . $key . "', " . $value . ")";
+            $replacement = "env('" . $env . "." . $key . "', " . $value . ")";
 
             if (substr($key, 0, 4) === "Text") {
                 $pattern = "/env\('" . $env . "\." . $key . "',\s*'([^']*)'\)/";
-                //单行转义处理
                 $value = urlencode($value);
-                $replacement =  "env('" . $env . "." . $key . "', '" . $value . "')";
+                $replacement = "env('" . $env . "." . $key . "', '" . $value . "')";
             }
 
-            //判断是否成功匹配
-            if (preg_match($pattern, $str_file)) {
-                $str_file = preg_replace($pattern, $replacement, $str_file);
+            if (preg_match($pattern, $content)) {
+                $content = preg_replace($pattern, $replacement, $content);
             }
         }
 
-        //写入并返回结果
         try {
-            file_put_contents($fileName, $str_file);
+            file_put_contents($filePath, $content);
             return true;
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             return false;
         }
     }
 
-    /**
-     * @description: 获取主题配置
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-07 12:57:15
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $TemplateDirectory
-     * @param {*} $Original
-     */
-    protected static function mResultGetThemeConfig($TemplateDirectory, $Original = false)
+    protected static function getThemeConfig(string $themeDir, bool $original = false)
     {
-        $path = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $TemplateDirectory . '/config.php';
-        if (is_file($path)) {
-            $Config = include $path;
-            $require = array();
-            if ($Original) {
-                $require = $Config;
-            } else {
-                //选择格式数据获取
-                if (array_key_exists('Select', $Config)) {
-                    foreach ($Config['Select'] as $key => $value) {
-                        $require[$key] = $value['Element'][$value['Default']];
-                    }
-                }
-                if (array_key_exists('Text', $Config)) {
-                    foreach ($Config['Text'] as $key => $value) {
-                        //反转义
-                        $require[$key] = urldecode($value['Default']);
-                        //dd($require[$key]);
-                    }
-                }
-            }
-            //dd($require);
-            return $require;
-        } else {
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/theme/' . $themeDir . '/config.php';
+        if (!is_file($path)) {
             return false;
         }
+
+        $config = include $path;
+        $result = [];
+
+        if ($original) {
+            return $config;
+        }
+
+        if (array_key_exists('Select', $config)) {
+            foreach ($config['Select'] as $key => $value) {
+                $result[$key] = $value['Element'][$value['Default']];
+            }
+        }
+
+        if (array_key_exists('Text', $config)) {
+            foreach ($config['Text'] as $key => $value) {
+                $result[$key] = urldecode($value['Default']);
+            }
+        }
+
+        return $result;
     }
 
-    /**
-     * @description: 规范化View::fetch
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-07 13:06:14
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $tDef_Path
-     */
-    protected static function mObjectEasyViewFetch($tDef_Path)
+    protected static function fetchView(string $path)
     {
         try {
-            $tDef_Result = View::fetch($tDef_Path);
-        } catch (\Throwable $th) {
+            return View::fetch($path);
+        } catch (\Throwable $e) {
             return redirect('/index/404');
         }
-        return $tDef_Result;
     }
 
-    /**
-     * @description: 根据主题设置View::config
-     * @return {*}
-     * @Author: github.com/zhiguai
-     * @Date: 2023-09-09 16:12:51
-     * @LastEditTime: Do not edit
-     * @LastEditors: github.com/zhiguai
-     * @param {*} $tDef_ThemeDirectoryName
-     */
-    protected static function mObjectEasySetViewConfig($tDef_ThemeDirectoryName = 0)
+    protected static function setViewConfig(string $themeDir = '')
     {
-        if (empty($tDef_ThemeDirectoryName)) {
-            $tDef_Config = [
+        if (empty($themeDir)) {
+            $config = [
                 'view_path' => 'view/',
                 'tpl_replace_string' => ThinkConfig::get('view.tpl_replace_string')
             ];
         } else {
-            $tDef_Config = [
-                'view_path' => 'theme/' . $tDef_ThemeDirectoryName . '/',
+            $config = [
+                'view_path' => 'theme/' . $themeDir . '/',
                 'tpl_replace_string' => ThinkConfig::get('view.tpl_replace_string')
             ];
-            $tDef_Config['tpl_replace_string']['{__ThemeUrlPath__}'] = '/theme/' . $tDef_ThemeDirectoryName;
+            $config['tpl_replace_string']['{__ThemeUrlPath__}'] = '/theme/' . $themeDir;
         }
-        return View::config($tDef_Config);
+
+        return View::config($config);
     }
 }

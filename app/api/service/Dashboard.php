@@ -6,7 +6,7 @@ use think\facade\Db;
 use app\common\cache\CacheManager;
 
 use app\api\model\Cards as CardsModel;
-use app\api\model\Likes as LikesModel;
+use app\api\model\Likes;
 use app\api\model\Comments as CommentsModel;
 
 class Dashboard
@@ -18,7 +18,7 @@ class Dashboard
         $count = [
             'cards' => CardsModel::count(),
             'comments' => CommentsModel::count(),
-            'good' => LikesModel::count()
+            'good' => Likes::count()
         ];
 
         $chart = [

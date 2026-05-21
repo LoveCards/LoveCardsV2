@@ -26,7 +26,8 @@ class Cards extends Model
         'status' => 'INT',
         'user_id' => 'INT',
         'data' => 'JSON',
-        'cover' => 'VARCHAR',
+        'cover' => 'VARCHAR',   // 存储 file_hash（指向 files.hash）
+        'pictures' => 'JSON',   // 存储 [hash1, hash2, ...] 图集
         'content' => 'TEXT',
         'tags' => 'JSON',
         'goods' => 'INT',

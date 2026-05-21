@@ -35,77 +35,56 @@ class UserProfile extends BaseController
 
     public function update()
     {
-        $lDef_ParamData = [
+        $params = [
             'id' => request()->uid,
             'avatar' => Request::param('avatar'),
             'username' => Request::param('username'),
             'password' => Request::param('password'),
         ];
 
-        try {
-            validate(UsersValidate::class)
-                ->batch(true)
-                ->scene('edit')
-                ->check($lDef_ParamData);
-        } catch (ValidateException $e) {
-            return ApiResponse::createBadRequest('编辑失败', $e->getError());
+        $params = $this->validateAndClean($params, '编辑失败');
+
+        if (isset($params['password']) && $params['password']) {
+            $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
         }
 
-        if ($lDef_ParamData['password']) {
-            $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
-        }
-
-        UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        UsersService::Patch($params['id'], array_diff($params, [null, '']));
         return ApiResponse::createNoContent();
     }
 
     public function password()
     {
-        $lDef_ParamData = [
+        $params = [
             'id' => request()->uid,
             'password' => Request::param('password'),
         ];
 
-        if (!$lDef_ParamData['password']) {
+        if (empty($params['password'])) {
             return ApiResponse::createBadRequest('编辑失败', ['密码不可为空']);
         }
 
-        try {
-            validate(UsersValidate::class)
-                ->batch(true)
-                ->scene('edit')
-                ->check($lDef_ParamData);
-        } catch (ValidateException $e) {
-            return ApiResponse::createBadRequest('编辑失败', $e->getError());
-        }
+        $params = $this->validateAndClean($params, '编辑失败');
+        $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
 
-        $lDef_ParamData['password'] = password_hash($lDef_ParamData['password'], PASSWORD_DEFAULT);
-
-        UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        UsersService::Patch($params['id'], array_diff($params, [null, '']));
         return ApiResponse::createNoContent();
     }
 
     public function email()
     {
-        $lDef_ParamData = [
+        $params = [
             'id' => request()->uid,
-            'email' => Request::param('email')
+            'email' => Request::param('email'),
         ];
 
-        if (!Code::CheckCaptcha($lDef_ParamData['email'], strtoupper(Request::param('captcha')), 'Info_BindEmailCaptcha')) {
+        $captcha = strtoupper(Request::param('captcha', ''));
+        if (!Code::CheckCaptcha($params['email'], $captcha, 'Info_BindEmailCaptcha')) {
             return ApiResponse::createBadRequest('编辑失败', ['验证码错误']);
-        };
-
-        try {
-            validate(UsersValidate::class)
-                ->batch(true)
-                ->scene('edit')
-                ->check($lDef_ParamData);
-        } catch (ValidateException $e) {
-            return ApiResponse::createBadRequest('编辑失败', $e->getError());
         }
 
-        UsersService::Patch($lDef_ParamData['id'], array_diff($lDef_ParamData, [null, '']));
+        $params = $this->validateAndClean($params, '编辑失败');
+
+        UsersService::Patch($params['id'], array_diff($params, [null, '']));
         return ApiResponse::createNoContent();
     }
 
@@ -113,13 +92,28 @@ class UserProfile extends BaseController
     {
         $account = Request::param('email');
 
-        if (filter_var($account, FILTER_VALIDATE_EMAIL)) {
-            $data = Code::CreateCaptcha($account, 'Info_BindEmailCaptcha', 300);
-            $code = $data['data'];
-            Email::SendCaptcha($code, $account);
-            return ApiResponse::createOk(['300s后失效']);
-        } else {
+        if (!filter_var($account, FILTER_VALIDATE_EMAIL)) {
             return ApiResponse::createError('发送失败', ['邮箱格式错误']);
         }
+
+        $data = Code::CreateCaptcha($account, 'Info_BindEmailCaptcha', 300);
+        $code = $data['data'];
+        Email::SendCaptcha($code, $account);
+
+        return ApiResponse::createOk(['300s后失效']);
+    }
+
+    private function validateAndClean(array $params, string $errorPrefix): array
+    {
+        try {
+            validate(UsersValidate::class)
+                ->batch(true)
+                ->scene('edit')
+                ->check($params);
+        } catch (ValidateException $e) {
+            throw \app\api\ApiException::badRequest($errorPrefix, \app\api\ApiException::CODE_PARAM_INVALID, $e->getError());
+        }
+
+        return $params;
     }
 }

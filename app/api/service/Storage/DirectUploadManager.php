@@ -26,6 +26,7 @@ class DirectUploadManager
         $expireAt = date('Y-m-d H:i:s', time() + $expire);
 
         $fileModel = new Files();
+        $fileModel->hash = Files::generateHash();
         $fileModel->channel_slug = $defaultChannel['slug'];
         $fileModel->user_id = $userId;
         $fileModel->original_name = $filename;

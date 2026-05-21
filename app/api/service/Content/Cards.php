@@ -6,7 +6,6 @@ use think\facade\Db;
 
 use app\api\model\Cards as CardsModel;
 use app\api\model\TagsMap as TagsMapModel;
-use app\api\model\Images as ImagesModel;
 use app\api\model\Comments as CommentsModel;
 
 use yunarch\utils\src\ModelList;
@@ -18,20 +17,22 @@ class Cards
 
     public static function hotList(): array
     {
-        $lDef_Result = Db::table('cards')
-            ->where('status', 0)
+        $top = CardsModel::where('status', 0)
             ->where('is_top', 1)
-            ->where('deleted_at', null)
             ->order('id', 'desc')
             ->limit(self::TOP_LISTS_MAX)
-            ->select()->toArray();
-        $lDef_CardLists = $lDef_Result;
+            ->select()
+            ->toArray();
 
-        $lDef_Result = Db::query("select * from cards where is_top = 0 and status = 0 and deleted_at IS NULL order by comments*0.3+goods*0.7 desc limit 0," . self::HOT_LISTS_MAX);
+        $hot = CardsModel::fieldRaw('*, comments * 0.3 + goods * 0.7 as hot_score')
+            ->where('status', 0)
+            ->where('is_top', 0)
+            ->order('hot_score', 'desc')
+            ->limit(self::HOT_LISTS_MAX)
+            ->select()
+            ->toArray();
 
-        $lDef_CardLists = array_merge($lDef_CardLists, $lDef_Result);
-
-        return $lDef_CardLists;
+        return array_merge($top, $hot);
     }
 
     public static function list(array $params, int $user_id = -1): array
@@ -129,10 +130,6 @@ class Cards
             if (isset($data['tags'])) {
                 self::updateCardTags($data, true);
             }
-            if (isset($data['pictures'])) {
-                self::updateCardPictures($data, true);
-                unset($data['pictures']);
-            }
             Db::commit();
             return $result->id;
         } catch (\Throwable $th) {
@@ -147,10 +144,6 @@ class Cards
         try {
             if (isset($data['tags'])) {
                 self::updateCardTags($data);
-            }
-            if (isset($data['pictures'])) {
-                self::updateCardPictures($data);
-                unset($data['pictures']);
             }
 
             CardsModel::update($data);
@@ -181,35 +174,12 @@ class Cards
         }
     }
 
-    static public function updateCardPictures($data, $create = false): void
-    {
-        $pid = (int) $data['id'];
-        $pictures = json_decode($data['pictures'], true);
-
-        if (!$create) {
-            $def_data = [
-                'aid' => 0,
-                'pid' => 0,
-            ];
-            ImagesModel::where('aid', 1)->where('pid', $pid)->update($def_data);
-        }
-        foreach ($pictures as $picture_id) {
-            $item = [
-                'id' => $picture_id,
-                'aid' => 1,
-                'pid' => $pid,
-            ];
-            ImagesModel::update($item);
-        }
-    }
-
     static public function deleteCards($id = false, $ids = []): void
     {
         $data = $id ? $id : $ids;
         Db::startTrans();
         try {
             self::deleteCardsTags($data);
-            self::deleteCardsPictures($data);
             self::deleteCardsComments($data);
 
             CardsModel::destroy($data);
@@ -224,15 +194,6 @@ class Cards
     static public function deleteCardsTags($pids): void
     {
         TagsMapModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
-    }
-
-    static public function deleteCardsPictures($pids): void
-    {
-        $def_data = [
-            'aid' => 0,
-            'pid' => 0,
-        ];
-        ImagesModel::where('aid', 1)->where('pid', 'in', $pids)->update($def_data);
     }
 
     static public function deleteCardsComments($pids): void

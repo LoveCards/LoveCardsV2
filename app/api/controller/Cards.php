@@ -8,11 +8,9 @@ use app\api\validate\Cards as CardsValidate;
 use app\api\validate\Comments as CommentsValidate;
 
 use app\api\service\Content\Cards as CardsService;
-use app\api\service\Content\Likes as LikesService;
+use app\api\service\Likes\Likes as LikesService;
 use app\api\service\Content\Comments as CommentsService;
 use app\api\service\Config as ConfigService;
-
-use yunarch\validate\Common as CommonValidate;
 
 use app\api\ApiResponse;
 
@@ -41,12 +39,6 @@ class Cards extends BaseController
     public function get($id)
     {
         $result = CardsService::get((int) $id);
-        return ApiResponse::createOk($result);
-    }
-
-    public function images($id)
-    {
-        $result = \app\api\service\Content\Images::CardIndex(['pid' => $id]);
         return ApiResponse::createOk($result);
     }
 
@@ -92,8 +84,8 @@ class Cards extends BaseController
 
     public function like($id)
     {
-        $goods = LikesService::like((int) $id, request()->uid, request()->ip());
-        return ApiResponse::createOk([$goods]);
+        $likes = LikesService::like('card', (int) $id, request()->uid, request()->ip());
+        return ApiResponse::createOk(['likes' => $likes]);
     }
 
     public function comment($id)

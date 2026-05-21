@@ -10,33 +10,31 @@ class Theme extends BaseController
 {
     public function config()
     {
-        $lRes_ThemeConfig = CommonTheme::mResultGetThemeConfig(CommonTheme::mArrayGetThemeDirectory()['N']);
-        if ($lRes_ThemeConfig === false) {
-            $lRes_ThemeConfig = [];
+        $themeDir = CommonTheme::getThemeDirectory()['N'];
+        $themeConfig = CommonTheme::getThemeConfig($themeDir);
+        if ($themeConfig === false) {
+            $themeConfig = [];
         }
-        $data['config'] = CommonTheme::mResultGetThemeConfig(CommonTheme::mArrayGetThemeDirectory()['N'], true);
 
-        if (array_key_exists('ThemeDark', $lRes_ThemeConfig)) {
-            if (cookie('ThemeDark') != null) {
-                if (cookie('ThemeDark') == "false") {
-                    $lRes_ThemeConfig['ThemeDark'] = false;
-                } else {
-                    $lRes_ThemeConfig['ThemeDark'] = true;
-                }
-            }
+        $themeConfigFull = CommonTheme::getThemeConfig($themeDir, true);
+        $data['config'] = $themeConfigFull;
+
+        if (array_key_exists('ThemeDark', $themeConfig)) {
+            $darkCookie = cookie('ThemeDark');
+            $themeConfig['ThemeDark'] = ($darkCookie != "false");
         }
 
         $coreConfig = ConfigService::getGroup('core');
 
-        $data = [
+        return ApiResponse::createOk([
             'request' => [
                 'time' => date('Y-m-d H:i:s'),
                 'ip' => request()->ip()
             ],
             'view' => [
                 'path' => [
-                    'root' => '/theme/' . CommonTheme::mArrayGetThemeDirectory()['N'],
-                    'assets' => '/theme/' . CommonTheme::mArrayGetThemeDirectory()['N'] . '/assets',
+                    'root' => '/theme/' . $themeDir,
+                    'assets' => '/theme/' . $themeDir . '/assets',
                 ]
             ],
             'system' => [
@@ -53,9 +51,7 @@ class Theme extends BaseController
                     'db' => $coreConfig,
                 ],
             ],
-            'config' => $lRes_ThemeConfig,
-        ];
-
-        return ApiResponse::createOk($data);
+            'config' => $themeConfig,
+        ]);
     }
 }

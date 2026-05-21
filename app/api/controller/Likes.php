@@ -2,20 +2,23 @@
 
 namespace app\api\controller;
 
-use app\api\service\Content\Likes as LikesService;
+use think\facade\Request;
+use app\api\service\Likes\Likes as LikesService;
 use app\api\ApiResponse;
 
 class Likes extends BaseController
 {
     public function list()
     {
-        $result = LikesService::list(request()->uid);
+        $type = Request::param('type', null);
+        $result = LikesService::getUserLikes(request()->uid, $type);
         return ApiResponse::createOk($result);
     }
 
     public function unlike($id)
     {
-        LikesService::delete($id, request()->uid);
+        $type = Request::param('type', 'card');
+        LikesService::unlike($type, (int) $id, request()->uid);
         return ApiResponse::createNoContent();
     }
 }

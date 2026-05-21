@@ -20,9 +20,10 @@ class Permissions extends BaseController
         $meta = RBAC::getRouteMeta();
         $items = array_values($meta);
 
-        $page = (int) Request::param('page', 1);
-        $listRows = (int) Request::param('list_rows', 15);
-        $search = Request::param('search_value', '');
+        $params = $this->paramIndex(Request::param());
+        $search = $params['search_value'] ?? '';
+        $page = $params['page'] ?? 1;
+        $listRows = $params['list_rows'] ?? 15;
 
         if (!empty($search)) {
             $items = array_filter($items, function ($item) use ($search) {

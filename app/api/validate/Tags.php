@@ -8,8 +8,8 @@ class Tags extends Validate
 {
     static public $all_scene = [
         'create' => [
-            'normal' => false,
-            'require' => false,
+            'normal' => ['user_id'],
+            'require' => ['name'],
             'nonNull' => false,
             'toNull' => false,
         ],
