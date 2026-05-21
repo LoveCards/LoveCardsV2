@@ -21,6 +21,7 @@ class CacheManager
         'email'    => 'email',
         'system'   => 'system',
         'storage'  => 'storage',
+        'config'   => 'config',
     ];
 
     /**

@@ -4,6 +4,7 @@ namespace app\index\common;
 
 use think\Facade;
 use think\facade\View;
+use think\facade\Config as ThinkConfig;
 use app\api\service\Config as ConfigService;
 
 class Theme extends Facade
@@ -144,12 +145,12 @@ class Theme extends Facade
         if (empty($tDef_ThemeDirectoryName)) {
             $tDef_Config = [
                 'view_path' => 'view/',
-                'tpl_replace_string' => Config::get('view.tpl_replace_string')
+                'tpl_replace_string' => ThinkConfig::get('view.tpl_replace_string')
             ];
         } else {
             $tDef_Config = [
                 'view_path' => 'theme/' . $tDef_ThemeDirectoryName . '/',
-                'tpl_replace_string' => Config::get('view.tpl_replace_string')
+                'tpl_replace_string' => ThinkConfig::get('view.tpl_replace_string')
             ];
             $tDef_Config['tpl_replace_string']['{__ThemeUrlPath__}'] = '/theme/' . $tDef_ThemeDirectoryName;
         }

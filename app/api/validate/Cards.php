@@ -111,13 +111,13 @@ class Cards extends Validate
 
     protected function picturesLength($value)
     {
-        $config = ConfigService::get('cards.picture_limit');
+        $config = ConfigService::get('cards.picture_limit', 15);
         $decoded = json_decode($value, true);
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }
     protected function tagsLength($value)
     {
-        $config = ConfigService::get('cards.tag_limit');
+        $config = ConfigService::get('cards.tag_limit', 3);
         $decoded = json_decode($value, true);
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
     }

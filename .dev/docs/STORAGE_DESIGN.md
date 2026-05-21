@@ -1,7 +1,7 @@
 # Storage 模块设计文档
 
 > 本文档基于实际代码实现生成，描述 Storage 模块的完整架构与使用方法。
-> 最后更新：2026-05-18
+> 最后更新：2026-05-21
 
 ---
 
@@ -52,15 +52,14 @@ app/api/service/Storage/
 ├── DirectUploadManager.php           # 直传入口
 └── PathGenerator.php                 # 统一路径生成
 
+app/api/controller/
+└── Storage.php                       # 存储管理 API（meta/install/types）
+
 app/api/model/
 └── Files.php                         # 文件模型（SoftDelete）
 
-config/apps/storage/
-├── settings.php                      # 全局设置
-├── local.php                         # 本地存储默认配置
-├── oss.php                           # OSS 默认配置
-├── cos.php                           # COS 默认配置
-└── qiniu.php                         # 七牛默认配置
+# 注意：config/apps/storage/ 目录已删除
+# Driver 配置通过 API 注册到 configs 表，不依赖外部文件
 ```
 
 ---
@@ -209,35 +208,66 @@ class StorageResult
 
 ### 5.1 配置体系
 
-渠道配置使用三层优先级：**文件默认值 → 数据库覆盖 → .env 最高优先**
+Driver 配置通过 **API 注册** 到 `configs` 表，不依赖外部文件。
+
+**注册流程**：
+
+```
+POST /api/all/storage/install
+  ↓
+StorageFactory 扫描 Driver/*.php
+  ↓
+每个 Driver::meta() → 转换为 schema 格式
+  ↓
+ConfigService::register('storage_' . type, $schema) → seed SQL
+```
+
+**运行时读取优先级**：`.env` → CacheManager(config) → SQL
 
 | 层 | 来源 | 说明 |
 |----|------|------|
-| Layer 1 | `config/apps/storage/{type}.php` | 文件默认值，随代码部署 |
-| Layer 2 | `configs` 表（group=`storage_{type}`） | admin 后台编辑，通用 key-value |
-| Layer 3 | `.env` | 环境变量，最高优先级 |
+| Layer 1 | `.env` | 环境变量，最高优先级 |
+| Layer 2 | `CacheManager` (config 域) | 24h TTL 缓存 |
+| Layer 3 | `configs` 表（group=`storage_{type}`） | 注册时 seed + admin 后台编辑 |
 
-**约定式同步**：Driver 的 `getType()` 返回值 = 配置 group 后缀 = 配置文件名。
+**配置 API 端点**：
 
-例：`CosDriver::getType()` → `'cos'` → `storage_cos` → `config/apps/storage/cos.php`
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/all/storage/install` | 扫描所有 Driver → 注册配置 + seed SQL |
+| GET | `/api/all/storage/{type}/meta` | 读取 Driver meta（转换为 schema 格式） |
+| GET | `/api/all/storage/types` | 列出所有已注册 Driver 类型 |
 
-### 5.2 渠道配置字段
+### 5.2 Driver meta() 定位
 
-每个渠道的配置文件定义默认值：
+Driver 的 `meta()` 方法声明该 Driver 需要哪些配置字段，供：
+
+1. Storage 模块的 `meta` API 输出 schema
+2. 前端渲染配置表单（label、icon、input type）
+
+**meta() 不直接参与配置系统的 schema 定义**，schema 通过 API 注册流程写入。
+
+### 5.3 渠道配置字段
+
+每个渠道的配置由 Driver `meta()['fields']` 转换而来：
 
 ```php
-// 示例：config/apps/storage/cos.php
-return [
-    'secret_id' => '',
-    'secret_key' => '',
-    'bucket' => '',
-    'region' => 'ap-guangzhou',
-    'cdn_url' => '',
-    'allow_mime_types' => 'image/jpeg,image/png,image/gif,image/webp',
-    'max_file_size' => 52428800,
-    'path_template' => 'storage/{date}/{uuid}.{ext}',
-];
+// CosDriver::meta()['fields']
+['key' => 'secret_id',  'label' => 'SecretId',  'type' => 'text'],
+['key' => 'secret_key', 'label' => 'SecretKey', 'type' => 'password'],
+['key' => 'bucket',     'label' => 'Bucket',    'type' => 'text'],
+['key' => 'region',     'label' => 'Region',    'type' => 'text'],
+// ...
 ```
+
+注册到 configs 表后：
+
+| group | key | type | description |
+|-------|-----|------|-------------|
+| storage_cos | secret_id | string | SecretId |
+| storage_cos | secret_key | string | SecretKey |
+| storage_cos | bucket | string | Bucket |
+| storage_cos | region | string | Region |
 
 **通用字段（所有渠道都有）：**
 
@@ -247,17 +277,16 @@ return [
 | `max_file_size` | 最大文件大小（字节） |
 | `path_template` | 路径模板，支持 `{date}`、`{uuid}`、`{ext}` 占位符 |
 
-### 5.3 settings.php - 全局设置
+### 5.4 存储全局设置
 
-```php
-// config/apps/storage/settings.php
-return [
-    'default' => 'local',          // 默认存储渠道
-    'rate_limit_max' => 10,        // 每窗口最大请求数
-    'rate_limit_window' => 60,     // 时间窗口（秒）
-    'direct_upload_expire' => 3600,// 直传凭证有效期（秒）
-];
-```
+通过 `POST /api/all/storage/install` 注册到 `storage` group：
+
+| key | type | default | description |
+|-----|------|---------|-------------|
+| default | string | 'local' | 默认存储渠道 |
+| rate_limit_max | int | 10 | 限流次数 |
+| rate_limit_window | int | 60 | 限流窗口(秒) |
+| direct_upload_expire | int | 3600 | 直传过期时间(秒) |
 
 ---
 
@@ -333,20 +362,27 @@ CREATE TABLE `files` (
 | `POST` | `/api/storage/files/direct` | `getDirectUploadCredential()` | 获取直传凭证 |
 | `PATCH` | `/api/storage/files/{id}/confirm` | `confirmDirectUpload($id)` | 确认直传完成 |
 
-### 7.3 渠道管理（admin.php 路由组）
+### 7.3 存储管理（admin 路由组）
 
 | 方法 | 路由 | 控制器方法 | 说明 |
 |------|------|-----------|------|
-| `GET` | `/api/storage/channels` | `storageChannels()` | 渠道列表（含元数据） |
-| `POST` | `/api/storage/channels/{channel}/test` | `testChannel($channel)` | 测试渠道连通性 |
-| `GET` | `/api/storage/channels/stats` | `channelStats()` | 渠道文件统计 |
+| GET | `/api/all/storage/types` | `Storage/types` | Driver 类型列表 |
+| GET | `/api/all/storage/{type}/meta` | `Storage/meta` | Driver 配置信息（转换为 schema） |
+| POST | `/api/all/storage/install` | `Storage/install` | 扫描 Driver → 注册配置 + seed SQL |
+| GET | `/api/all/config/storage-channels` | `Config/storageChannels` | 渠道列表（含元数据） |
+| POST | `/api/all/config/test-channel` | `Config/testChannel` | 测试渠道连通性 |
+| GET | `/api/all/config/channel-stats` | `Config/channelStats` | 渠道文件统计 |
 
-### 7.4 配置管理（admin.php 路由组）
+### 7.4 配置管理（admin 路由组）
 
 | 方法 | 路由 | 控制器方法 | 说明 |
 |------|------|-----------|------|
-| `GET` | `/api/system/config` | `admin.Config/index` | 获取配置（支持 group 参数） |
-| `POST` | `/api/system/config` | `admin.Config/save` | 保存配置 |
+| GET | `/api/all/config` | `Config/index` | 获取配置（支持 group 参数） |
+| POST | `/api/all/config` | `Config/save` | 保存配置 |
+| GET | `/api/all/config/groups` | `Config/groups` | 列出所有已注册 group |
+| POST | `/api/all/config/init` | `Config/init` | 初始化配置系统 |
+| POST | `/api/all/config/register` | `Config/register` | 注册单个 group schema |
+| POST | `/api/all/config/reload` | `Config/reload` | 重载配置缓存 |
 
 ---
 
@@ -439,14 +475,15 @@ public static function meta(): array
    - 实现 upload() / delete() / getUrl()
    - 可选：implements HasDirectUpload → 实现 getDirectUploadUrl() + getUploadCredential()
 
-2. 创建 config/apps/storage/mycloud.php
-   - 返回默认配置数组
-
-3. 完成。
+2. 完成。
    - StorageFactory 自动扫描识别
-   - ChannelManager 自动加载配置（storage_mycoud）
+   - 调用 POST /api/all/storage/install 注册配置到 SQL
+   - 或调用 GET /api/all/storage/mycloud/meta 获取 schema → POST /api/all/config/register 注册
    - admin 后台自动出现该渠道配置页（API 动态返回）
    - 前端 admin 自动渲染表单（从 API 拿字段定义）
+
+注意：不再需要创建 config/apps/storage/mycloud.php 配置文件
+      Driver 的 meta() 已包含完整的字段声明
 ```
 
 ---

@@ -15,12 +15,14 @@ class Config extends BaseController
 {
     protected function getAllowedGroups(): array
     {
-        $groups = ['core', 'upload', 'cards', 'comments', 'user', 'geetest', 'mail', 'storage'];
-        foreach (StorageFactory::getRegisteredTypes() as $type) {
-            $groups[] = 'storage_' . $type;
+        $groups = ConfigService::getSchemaGroups();
+        if (empty($groups)) {
+            $groups = ['core', 'upload', 'cards', 'comments', 'user', 'geetest', 'version'];
         }
         return $groups;
     }
+
+    // ═══ 读取 ═══
 
     public function index()
     {
@@ -45,6 +47,13 @@ class Config extends BaseController
         return ApiResponse::createOk($result);
     }
 
+    public function groups()
+    {
+        return ApiResponse::createOk(ConfigService::getSchemaGroups());
+    }
+
+    // ═══ 写入 ═══
+
     public function save()
     {
         $params = Request::param();
@@ -62,6 +71,52 @@ class Config extends BaseController
 
         return ApiResponse::createNoContent();
     }
+
+    // ═══ 初始化/注册 ═══
+
+    /**
+     * 初始化配置系统
+     * 扫描 config/apps/*.php 并批量注册 + seed SQL
+     * POST /api/config/init
+     */
+    public function init()
+    {
+        $result = ConfigService::init();
+        return ApiResponse::createOk($result);
+    }
+
+    /**
+     * 注册单个 group 的 schema
+     * POST /api/config/register
+     * Body: { "group": "storage_cos", "schema": {...} }
+     */
+    public function register()
+    {
+        $group = Request::param('group', '');
+        $schema = Request::param('schema', []);
+
+        if (empty($group) || empty($schema)) {
+            return ApiResponse::createBadRequest('缺少 group 或 schema');
+        }
+
+        $result = ConfigService::register($group, $schema);
+        return ApiResponse::createOk($result);
+    }
+
+    // ═══ 管理 ═══
+
+    /**
+     * 重载配置缓存
+     * POST /api/config/reload
+     */
+    public function reload()
+    {
+        $group = Request::param('group');
+        ConfigService::reload($group ?: null);
+        return ApiResponse::createNoContent();
+    }
+
+    // ═══ Storage 相关（保留兼容） ═══
 
     public function storageChannels()
     {
