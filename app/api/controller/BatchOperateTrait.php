@@ -16,8 +16,8 @@ trait BatchOperateTrait
     public function batch()
     {
         $params = $this->param(
-            \yunarch\validate\ModelList::class,
-            'batch',
+            \yunarch\validate\Common::class,
+            \yunarch\validate\Common::$all_scene['BatchOperate'],
             request()->param()
         );
 
@@ -28,7 +28,7 @@ trait BatchOperateTrait
             throw ApiException::error('批量操作未实现');
         }
 
-        $result = $service->batchOperate($params);
+        $result = $service->batchOperate($params['method'], $params['ids']);
         return ApiResponse::createOk('操作成功', $result);
     }
 }

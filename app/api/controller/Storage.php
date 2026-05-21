@@ -6,14 +6,11 @@ use think\facade\Request;
 
 use app\api\service\Config as ConfigService;
 use app\api\service\Storage\StorageFactory;
+use app\api\service\Storage\ChannelTester;
 use app\api\ApiResponse;
 
 class Storage extends BaseController
 {
-    /**
-     * 读取指定 Driver 的 meta，转换为配置 schema 格式
-     * GET /api/storage/{type}/meta
-     */
     public function meta(string $type)
     {
         $driverClass = StorageFactory::getDriverClass($type);
@@ -41,10 +38,6 @@ class Storage extends BaseController
         ]);
     }
 
-    /**
-     * 扫描所有 Driver，注册配置 + seed SQL
-     * POST /api/storage/install
-     */
     public function install()
     {
         $types = StorageFactory::getRegisteredTypes();
@@ -70,7 +63,6 @@ class Storage extends BaseController
             }
         }
 
-        // 注册全局存储设置
         $settings = [
             'default'              => ['type' => 'string', 'default' => 'local', 'description' => '默认存储渠道'],
             'rate_limit_max'       => ['type' => 'int',    'default' => 10,     'description' => '限流次数'],
@@ -82,10 +74,6 @@ class Storage extends BaseController
         return ApiResponse::createOk($results);
     }
 
-    /**
-     * 列出所有已注册的 Driver 类型
-     * GET /api/storage/types
-     */
     public function types()
     {
         $types = StorageFactory::getRegisteredTypes();
@@ -104,9 +92,65 @@ class Storage extends BaseController
         return ApiResponse::createOk($result);
     }
 
-    /**
-     * UI input type → schema 数据类型映射
-     */
+    public function channels()
+    {
+        $result = [];
+        foreach (StorageFactory::getRegisteredTypes() as $type) {
+            $driverClass = StorageFactory::getDriverClass($type);
+            if ($driverClass === null) {
+                continue;
+            }
+            $meta = $driverClass::meta();
+            $result[] = [
+                'slug'   => $type,
+                'name'   => $meta['name'] ?? $type,
+                'icon'   => $meta['icon'] ?? 'mdi-cloud',
+                'fields' => $meta['fields'] ?? [],
+            ];
+        }
+        return ApiResponse::createOk($result);
+    }
+
+    public function testChannel($channel = '')
+    {
+        $channel = $channel ?: Request::param('channel', '');
+        if (empty($channel)) {
+            return ApiResponse::createBadRequest('请指定渠道');
+        }
+
+        try {
+            $result = ChannelTester::test($channel);
+            return ApiResponse::createOk($result);
+        } catch (\Exception $e) {
+            return ApiResponse::createOk(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function channelStats()
+    {
+        $channels = StorageFactory::getRegisteredTypes();
+        $result = [];
+
+        foreach ($channels as $slug) {
+            $count = \think\facade\Db::table('files')
+                ->where('channel_slug', $slug)
+                ->whereNull('deleted_at')
+                ->count();
+
+            $totalSize = \think\facade\Db::table('files')
+                ->where('channel_slug', $slug)
+                ->whereNull('deleted_at')
+                ->sum('file_size');
+
+            $result[$slug] = [
+                'file_count' => $count ?? 0,
+                'total_size' => $totalSize ?? 0,
+            ];
+        }
+
+        return ApiResponse::createOk($result);
+    }
+
     private static function mapMetaType(string $uiType): string
     {
         return match ($uiType) {

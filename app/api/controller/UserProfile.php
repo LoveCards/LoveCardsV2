@@ -15,7 +15,7 @@ use app\common\email\Email;
 
 use app\api\ApiResponse;
 
-class Info extends BaseController
+class UserProfile extends BaseController
 {
     public function get()
     {

@@ -5,16 +5,14 @@ use think\facade\Route;
 use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\PermissionCheck;
 
-// 用户个人信息
 Route::group('users/me', function () {
-    Route::get('', 'Info/get')->name('info.get')->setOption('meta', ['name' => '我的信息', 'group' => '用户']);
-    Route::patch('', 'Info/update')->name('info.update')->setOption('meta', ['name' => '编辑我的信息', 'group' => '用户']);
-    Route::post('password', 'Info/password')->name('info.password')->setOption('meta', ['name' => '修改密码', 'group' => '用户']);
-    Route::post('email', 'Info/email')->name('info.email')->setOption('meta', ['name' => '绑定邮箱', 'group' => '用户']);
-    Route::post('email-captcha', 'Info/emailCaptcha')->name('info.emailCaptcha')->setOption('meta', ['name' => '邮箱验证码', 'group' => '用户']);
+    Route::get('', 'UserProfile/get')->name('users.me.get')->setOption('meta', ['name' => '我的信息', 'group' => '用户']);
+    Route::patch('', 'UserProfile/update')->name('users.me.update')->setOption('meta', ['name' => '编辑我的信息', 'group' => '用户']);
+    Route::post('password', 'UserProfile/password')->name('users.me.password')->setOption('meta', ['name' => '修改密码', 'group' => '用户']);
+    Route::post('email', 'UserProfile/email')->name('users.me.email')->setOption('meta', ['name' => '绑定邮箱', 'group' => '用户']);
+    Route::post('email-captcha', 'UserProfile/emailCaptcha')->name('users.me.emailCaptcha')->setOption('meta', ['name' => '邮箱验证码', 'group' => '用户']);
 })->middleware(JwtAuthCheck::class)->middleware(PermissionCheck::class);
 
-// 全部用户（管理员）
 Route::group('all/users', function () {
     Route::get('', 'Users/allList')->name('users.allList')->setOption('meta', ['name' => '全部用户', 'group' => '用户']);
     Route::get(':id', 'Users/allGet')->name('users.allGet')->setOption('meta', ['name' => '获取任意用户', 'group' => '用户']);

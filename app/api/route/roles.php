@@ -15,3 +15,5 @@ Route::group('all/roles', function () {
     Route::post(':id/permissions', 'Roles/assignPermissions')->name('roles.assignPermissions')->setOption('meta', ['name' => '分配权限', 'group' => '角色']);
     Route::get(':id/permissions', 'Roles/getRolePermissions')->name('roles.getRolePermissions')->setOption('meta', ['name' => '获取角色权限', 'group' => '角色']);
 })->middleware(JwtAuthCheck::class)->middleware(PermissionCheck::class);
+
+Route::post('all/roles/reseed', 'Roles/reseed')->name('roles.reseed')->setOption('meta', ['name' => '重新 seed 权限', 'group' => '角色'])->middleware(JwtAuthCheck::class);

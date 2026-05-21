@@ -89,7 +89,7 @@ class Roles
         $systemRoles = RolesModel::whereIn('id', $data)
             ->where('is_system', 1)
             ->select();
-        if ($systemRoles->isNotEmpty()) {
+        if (!$systemRoles->isEmpty()) {
             $names = $systemRoles->column('name');
             throw ApiException::badRequest('系统角色不可删除：' . implode(', ', $names), ApiException::CODE_PARAM_INVALID);
         }

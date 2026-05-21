@@ -27,7 +27,7 @@ class BaseController
      * @return array 验证通过的参数
      * @throws ApiException 验证失败时抛出
      */
-    protected function param(string $ValidateClass, string $scene, array $requestParam = []): array
+    protected function param(string $ValidateClass, array $scene, array $requestParam = []): array
     {
         $result = ValidateExtend::sceneFilter($requestParam, $scene);
 
@@ -37,7 +37,7 @@ class BaseController
                 ->batch(true)
                 ->check($params);
         } catch (ValidateException $e) {
-            throw ApiException::badRequest('参数错误', $e->getError());
+            throw ApiException::badRequest('参数错误', ApiException::CODE_PARAM_INVALID, $e->getError());
         }
 
         return $params;
@@ -60,7 +60,7 @@ class BaseController
                 ->batch(true)
                 ->check($params);
         } catch (ValidateException $e) {
-            throw ApiException::badRequest('参数错误', $e->getError());
+            throw ApiException::badRequest('参数错误', ApiException::CODE_PARAM_INVALID, $e->getError());
         }
 
         return $params;
@@ -83,7 +83,7 @@ class BaseController
                 ->batch(true)
                 ->check($params);
         } catch (ValidateException $e) {
-            throw ApiException::badRequest('参数错误', $e->getError());
+            throw ApiException::badRequest('参数错误', ApiException::CODE_PARAM_INVALID, $e->getError());
         }
 
         return $params;

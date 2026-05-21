@@ -5,7 +5,6 @@ namespace app\api\controller;
 use think\facade\Request;
 
 use app\api\validate\Cards as CardsValidate;
-use app\api\validate\CardsSetting as CardsValidateSetting;
 use app\api\validate\Comments as CommentsValidate;
 
 use app\api\service\Content\Cards as CardsService;
@@ -147,38 +146,5 @@ class Cards extends BaseController
     {
         CardsService::deleteAny((int) $id);
         return ApiResponse::createNoContent();
-    }
-
-    public function setting()
-    {
-        $data = [
-            'DefSetCardsImgNum' => Request::param('DefSetCardsImgNum'),
-            'DefSetCardsTagNum' => Request::param('DefSetCardsTagNum'),
-            'DefSetCardsStatus' => Request::param('DefSetCardsStatus'),
-            'DefSetCardsImgSize' => Request::param('DefSetCardsImgSize'),
-            'DefSetCardsCommentsStatus' => Request::param('DefSetCardsCommentsStatus')
-        ];
-
-        try {
-            validate(CardsValidateSetting::class)
-                ->batch(true)
-                ->check($data);
-        } catch (\think\exception\ValidateException $e) {
-            return ApiResponse::createBadRequest('修改失败', $e->getError());
-        }
-
-        $result = ConfigService::setGroup('cards', [
-            'picture_limit' => $data['DefSetCardsImgNum'],
-            'tag_limit' => $data['DefSetCardsTagNum'],
-            'approve' => (bool) $data['DefSetCardsStatus'],
-            'image_size' => $data['DefSetCardsImgSize'],
-            'comments_status' => (bool) $data['DefSetCardsCommentsStatus'],
-        ]);
-
-        if ($result == true) {
-            return ApiResponse::createNoContent();
-        } else {
-            return ApiResponse::createError('修改失败，请重试');
-        }
     }
 }
