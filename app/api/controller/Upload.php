@@ -20,7 +20,7 @@ class Upload extends BaseController
         $user = UsersService::Get($uid);
         if (!$user || !$user->id) return false;
         $roles = is_array($user->roles_id) ? $user->roles_id : (json_decode($user->roles_id, true) ?: []);
-        return in_array(config('roles.system_roles.root'), $roles) || in_array(config('roles.system_roles.admin'), $roles);
+        return in_array(config('system.system_roles.root'), $roles) || in_array(config('system.system_roles.admin'), $roles);
     }
 
     public function upload()

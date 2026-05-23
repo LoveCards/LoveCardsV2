@@ -3,32 +3,29 @@
 namespace app\api\service\Content;
 
 use think\facade\Db;
-use app\common\Common;
 
 use app\api\model\Tags as TagsModel;
 use app\api\model\TagsMap as TagsMapModel;
+
+use app\common\FieldsToggle;
 
 use yunarch\utils\src\ModelList;
 
 class Tags
 {
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false)
-    {
-        $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
-        if ($value2) {
-            foreach ($value2 as $item) {
-                $where = $where . "WHEN {$fields} = {$item} THEN {$value1[1]} ";
-            }
-        }
-        $sql = "CASE {$where}END";
-
-        TagsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
-    }
-
     static public function noPaginateIndex($params): array
     {
         $params['search_default_key'] = 'name';
         $result = ModelList::make(TagsModel::class)->getNoPaginate($params);
+        return $result->toArray();
+    }
+
+    static public function get(int $id): array
+    {
+        $result = TagsModel::where('id', $id)->findOrEmpty();
+        if ($result->isEmpty()) {
+            throw \app\api\ApiException::notFound('标签不存在', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
+        }
         return $result->toArray();
     }
 
@@ -59,13 +56,13 @@ class Tags
     {
         switch ($method) {
             case 'approve':
-                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 3], [1, 2]);
                 break;
             case 'ban':
-                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 1], [2, 3]);
                 break;
             case 'hide':
-                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 2], [1, 3]);
                 break;
             case 'delete':
                 self::deleteTags(false, $ids);

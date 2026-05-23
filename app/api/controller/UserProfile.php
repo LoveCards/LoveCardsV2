@@ -98,7 +98,12 @@ class UserProfile extends BaseController
 
         $data = Code::CreateCaptcha($account, 'Info_BindEmailCaptcha', 300);
         $code = $data['data'];
-        Email::SendCaptcha($code, $account);
+
+        try {
+            Email::SendCaptcha($code, $account);
+        } catch (\RuntimeException $e) {
+            return ApiResponse::createBadRequest($e->getMessage());
+        }
 
         return ApiResponse::createOk(['300s后失效']);
     }

@@ -8,6 +8,7 @@ use think\facade\Cache;
 
 use app\system\utils\Export;
 
+use app\common\VersionService;
 use app\system\utils\Common;
 use app\system\utils\Database;
 use app\system\utils\Environment;
@@ -55,7 +56,12 @@ class Install
         $latestInfo = $this->getHttpData('GithubReleasesLatestInfo', 'https://api.github.com/repos/zhiguai/LoveCards/releases/latest');
         $verlogMd = $this->getHttpData('GithubVerlogMd', 'https://github.moeyy.xyz/https://raw.githubusercontent.com/zhiguai/LoveCards/main/VerLog.md');
 
-        $data = Common::mArrayGetLCVersionInfo();
+        $data = VersionService::public();
+        $info = VersionService::info();
+        $data['php_min'] = $info['php_min'] ?? '7.2.5';
+        $data['php_max'] = $info['php_max'] ?? '8.0.99';
+        $data['mysql_min'] = $info['mysql_min'] ?? '5.7';
+        $data['mysql_max'] = $info['mysql_max'] ?? '9999';
         $data['GithubInfo'] = json_decode($latestInfo, true);
         $data['GithubVerlogMd'] = $verlogMd;
 

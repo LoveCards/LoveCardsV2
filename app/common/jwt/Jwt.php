@@ -12,7 +12,6 @@ use UnexpectedValueException;
 use think\facade\Config;
 use think\facade\Cache;
 use app\common\cache\CacheManager;
-use app\api\ApiException;
 
 class Jwt
 {
@@ -45,15 +44,15 @@ class Jwt
         } catch (ExpiredException $e) {
             $newToken = self::_renew($token);
             if ($newToken === null) {
-                throw ApiException::unauthorized('token已失效', ApiException::CODE_TOKEN_EXPIRED);
+                throw new \RuntimeException('token已失效');
             }
             return ['_new_token' => $newToken];
         } catch (SignatureInvalidException $e) {
-            throw ApiException::unauthorized('签名不正确', ApiException::CODE_TOKEN_INVALID);
+            throw new \RuntimeException('签名不正确');
         } catch (BeforeValidException $e) {
-            throw ApiException::unauthorized('token未生效', ApiException::CODE_TOKEN_INVALID);
+            throw new \RuntimeException('token未生效');
         } catch (UnexpectedValueException $e) {
-            throw ApiException::unauthorized('未知错误:' . $e->getMessage(), ApiException::CODE_UNKNOWN);
+            throw new \RuntimeException('未知错误:' . $e->getMessage());
         }
     }
 

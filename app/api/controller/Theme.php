@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\api\service\Theme as CommonTheme;
 use app\api\service\Config as ConfigService;
+use app\common\VersionService;
 use app\api\ApiResponse;
 
 class Theme extends BaseController
@@ -38,14 +39,7 @@ class Theme extends BaseController
                 ]
             ],
             'system' => [
-                'version' => [
-                    'Name' => 'LoveCards',
-                    'Url' => '//lovecards.cn',
-                    'VerS' => '2.4.1',
-                    'Ver' => '21',
-                    'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
-                    'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
-                ],
+                'version' => VersionService::public(),
                 'config' => [
                     'file' => $coreConfig,
                     'db' => $coreConfig,

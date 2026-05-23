@@ -128,7 +128,7 @@ class Auth extends BaseController
             if ($e->getCode() !== \app\api\ApiException::CODE_USER_NOT_FOUND) {
                 throw $e;
             }
-            $user = UsersService::Register($number, $username, $accountMap['email'], $accountMap['phone'], $password, [config('roles.system_roles.guest')]);
+            $user = UsersService::Register($number, $username, $accountMap['email'], $accountMap['phone'], $password, [config('system.system_roles.guest')]);
             $token = Jwt::sign(['uid' => $user->id]);
             return ApiResponse::createOk(['token' => $token]);
         }
@@ -144,7 +144,12 @@ class Auth extends BaseController
 
         $data = Code::CreateCaptcha($account, 'Auth', 300);
         $code = $data['data'];
-        Email::SendCaptcha($code, $account);
+
+        try {
+            Email::SendCaptcha($code, $account);
+        } catch (\RuntimeException $e) {
+            return ApiResponse::createBadRequest($e->getMessage());
+        }
 
         return ApiResponse::createNoContent();
     }

@@ -4,7 +4,6 @@ namespace app\common\email;
 
 use app\common\cache\CacheManager;
 use think\facade\Config as ThinkConfig;
-use app\api\ApiException;
 use mailer\tp6\Mailer;
 
 class Email
@@ -47,10 +46,10 @@ class Email
                     ->text('【' . $code . '】5分钟内有效，请勿泄露')
                     ->send();
             } catch (\Throwable $e) {
-                throw ApiException::error('发送失败: ' . $e->getMessage(), ApiException::CODE_SYSTEM_ERROR);
+                throw new \RuntimeException('发送失败: ' . $e->getMessage());
             }
             return;
         }
-        throw ApiException::badRequest('刚刚发出，请稍后再试', ApiException::CODE_PARAM_INVALID);
+        throw new \RuntimeException('刚刚发出，请稍后再试');
     }
 }

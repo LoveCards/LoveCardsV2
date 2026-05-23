@@ -4,6 +4,7 @@ namespace app\api\service;
 
 use think\facade\Db;
 use app\common\cache\CacheManager;
+use app\common\VersionService;
 
 use app\api\model\Cards as CardsModel;
 use app\api\model\Likes;
@@ -30,14 +31,7 @@ class Dashboard
         return [
             'count' => $count,
             'chart' => $chart,
-            'ver' => [
-                'Name' => 'LoveCards',
-                'Url' => '//lovecards.cn',
-                'VerS' => '2.4.1',
-                'Ver' => '21',
-                'GithubUrl' => '//github.com/LoveCards/LoveCardsV2',
-                'QGroupUrl' => '//jq.qq.com/?_wv=1027&k=qM8f2RMg',
-            ],
+            'ver' => VersionService::public(),
             'notice' => $notice,
         ];
     }

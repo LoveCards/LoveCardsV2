@@ -7,6 +7,8 @@ use think\facade\Db;
 use app\api\model\Comments as CommentsModel;
 use app\api\model\Cards as CardsModel;
 
+use app\common\FieldsToggle;
+
 use yunarch\utils\src\ModelList;
 
 class Comments
@@ -17,18 +19,6 @@ class Comments
         $result = CommentsModel::update($data, $where, $allowField);
 
         return $result;
-    }
-
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
-    {
-        $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
-        if ($value2) {
-            foreach ($value2 as $item) {
-                $where = $where . "WHEN {$fields} = {$item} THEN {$value1[1]} ";
-            }
-        }
-        $sql = "CASE {$where}END";
-        CommentsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
     public static function newList(array $params, int $user_id = -1): array
@@ -97,20 +87,33 @@ class Comments
         CommentsModel::update($data);
     }
 
+    static public function deleteOwnComment(int $id, int $uid): void
+    {
+        $result = CommentsModel::where([
+            'id' => $id,
+            'user_id' => $uid,
+            'status' => 0,
+        ])->update(['status' => 2]);
+
+        if ($result === 0) {
+            throw \app\api\ApiException::notFound('评论不存在', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
+        }
+    }
+
     static public function batchOperate($method, $ids): void
     {
         switch ($method) {
             case 'top':
-                self::fieldsToggle('is_top', $ids, [0, 1]);
+                FieldsToggle::toggle(CommentsModel::class, 'is_top', $ids, [0, 1]);
                 break;
             case 'approve':
-                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                FieldsToggle::toggle(CommentsModel::class, 'status', $ids, [0, 3], [1, 2]);
                 break;
             case 'ban':
-                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                FieldsToggle::toggle(CommentsModel::class, 'status', $ids, [0, 1], [2, 3]);
                 break;
             case 'hide':
-                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                FieldsToggle::toggle(CommentsModel::class, 'status', $ids, [0, 2], [1, 3]);
                 break;
             case 'delete':
                 self::deleteComments(false, $ids);

@@ -8,7 +8,7 @@ use app\api\validate\Cards as CardsValidate;
 use app\api\validate\Comments as CommentsValidate;
 
 use app\api\service\Content\Cards as CardsService;
-use app\api\service\Likes\Likes as LikesService;
+use app\api\service\Content\Likes as LikesService;
 use app\api\service\Content\Comments as CommentsService;
 use app\api\service\Config as ConfigService;
 
@@ -70,15 +70,7 @@ class Cards extends BaseController
 
     public function delete($id)
     {
-        $result = \app\api\model\Cards::where([
-            'id' => $id,
-            'user_id' => request()->uid,
-            'status' => 0
-        ])->update(['status' => 2]);
-
-        if ($result === 0) {
-            return ApiResponse::createNotFound([]);
-        }
+        CardsService::deleteCards((int) $id);
         return ApiResponse::createNoContent([]);
     }
 

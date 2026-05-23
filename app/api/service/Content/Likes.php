@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service\Likes;
+namespace app\api\service\Content;
 
 use think\facade\Db;
 use app\api\model\Likes as LikesModel;

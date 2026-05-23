@@ -115,7 +115,6 @@ class ApiResponse
         return [
             'code'    => $code,
             'message' => $message,
-            'error'   => $message,
             'detail'  => $detail,
         ];
     }

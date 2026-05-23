@@ -6,7 +6,7 @@ use think\facade\Request;
 use app\common\cache\CacheManager;
 
 use app\api\service\Theme;
-use app\common\Common;
+use app\common\VersionService;
 use app\api\service\Config as ConfigService;
 
 use app\api\ApiResponse;
@@ -67,8 +67,8 @@ class System extends BaseController
             return ApiResponse::createBadRequest('修改失败，主题信息不存在');
         }
 
-        $versionInfo = Common::getVersionInfo();
-        if (!($versionInfo['VerS'] >= $themeInfo['SysVersionL'] && $versionInfo['VerS'] < $themeInfo['SysVersionR'])) {
+        $version = VersionService::info()['version'] ?? '0.0.0';
+        if (!($version >= $themeInfo['SysVersionL'] && $version < $themeInfo['SysVersionR'])) {
             return ApiResponse::createBadRequest('修改失败，该主题不适用当前版本');
         }
 
@@ -116,7 +116,7 @@ class System extends BaseController
     public function update()
     {
         return ApiResponse::createOk([
-            'ver' => Common::getVersionInfo(),
+            'ver' => VersionService::public(),
             'latest' => $this->getLatestVer(),
             'verlog' => $this->getUpdata()
         ]);

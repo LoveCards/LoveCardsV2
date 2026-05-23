@@ -4,37 +4,23 @@ namespace app\api\service;
 
 use think\facade\Db;
 use app\api\model\Users as UsersModel;
-
-use app\common\Common;
+use app\common\FieldsToggle;
 
 use yunarch\utils\src\ModelList;
 
 class Users
 {
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
-    {
-        $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
-        if ($value2) {
-            foreach ($value2 as $item) {
-                $where = $where . "WHEN {$fields} = {$item} THEN {$value1[1]} ";
-            }
-        }
-        $sql = "CASE {$where}END";
-
-        UsersModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
-    }
-
     static public function batchOperate($method, $ids): void
     {
         switch ($method) {
             case 'approve':
-                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                FieldsToggle::toggle(UsersModel::class, 'status', $ids, [0, 3], [1, 2]);
                 break;
             case 'ban':
-                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                FieldsToggle::toggle(UsersModel::class, 'status', $ids, [0, 1], [2, 3]);
                 break;
             case 'hide':
-                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                FieldsToggle::toggle(UsersModel::class, 'status', $ids, [0, 2], [1, 3]);
                 break;
             case 'delete':
                 self::deleteUsers(false, $ids);
@@ -70,7 +56,7 @@ class Users
     public static function Register($number, $username, $email, $phone, $password, $roles_id = null, $status = 0): UsersModel
     {
         if ($roles_id === null) {
-            $roles_id = [config('roles.system_roles.user')];
+            $roles_id = [config('system.system_roles.user')];
         }
         if ($password != '') {
             $result = null;

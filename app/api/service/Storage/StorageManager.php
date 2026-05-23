@@ -52,9 +52,13 @@ class StorageManager
 
         $modelList = ModelList::make(Files::class);
 
-        $showDeleted = !empty($params['show_deleted']);
-        if ($isAdmin && $showDeleted) {
-            $modelList->onlyTrashed();
+        $showDeleted = (int) ($params['show_deleted'] ?? 0);
+        if ($isAdmin && $showDeleted > 0) {
+            if ($showDeleted === 1) {
+                $modelList->withTrashed();
+            } elseif ($showDeleted === 2) {
+                $modelList->onlyTrashed();
+            }
         }
 
         $where = $params['where'] ?? [];
@@ -81,6 +85,10 @@ class StorageManager
 
         if (isset($params['status'])) {
             $where[] = ['status', '=', $params['status']];
+        }
+
+        if (isset($params['upload_status'])) {
+            $where[] = ['upload_status', '=', $params['upload_status']];
         }
 
         $params['where'] = $where;

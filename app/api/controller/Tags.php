@@ -29,11 +29,8 @@ class Tags extends BaseController
 
     public function get($id)
     {
-        $result = \app\api\model\Tags::where('id', $id)->findOrEmpty();
-        if ($result->isEmpty()) {
-            return ApiResponse::createNotFound();
-        }
-        return ApiResponse::createOk($result->toArray());
+        $result = TagsService::get((int) $id);
+        return ApiResponse::createOk($result);
     }
 
     public function create()

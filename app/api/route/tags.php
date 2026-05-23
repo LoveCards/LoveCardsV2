@@ -6,8 +6,8 @@ use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\PermissionCheck;
 
 // 公开路由（游客可访问）
-Route::get('tags', 'Tags/list')->name('tags.list')->setOption('meta', ['name' => '标签列表', 'group' => '标签', 'public' => true]);
 Route::get('tags/:id', 'Tags/get')->name('tags.get')->setOption('meta', ['name' => '标签详情', 'group' => '标签', 'public' => true]);
+Route::get('tags', 'Tags/list')->name('tags.list')->setOption('meta', ['name' => '标签列表', 'group' => '标签', 'public' => true]);
 
 // 用户创建标签
 Route::post('tags', 'Tags/create')->name('tags.create')->setOption('meta', ['name' => '创建标签', 'group' => '标签'])->middleware(JwtAuthCheck::class)->middleware(PermissionCheck::class);

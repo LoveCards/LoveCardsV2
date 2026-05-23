@@ -3,7 +3,7 @@
 namespace app\api\controller;
 
 use think\facade\Request;
-use app\api\service\Likes\Likes as LikesService;
+use app\api\service\Content\Likes as LikesService;
 use app\api\ApiResponse;
 
 class Likes extends BaseController

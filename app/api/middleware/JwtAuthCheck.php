@@ -31,6 +31,12 @@ class JwtAuthCheck
                 if (isset($data['_new_token'])) {
                     $request->newToken = $data['_new_token'];
                 }
+            } catch (\RuntimeException $e) {
+                $apiEx = \app\api\ApiException::unauthorized($e->getMessage());
+                if (!ConfigService::get('core.visitor_mode')) {
+                    return $apiEx->exceptionHandle();
+                }
+                $this->setVisitor($request);
             } catch (\app\api\ApiException $e) {
                 if (!ConfigService::get('core.visitor_mode')) {
                     return $e->exceptionHandle();
@@ -57,6 +63,6 @@ class JwtAuthCheck
     {
         $request->uid = 0;
         $request->user = null;
-        $request->rolesId = [config('roles.system_roles.guest')];
+        $request->rolesId = [config('system.system_roles.guest')];
     }
 }

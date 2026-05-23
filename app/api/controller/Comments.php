@@ -60,15 +60,7 @@ class Comments extends BaseController
 
     public function delete($id)
     {
-        $result = \app\api\model\Comments::where([
-            'id' => $id,
-            'user_id' => request()->uid,
-            'status' => 0
-        ])->update(['status' => 2]);
-
-        if ($result === 0) {
-            return ApiResponse::createNotFound([]);
-        }
+        CommentsService::deleteOwnComment((int) $id, request()->uid);
         return ApiResponse::createNoContent([]);
     }
 

@@ -70,8 +70,8 @@
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
                             <div class="mdui-card-primary-subtitle">
-                                Crafted with <a :href="res.VersionInfo.Url?res.VersionInfo.Url:'#'"
-                                    target="_blank">{{res.VersionInfo.name?res.VersionInfo.name:'LoveCards'}}</a>
+                                Crafted with <a :href="res.VersionInfo.homepage?res.VersionInfo.homepage:'#'"
+                                    target="_blank">{{res.VersionInfo.app_name?res.VersionInfo.app_name:'LoveCards'}}</a>
                                 ©
                                 2024
                                 time Made
@@ -87,8 +87,8 @@
                         <div class="mdui-card-primary">
                             <div class="mdui-card-primary-title">LoveCards</div>
                             <div class="mdui-card-primary-subtitle">
-                                Crafted with <a :href="res.VersionInfo.Url?res.VersionInfo.Url:'#'"
-                                    target="_blank">{{res.VersionInfo.name?res.VersionInfo.name:'LoveCards'}}</a><br>
+                                Crafted with <a :href="res.VersionInfo.homepage?res.VersionInfo.homepage:'#'"
+                                    target="_blank">{{res.VersionInfo.app_name?res.VersionInfo.app_name:'LoveCards'}}</a><br>
                                 ©
                                 2024 time
                                 Made by <a href="https://github.com/zhiguai" target="_blank">吃纸怪</a>.
@@ -127,7 +127,7 @@
                                 style="margin-top: -25px;color: #1296DB;margin-left: 43px;font-size: x-small;font-weight: bold;">
                                 LoveCards</div>
                             <ul class="mdui-m-t-1">
-                                <li>🗃️当前版本：<kbd>{{res.VersionInfo.Ver?res.VersionInfo.VerS+'['+res.VersionInfo.Ver+']':'加载中..'}}</kbd>
+                                <li>🗃️当前版本：<kbd>{{res.VersionInfo.build?res.VersionInfo.version+'['+res.VersionInfo.build+']':'加载中..'}}</kbd>
                                 </li>
                                 <li>🆕最新版本：<a
                                         href="https://github.com/zhiguai/LoveCards/releases"><kbd>{{res.VersionInfo.GithubInfo?res.VersionInfo.GithubInfo.name:'加载中..'}}</kbd></a>
@@ -142,7 +142,7 @@
                                 <li>👩‍👧‍👦交流社区：<a href="https://forum.lovecards.cn/"
                                         target="_blank">forum.lovecards.cn</a></li>
                                 <li> 👯‍♂QQ交流群：<a
-                                        href="{{res.VersionInfo.QGroupUrl?res.VersionInfo.QGroupUrl:'https://lovecards.cn/'}}"
+                                        href="{{res.VersionInfo.qgroup?res.VersionInfo.qgroup:'https://lovecards.cn/'}}"
                                         target="_blank">801235342</a></li>
                             </ul>
                         </div>
@@ -162,14 +162,14 @@
                                         <td>PHP</td>
                                         <td>{{res.Environment.php?res.Environment.php.value:'加载中..'}}
                                         </td>
-                                        <td>[{{res.VersionInfo.InstallEnvironment?res.VersionInfo.InstallEnvironment.php['[']+','+res.VersionInfo.InstallEnvironment.php[')']:'-,-'}})
+                                        <td>[{{res.VersionInfo.php_min?res.VersionInfo.php_min+','+res.VersionInfo.php_max:'-,-'}})
                                         </td>
                                         <td>{{res.Environment.php?.status?'✔️可用':'❌不可用'}}</td>
                                     </tr>
                                     <tr>
                                         <td>MySQL</td>
                                         <td>自查</td>
-                                        <td>[{{res.VersionInfo.InstallEnvironment?res.VersionInfo.InstallEnvironment.mysql['[']+','+res.VersionInfo.InstallEnvironment.mysql[')']:'-,-'}})
+                                        <td>[{{res.VersionInfo.mysql_min?res.VersionInfo.mysql_min+','+res.VersionInfo.mysql_max:'-,-'}})
                                         </td>
                                         <td>🔍自查</td>
                                     </tr>
@@ -264,7 +264,7 @@
                                 <li> 🏞️更多主题：<a href="https://forum.lovecards.cn/t/CreateAndShare"
                                         target="_blank">由LoveCards社区提供</a></li>
                                 <li> 👯‍♂QQ交流群：<a
-                                        href="{{res.VersionInfo.QGroupUrl?res.VersionInfo.QGroupUrl:'https://lovecards.cn/'}}"
+                                        href="{{res.VersionInfo.qgroup?res.VersionInfo.qgroup:'https://lovecards.cn/'}}"
                                         target="_blank">801235342</a></li>
                             </ul>
                         </div>

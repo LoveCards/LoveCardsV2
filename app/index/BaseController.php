@@ -94,7 +94,7 @@ class BaseController extends Common
             'ThemeAssetsUrlPath' => '/theme/' . $this->attrGReqView['Theme']['DirectoryName'] . '/assets', //模板路径
             'ThemeConfig' => $lRes_ThemeConfig, //模板配置
 
-            'LCVersionInfo' => Common::mArrayGetLCVersionInfo(), //程序版本信息
+            'LCVersionInfo' => \app\common\VersionService::public(), //程序版本信息
 
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
             'SystemConfig' => config::get('master'),

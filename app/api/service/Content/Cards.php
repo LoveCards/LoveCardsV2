@@ -8,6 +8,8 @@ use app\api\model\Cards as CardsModel;
 use app\api\model\TagsMap as TagsMapModel;
 use app\api\model\Comments as CommentsModel;
 
+use app\common\FieldsToggle;
+
 use yunarch\utils\src\ModelList;
 
 class Cards
@@ -90,16 +92,16 @@ class Cards
     {
         switch ($method) {
             case 'top':
-                self::fieldsToggle('is_top', $ids, [0, 1]);
+                FieldsToggle::toggle(CardsModel::class, 'is_top', $ids, [0, 1]);
                 break;
             case 'approve':
-                self::fieldsToggle('status', $ids, [0, 3], [1, 2]);
+                FieldsToggle::toggle(CardsModel::class, 'status', $ids, [0, 3], [1, 2]);
                 break;
             case 'ban':
-                self::fieldsToggle('status', $ids, [0, 1], [2, 3]);
+                FieldsToggle::toggle(CardsModel::class, 'status', $ids, [0, 1], [2, 3]);
                 break;
             case 'hide':
-                self::fieldsToggle('status', $ids, [0, 2], [1, 3]);
+                FieldsToggle::toggle(CardsModel::class, 'status', $ids, [0, 2], [1, 3]);
                 break;
             case 'delete':
                 self::deleteCards(false, $ids);
@@ -107,18 +109,6 @@ class Cards
             default:
                 throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
-    }
-
-    static public function fieldsToggle($fields, $ids, $value1 = [0, 1], $value2 = false): void
-    {
-        $where = "WHEN {$fields} = {$value1[0]} THEN {$value1[1]} WHEN {$fields} = {$value1[1]} THEN {$value1[0]} ";
-        if ($value2) {
-            foreach ($value2 as $item) {
-                $where = $where . "WHEN {$fields} = {$item} THEN {$value1[1]} ";
-            }
-        }
-        $sql = "CASE {$where}END";
-        CardsModel::where('id', 'in', $ids)->update([$fields => Db::raw($sql)]);
     }
 
     static public function createCard($data): string

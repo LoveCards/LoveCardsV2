@@ -2,7 +2,7 @@
 
 namespace app\system\utils;
 
-use app\system\utils\Common;
+use app\common\VersionService;
 
 class Environment
 {
@@ -18,10 +18,9 @@ class Environment
     //验证安装环境
     public static function Check()
     {
-        $extensions = get_loaded_extensions();
-        $IE = Common::mArrayGetLCVersionInfo()['InstallEnvironment'];
+        $requirements = VersionService::requirements();
         $data = [
-            'php' => self::EStruct(phpversion(), (($IE['php']['['] <= phpversion()) && (phpversion() <= $IE['php'][')']))),
+            'php' => self::EStruct(phpversion(), (phpversion() >= $requirements['php']['min'] && phpversion() < $requirements['php']['max'])),
             'pdo_mysql' => self::EStruct(-1, extension_loaded('pdo')),
             'openssl' => self::EStruct(-1, extension_loaded('openssl')),
         ];

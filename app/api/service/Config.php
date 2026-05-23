@@ -25,7 +25,6 @@ class Config
 
         foreach ($files as $file) {
             $group = pathinfo($file, PATHINFO_FILENAME);
-            if ($group === 'roles') continue;
 
             $schema = include $file;
             if (!is_array($schema)) continue;

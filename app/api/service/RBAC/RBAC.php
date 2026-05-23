@@ -30,7 +30,7 @@ class RBAC
             return false;
         }
 
-        if (in_array(config('roles.system_roles.root'), $rolesId)) {
+        if (in_array(config('system.system_roles.root'), $rolesId)) {
             return true;
         }
 
