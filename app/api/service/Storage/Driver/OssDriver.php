@@ -54,8 +54,7 @@ class OssDriver extends AbstractDriver implements HasDirectUpload
         $this->validateFile($file);
 
         $bucket = $this->config['bucket'] ?? '';
-        $content = file_get_contents($file->getPathname());
-        $this->getOssClient()->putObject($bucket, $path, $content);
+        $this->getOssClient()->uploadFile($bucket, $path, $file->getPathname());
 
         $mime = $this->detectMime($file->getPathname());
 

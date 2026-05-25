@@ -31,7 +31,7 @@ class Files extends Model
 
     public static function generateHash(): string
     {
-        return substr(str_replace('-', '', md5(uniqid((string) mt_rand(), true))), 0, 16);
+        return bin2hex(random_bytes(8));
     }
 
     const SCENE_CARD = 'card';
@@ -120,6 +120,22 @@ class Files extends Model
             ];
             $record->upload_status = self::UPLOAD_FAILED;
             $record->save();
+        }
+
+        return $cleaned;
+    }
+
+    public static function hardCleanupExpired(int $limit = 100): array
+    {
+        $expired = self::where('upload_status', self::UPLOAD_PENDING)
+            ->where('expire_at', '<', date('Y-m-d H:i:s'))
+            ->limit($limit)
+            ->select();
+
+        $cleaned = [];
+        foreach ($expired as $record) {
+            $cleaned[] = ['id' => $record->id];
+            $record->delete();
         }
 
         return $cleaned;

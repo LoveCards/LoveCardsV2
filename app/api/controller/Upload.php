@@ -10,6 +10,7 @@ use app\api\service\Storage\ChannelManager;
 use app\api\service\Storage\PathGenerator;
 use app\api\service\Users as UsersService;
 use app\api\model\Files;
+use app\api\validate\Files as FilesValidate;
 
 class Upload extends BaseController
 {
@@ -40,6 +41,15 @@ class Upload extends BaseController
         $refType = Request::param('ref_type', null);
         $refId = Request::param('ref_id', null);
         $isPublic = (int) Request::param('is_public', 0);
+
+        $validateData = ['scene' => $scene, 'is_public' => $isPublic];
+        if ($refType !== null) $validateData['ref_type'] = $refType;
+        if ($refId !== null) $validateData['ref_id'] = $refId;
+
+        $validate = new FilesValidate();
+        if (!$validate->check($validateData)) {
+            return ApiResponse::createBadRequest($validate->getError());
+        }
 
         $status = Files::STATUS_NORMAL;
         $uploadStatus = Files::UPLOAD_COMPLETED;
@@ -98,6 +108,11 @@ class Upload extends BaseController
         $ids = json_decode(Request::param('ids', '[]'), true);
         $method = Request::param('method', '');
 
+        $validate = new FilesValidate();
+        if (!$validate->check(['method' => $method])) {
+            return ApiResponse::createBadRequest($validate->getError());
+        }
+
         if (empty($ids) || empty($method)) {
             return ApiResponse::createBadRequest('参数不完整');
         }
@@ -115,7 +130,7 @@ class Upload extends BaseController
         $userId = request()->uid ?? 0;
 
         if (!StorageManager::checkRateLimit((string) $userId)) {
-            return ApiResponse::createError('请求过于频繁');
+            return ApiResponse::createTooMany('请求过于频繁');
         }
 
         $filename = Request::param('filename', '');

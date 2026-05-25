@@ -46,30 +46,26 @@ class CosDriver extends AbstractDriver implements HasDirectUpload
         $bucket = $this->config['bucket'] ?? '';
         $region = $this->config['region'] ?? '';
 
-        $content = file_get_contents($file->getPathname());
         $mime = $this->detectMime($file->getPathname());
+        $fileSize = $file->getSize();
 
         $host = "{$bucket}.cos.{$region}.myqcloud.com";
         $url = "https://{$host}/{$path}";
 
+        $fp = fopen($file->getPathname(), 'r');
+
         $auth = $this->getSignature()->createAuthorization(
-            new Request('PUT', $url, ['Content-Type' => $mime], $content),
+            new Request('PUT', $url, ['Content-Type' => $mime], ''),
             '+30 minutes'
         );
 
         $ch = curl_init();
-        $tmpFile = fopen('php://temp', 'w+');
-        fwrite($tmpFile, $content);
-        rewind($tmpFile);
-
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_PUT, true);
         curl_setopt($ch, CURLOPT_UPLOAD, true);
-        curl_setopt($ch, CURLOPT_INFILE, $tmpFile);
-        curl_setopt($ch, CURLOPT_INFILESIZE, strlen($content));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_INFILE, $fp);
+        curl_setopt($ch, CURLOPT_INFILESIZE, $fileSize);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Authorization: ' . $auth,
             'Content-Type: ' . $mime,
@@ -80,7 +76,7 @@ class CosDriver extends AbstractDriver implements HasDirectUpload
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
 
-        fclose($tmpFile);
+        fclose($fp);
         curl_close($ch);
 
         if ($response === false || $error) {
@@ -96,7 +92,7 @@ class CosDriver extends AbstractDriver implements HasDirectUpload
             'url' => $this->getUrl($path),
             'path' => $path,
             'driver_path' => $path,
-            'size' => $file->getSize(),
+            'size' => $fileSize,
             'mime_type' => $mime,
             'original_name' => $file->getOriginalName(),
             'channel_slug' => $this->channelSlug,
@@ -119,8 +115,6 @@ class CosDriver extends AbstractDriver implements HasDirectUpload
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Authorization: ' . $auth,

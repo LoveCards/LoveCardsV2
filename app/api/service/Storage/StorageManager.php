@@ -159,6 +159,8 @@ class StorageManager
             $driver = StorageFactory::make($file->channel_slug);
             $driver->delete($file->driver_path);
         } catch (\Throwable $e) {
+            \think\facade\Log::error("Storage hardDelete driver failed: " . $e->getMessage());
+            throw $e;
         }
 
         Db::table('files')->where('id', $fileId)->delete();
@@ -216,6 +218,24 @@ class StorageManager
         return $result;
     }
 
+    public static function channelStats(): array
+    {
+        $channels = ChannelManager::getAll();
+        $result = [];
+
+        foreach ($channels as $config) {
+            $slug = $config['slug'];
+            $query = Files::where('channel_slug', $slug)->whereNull('deleted_at');
+            $result[] = [
+                'slug' => $slug,
+                'count' => $query->count(),
+                'size' => (int) $query->sum('file_size'),
+            ];
+        }
+
+        return $result;
+    }
+
     public static function checkRateLimit(string $uid): bool
     {
         $settings = ChannelManager::getRateLimitSettings();
@@ -236,21 +256,5 @@ class StorageManager
         CacheManager::set('storage', $key, array_values($timestamps), $window);
 
         return true;
-    }
-}
-
-class ChannelUploader
-{
-    private string $slug;
-
-    public function __construct(string $slug)
-    {
-        $this->slug = $slug;
-    }
-
-    public function upload(UploadedFile $file, string $path): StorageResult
-    {
-        $driver = StorageFactory::make($this->slug);
-        return $driver->upload($file, $path);
     }
 }

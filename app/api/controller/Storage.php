@@ -6,6 +6,7 @@ use think\facade\Request;
 
 use app\api\service\Config as ConfigService;
 use app\api\service\Storage\StorageFactory;
+use app\api\service\Storage\StorageManager;
 use app\api\service\Storage\ChannelTester;
 use app\api\ApiResponse;
 
@@ -23,7 +24,7 @@ class Storage extends BaseController
         $schema = [];
         foreach ($meta['fields'] as $field) {
             $schema[$field['key']] = [
-                'type'        => self::mapMetaType($field['type'] ?? 'text'),
+                'type'        => StorageFactory::mapMetaType($field['type'] ?? 'text'),
                 'default'     => $field['default'] ?? '',
                 'description' => $field['label'] ?? $field['key'],
             ];
@@ -52,7 +53,7 @@ class Storage extends BaseController
             $schema = [];
             foreach ($meta['fields'] as $field) {
                 $schema[$field['key']] = [
-                    'type'        => self::mapMetaType($field['type'] ?? 'text'),
+                    'type'        => StorageFactory::mapMetaType($field['type'] ?? 'text'),
                     'default'     => $field['default'] ?? '',
                     'description' => $field['label'] ?? $field['key'],
                 ];
@@ -128,37 +129,6 @@ class Storage extends BaseController
 
     public function channelStats()
     {
-        $channels = StorageFactory::getRegisteredTypes();
-        $result = [];
-
-        foreach ($channels as $slug) {
-            $count = \think\facade\Db::table('files')
-                ->where('channel_slug', $slug)
-                ->whereNull('deleted_at')
-                ->count();
-
-            $totalSize = \think\facade\Db::table('files')
-                ->where('channel_slug', $slug)
-                ->whereNull('deleted_at')
-                ->sum('file_size');
-
-            $result[$slug] = [
-                'file_count' => $count ?? 0,
-                'total_size' => $totalSize ?? 0,
-            ];
-        }
-
-        return ApiResponse::createOk($result);
-    }
-
-    private static function mapMetaType(string $uiType): string
-    {
-        return match ($uiType) {
-            'text', 'password', 'select', 'textarea' => 'string',
-            'number'                                  => 'int',
-            'checkbox', 'toggle', 'switch'            => 'bool',
-            'json'                                    => 'json',
-            default                                   => 'string',
-        };
+        return ApiResponse::createOk(StorageManager::channelStats());
     }
 }

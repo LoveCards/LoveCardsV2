@@ -42,13 +42,13 @@ class QiniuDriver extends AbstractDriver implements HasDirectUpload
         $secretKey = $this->config['secret_key'] ?? '';
         $bucket = $this->config['bucket'] ?? '';
 
-        $content = file_get_contents($file->getPathname());
-
         $auth = new \Qiniu\Auth($accessKey, $secretKey);
         $token = $auth->uploadToken($bucket);
 
         $uploadManager = new \Qiniu\Storage\UploadManager();
-        list($result, $error) = $uploadManager->put($token, $path, $content);
+        list($result, $error) = $uploadManager->put($token, $path, file_get_contents($file->getPathname()), [
+            'mimeType' => $this->detectMime($file->getPathname()),
+        ]);
 
         if ($error !== null) {
             throw new ApiException('七牛上传失败: ' . $error->message());

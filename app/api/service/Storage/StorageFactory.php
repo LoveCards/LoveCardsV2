@@ -70,4 +70,15 @@ class StorageFactory
         self::scanDrivers();
         return isset(self::$drivers[$type]);
     }
+
+    public static function mapMetaType(string $uiType): string
+    {
+        return match ($uiType) {
+            'text', 'password', 'select', 'textarea' => 'string',
+            'number'                                  => 'int',
+            'checkbox', 'toggle', 'switch'            => 'bool',
+            'json'                                    => 'json',
+            default                                   => 'string',
+        };
+    }
 }

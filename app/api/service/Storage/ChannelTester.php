@@ -2,15 +2,14 @@
 
 namespace app\api\service\Storage;
 
-use app\api\service\Config as ConfigService;
-
 class ChannelTester
 {
     public static function test(string $channel): array
     {
-        $config = ConfigService::getGroup('storage_' . $channel);
-        if (empty($config)) {
-            return ['success' => false, 'message' => '渠道配置不存在'];
+        try {
+            $config = ChannelManager::getBySlug($channel);
+        } catch (\Throwable $e) {
+            return ['success' => false, 'message' => '渠道配置不存在: ' . $channel];
         }
 
         $type = $config['type'] ?? $channel;

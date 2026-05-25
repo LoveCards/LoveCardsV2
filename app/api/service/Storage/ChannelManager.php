@@ -3,6 +3,7 @@
 namespace app\api\service\Storage;
 
 use app\api\service\Config;
+use think\facade\Db;
 
 class ChannelManager
 {
@@ -13,8 +14,15 @@ class ChannelManager
     {
         if (self::$channels === null) {
             self::$channels = [];
-            foreach (StorageFactory::getRegisteredTypes() as $type) {
-                $group = 'storage_' . $type;
+
+            $groups = Db::table('configs')
+                ->where('group', 'like', 'storage_%')
+                ->distinct()
+                ->column('group');
+
+            foreach ($groups as $group) {
+                $type = str_replace('storage_', '', $group);
+                if ($type === '' || $type === 'storage') continue;
                 self::$channels[$type] = array_merge(
                     ['type' => $type],
                     Config::getGroup($group)
