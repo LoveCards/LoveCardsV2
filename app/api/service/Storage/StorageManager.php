@@ -226,10 +226,9 @@ class StorageManager
         foreach ($channels as $config) {
             $slug = $config['slug'];
             $query = Files::where('channel_slug', $slug)->whereNull('deleted_at');
-            $result[] = [
-                'slug' => $slug,
-                'count' => $query->count(),
-                'size' => (int) $query->sum('file_size'),
+            $result[$slug] = [
+                'file_count' => $query->count(),
+                'total_size' => (int) $query->sum('file_size'),
             ];
         }
 
