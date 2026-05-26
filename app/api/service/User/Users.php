@@ -2,7 +2,6 @@
 
 namespace app\api\service\User;
 
-use think\facade\Db;
 use app\api\model\Users as UsersModel;
 use app\common\FieldsToggle;
 
@@ -28,63 +27,6 @@ class Users
             default:
                 throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
-    }
-
-    public static function Login($account, $password): UsersModel
-    {
-        $result = UsersModel::where('number', $account)
-            ->whereOr('username', $account)
-            ->whereOr('email', $account)
-            ->whereOr('phone', $account)
-            ->find();
-
-        if (!$result) {
-            throw \app\api\ApiException::unauthorized('用户不存在', \app\api\ApiException::CODE_USER_NOT_FOUND);
-        }
-
-        if ($result['status'] != 0 && $result['status'] != 2) {
-            throw \app\api\ApiException::forbidden('您的账户已被封禁或未激活', \app\api\ApiException::CODE_USER_BANNED);
-        }
-
-        if (!password_verify($password, $result['password'])) {
-            throw \app\api\ApiException::unauthorized('密码不匹配', \app\api\ApiException::CODE_PASSWORD_MISMATCH);
-        }
-
-        return $result;
-    }
-
-    public static function Register($number, $username, $email, $phone, $password, $roles_id = null, $status = 0): UsersModel
-    {
-        if ($roles_id === null) {
-            $roles_id = [config('system.system_roles.user')];
-        }
-        if ($password != '') {
-            $result = null;
-            if ($email != '') {
-                $result = UsersModel::where('email', $email)->find();
-            } elseif ($phone != '') {
-                $result = UsersModel::where('phone', $phone)->find();
-            }
-            if ($result) {
-                throw \app\api\ApiException::badRequest('邮箱或手机号已存在', \app\api\ApiException::CODE_USER_ALREADY_EXISTS);
-            } else {
-                $data = array(
-                    'number' => $number,
-                    'username' => $username,
-                    'email' => $email,
-                    'phone' => $phone,
-                    'roles_id' => $roles_id,
-                    'status' => $status,
-                );
-            }
-        } else {
-            throw \app\api\ApiException::badRequest('密码不得为空', \app\api\ApiException::CODE_PARAM_INVALID);
-        }
-
-        $data['password'] = password_hash($password, PASSWORD_DEFAULT);
-        $result = UsersModel::create($data);
-
-        return $result;
     }
 
     public static function Index($params): array

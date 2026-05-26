@@ -1,8 +1,8 @@
 <?php
 
-namespace app\api\controller\Auth;
+namespace app\api\controller\Rbac;
 
-use app\api\service\Auth\RBAC;
+use app\api\service\Rbac\RBAC;
 use app\api\ApiResponse;
 use app\api\controller\BaseController;
 use think\facade\Request;

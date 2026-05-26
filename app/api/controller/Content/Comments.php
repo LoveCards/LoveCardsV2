@@ -6,8 +6,7 @@ use think\facade\Request;
 
 use app\api\validate\Comments as CommentsValidate;
 use app\api\service\Content\Comments as CommentsService;
-
-use yunarch\validate\Common as CommonValidate;
+use app\api\service\System\Config as ConfigService;
 
 use app\api\ApiResponse;
 use app\api\controller\BaseController;
@@ -37,11 +36,11 @@ class Comments extends BaseController
 
         $params['user_id'] = request()->uid;
         $params['post_ip'] = request()->ip();
-        $params['status'] = \app\api\service\Config::get('comments.approve') ? 3 : 0;
+        $params['status'] = ConfigService::get('comments.approve') ? 3 : 0;
 
         $result = CommentsService::createComment($params);
 
-        if (\app\api\service\Config::get('comments.approve')) {
+        if (ConfigService::get('comments.approve')) {
             return ApiResponse::createCreated();
         }
         return ApiResponse::createOk($result['data']);

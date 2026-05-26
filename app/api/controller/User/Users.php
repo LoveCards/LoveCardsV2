@@ -7,8 +7,6 @@ use think\facade\Request;
 use app\api\service\User\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
-use yunarch\validate\Common as CommonValidate;
-
 use app\api\ApiResponse;
 use app\api\controller\BaseController;
 use app\api\controller\BatchOperateTrait;

@@ -2,7 +2,7 @@
 
 namespace app\api\middleware;
 
-use app\api\service\Auth\RBAC;
+use app\api\service\Rbac\RBAC;
 use app\api\ApiResponse;
 
 class PermissionCheck

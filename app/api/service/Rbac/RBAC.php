@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service\Auth;
+namespace app\api\service\Rbac;
 
 use think\facade\Db;
 use think\facade\Route;
