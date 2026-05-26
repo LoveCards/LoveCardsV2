@@ -2,7 +2,7 @@
 
 namespace app\index\common;
 
-use app\api\service\Config as ConfigService;
+use app\api\service\System\Config as ConfigService;
 
 class Common
 {

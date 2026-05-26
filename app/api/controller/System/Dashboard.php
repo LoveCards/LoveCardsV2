@@ -1,9 +1,10 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\System;
 
-use app\api\service\Dashboard as DashboardService;
+use app\api\service\System\Dashboard as DashboardService;
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Dashboard extends BaseController
 {

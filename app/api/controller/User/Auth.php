@@ -1,12 +1,12 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\User;
 
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use app\api\service\Users as UsersService;
-use app\api\service\Config as ConfigService;
+use app\api\service\User\Users as UsersService;
+use app\api\service\System\Config as ConfigService;
 use app\api\validate\Users as UsersValidate;
 
 use app\common\jwt\Jwt;
@@ -14,6 +14,7 @@ use app\common\email\Email;
 use app\common\captcha\Code;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Auth extends BaseController
 {

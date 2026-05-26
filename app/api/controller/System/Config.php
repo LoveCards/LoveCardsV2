@@ -1,12 +1,13 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\System;
 
 use think\facade\Request;
 
-use app\api\service\Config as ConfigService;
+use app\api\service\System\Config as ConfigService;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Config extends BaseController
 {

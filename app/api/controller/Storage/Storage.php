@@ -1,14 +1,15 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Storage;
 
 use think\facade\Request;
 
-use app\api\service\Config as ConfigService;
+use app\api\service\System\Config as ConfigService;
 use app\api\service\Storage\StorageFactory;
 use app\api\service\Storage\StorageManager;
 use app\api\service\Storage\ChannelTester;
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Storage extends BaseController
 {

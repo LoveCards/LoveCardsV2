@@ -4,7 +4,7 @@ namespace app\index\method;
 
 use app\index\common\Common;
 use app\index\common\FrontEnd;
-use app\api\service\Users as UsersService;
+use app\api\service\User\Users as UsersService;
 
 trait Users
 {

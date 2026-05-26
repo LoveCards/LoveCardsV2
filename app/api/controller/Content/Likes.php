@@ -1,10 +1,11 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Content;
 
 use think\facade\Request;
 use app\api\service\Content\Likes as LikesService;
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Likes extends BaseController
 {

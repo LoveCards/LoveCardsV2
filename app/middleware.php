@@ -2,5 +2,5 @@
 
 return [
     //session开启
-    think\middleware\SessionInit::class
+    think\middleware\SessionInit::class,
 ];

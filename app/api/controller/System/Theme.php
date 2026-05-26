@@ -1,11 +1,12 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\System;
 
-use app\api\service\Theme as CommonTheme;
-use app\api\service\Config as ConfigService;
+use app\api\service\System\Theme as CommonTheme;
+use app\api\service\System\Config as ConfigService;
 use app\common\VersionService;
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Theme extends BaseController
 {

@@ -1,9 +1,10 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Auth;
 
-use app\api\service\RBAC\RBAC;
+use app\api\service\Auth\RBAC;
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 use think\facade\Request;
 
 class Permissions extends BaseController

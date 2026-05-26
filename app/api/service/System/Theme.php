@@ -1,11 +1,11 @@
 <?php
 
-namespace app\api\service;
+namespace app\api\service\System;
 
 use think\Facade;
 use think\facade\View;
 use think\facade\Config as ThinkConfig;
-use app\api\service\Config as ConfigService;
+use app\api\service\System\Config as ConfigService;
 
 class Theme extends Facade
 {

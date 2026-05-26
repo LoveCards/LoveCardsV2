@@ -7,7 +7,7 @@ use think\facade\Cookie;
 
 use app\index\extend\jwt\Jwt;
 
-use app\api\service\Users as UsersService;
+use app\api\service\User\Users as UsersService;
 
 class FrontEnd extends Facade
 {

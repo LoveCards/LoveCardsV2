@@ -2,7 +2,7 @@
 
 namespace app\api\service\Storage;
 
-use app\api\service\Config;
+use app\api\service\System\Config;
 use think\facade\Db;
 
 class ChannelManager

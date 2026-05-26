@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service\RBAC;
+namespace app\api\service\Auth;
 
 use think\facade\Db;
 use app\api\model\Roles as RolesModel;

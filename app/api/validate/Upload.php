@@ -3,7 +3,7 @@
 namespace app\api\validate;
 
 use think\Validate;
-use app\api\service\Config as ConfigService;
+use app\api\service\System\Config as ConfigService;
 
 class Upload extends Validate
 {

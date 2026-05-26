@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Storage;
 
 use think\facade\Request;
 use app\api\ApiResponse;
@@ -8,9 +8,10 @@ use app\api\service\Storage\StorageManager;
 use app\api\service\Storage\DirectUploadManager;
 use app\api\service\Storage\ChannelManager;
 use app\api\service\Storage\PathGenerator;
-use app\api\service\Users as UsersService;
+use app\api\service\User\Users as UsersService;
 use app\api\model\Files;
 use app\api\validate\Files as FilesValidate;
+use app\api\controller\BaseController;
 
 class Upload extends BaseController
 {

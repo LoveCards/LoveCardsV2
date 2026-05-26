@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Content;
 
 use think\facade\Request;
 
@@ -10,6 +10,8 @@ use app\api\service\Content\Comments as CommentsService;
 use yunarch\validate\Common as CommonValidate;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
+use app\api\controller\BatchOperateTrait;
 
 class Comments extends BaseController
 {

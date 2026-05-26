@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\service;
+namespace app\api\service\User;
 
 use think\facade\Db;
 use app\api\model\Users as UsersModel;

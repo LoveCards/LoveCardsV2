@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Content;
 
 use think\facade\Request;
 
@@ -8,6 +8,8 @@ use app\api\service\Content\Tags as TagsService;
 use app\api\validate\Tags as TagsValidate;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
+use app\api\controller\BatchOperateTrait;
 
 class Tags extends BaseController
 {

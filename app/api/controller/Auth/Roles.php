@@ -1,16 +1,17 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\Auth;
 
 use think\facade\Request;
 
-use app\api\service\RBAC\Roles as RolesService;
-use app\api\service\RBAC\RBAC;
-use app\api\service\Config as ConfigService;
+use app\api\service\Auth\Roles as RolesService;
+use app\api\service\Auth\RBAC;
+use app\api\service\System\Config as ConfigService;
 use app\common\cache\CacheManager;
 use app\api\validate\Roles as RolesValidate;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
 class Roles extends BaseController
 {

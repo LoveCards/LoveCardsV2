@@ -1,15 +1,17 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\User;
 
 use think\facade\Request;
 
-use app\api\service\Users as UsersService;
+use app\api\service\User\Users as UsersService;
 use app\api\validate\Users as UsersValidate;
 
 use yunarch\validate\Common as CommonValidate;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
+use app\api\controller\BatchOperateTrait;
 
 class Users extends BaseController
 {
@@ -17,7 +19,7 @@ class Users extends BaseController
 
     protected function getBatchService(): string
     {
-        return \app\api\service\Users::class;
+        return \app\api\service\User\Users::class;
     }
 
     public function allList()

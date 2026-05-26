@@ -1,12 +1,12 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\User;
 
 use think\facade\Request;
 use think\exception\ValidateException;
 
-use app\api\service\Users as UsersService;
-use app\api\service\RBAC\RBAC;
+use app\api\service\User\Users as UsersService;
+use app\api\service\Auth\RBAC;
 use app\api\model\Roles as RolesModel;
 use app\api\validate\Users as UsersValidate;
 
@@ -14,8 +14,9 @@ use app\common\captcha\Code;
 use app\common\email\Email;
 
 use app\api\ApiResponse;
+use app\api\controller\BaseController;
 
-class UserProfile extends BaseController
+class Profile extends BaseController
 {
     public function get()
     {
