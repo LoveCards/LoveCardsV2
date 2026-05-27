@@ -57,13 +57,17 @@ class Sender extends BaseController
 
     public function testChannel()
     {
-        $channel = Request::param('channel', '');
-        if (empty($channel)) {
-            return ApiResponse::createBadRequest('请指定渠道');
+        try {
+            $channel = Request::param('channel', '');
+            if (empty($channel)) {
+                return ApiResponse::createBadRequest('请指定渠道');
+            }
+
+            $to = Request::param('to', 'test@example.com');
+
+            return ApiResponse::createOk(SenderManager::testChannel($channel, $to));
+        } catch (\Throwable $e) {
+            return ApiResponse::createBadRequest($e->getMessage());
         }
-
-        $to = Request::param('to', 'test@example.com');
-
-        return ApiResponse::createOk(SenderManager::testChannel($channel, $to));
     }
 }
