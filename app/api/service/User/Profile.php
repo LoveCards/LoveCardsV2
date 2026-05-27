@@ -7,7 +7,7 @@ use app\api\model\Roles as RolesModel;
 use app\api\service\Rbac\RBAC;
 use app\api\ApiException;
 use app\common\captcha\Code;
-use app\common\email\Email;
+use app\api\service\Sender\Sender;
 
 class Profile
 {
@@ -73,6 +73,6 @@ class Profile
         $data = Code::CreateCaptcha($email, 'Info_BindEmailCaptcha', 300);
         $code = $data['data'];
 
-        Email::SendCaptcha($code, $email);
+        Sender::code('smtp', $email, $code);
     }
 }

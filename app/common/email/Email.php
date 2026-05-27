@@ -6,6 +6,9 @@ use app\common\cache\CacheManager;
 use think\facade\Config as ThinkConfig;
 use mailer\tp6\Mailer;
 
+/**
+ * @deprecated 使用 app\api\service\Sender\SenderManager 替代
+ */
 class Email
 {
     protected static function resetMailerConfig(): void

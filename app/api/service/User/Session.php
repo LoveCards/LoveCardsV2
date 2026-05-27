@@ -6,7 +6,7 @@ use app\api\model\Users as UsersModel;
 use app\api\ApiException;
 use app\common\jwt\Jwt;
 use app\common\captcha\Code;
-use app\common\email\Email;
+use app\api\service\Sender\Sender;
 
 class Session
 {
@@ -107,7 +107,7 @@ class Session
         $data = Code::CreateCaptcha($email, 'Auth', 300);
         $code = $data['data'];
 
-        Email::SendCaptcha($code, $email);
+        Sender::code('smtp', $email, $code);
     }
 
     public static function verifyCaptcha(string $email, string $code): bool
