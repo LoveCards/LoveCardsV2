@@ -3,8 +3,8 @@
 namespace app\api\service\System;
 
 use think\facade\Db;
-use app\common\cache\CacheManager;
-use app\common\VersionService;
+use app\common\infra\CacheManager;
+use app\api\service\System\VersionService;
 
 use app\api\model\Cards as CardsModel;
 use app\api\model\Likes;

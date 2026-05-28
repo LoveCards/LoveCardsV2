@@ -1,6 +1,6 @@
 <?php
 
-namespace yunarch\utils\src;
+namespace app\common\support;
 
 use think\exception\ValidateException;
 

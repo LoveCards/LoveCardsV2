@@ -5,7 +5,7 @@ namespace app\api\validate;
 use think\Validate;
 use app\api\service\System\Config as ConfigService;
 
-use yunarch\utils\src\ValidateRuleExtend;
+use app\common\support\ValidateRuleExtend;
 
 class Cards extends Validate
 {

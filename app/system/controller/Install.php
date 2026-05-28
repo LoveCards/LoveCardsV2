@@ -8,7 +8,7 @@ use think\facade\Cache;
 
 use app\system\utils\Export;
 
-use app\common\VersionService;
+use app\api\service\System\VersionService;
 use app\system\utils\Common;
 use app\system\utils\Database;
 use app\system\utils\Environment;

@@ -33,6 +33,12 @@ class Users extends Validate
             'nonNull' => false,
             'toNull' => false,
         ],
+        'captcha' => [
+            'normal' => false,
+            'require' => ['account'],
+            'nonNull' => false,
+            'toNull' => false,
+        ],
         'allUpdate' => [
             'normal' => [
                 'avatar',
@@ -57,6 +63,7 @@ class Users extends Validate
 
     protected $rule =   [
         'id' => 'number',
+        'account' => 'max:320',
         'number' => 'length:3,20|alphaDash|unique:users',
         'username' => 'length:3,12|chsDash|unique:users',
         'password' => 'length:5,36|password',
@@ -73,6 +80,9 @@ class Users extends Validate
     protected $message  =   [
         'id.require' => 'ID不得为空',
         'id.number' => 'ID格式错误',
+
+        'account.require' => '账号不能为空',
+        'account.max' => '账号超出最大长度',
 
         'status.require' => '状态不得为空',
         'status.number' => '状态格式错误',

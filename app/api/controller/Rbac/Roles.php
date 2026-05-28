@@ -7,7 +7,7 @@ use think\facade\Request;
 use app\api\service\Rbac\Roles as RolesService;
 use app\api\service\Rbac\RBAC;
 use app\api\service\System\Config as ConfigService;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 use app\api\validate\Roles as RolesValidate;
 
 use app\api\ApiResponse;

@@ -23,6 +23,14 @@ class Session extends BaseController
     {
         $account = Request::param('account');
         $password = Request::param('password');
+
+        if (empty($account) || empty($password)) {
+            return ApiResponse::createBadRequest('参数错误', [
+                'account' => empty($account) ? '账号不能为空' : null,
+                'password' => empty($password) ? '密码不能为空' : null,
+            ]);
+        }
+
         $accountMap = SessionService::resolveAccountType($account);
 
         try {
@@ -48,6 +56,13 @@ class Session extends BaseController
         $account = Request::param('account');
         $password = Request::param('password');
         $code = Request::param('code');
+
+        if (empty($account) || empty($password)) {
+            return ApiResponse::createBadRequest('参数错误', [
+                'account' => empty($account) ? '账号不能为空' : null,
+                'password' => empty($password) ? '密码不能为空' : null,
+            ]);
+        }
 
         if (ConfigService::get('user.captcha')) {
             if (!SessionService::verifyCaptcha($account, $code)) {
@@ -92,14 +107,18 @@ class Session extends BaseController
 
     public function captcha()
     {
-        $account = Request::param('account');
+        $params = $this->param(
+            UsersValidate::class,
+            UsersValidate::$all_scene['captcha'],
+            request()->param()
+        );
 
         try {
-            SessionService::sendCaptcha($account);
+            SessionService::sendCaptcha($params['account']);
         } catch (\RuntimeException $e) {
             return ApiResponse::createBadRequest($e->getMessage());
         } catch (\app\api\ApiException $e) {
-            return ApiResponse::createError('发送失败', [$e->getMessage()]);
+            return ApiResponse::createBadRequest($e->getMessage());
         }
 
         return ApiResponse::createNoContent();

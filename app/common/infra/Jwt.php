@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\jwt;
+namespace app\common\infra;
 
 use Firebase\JWT\JWT as FBJWT;
 use Firebase\JWT\Key;
@@ -11,7 +11,7 @@ use UnexpectedValueException;
 
 use think\facade\Config;
 use think\facade\Cache;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 
 class Jwt
 {

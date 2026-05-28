@@ -3,10 +3,10 @@
 namespace app\api\controller\System;
 
 use think\facade\Request;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 
 use app\api\service\System\Theme;
-use app\common\VersionService;
+use app\api\service\System\VersionService;
 use app\api\service\System\Config as ConfigService;
 
 use app\api\ApiResponse;

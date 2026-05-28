@@ -76,7 +76,7 @@ class Index extends BaseController
                 'ViewKeywords' => '',
                 'ViewDescription' => ''
             ]);
-            View::assign('LCVersionInfo', \app\common\VersionService::public());
+            View::assign('LCVersionInfo', \app\api\service\System\VersionService::public());
             View::config(['view_path' => './view/']);
             return View::fetch('error/404');
         } else {

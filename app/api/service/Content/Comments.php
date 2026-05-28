@@ -7,9 +7,9 @@ use think\facade\Db;
 use app\api\model\Comments as CommentsModel;
 use app\api\model\Cards as CardsModel;
 
-use app\common\FieldsToggle;
+use app\common\support\FieldsToggle;
 
-use yunarch\utils\src\ModelList;
+use app\common\support\ModelList;
 
 class Comments
 {

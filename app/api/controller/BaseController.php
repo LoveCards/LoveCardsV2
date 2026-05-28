@@ -6,9 +6,9 @@ use think\exception\ValidateException;
 use app\api\ApiException;
 use app\api\ApiResponse;
 
-use yunarch\utils\src\ValidateRuleExtend;
-use yunarch\utils\src\ValidateExtend;
-use yunarch\validate\ModelList as ModelListValidate;
+use app\common\support\ValidateRuleExtend;
+use app\common\support\ValidateExtend;
+use app\common\validate\ModelList as ModelListValidate;
 
 class BaseController
 {

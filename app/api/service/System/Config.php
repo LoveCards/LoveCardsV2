@@ -3,7 +3,7 @@
 namespace app\api\service\System;
 
 use think\facade\Db;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 
 class Config
 {

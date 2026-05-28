@@ -4,7 +4,7 @@ namespace app\api\service\Rbac;
 
 use think\facade\Db;
 use think\facade\Route;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 
 class RBAC
 {

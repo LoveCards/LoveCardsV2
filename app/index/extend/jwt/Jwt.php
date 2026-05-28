@@ -13,7 +13,7 @@ use InvalidArgumentException;
 use UnexpectedValueException;
 
 use think\facade\Config;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 use app\index\common\Common;
 
 class Jwt

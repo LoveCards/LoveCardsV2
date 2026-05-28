@@ -1,6 +1,6 @@
 <?php
 
-namespace yunarch\validate;
+namespace app\common\validate;
 
 use think\Validate;
 

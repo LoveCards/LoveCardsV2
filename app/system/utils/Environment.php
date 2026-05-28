@@ -2,7 +2,7 @@
 
 namespace app\system\utils;
 
-use app\common\VersionService;
+use app\api\service\System\VersionService;
 
 class Environment
 {

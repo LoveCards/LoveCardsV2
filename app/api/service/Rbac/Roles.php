@@ -6,7 +6,7 @@ use think\facade\Db;
 use app\api\model\Roles as RolesModel;
 use app\api\model\RolePermissions as RolePermissionsModel;
 use app\api\ApiException;
-use yunarch\utils\src\ModelList;
+use app\common\support\ModelList;
 
 class Roles
 {

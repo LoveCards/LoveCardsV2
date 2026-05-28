@@ -4,10 +4,10 @@ namespace app\api\service\Storage;
 
 use think\file\UploadedFile;
 use think\facade\Db;
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 use app\api\model\Files;
 use app\api\service\Storage\Contract\StorageResult;
-use yunarch\utils\src\ModelList;
+use app\common\support\ModelList;
 
 class StorageManager
 {

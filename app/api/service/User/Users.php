@@ -3,9 +3,9 @@
 namespace app\api\service\User;
 
 use app\api\model\Users as UsersModel;
-use app\common\FieldsToggle;
+use app\common\support\FieldsToggle;
 
-use yunarch\utils\src\ModelList;
+use app\common\support\ModelList;
 
 class Users
 {

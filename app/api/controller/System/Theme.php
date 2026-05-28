@@ -4,7 +4,7 @@ namespace app\api\controller\System;
 
 use app\api\service\System\Theme as CommonTheme;
 use app\api\service\System\Config as ConfigService;
-use app\common\VersionService;
+use app\api\service\System\VersionService;
 use app\api\ApiResponse;
 use app\api\controller\BaseController;
 

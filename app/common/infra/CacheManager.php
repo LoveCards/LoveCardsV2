@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\cache;
+namespace app\common\infra;
 
 use think\facade\Cache;
 

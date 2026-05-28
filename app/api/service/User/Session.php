@@ -4,7 +4,7 @@ namespace app\api\service\User;
 
 use app\api\model\Users as UsersModel;
 use app\api\ApiException;
-use app\common\jwt\Jwt;
+use app\common\infra\Jwt;
 use app\common\captcha\Code;
 use app\api\service\Sender\Sender;
 

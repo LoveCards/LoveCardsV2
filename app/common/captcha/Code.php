@@ -2,7 +2,7 @@
 
 namespace app\common\captcha;
 
-use app\common\cache\CacheManager;
+use app\common\infra\CacheManager;
 
 class Code
 {

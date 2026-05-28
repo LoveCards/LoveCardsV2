@@ -5,7 +5,7 @@ namespace app\api\middleware;
 use app\api\service\System\Config as ConfigService;
 use app\api\service\User\Users as UsersService;
 use app\api\ApiResponse;
-use app\common\jwt\Jwt;
+use app\common\infra\Jwt;
 
 class JwtAuthCheck
 {
