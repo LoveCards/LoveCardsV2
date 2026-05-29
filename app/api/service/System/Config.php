@@ -283,6 +283,32 @@ class Config
         return true;
     }
 
+    /**
+     * 删除配置组
+     */
+    public static function deleteGroup(string $group): bool
+    {
+        Db::table('configs')->where('group', $group)->delete();
+        unset(self::$cache[$group]);
+        unset(self::$cache["group:" . $group]);
+        unset(self::$schema[$group]);
+        CacheManager::clearDomain('config');
+        return true;
+    }
+
+    /**
+     * 删除配置键
+     */
+    public static function deleteKey(string $group, string $key): bool
+    {
+        Db::table('configs')->where('group', $group)->where('key', $key)->delete();
+        unset(self::$cache["{$group}.{$key}"]);
+        unset(self::$cache[$group]);
+        unset(self::$schema[$group]);
+        CacheManager::clearDomain('config');
+        return true;
+    }
+
     // ═══════════════════════════════
     //  管理接口
     // ═══════════════════════════════

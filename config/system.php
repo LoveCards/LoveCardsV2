@@ -9,7 +9,7 @@ return [
     'qgroup'       => 'https://jq.qq.com/?_wv=1027&k=qM8f2RMg',
 
     // ─── 环境要求 ───
-    'php_min'      => '7.2.5',
+    'php_min'      => '8.0',
     'php_max'      => '8.0.99',
     'mysql_min'    => '5.7',
     'mysql_max'    => '9999',
@@ -21,7 +21,4 @@ return [
         'user'  => 3,
         'guest' => 4,
     ],
-    'default_role' => 'user',
-    'guest_role'   => 'guest',
-    'admin_roles'  => ['root', 'admin'],
 ];

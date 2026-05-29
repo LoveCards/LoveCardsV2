@@ -95,9 +95,9 @@ class CaptchaManager
     public static function config(): array
     {
         return [
-            'geetest' => [
-                'id'     => ConfigService::get('geetest.id', ''),
-                'status' => ConfigService::get('geetest.status', false),
+            'captcha_geetest_v4' => [
+                'id'     => ConfigService::get('captcha_geetest_v4.id', ''),
+                'status' => ConfigService::get('captcha_geetest_v4.status', false),
             ],
             'code_enabled'    => ConfigService::get('captcha.code_enabled', true),
             'captcha_enabled' => ConfigService::get('captcha.captcha_enabled', true),

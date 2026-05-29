@@ -15,7 +15,7 @@ class Config extends BaseController
     {
         $groups = ConfigService::getSchemaGroups();
         if (empty($groups)) {
-            $groups = ['core', 'upload', 'cards', 'comments', 'user', 'geetest', 'version', 'captcha'];
+            $groups = ['core', 'upload', 'cards', 'comments', 'user', 'version', 'captcha'];
         }
         return $groups;
     }
@@ -89,7 +89,7 @@ class Config extends BaseController
         $schema = Request::param('schema', []);
 
         if (empty($group) || empty($schema)) {
-            return ApiResponse::createBadRequest('缺少 group 或 schema');
+            return ApiResponse::createBadRequest('缂哄皯 group 鎴?schema');
         }
 
         $result = ConfigService::register($group, $schema);
@@ -100,6 +100,27 @@ class Config extends BaseController
     {
         $group = Request::param('group');
         ConfigService::reload($group ?: null);
+        return ApiResponse::createNoContent();
+    }
+
+    public function delete()
+    {
+        $group = Request::param('group', '');
+        if (empty($group)) {
+            return ApiResponse::createBadRequest('缺少 group');
+        }
+        ConfigService::deleteGroup($group);
+        return ApiResponse::createNoContent();
+    }
+
+    public function deleteKey()
+    {
+        $group = Request::param('group', '');
+        $key = Request::param('key', '');
+        if (empty($group) || empty($key)) {
+            return ApiResponse::createBadRequest('缺少 group 或 key');
+        }
+        ConfigService::deleteKey($group, $key);
         return ApiResponse::createNoContent();
     }
 }

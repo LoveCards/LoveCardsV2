@@ -29,8 +29,8 @@ class GeetestDriver extends AbstractDriver
 
     public function generate(array $params): array
     {
-        $captchaId = ConfigService::get('geetest.id', '');
-        $status    = ConfigService::get('geetest.status', false);
+        $captchaId = ConfigService::get('captcha_geetest_v4.id', '');
+        $status    = ConfigService::get('captcha_geetest_v4.status', false);
 
         return [
             'captcha_id' => $captchaId,
@@ -50,8 +50,8 @@ class GeetestDriver extends AbstractDriver
             return false;
         }
 
-        $captchaId  = ConfigService::get('geetest.id', '');
-        $captchaKey = ConfigService::get('geetest.key', '');
+        $captchaId  = ConfigService::get('captcha_geetest_v4.id', '');
+        $captchaKey = ConfigService::get('captcha_geetest_v4.key', '');
 
         if (empty($captchaId) || empty($captchaKey)) {
             return false;

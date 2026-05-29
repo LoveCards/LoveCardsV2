@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'default_smtp' => [
+    'default'       => [
         'type'        => 'string',
-        'default'     => 'email',
+        'default'     => 'sender_smtp',
+        'description' => '全局默认发送渠道',
+    ],
+    'default_smtp'  => [
+        'type'        => 'string',
+        'default'     => 'sender_smtp',
         'description' => 'SMTP 渠道默认 Driver',
     ],
-    'default_sms' => [
+    'default_sms'   => [
         'type'        => 'string',
-        'default'     => 'sms',
+        'default'     => 'sender_aliyun_sms',
         'description' => 'SMS 渠道默认 Driver',
-    ],
-    'default_webhook' => [
-        'type'        => 'string',
-        'default'     => '',
-        'description' => 'Webhook 渠道默认 Driver',
     ],
 ];

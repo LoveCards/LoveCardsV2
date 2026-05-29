@@ -6,7 +6,6 @@ use think\facade\View;
 
 use app\index\common\File;
 use app\index\common\Theme;
-use app\index\common\Common;
 use app\index\BaseController;
 
 use app\index\method\IndexFacade as IndexFacade;

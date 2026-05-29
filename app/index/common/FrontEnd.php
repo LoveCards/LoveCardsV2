@@ -5,7 +5,7 @@ namespace app\index\common;
 use think\Facade;
 use think\facade\Cookie;
 
-use app\index\extend\jwt\Jwt;
+use app\common\infra\Jwt;
 
 use app\api\service\User\Users as UsersService;
 
@@ -38,6 +38,23 @@ class FrontEnd extends Facade
      * @LastEditTime: Do not edit
      * @LastEditors: github.com/zhiguai
      */
+
+
+    private static function mObjectCheckToken(string $token): array
+    {
+        try {
+            $result = Jwt::verify($token);
+            if (isset($result['_new_token'])) {
+                $newData = Jwt::verify($result['_new_token']);
+                $newData['token'] = $result['_new_token'];
+                return Common::mArrayEasyReturnStruct(null, true, $newData);
+            }
+            return Common::mArrayEasyReturnStruct(null, true, $result);
+        } catch (\RuntimeException $e) {
+            return Common::mArrayEasyReturnStruct($e->getMessage(), false);
+        }
+    }
+
     public static function mResultGetNowAdminAllData()
     {
         //$TDef_JwtData = request()->JwtData;
@@ -48,7 +65,7 @@ class FrontEnd extends Facade
         }
 
         //Jwt校验
-        $lDef_JwtCheckTokenResult = jwt::CheckToken($token);
+        $lDef_JwtCheckTokenResult = self::mObjectCheckToken($token);
         if (!$lDef_JwtCheckTokenResult['status']) {
             return Common::mArrayEasyReturnStruct($lDef_JwtCheckTokenResult['msg'], false);
         }
@@ -78,7 +95,7 @@ class FrontEnd extends Facade
         }
 
         //Jwt校验
-        $lDef_JwtCheckTokenResult = jwt::CheckToken($token);
+        $lDef_JwtCheckTokenResult = self::mObjectCheckToken($token);
         if (!$lDef_JwtCheckTokenResult['status']) {
             return Common::mArrayEasyReturnStruct($lDef_JwtCheckTokenResult['msg'], false);
         }

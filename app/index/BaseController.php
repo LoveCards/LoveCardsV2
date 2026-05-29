@@ -97,7 +97,7 @@ class BaseController extends Common
             'LCVersionInfo' => \app\api\service\System\VersionService::public(), //程序版本信息
 
             'SystemData' => Common::mArrayGetDbSystemData(), //系统配置信息
-            'SystemConfig' => config::get('master'),
+            'SystemConfig' => [], // TODO: master config 已迁移至 ConfigService，待升级
             'SystemControllerName' => strtolower(request()->controller()), //当前控制器名称
             'SystemActionName' => request()->action(), //当前方法名
 

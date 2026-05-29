@@ -284,7 +284,7 @@ trait Cards
                 $lDef_CardData['look'] = $lDef_CardData['look'] + 1;
             }
             // 获取图片数据
-            $tDef_ImgData = ImagesModel::where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $lDef_CardData['id'])->select()->toArray();
+            // TODO: Images model 已移除，待升级替换为当前存储系统的图片查询
             // 获取评论列表
             $lDef_Result = Db::table('comments')->where('aid', $BaseController->attrGReqAppId['cards'])->where('pid', $tReq_ParamId)->where('status', 0)->order('id', 'desc')->paginate($tDef_CommentsMax, true);
 
