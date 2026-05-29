@@ -5,8 +5,7 @@ namespace app\api\service\User;
 use app\api\model\Users as UsersModel;
 use app\api\ApiException;
 use app\common\infra\Jwt;
-use app\common\captcha\Code;
-use app\api\service\Sender\Sender;
+use app\api\service\Captcha\Captcha;
 
 class Session
 {
@@ -104,20 +103,20 @@ class Session
             throw ApiException::badRequest('目前仅支持邮箱验证', ApiException::CODE_PARAM_INVALID);
         }
 
-        $data = Code::CreateCaptcha($email, 'Auth', 300);
-        $code = $data['data'];
-
-        Sender::code('smtp', $email, $code);
+        Captcha::generate('code', ['to' => $email, 'scene' => 'Auth', 'ttl' => 300]);
     }
 
     public static function verifyCaptcha(string $email, string $code): bool
     {
-        return Code::CheckCaptcha($email, strtoupper($code), 'Auth');
+        return Captcha::verify('code', ['key' => $email, 'code' => $code, 'scene' => 'Auth']);
     }
 
     public static function deleteCaptcha(string $email): void
     {
-        Code::DeleteCaptcha($email, 'Auth');
+        $driver = Captcha::driver('code');
+        if (method_exists($driver, 'delete')) {
+            $driver->delete($email, 'Auth');
+        }
     }
 
     public static function resolveAccountType(string $account, string $default = ''): array

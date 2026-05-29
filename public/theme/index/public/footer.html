@@ -65,12 +65,12 @@
         //CookieMsg处理
         CommonEntity.CookieMsgHandling();
 
-        //初始化主题
+        //初始化主题 + 验证配置
         CommonEntity.ThemeInit().then((req) => {
-            if (!req.data.system.config.file.UserAuth.Captcha) {
-                if ($('#SendMsgCaptchaDiv').length) {
-                    $('#SendMsgCaptchaDiv').hide();
-                }
+            return CommonEntity.CaptchaInit();
+        }).then(() => {
+            if (!CommonEntity.config.geetest4.CaptchaStatus) {
+                // 极验未启用，无需处理
             }
         });
 

@@ -6,8 +6,7 @@ use app\api\model\Users as UsersModel;
 use app\api\model\Roles as RolesModel;
 use app\api\service\Rbac\RBAC;
 use app\api\ApiException;
-use app\common\captcha\Code;
-use app\api\service\Sender\Sender;
+use app\api\service\Captcha\Captcha;
 
 class Profile
 {
@@ -57,7 +56,7 @@ class Profile
 
     public static function changeEmail(int $uid, string $email, string $captcha): void
     {
-        if (!Code::CheckCaptcha($email, strtoupper($captcha), 'Info_BindEmailCaptcha')) {
+        if (!Captcha::verify('code', ['key' => $email, 'code' => $captcha, 'scene' => 'Info_BindEmailCaptcha'])) {
             throw ApiException::badRequest('验证码错误', ApiException::CODE_PARAM_INVALID);
         }
 
@@ -70,9 +69,6 @@ class Profile
             throw ApiException::badRequest('邮箱格式错误', ApiException::CODE_PARAM_INVALID);
         }
 
-        $data = Code::CreateCaptcha($email, 'Info_BindEmailCaptcha', 300);
-        $code = $data['data'];
-
-        Sender::code('smtp', $email, $code);
+        Captcha::generate('code', ['to' => $email, 'scene' => 'Info_BindEmailCaptcha', 'ttl' => 300]);
     }
 }

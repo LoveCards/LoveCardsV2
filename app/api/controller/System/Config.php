@@ -15,7 +15,7 @@ class Config extends BaseController
     {
         $groups = ConfigService::getSchemaGroups();
         if (empty($groups)) {
-            $groups = ['core', 'upload', 'cards', 'comments', 'user', 'geetest', 'version'];
+            $groups = ['core', 'upload', 'cards', 'comments', 'user', 'geetest', 'version', 'captcha'];
         }
         return $groups;
     }

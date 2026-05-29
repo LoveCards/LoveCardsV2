@@ -72,6 +72,7 @@ class Base {
             // CommentsDelete: '/api/comments/delete',//删除评论
 
             ThemeConfig: '/api/theme/config',//主题配置
+            CaptchaConfig: '/api/captcha/config',//验证配置
 
             //install
             SystemInstallCheckEnvironment: '/system/Install/GetCheckEnvironment',//验证环境
@@ -113,15 +114,27 @@ class Base {
      * @returns {Promise}
      */
     ThemeInit = () => {
-        //获取极验配置
+        //获取主题配置
         return this.RequestApiUrl('get', 'ThemeConfig', undefined, [], 'UserTokenName').then((req) => {
-            this.config.geetest4.CaptchaId = req.data.system.config.file.Geetest.Id;
-            this.config.geetest4.CaptchaStatus = Number(req.data.system.config.file.Geetest.Status);
-            //console.log(this.config.geetest4);
             return req;
         }).catch((err) => {
             this.commonFunctions.snackbar('获取配置信息失败,请刷新页面后再试！');
             throw err;
+        });
+    }
+
+    /**
+     * 加载验证配置
+     * @returns {Promise}
+     */
+    CaptchaInit = () => {
+        return this.RequestApiUrl('get', 'CaptchaConfig', undefined, []).then((req) => {
+            const data = req.data || {};
+            this.config.geetest4.CaptchaId = data.geetest?.id || '';
+            this.config.geetest4.CaptchaStatus = Number(data.geetest?.status || 0);
+            return req;
+        }).catch((err) => {
+            return err;
         });
     }
 

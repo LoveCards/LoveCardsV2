@@ -69,7 +69,7 @@ class Profile extends BaseController
         } catch (\RuntimeException $e) {
             return ApiResponse::createBadRequest($e->getMessage());
         } catch (\app\api\ApiException $e) {
-            return ApiResponse::createError('发送失败', [$e->getMessage()]);
+            return ApiResponse::createBadRequest($e->getMessage());
         }
 
         return ApiResponse::createOk(['300s后失效']);

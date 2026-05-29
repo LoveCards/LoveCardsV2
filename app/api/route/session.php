@@ -5,13 +5,13 @@ use think\facade\Route;
 use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\PermissionCheck;
 use app\api\middleware\SessionDebounce;
-use app\api\middleware\GeetestCheck;
+use app\api\service\Captcha\Middleware\CaptchaCheck;
 
 Route::post('session/login', 'User.Session/login')->name('session.login')->setOption('meta', ['name' => '登录', 'group' => '认证', 'public' => true]);
 Route::post('session/register', 'User.Session/register')
     ->name('session.register')
     ->setOption('meta', ['name' => '注册', 'group' => '认证', 'public' => true])
-    ->middleware(SessionDebounce::class)->middleware(GeetestCheck::class);
+    ->middleware(SessionDebounce::class)->middleware(CaptchaCheck::class, ['type' => 'captcha']);
 Route::post('session/guest', 'User.Session/guest')->name('session.guest')->setOption('meta', ['name' => '访客登录', 'group' => '认证', 'public' => true]);
 Route::post('session/captcha', 'User.Session/captcha')
     ->name('session.captcha')
