@@ -29,6 +29,6 @@ trait BatchOperateTrait
         }
 
         $result = $service->batchOperate($params['method'], $params['ids']);
-        return ApiResponse::createOk('操作成功', $result);
+        return ApiResponse::createOk($result, '操作成功');
     }
 }

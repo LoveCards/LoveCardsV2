@@ -1,7 +1,10 @@
 <IfModule mod_rewrite.c>
   Options +FollowSymlinks -Multiviews
   RewriteEngine On
- 
+
+  # SPA theme: route /_next/* to index.php (ThemeEngine handles asset serving)
+  RewriteRule ^_next/(.*)$ index.php?/_next/$1 [QSA,PT,L]
+
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(.*)$ index.php?/$1 [QSA,PT,L]

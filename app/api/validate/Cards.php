@@ -1,124 +1,242 @@
 <?php
 
+
+
 namespace app\api\validate;
 
+
+
 use think\Validate;
-use app\api\service\System\Config as ConfigService;
+
+use app\common\service\Config as ConfigService;
+
+
 
 use app\common\support\ValidateRuleExtend;
 
+
+
 class Cards extends Validate
+
 {
+
+
 
     var $ValidateRuleExtend;
 
+
+
     function __construct()
+
     {
+
         parent::__construct();
+
         $this->ValidateRuleExtend = new ValidateRuleExtend();
+
     }
 
+
+
     static public $all_scene = [
+
         'create' => [
+
             'normal' => [
+
                 'pictures'
+
             ],
+
             'require' => [
+
                 'content'
+
             ],
+
             'nonNull' => false,
+
             'toNull' => [
-                'data',
+
                 'cover',
+
                 'tags'
+
             ],
+
         ],
+
         'allUpdate' => [
+
             'normal' => [
+
                 'pictures',
 
+
+
                 'content',
+
                 'is_top',
+
                 'status',
 
+
+
                 'user_id',
+
                 'comments',
+
                 'views',
+
                 'good'
+
             ],
+
             'require' => [
+
                 'id'
+
             ],
+
             'nonNull' => false,
+
             'toNull' => [
+
                 'cover',
+
                 'tags',
-                'data'
+
             ],
+
         ],
+
     ];
+
     static public $scene_message = [
+
         'id.require' => 'ID不能为空',
+
         'content.require' => '内容不能为空'
+
     ];
+
+
 
     protected $rule =   [
+
         'id' => 'number',
+
         'is_top' => 'number',
+
         'status' => 'number',
+
         'user_id' => 'number',
+
         'data' => 'arrayJson',
+
         'cover' => 'url|max:2083',
+
         'content' => 'max:5000',
+
         'tags' => 'arrayJson|tagsLength',
+
         'good' => 'number',
+
         'views' => 'number',
+
         'comments' => 'number',
+
         'post_ip' => 'ip|max:39',
 
+
+
         'pictures' => 'arrayJson|picturesLength',
+
     ];
 
+
+
     protected $message  =   [
+
         'id.number' => 'ID格式错误',
+
+
 
         'is_top.number' => '置顶状态格式错误',
 
+
+
         'status.number' => '状态格式错误',
+
+
 
         'user_id.number' => '用户ID格式错误',
 
+
+
         'data.arrayJson' => '自定义字段格式错误',
 
+
+
         'cover.url' => '封面图片格式不正确',
+
         'cover.max' => '封面图片地址过长',
 
+
+
         'tags.arrayJson' => '标签格式错误',
+
         'tags.tagsLength' => '标签个数超出上限',
+
+
 
         'good.number' => '喜欢数格式错误',
 
+
+
         'views.number' => '浏览量格式错误',
+
+
 
         'comments.number' => '评论数格式错误',
 
+
+
         'post_ip.ip' => 'IP地址格式不正确',
+
         'post_ip.max' => 'IP地址过长',
 
+
+
         'pictures.arrayJson' => '图集格式错误',
+
         'pictures.picturesLength' => '图片个数超出上限',
+
     ];
 
+
+
     protected function picturesLength($value)
+
     {
+
         $config = ConfigService::get('cards.picture_limit', 15);
-        $decoded = json_decode($value, true);
+
+        $decoded = is_array($value) ? $value : json_decode($value, true);
+
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
+
     }
+
     protected function tagsLength($value)
+
     {
+
         $config = ConfigService::get('cards.tag_limit', 3);
-        $decoded = json_decode($value, true);
+
+        $decoded = is_array($value) ? $value : json_decode($value, true);
+
         return $this->ValidateRuleExtend->checkArrayLength($decoded, $config);
+
     }
 }

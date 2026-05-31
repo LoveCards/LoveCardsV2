@@ -2,7 +2,7 @@
 
 namespace app\api\service\Sender;
 
-use app\api\service\System\Config;
+use app\common\service\Config;
 use think\facade\Db;
 
 class ChannelManager

@@ -12,10 +12,18 @@ use app\common\support\FieldsToggle;
 
 use app\common\support\ModelList;
 
+use app\common\service\Traits\Ownable;
+
 class Cards
 {
+    use Ownable;
+    
     const TOP_LISTS_MAX = 32;
     const HOT_LISTS_MAX = 8;
+    
+    const MODEL_CLASS = CardsModel::class;
+    const OWNER_FIELD = 'user_id';
+    const RESOURCE_NAME = '卡片';
 
     public static function hotList(): array
     {
@@ -57,7 +65,7 @@ class Cards
         if ($result->isEmpty()) {
             throw \app\api\ApiException::notFound('卡片不存在', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
         }
-        return $result->toArray();
+        return self::decodeJsonFields($result->toArray());
     }
 
     public static function getAny(int $id): array
@@ -66,7 +74,7 @@ class Cards
         if ($result->isEmpty()) {
             throw \app\api\ApiException::notFound('卡片不存在', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
         }
-        return $result->toArray();
+        return self::decodeJsonFields($result->toArray());
     }
 
     public static function listOwn(array $params, int $uid): array
@@ -104,7 +112,7 @@ class Cards
                 FieldsToggle::toggle(CardsModel::class, 'status', $ids, [0, 2], [1, 3]);
                 break;
             case 'delete':
-                self::deleteCards(false, $ids);
+                self::deleteCards($ids);
                 break;
             default:
                 throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
@@ -115,6 +123,12 @@ class Cards
     {
         Db::startTrans();
         try {
+            if (isset($data['data']) && is_array($data['data'])) {
+                $data['data'] = json_encode($data['data']);
+            }
+            if (isset($data['tags']) && is_array($data['tags'])) {
+                $data['tags'] = json_encode($data['tags']);
+            }
             $result = CardsModel::create($data);
             $data['id'] = $result->id;
             if (isset($data['tags'])) {
@@ -128,14 +142,34 @@ class Cards
         }
     }
 
-    static public function updateCard($data): void
+    /**
+     * 更新卡片
+     * 
+     * @param array $data 卡片数据
+     * @param int|null $uid 当前用户 ID（用户操作必传，管理员操作传 null）
+     * @return void
+     */
+    static public function updateCard(array $data, ?int $uid = null): void
     {
         Db::startTrans();
         try {
+            // 验证所有权
+            self::assertOwnerIf($data['id'], $uid);
+            
+            // 移除敏感字段
+            unset($data['user_id']);
+            
             if (isset($data['tags'])) {
                 self::updateCardTags($data);
             }
 
+            if (isset($data['data']) && is_array($data['data'])) {
+                $data['data'] = json_encode($data['data']);
+            }
+            if (isset($data['tags']) && is_array($data['tags'])) {
+                $data['tags'] = json_encode($data['tags']);
+            }
+            
             CardsModel::update($data);
 
             Db::commit();
@@ -164,15 +198,28 @@ class Cards
         }
     }
 
-    static public function deleteCards($id = false, $ids = []): void
+    /**
+     * 删除卡片
+     * 
+     * @param array $ids 资源 ID 列表
+     * @param int|null $uid 当前用户 ID（用户操作必传，管理员操作传 null）
+     * @return void
+     */
+    static public function deleteCards(array $ids, ?int $uid = null): void
     {
-        $data = $id ? $id : $ids;
+        if (empty($ids)) {
+            throw \app\api\ApiException::badRequest('未指定要删除的卡片');
+        }
+        
         Db::startTrans();
         try {
-            self::deleteCardsTags($data);
-            self::deleteCardsComments($data);
+            // 验证所有权
+            self::assertOwnerBatchIf($ids, $uid);
+            
+            self::deleteCardsTags($ids);
+            self::deleteCardsComments($ids);
 
-            CardsModel::destroy($data);
+            CardsModel::destroy($ids);
 
             Db::commit();
         } catch (\Throwable $th) {
@@ -191,13 +238,17 @@ class Cards
         CommentsModel::where('aid', 1)->where('pid', 'in', $pids)->delete();
     }
 
-    static public function updateAny($data): void
+    private static function decodeJsonFields(array $card): array
     {
-        self::updateCard($data);
+        foreach (['data', 'tags', 'pictures'] as $field) {
+            if (isset($card[$field]) && is_string($card[$field])) {
+                $decoded = json_decode($card[$field], true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $card[$field] = $decoded;
+                }
+            }
+        }
+        return $card;
     }
 
-    static public function deleteAny($id = false, $ids = []): void
-    {
-        self::deleteCards($id, $ids);
-    }
 }

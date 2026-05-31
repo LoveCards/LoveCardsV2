@@ -4,12 +4,12 @@ namespace app\api\controller\Storage;
 
 use think\facade\Request;
 use app\api\ApiResponse;
+use app\api\ApiException;
 use app\api\service\Storage\StorageManager;
 use app\api\service\Storage\DirectUploadManager;
 use app\api\service\Storage\ChannelManager;
 use app\api\service\Storage\PathGenerator;
 use app\api\service\User\Users as UsersService;
-use app\api\model\Files;
 use app\api\validate\Files as FilesValidate;
 use app\api\controller\BaseController;
 
@@ -29,13 +29,13 @@ class Upload extends BaseController
     {
         $file = request()->file('file');
         if (empty($file)) {
-            return ApiResponse::createError('请提交文件');
+            throw ApiException::badRequest('请提交文件');
         }
 
         $userId = request()->uid ?? 0;
 
         if (!StorageManager::checkRateLimit((string) $userId)) {
-            return ApiResponse::createTooMany('请求过于频繁');
+            throw ApiException::tooMany('请求过于频繁');
         }
 
         $scene = Request::param('scene', 'direct');
@@ -49,29 +49,25 @@ class Upload extends BaseController
 
         $validate = new FilesValidate();
         if (!$validate->check($validateData)) {
-            return ApiResponse::createBadRequest($validate->getError());
+            throw ApiException::badRequest($validate->getError());
         }
 
-        $status = Files::STATUS_NORMAL;
-        $uploadStatus = Files::UPLOAD_COMPLETED;
+        $status = 0;
+        $uploadStatus = 1;
 
         $path = PathGenerator::generate(ChannelManager::getDefaultChannel(), $file->getOriginalName());
 
-        try {
-            $result = StorageManager::upload($file, $path, [
-                'user_id' => $userId,
-                'scene' => $scene,
-                'ref_type' => $refType,
-                'ref_id' => $refId,
-                'is_public' => $isPublic,
-                'status' => $status,
-                'upload_status' => $uploadStatus,
-            ]);
+        $result = StorageManager::upload($file, $path, [
+            'user_id' => $userId,
+            'scene' => $scene,
+            'ref_type' => $refType,
+            'ref_id' => $refId,
+            'is_public' => $isPublic,
+            'status' => $status,
+            'upload_status' => $uploadStatus,
+        ]);
 
-            return ApiResponse::createOk($result->toArray());
-        } catch (\Exception $e) {
-            return ApiResponse::createError('上传失败', ['detail' => $e->getMessage()]);
-        }
+        return ApiResponse::createOk($result->toArray());
     }
 
     public function list()
@@ -97,7 +93,10 @@ class Upload extends BaseController
         $isAdmin = $this->isAdmin();
 
         $file = StorageManager::getFile($fileId, $userId, $isAdmin);
-        return $file ? ApiResponse::createOk($file) : ApiResponse::createNotFound();
+        if (!$file) {
+            throw ApiException::notFound('文件不存在');
+        }
+        return ApiResponse::createOk($file);
     }
 
     public function batch()
@@ -122,7 +121,7 @@ class Upload extends BaseController
             StorageManager::batchOperate($method, $ids);
             return ApiResponse::createNoContent();
         } catch (\Throwable $e) {
-            return ApiResponse::createError($e->getMessage());
+            throw ApiException::error($e->getMessage());
         }
     }
 
@@ -131,7 +130,7 @@ class Upload extends BaseController
         $userId = request()->uid ?? 0;
 
         if (!StorageManager::checkRateLimit((string) $userId)) {
-            return ApiResponse::createTooMany('请求过于频繁');
+            throw ApiException::tooMany('请求过于频繁');
         }
 
         $filename = Request::param('filename', '');
@@ -140,12 +139,8 @@ class Upload extends BaseController
 
         $path = PathGenerator::generate(ChannelManager::getDefaultChannel(), $filename);
 
-        try {
-            $result = DirectUploadManager::createPendingRecord($filename, $mime, $size, $path, $userId);
-            return ApiResponse::createOk($result);
-        } catch (\Exception $e) {
-            return ApiResponse::createError('获取凭证失败', ['detail' => $e->getMessage()]);
-        }
+        $result = DirectUploadManager::createPendingRecord($filename, $mime, $size, $path, $userId);
+        return ApiResponse::createOk($result);
     }
 
     public function confirm($id = 0)
@@ -153,7 +148,10 @@ class Upload extends BaseController
         $recordId = (int) ($id ?: Request::param('record_id', 0));
 
         $result = DirectUploadManager::confirmUpload($recordId);
-        return $result ? ApiResponse::createOk() : ApiResponse::createError('确认失败');
+        if (!$result) {
+            throw ApiException::error('确认失败');
+        }
+        return ApiResponse::createNoContent();
     }
 
     public function cleanup()
@@ -170,14 +168,10 @@ class Upload extends BaseController
     public function allDelete($id)
     {
         if (!$this->isAdmin()) {
-            return ApiResponse::createForbidden('需要管理员权限');
+            throw ApiException::forbidden('需要管理员权限');
         }
 
-        try {
-            StorageManager::hardDelete((int) $id);
-            return ApiResponse::createNoContent();
-        } catch (\Throwable $e) {
-            return ApiResponse::createError($e->getMessage());
-        }
+        StorageManager::hardDelete((int) $id);
+        return ApiResponse::createNoContent();
     }
 }

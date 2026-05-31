@@ -11,8 +11,16 @@ use app\common\support\FieldsToggle;
 
 use app\common\support\ModelList;
 
+use app\common\service\Traits\Ownable;
+
 class Tags
 {
+    use Ownable;
+    
+    const MODEL_CLASS = TagsModel::class;
+    const OWNER_FIELD = 'user_id';
+    const RESOURCE_NAME = '标签';
+    
     static public function noPaginateIndex($params): array
     {
         $params['search_default_key'] = 'name';
@@ -65,21 +73,34 @@ class Tags
                 FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 2], [1, 3]);
                 break;
             case 'delete':
-                self::deleteTags(false, $ids);
+                self::deleteTags($ids);
                 break;
             default:
                 throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
         }
     }
 
-    static public function deleteTags($id = false, $ids = []): void
+    /**
+     * 删除标签
+     * 
+     * @param array $ids 资源 ID 列表
+     * @param int|null $uid 当前用户 ID（用户操作必传，管理员操作传 null）
+     * @return void
+     */
+    static public function deleteTags(array $ids, ?int $uid = null): void
     {
-        $data = $id ? $id : $ids;
+        if (empty($ids)) {
+            throw \app\api\ApiException::badRequest('未指定要删除的标签');
+        }
+        
+        // 验证所有权
+        self::assertOwnerBatchIf($ids, $uid);
+        
         Db::startTrans();
         try {
-            self::deleteTagsMap($data);
+            self::deleteTagsMap($ids);
 
-            TagsModel::destroy($data);
+            TagsModel::destroy($ids);
 
             Db::commit();
         } catch (\Throwable $th) {
@@ -93,18 +114,19 @@ class Tags
         TagsMapModel::where('tag_id', 'in', $ids)->delete();
     }
 
-    static public function updateTag(array $data): int
+    /**
+     * 更新标签
+     * 
+     * @param array $data 标签数据
+     * @param int|null $uid 当前用户 ID（用户操作必传，管理员操作传 null）
+     * @return int 更新的记录数
+     */
+    static public function updateTag(array $data, ?int $uid = null): void
     {
-        return TagsModel::update($data);
+        // 验证所有权
+        self::assertOwnerIf($data['id'], $uid);
+        
+        TagsModel::update($data);
     }
 
-    static public function updateAny(array $data): int
-    {
-        return self::updateTag($data);
-    }
-
-    static public function deleteAny($id = false, $ids = []): void
-    {
-        self::deleteTags($id, $ids);
-    }
 }

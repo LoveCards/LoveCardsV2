@@ -4,9 +4,16 @@ use think\facade\Route;
 
 use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\PermissionCheck;
+use app\api\middleware\SessionDebounce;
 use app\api\service\Captcha\Middleware\CaptchaCheck;
 
 Route::get('cards/hot', 'Content.Cards/hotList')->name('cards.hot')->setOption('meta', ['name' => '热门卡片', 'group' => '卡片', 'public' => true]);
+Route::get('cards/search', 'Content.Cards/search')->name('cards.search')->setOption('meta', ['name' => '搜索卡片', 'group' => '卡片', 'public' => true]);
+Route::get('cards/:id/comments', 'Content.Comments/cardList')->name('comments.cardList')->setOption('meta', ['name' => '卡片评论列表', 'group' => '评论', 'public' => true]);
+Route::post('cards/:id/comments', 'Content.Comments/create')
+    ->name('comments.create')
+    ->setOption('meta', ['name' => '创建评论', 'group' => '评论'])
+    ->middleware(JwtAuthCheck::class)->middleware(SessionDebounce::class)->middleware(CaptchaCheck::class, ['type' => 'captcha'])->middleware(PermissionCheck::class);
 Route::get('cards/:id', 'Content.Cards/get')->name('cards.get')->setOption('meta', ['name' => '卡片详情', 'group' => '卡片', 'public' => true]);
 Route::get('cards', 'Content.Cards/list')->name('cards.list')->setOption('meta', ['name' => '卡片列表', 'group' => '卡片', 'public' => true]);
 

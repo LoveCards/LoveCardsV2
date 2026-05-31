@@ -21,7 +21,7 @@ class ValidateRuleExtend
                 return $this->arrayOrIntJson($value);
             });
             $validate->extend('checkArrayLength', function ($value, $rule) {
-                return $this->arrayOrIntJson($value, $rule);
+                return $this->checkArrayLength($value, $rule);
             });
             $validate->extend('nonNull', function ($value) {
                 return $this->nonNull($value);
@@ -41,6 +41,9 @@ class ValidateRuleExtend
     // 通用JSON->Array验证规则
     public function arrayJson($value)
     {
+        if (is_array($value)) {
+            return true;
+        }
         $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             return $this->jsonTypePass($decoded, 'array');
@@ -51,9 +54,15 @@ class ValidateRuleExtend
     // 通用JSON->Array||Integer验证规则
     public function arrayOrIntJson($value)
     {
+        if (is_array($value)) {
+            return true;
+        }
+        if (is_int($value)) {
+            return true;
+        }
         $decoded = json_decode($value, true);
         if (json_last_error() === JSON_ERROR_NONE) {
-            return ($this->jsonTypePass($decoded, 'array') || $this->jsonTypePass($decoded, 'Integer'));
+            return ($this->jsonTypePass($decoded, 'array') || $this->jsonTypePass($decoded, 'integer'));
         } else {
             return false;
         }

@@ -4,17 +4,6 @@ use think\facade\Route;
 
 use app\api\middleware\JwtAuthCheck;
 use app\api\middleware\PermissionCheck;
-use app\api\middleware\SessionDebounce;
-use app\api\service\Captcha\Middleware\CaptchaCheck;
-
-// 公开路由（游客可访问）
-Route::get('cards/:id/comments', 'Content.Comments/cardList')->name('comments.cardList')->setOption('meta', ['name' => '卡片评论列表', 'group' => '评论', 'public' => true]);
-
-// 创建评论（需鉴权 + 防抖 + 极验）
-Route::post('cards/:id/comments', 'Content.Comments/create')
-    ->name('comments.create')
-    ->setOption('meta', ['name' => '创建评论', 'group' => '评论'])
-    ->middleware(JwtAuthCheck::class)->middleware(SessionDebounce::class)->middleware(CaptchaCheck::class, ['type' => 'captcha'])->middleware(PermissionCheck::class);
 
 // 用户自己的评论
 Route::get('users/me/comments', 'Content.Comments/listOwn')->name('comments.listOwn')->setOption('meta', ['name' => '我的评论', 'group' => '评论'])->middleware(JwtAuthCheck::class)->middleware(PermissionCheck::class);

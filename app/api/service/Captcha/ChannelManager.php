@@ -2,7 +2,7 @@
 
 namespace app\api\service\Captcha;
 
-use app\api\service\System\Config as ConfigService;
+use app\common\service\Config as ConfigService;
 
 class ChannelManager
 {

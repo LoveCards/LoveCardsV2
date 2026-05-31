@@ -14,7 +14,7 @@ class Index
         $result = Common::CheckInstallLock();
         if ($result === true) {
             Cookie::forever('msg', '检测到安装锁，如需重新安装请删除根目录[lock.txt]文件');
-            return redirect('/index/index');
+            return redirect('/frontend/index');
         }
 
         View::assign([

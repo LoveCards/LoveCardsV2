@@ -4,7 +4,7 @@ namespace app\api\controller\Storage;
 
 use think\facade\Request;
 
-use app\api\service\System\Config as ConfigService;
+use app\common\service\Config as ConfigService;
 use app\api\service\Storage\StorageFactory;
 use app\api\service\Storage\StorageManager;
 use app\api\service\Storage\ChannelTester;

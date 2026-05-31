@@ -1,0 +1,38 @@
+{include file="layout/header" /}
+
+{if isset($__LC_DATA__._errors) && isset($__LC_DATA__._errors['cards.get'])}
+  <section class="error-page">
+    <h2>卡片不存在</h2>
+    <p><a href="/">返回首页</a></p>
+  </section>
+{else/}
+  <article class="card">
+    <header class="card-header">
+      <h2 class="card-title" style="font-size:1.5rem">{$__LC_DATA__['cards.get']['data']['data']['title']|default='无标题'}</h2>
+    </header>
+    <div class="card-body card-detail-content">{$__LC_DATA__['cards.get']['data']['data']['content']|raw}</div>
+    <div class="card-meta">
+      <span>♥ {$__LC_DATA__['cards.get']['data']['data']['goods']}</span>
+      <span>👁 {$__LC_DATA__['cards.get']['data']['data']['views']}</span>
+      <span>💬 {$__LC_DATA__['cards.get']['data']['data']['comments']}</span>
+      <span>{$__LC_DATA__['cards.get']['data']['data']['created_at']}</span>
+    </div>
+  </article>
+
+  <section style="margin-top:32px">
+    <div class="section-title"><span class="accent">💬</span> 评论</div>
+    {volist name="__LC_DATA__['comments.list']['data']['data']" id="comment"}
+      <div class="card" style="margin-bottom:12px;padding:16px">
+        <div class="comment-body">{$comment.content}</div>
+        <div class="comment-meta">{$comment.created_at}</div>
+      </div>
+    {/volist}
+    {if empty($__LC_DATA__['comments.list']['data']['data'])}
+      <p class="muted" style="margin-bottom:16px">暂无评论</p>
+    {/if}
+  </section>
+
+  <div id="card-app" data-card-id="{$__LC_DATA__['cards.get']['data']['data']['id']}" data-card-user-id="{$__LC_DATA__['cards.get']['data']['data']['user_id']}"></div>
+{/if}
+
+{include file="layout/footer" /}

@@ -3,7 +3,7 @@
 namespace app\api\service\Sender;
 
 use app\api\service\Sender\Contract\Message;
-use app\api\service\System\Config as ConfigService;
+use app\common\service\Config as ConfigService;
 
 class SenderManager
 {

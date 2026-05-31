@@ -1,0 +1,91 @@
+{
+  "name": "default-ssr",
+  "version": "2.1.0",
+  "description": "LoveCards 默认 SSR 主题",
+  "author": "LoveCards",
+  "mode": "ssr",
+  "config": {
+    "siteName": {
+      "type": "text",
+      "label": "站点名称",
+      "default": "LoveCards"
+    },
+    "siteKeywords": {
+      "type": "text",
+      "label": "SEO 关键词",
+      "default": "LoveCards,卡片,表白"
+    },
+    "siteDesc": {
+      "type": "text",
+      "label": "SEO 描述",
+      "default": "LoveCards - 一个简洁的卡片系统"
+    },
+    "primaryColor": {
+      "type": "color",
+      "label": "主色调",
+      "default": "#e91e63"
+    }
+  },
+  "routes": {
+    "/": {
+      "template": "index.html",
+      "data": ["cards.hot", "tags.list"],
+      "auth": false
+    },
+    "/cards": {
+      "template": "cards.html",
+      "data": ["cards.list", "tags.list"],
+      "auth": false
+    },
+    "/cards/:id": {
+      "template": "card.html",
+      "data": ["cards.get", "comments.list"],
+      "auth": false
+    },
+    "/publish": {
+      "template": "publish.html",
+      "data": ["tags.list"],
+      "auth": false
+    },
+    "/search": {
+      "template": "search.html",
+      "data": [],
+      "auth": false
+    },
+    "/login": {
+      "template": "login.html",
+      "data": [],
+      "auth": false
+    },
+    "/user": {
+      "template": "user.html",
+      "data": [],
+      "auth": false
+    },
+    "/user/settings": {
+      "template": "settings.html",
+      "data": [],
+      "auth": false
+    },
+    "/user/password": {
+      "template": "password.html",
+      "data": [],
+      "auth": false
+    },
+    "/user/cards": {
+      "template": "user-cards.html",
+      "data": [],
+      "auth": false
+    },
+    "/user/comments": {
+      "template": "user-comments.html",
+      "data": [],
+      "auth": false
+    },
+    "/user/likes": {
+      "template": "user-likes.html",
+      "data": [],
+      "auth": false
+    }
+  }
+}

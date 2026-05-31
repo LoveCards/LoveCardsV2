@@ -1,0 +1,36 @@
+{include file="layout/header" /}
+
+<section>
+  <div class="section-title"><span class="accent">●</span> 标签</div>
+  <div class="tag-cloud">
+    {volist name="__LC_DATA__['tags.list']['data']['data']" id="tag"}
+      <a href="/cards?tag={$tag.name}" class="tag">{$tag.name}</a>
+    {/volist}
+  </div>
+</section>
+
+<section>
+  <div class="section-title"><span class="accent">♥</span> 热门卡片</div>
+  <div class="masonry">
+    {volist name="__LC_DATA__['cards.hot']['data']" id="card"}
+      <div class="masonry-item">
+        <article class="card">
+          {if $card.cover}
+            <img src="{$card.cover}" alt="" class="card-cover">
+          {/if}
+          <div class="card-header">
+            <h3 class="card-title"><a href="/cards/{$card.id}">{$card.data.title|default='无标题'}</a></h3>
+          </div>
+          <div class="card-body card-excerpt">{$card.content}</div>
+          <div class="card-footer">
+            <span>♥ {$card.goods}</span>
+            <span>👁 {$card.views}</span>
+            <span>💬 {$card.comments}</span>
+          </div>
+        </article>
+      </div>
+    {/volist}
+  </div>
+</section>
+
+{include file="layout/footer" /}

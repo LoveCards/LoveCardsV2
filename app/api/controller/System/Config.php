@@ -4,7 +4,7 @@ namespace app\api\controller\System;
 
 use think\facade\Request;
 
-use app\api\service\System\Config as ConfigService;
+use app\common\service\Config as ConfigService;
 
 use app\api\ApiResponse;
 use app\api\controller\BaseController;

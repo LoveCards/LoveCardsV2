@@ -19,8 +19,7 @@ class Likes
 
         Db::startTrans();
         try {
-            $exists = LikesModel::where('ref_type', $refType)
-                ->where('ref_id', $refId)
+            $exists = LikesModel::where('pid', $refId)
                 ->where('uid', $uid)
                 ->find();
 
@@ -29,17 +28,17 @@ class Likes
             }
 
             LikesModel::create([
-                'ref_type' => $refType,
-                'ref_id' => $refId,
+                'aid' => 1,
+                'pid' => $refId,
                 'uid' => $uid,
                 'ip' => $ip,
             ]);
 
-            self::incCounter($refType, $refId);
+            self::incCounter($refId);
 
             Db::commit();
 
-            return self::count($refType, $refId);
+            return self::count($refId);
         } catch (\Throwable $e) {
             Db::rollback();
             throw $e;
@@ -50,8 +49,7 @@ class Likes
     {
         Db::startTrans();
         try {
-            $like = LikesModel::where('ref_type', $refType)
-                ->where('ref_id', $refId)
+            $like = LikesModel::where('pid', $refId)
                 ->where('uid', $uid)
                 ->find();
 
@@ -61,7 +59,7 @@ class Likes
 
             $like->delete();
 
-            self::decCounter($refType, $refId);
+            self::decCounter($refId);
 
             Db::commit();
         } catch (\Throwable $e) {
@@ -70,35 +68,23 @@ class Likes
         }
     }
 
-    public static function getUserLikes(int $uid, ?string $refType = null): array
+    public static function getUserLikes(int $uid): array
     {
-        $query = LikesModel::where('uid', $uid);
-        if ($refType !== null) {
-            $query->where('ref_type', $refType);
-        }
-        return $query->select()->toArray();
+        return LikesModel::where('uid', $uid)->select()->toArray();
     }
 
-    public static function count(string $refType, int $refId): int
+    public static function count(int $refId): int
     {
-        return (int) LikesModel::where('ref_type', $refType)
-            ->where('ref_id', $refId)
-            ->count();
+        return (int) LikesModel::where('pid', $refId)->count();
     }
 
-    private static function incCounter(string $refType, int $refId): void
+    private static function incCounter(int $refId): void
     {
-        match ($refType) {
-            'card' => CardsModel::where('id', $refId)->inc('goods')->update(),
-            default => null,
-        };
+        CardsModel::where('id', $refId)->inc('goods')->update();
     }
 
-    private static function decCounter(string $refType, int $refId): void
+    private static function decCounter(int $refId): void
     {
-        match ($refType) {
-            'card' => CardsModel::where('id', $refId)->where('goods', '>', 0)->dec('goods')->update(),
-            default => null,
-        };
+        CardsModel::where('id', $refId)->where('goods', '>', 0)->dec('goods')->update();
     }
 }

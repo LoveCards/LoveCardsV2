@@ -6,7 +6,7 @@ use think\facade\Request;
 use think\exception\ValidateException;
 
 use app\api\service\User\Session as SessionService;
-use app\api\service\System\Config as ConfigService;
+use app\common\service\Config as ConfigService;
 use app\api\validate\Users as UsersValidate;
 
 use app\api\ApiResponse;

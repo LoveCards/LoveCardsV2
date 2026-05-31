@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="{$config.siteKeywords|default=''}">
+  <meta name="description" content="{$config.siteDesc|default=''}">
+  <title>{$config.siteName|default='LoveCards'}</title>
+  <link rel="stylesheet" href="/theme/default-ssr/assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <script>
+    // 暗色模式初始化（防止闪烁）
+    (function() {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <!-- 移动端顶部栏 -->
+  <header class="mobile-header">
+    <a href="/" class="logo">{$config.siteName|default='LoveCards'}</a>
+    <button class="theme-toggle" id="theme-toggle-mobile" aria-label="切换主题">🌓</button>
+  </header>
+
+  <!-- 桌面端侧边栏 -->
+  <aside class="sidebar">
+    <a href="/" class="sidebar-logo">
+      <span>♥</span>
+      <span>{$config.siteName|default='LoveCards'}</span>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/">🏠 首页</a>
+      <a href="/cards">🧭 探索</a>
+      <a href="/search">🔍 搜索</a>
+      <a href="/publish" class="auth-required">✏️ 发布卡片</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="theme-toggle" id="theme-toggle-desktop" aria-label="切换主题" style="align-self:flex-start">🌓 切换主题</button>
+      <a href="/login" class="btn btn-primary btn-block" id="login-link">登录</a>
+      <a href="/register" class="btn btn-secondary btn-block" id="register-link">注册</a>
+      <a href="/user" class="btn btn-ghost btn-block auth-required" id="user-link" style="display:none">👤 个人中心</a>
+    </div>
+  </aside>
+
+  <!-- 移动端底部导航 -->
+  <nav class="mobile-nav">
+    <a href="/"><span class="nav-icon">🏠</span>首页</a>
+    <a href="/cards"><span class="nav-icon">🧭</span>探索</a>
+    <a href="/publish" class="auth-required" style="position:relative;top:-8px"><span style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--primary);color:white;font-size:1.5rem">+</span></a>
+    <a href="/search"><span class="nav-icon">🔍</span>搜索</a>
+    <a href="/user"><span class="nav-icon">👤</span>我的</a>
+  </nav>
+
+  <div class="page-wrapper">
+    <main class="main-content container" id="main-content">
