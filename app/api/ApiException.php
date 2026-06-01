@@ -215,7 +215,12 @@ class ApiException extends \Exception
         $httpStatus = $this->getHttpStatus();
         $code = $this->getCode();
         $message = $this->message ?: self::getMessageByCode($code);
+
+        // 生产环境不泄露堆栈跟踪
         $detail = $this->data;
+        if (!env('app_debug', false) && $detail instanceof \Throwable) {
+            $detail = null;
+        }
 
         $data = ApiResponse::error($message, $detail, $code);
         $result = \think\Response::create($data, 'json')->code($httpStatus);

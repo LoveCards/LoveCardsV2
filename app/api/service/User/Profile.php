@@ -29,7 +29,7 @@ class Profile
             ->select()
             ->toArray();
 
-        $userData['permissions'] = RBAC::getUserPermissions($rolesId);
+        $userData['capabilities'] = RBAC::getUserCapabilities($rolesId);
 
         return $userData;
     }

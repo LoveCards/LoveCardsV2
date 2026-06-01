@@ -38,7 +38,7 @@ class Cards extends Validate
 
 
 
-    static public $all_scene = [
+    public static $all_scene = [
 
         'create' => [
 
@@ -112,7 +112,7 @@ class Cards extends Validate
 
     ];
 
-    static public $scene_message = [
+    public static $scene_message = [
 
         'id.require' => 'ID不能为空',
 

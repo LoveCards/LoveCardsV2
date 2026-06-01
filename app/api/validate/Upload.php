@@ -7,7 +7,7 @@ use app\common\service\Config as ConfigService;
 
 class Upload extends Validate
 {
-    static public $all_scene = [
+    public static $all_scene = [
         'CheckImage' => [
             'normal' => ['file'],
             'require' => ['file'],
@@ -22,7 +22,7 @@ class Upload extends Validate
         ],
     ];
 
-    static public $scene_message = [
+    public static $scene_message = [
         'file.require' => '文件不得为空',
     ];
 

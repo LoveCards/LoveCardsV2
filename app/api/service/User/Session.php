@@ -34,12 +34,8 @@ class Session
         return ['user' => $result, 'token' => $token];
     }
 
-    public static function register(string $number, string $username, string $email, string $phone, string $password, array $rolesId = null, int $status = 0): array
+    public static function register(string $number, string $username, string $email, string $phone, string $password): array
     {
-        if ($rolesId === null) {
-            $rolesId = [config('system.system_roles.user')];
-        }
-
         if ($password === '') {
             throw ApiException::badRequest('密码不得为空', ApiException::CODE_PARAM_INVALID);
         }
@@ -55,6 +51,22 @@ class Session
             throw ApiException::badRequest('邮箱或手机号已存在', ApiException::CODE_USER_ALREADY_EXISTS);
         }
 
+        return self::createUser(
+            $number,
+            $username,
+            $email,
+            $phone,
+            $password,
+            [config('system.system_roles.user')],
+            0
+        );
+    }
+
+    /**
+     * 创建用户（内部方法，供 register/guest 调用）
+     */
+    private static function createUser(string $number, string $username, string $email, string $phone, string $password, array $rolesId, int $status): array
+    {
         $user = UsersModel::create([
             'number'    => $number,
             'username'  => $username,
@@ -86,13 +98,14 @@ class Session
             if ($e->getCode() !== ApiException::CODE_USER_NOT_FOUND) {
                 throw $e;
             }
-            return self::register(
+            return self::createUser(
                 $number,
                 $username,
                 $accountMap['email'],
                 $accountMap['phone'],
                 $password,
-                [config('system.system_roles.guest')]
+                [config('system.system_roles.guest')],
+                0
             );
         }
     }

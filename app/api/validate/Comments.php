@@ -6,7 +6,7 @@ use think\Validate;
 
 class Comments extends Validate
 {
-    static public $all_scene = [
+    public static $all_scene = [
         'create' => [
             'normal' => [
                 'parent_id'
@@ -38,7 +38,7 @@ class Comments extends Validate
             ],
         ],
     ];
-    static public $scene_message = [
+    public static $scene_message = [
         'id.require' => '项目ID不能为空',
         'aid.require' => '应用ID不能为空',
         'user_id.require' => '用户ID不能为空',

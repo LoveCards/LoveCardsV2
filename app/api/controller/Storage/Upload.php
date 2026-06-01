@@ -105,7 +105,8 @@ class Upload extends BaseController
             return ApiResponse::createForbidden('需要管理员权限');
         }
 
-        $ids = json_decode(Request::param('ids', '[]'), true);
+        $idsParam = Request::param('ids', '[]');
+        $ids = is_string($idsParam) ? json_decode($idsParam, true) : $idsParam;
         $method = Request::param('method', '');
 
         $validate = new FilesValidate();

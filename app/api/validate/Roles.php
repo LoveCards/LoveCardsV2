@@ -6,7 +6,7 @@ use think\Validate;
 
 class Roles extends Validate
 {
-    static public $all_scene = [
+    public static $all_scene = [
         'create' => [
             'normal' => [
                 'description'
@@ -30,21 +30,21 @@ class Roles extends Validate
             'nonNull' => false,
             'toNull' => false,
         ],
-        'assignPermissions' => [
+        'assignCapabilities' => [
             'normal' => false,
             'require' => [
                 'id',
-                'permission_hashes'
+                'capabilities'
             ],
             'nonNull' => false,
             'toNull' => false,
         ]
     ];
-    static public $scene_message = [
+    public static $scene_message = [
         'id.require' => '角色ID不能为空',
         'name.require' => '角色名称不能为空',
         'slug.require' => '角色标识不能为空',
-        'permission_hashes.require' => '权限hash集不能为空',
+        'capabilities.require' => '能力列表不能为空',
     ];
 
     protected $rule = [
@@ -52,7 +52,7 @@ class Roles extends Validate
         'name' => 'length:1,50|chsDash',
         'slug' => 'length:1,50|alphaDash|unique:roles',
         'description' => 'max:255',
-        'permission_hashes' => 'arrayJson',
+        'capabilities' => 'arrayJson',
     ];
 
     protected $message = [
@@ -70,7 +70,7 @@ class Roles extends Validate
 
         'description.max' => '角色描述超出最大长度(255)',
 
-        'permission_hashes.arrayJson' => '权限hash集格式错误',
-        'permission_hashes.require' => '权限hash集不能为空',
+        'capabilities.arrayJson' => '能力列表格式错误',
+        'capabilities.require' => '能力列表不能为空',
     ];
 }

@@ -6,7 +6,7 @@ use think\Validate;
 
 class Users extends Validate
 {
-    static public $all_scene = [
+    public static $all_scene = [
         'edit' => ['id', 'avatar', 'number', 'roles_id', 'email', 'phone', 'username', 'password', 'status'],
         'register' => ['email', 'phone', 'username', 'password'],
         'login' => ['email', 'phone', 'username', 'password'],
@@ -57,7 +57,7 @@ class Users extends Validate
             'toNull' => false,
         ],
     ];
-    static public $scene_message = [
+    public static $scene_message = [
         'number.nonNull' => '账号不得为空'
     ];
 

@@ -8,100 +8,105 @@ use app\api\model\Tags as TagsModel;
 use app\api\model\TagsMap as TagsMapModel;
 
 use app\common\support\FieldsToggle;
-
 use app\common\support\ModelList;
-
-use app\common\service\Traits\Ownable;
+use app\common\support\OwnershipGuard;
 
 class Tags
 {
-    use Ownable;
-    
-    const MODEL_CLASS = TagsModel::class;
-    const OWNER_FIELD = 'user_id';
-    const RESOURCE_NAME = '标签';
-    
-    static public function noPaginateIndex($params): array
+    use OwnershipGuard;
+
+    protected static string $guardModel = TagsModel::class;
+
+    public static function noPaginateIndex($params): array
     {
         $params['search_default_key'] = 'name';
         $result = ModelList::make(TagsModel::class)->getNoPaginate($params);
         return $result->toArray();
     }
 
-    static public function get(int $id): array
+    public static function get(int $id): array
     {
         $result = TagsModel::where('id', $id)->findOrEmpty();
         if ($result->isEmpty()) {
-            throw \app\api\ApiException::notFound('标签不存在', \app\api\ApiException::CODE_RESOURCE_NOT_FOUND);
+            throw \app\api\ApiException::notFound('标签不存在');
         }
         return $result->toArray();
     }
 
-    static public function Index($params): array
+    public static function Index($params): array
     {
         $params['search_default_key'] = 'name';
         $result = ModelList::make(TagsModel::class)->getPaginate($params);
         return $result->toArray();
     }
 
-    static public function listAll($params): array
+    public static function listAll($params): array
     {
         return self::Index($params);
     }
 
-    static public function createTag($params): void
+    public static function createTag($params): void
     {
         $params['aid'] = 1;
         TagsModel::create($params);
     }
 
-    static public function allCreate($params): void
+    /**
+     * 批量操作
+     *
+     * @param string $method
+     * @param array  $ids
+     * @param int    $uid
+     * @param array  $caps
+     */
+    public static function batchOperate(string $method, array $ids, int $uid, array $caps): void
     {
-        self::createTag($params);
-    }
-
-    static public function batchOperate($method, $ids): void
-    {
-        switch ($method) {
-            case 'approve':
-                FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 3], [1, 2]);
-                break;
-            case 'ban':
-                FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 1], [2, 3]);
-                break;
-            case 'hide':
-                FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 2], [1, 3]);
-                break;
-            case 'delete':
-                self::deleteTags($ids);
-                break;
-            default:
-                throw \app\api\ApiException::badRequest('方法不存在', \app\api\ApiException::CODE_PARAM_INVALID);
+        if (empty($ids)) {
+            throw \app\api\ApiException::badRequest('未指定要操作的资源');
         }
+
+        $opCaps = [
+            'approve' => 'tags.update',
+            'ban'     => 'tags.update',
+            'hide'    => 'tags.update',
+            'delete'  => 'tags.delete',
+        ];
+
+        $cap = $opCaps[$method] ?? null;
+        if (!$cap) {
+            throw \app\api\ApiException::badRequest('不支持的操作');
+        }
+
+        self::guardBatch($ids, $uid, $caps, $cap);
+
+        match ($method) {
+            'approve' => FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 3], [1, 2]),
+            'ban' => FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 1], [2, 3]),
+            'hide' => FieldsToggle::toggle(TagsModel::class, 'status', $ids, [0, 2], [1, 3]),
+            'delete' => self::deleteTagsWithMap($ids),
+        };
     }
 
     /**
      * 删除标签
-     * 
-     * @param array $ids 资源 ID 列表
-     * @param int|null $uid 当前用户 ID（用户操作必传，管理员操作传 null）
-     * @return void
+     *
+     * @param array $ids
+     * @param int   $uid
+     * @param array $caps
      */
-    static public function deleteTags(array $ids, ?int $uid = null): void
+    public static function deleteTags(array $ids, int $uid, array $caps): void
     {
         if (empty($ids)) {
             throw \app\api\ApiException::badRequest('未指定要删除的标签');
         }
-        
-        // 验证所有权
-        self::assertOwnerBatchIf($ids, $uid);
-        
+
+        // 验证能力 + 归属
+        self::guardBatch($ids, $uid, $caps, 'tags.delete');
+
         Db::startTrans();
         try {
             self::deleteTagsMap($ids);
-
             TagsModel::destroy($ids);
-
             Db::commit();
         } catch (\Throwable $th) {
             Db::rollback();
@@ -109,24 +114,53 @@ class Tags
         }
     }
 
-    static public function deleteTagsMap(array $ids): void
+    public static function deleteTagsMap(array $ids): void
     {
         TagsMapModel::where('tag_id', 'in', $ids)->delete();
     }
 
     /**
-     * 更新标签
-     * 
-     * @param array $data 标签数据
-     * @param int|null $uid 当前用户 ID（用户操作必传，管理员操作传 null）
-     * @return int 更新的记录数
+     * 删除标签及其关联映射
      */
-    static public function updateTag(array $data, ?int $uid = null): void
+    private static function deleteTagsWithMap(array $ids): void
     {
-        // 验证所有权
-        self::assertOwnerIf($data['id'], $uid);
-        
-        TagsModel::update($data);
+        Db::startTrans();
+        try {
+            self::deleteTagsMap($ids);
+            TagsModel::destroy($ids);
+            Db::commit();
+        } catch (\Throwable $th) {
+            Db::rollback();
+            throw \app\api\ApiException::error('删除失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
+        }
     }
 
+    /**
+     * 更新标签
+     *
+     * @param array $data
+     * @param int   $uid
+     * @param array $caps
+     */
+    public static function updateTag(array $data, int $uid, array $caps): void
+    {
+        Db::startTrans();
+        try {
+            // 验证能力 + 归属
+            self::guard($data['id'], $uid, $caps, 'tags.update');
+
+            // 移除敏感字段
+            unset($data['user_id']);
+
+            TagsModel::update($data);
+
+            Db::commit();
+        } catch (\Throwable $th) {
+            Db::rollback();
+            if ($th instanceof \app\api\ApiException) {
+                throw $th;
+            }
+            throw \app\api\ApiException::error('更新失败', \app\api\ApiException::CODE_SYSTEM_ERROR, null, $th);
+        }
+    }
 }

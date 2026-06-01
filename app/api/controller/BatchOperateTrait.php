@@ -28,7 +28,7 @@ trait BatchOperateTrait
             throw ApiException::error('批量操作未实现');
         }
 
-        $result = $service->batchOperate($params['method'], $params['ids']);
-        return ApiResponse::createOk($result, '操作成功');
+        $service->batchOperate($params['method'], $params['ids'], request()->uid ?? 0, request()->caps ?? []);
+        return ApiResponse::createNoContent();
     }
 }

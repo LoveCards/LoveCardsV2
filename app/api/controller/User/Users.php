@@ -20,20 +20,20 @@ class Users extends BaseController
         return \app\api\service\User\Users::class;
     }
 
-    public function allList()
+    public function list()
     {
         $params = $this->paramIndex(Request::param());
         $result = UsersService::listAll($params);
         return ApiResponse::createOk($result);
     }
 
-    public function allGet($id)
+    public function get($id)
     {
         $result = UsersService::Get((int) $id);
         return ApiResponse::createOk($result);
     }
 
-    public function allUpdate($id)
+    public function update($id)
     {
         $params = $this->param(UsersValidate::class, UsersValidate::$all_scene['allUpdate'], Request::param());
         $params['id'] = (int) $id;
@@ -42,13 +42,31 @@ class Users extends BaseController
             $params['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
         }
 
-        UsersService::updateAny($params['id'], $params);
+        $caps = request()->caps ?? [];
+
+        // 有 users.update.all → 走 updateAny（无归属限制）
+        if (in_array('users.update.all', $caps)) {
+            UsersService::updateAny($params['id'], $params);
+        } else {
+            // users.update → 走 updateUser（有归属检查）
+            UsersService::updateUser($params['id'], $params, request()->uid, $caps);
+        }
+
         return ApiResponse::createNoContent();
     }
 
-    public function allDelete($id)
+    public function delete($id)
     {
-        UsersService::deleteAny((int) $id);
+        $caps = request()->caps ?? [];
+
+        // 有 users.delete.all → 走 deleteAny（无归属限制）
+        if (in_array('users.delete.all', $caps)) {
+            UsersService::deleteAny((int) $id);
+        } else {
+            // users.delete → 走 deleteUser（有归属检查）
+            UsersService::deleteUser((int) $id, request()->uid, $caps);
+        }
+
         return ApiResponse::createNoContent();
     }
 }

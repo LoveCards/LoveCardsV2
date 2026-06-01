@@ -9,17 +9,29 @@ use think\facade\Request;
 
 class Permissions extends BaseController
 {
+    /**
+     * 获取全量能力列表（capability 字符串 + 描述）
+     */
     public function all()
     {
-        $meta = RBAC::getRouteMeta();
-        $result = array_values($meta);
+        $allCaps = RBAC::getAllCapabilities();
+        $result = [];
+        foreach ($allCaps as $cap => $desc) {
+            $result[] = ['capability' => $cap, 'description' => $desc];
+        }
         return ApiResponse::createOk($result);
     }
 
+    /**
+     * 分页搜索能力列表
+     */
     public function list()
     {
-        $meta = RBAC::getRouteMeta();
-        $items = array_values($meta);
+        $allCaps = RBAC::getAllCapabilities();
+        $items = [];
+        foreach ($allCaps as $cap => $desc) {
+            $items[] = ['capability' => $cap, 'description' => $desc];
+        }
 
         $params = $this->paramIndex(Request::param());
         $search = $params['search_value'] ?? '';
@@ -28,11 +40,8 @@ class Permissions extends BaseController
 
         if (!empty($search)) {
             $items = array_filter($items, function ($item) use ($search) {
-                return stripos($item['name'], $search) !== false
-                    || stripos($item['route_name'], $search) !== false
-                    || stripos($item['method'], $search) !== false
-                    || stripos($item['group'], $search) !== false
-                    || stripos($item['path'], $search) !== false;
+                return stripos($item['capability'], $search) !== false
+                    || stripos($item['description'], $search) !== false;
             });
             $items = array_values($items);
         }
@@ -44,9 +53,9 @@ class Permissions extends BaseController
 
         return ApiResponse::createOk([
             'current_page' => $page,
-            'last_page' => $lastPage,
-            'data' => $data,
-            'total' => $total,
+            'last_page'    => $lastPage,
+            'data'         => $data,
+            'total'        => $total,
         ]);
     }
 }

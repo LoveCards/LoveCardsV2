@@ -21,13 +21,19 @@ class Profile extends BaseController
 
     public function update()
     {
-        $params = [
-            'avatar'   => Request::param('avatar'),
-            'username' => Request::param('username'),
-            'password' => Request::param('password'),
-        ];
+        $params = [];
+        if (Request::has('avatar')) $params['avatar'] = Request::param('avatar');
+        if (Request::has('username')) $params['username'] = Request::param('username');
+        if (Request::has('password')) $params['password'] = Request::param('password');
 
+        if (empty($params)) {
+            return ApiResponse::createNoContent();
+        }
+
+        // 添加 id 用于验证，然后移除
+        $params['id'] = request()->uid;
         $params = $this->validateAndClean($params, '编辑失败');
+        unset($params['id']);
 
         ProfileService::update(request()->uid, $params);
         return ApiResponse::createNoContent();

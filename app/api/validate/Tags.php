@@ -6,7 +6,7 @@ use think\Validate;
 
 class Tags extends Validate
 {
-    static public $all_scene = [
+    public static $all_scene = [
         'create' => [
             'normal' => ['user_id'],
             'require' => ['name'],
@@ -38,7 +38,7 @@ class Tags extends Validate
             'toNull' => false,
         ],
     ];
-    static public $scene_message = [
+    public static $scene_message = [
         'aid.require' => '应用ID不得为空',
         'name.require' => '标签名不得为空',
     ];

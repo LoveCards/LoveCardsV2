@@ -9,18 +9,40 @@ class PermissionCheck
 {
     public function handle($request, \Closure $next)
     {
-        $routeName = request()->rule() ? request()->rule()->getName() : '';
+        $routeMeta = request()->rule()->getOption('meta') ?? [];
 
-        if (empty($routeName)) {
-            return ApiResponse::createForbidden('路由未定义');
+        // 公开路由 — 直接放行（由路由 meta.public 标记）
+        if ($routeMeta['public'] ?? false) {
+            return $next($request);
         }
 
-        $rolesId = $request->rolesId ?? [];
-        $method = request()->method();
+        // 获取路由所需能力
+        $requiredCaps = $routeMeta['caps'] ?? [];
 
-        if (!RBAC::checkAccess($rolesId, $routeName, $method)) {
+        // 无 caps 定义 → 降级为路由名
+        if (empty($requiredCaps)) {
+            $routeName = request()->rule()->getName();
+            $requiredCaps = [$routeName];
+        }
+
+        // 获取用户能力
+        $caps = RBAC::getUserCapabilities($request->rolesId ?? []);
+
+        // 检查是否满足任一能力
+        $hasAccess = false;
+        foreach ($requiredCaps as $cap) {
+            if (in_array($cap, $caps)) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        if (!$hasAccess) {
             return ApiResponse::createForbidden('权限不足');
         }
+
+        // 注入能力列表到 request
+        $request->caps = $caps;
 
         return $next($request);
     }

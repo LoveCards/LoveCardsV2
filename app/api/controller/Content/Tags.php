@@ -38,7 +38,7 @@ class Tags extends BaseController
     public function create()
     {
         $params = $this->param(TagsValidate::class, TagsValidate::$all_scene['create'], Request::param());
-        $params['user_id'] = request()->uid;
+        $params['user_id'] = request()->uid ?? 0;
         TagsService::createTag($params);
         return ApiResponse::createNoContent();
     }
@@ -47,46 +47,15 @@ class Tags extends BaseController
     {
         $params = $this->param(TagsValidate::class, TagsValidate::$all_scene['allUpdate'], Request::param());
         $params['id'] = (int) $id;
-        
-        TagsService::updateTag($params, request()->uid);
-        
+
+        TagsService::updateTag($params, request()->uid ?? 0, request()->caps ?? []);
+
         return ApiResponse::createNoContent();
     }
 
     public function delete($id)
     {
-        TagsService::deleteTags([(int) $id], request()->uid);
-        return ApiResponse::createNoContent();
-    }
-
-    public function allList()
-    {
-        $params = $this->paramIndex(Request::param());
-        $result = TagsService::listAll($params);
-        return ApiResponse::createOk($result);
-    }
-
-    public function allCreate()
-    {
-        $params = $this->param(TagsValidate::class, TagsValidate::$all_scene['allCreate'], Request::param());
-        $params['user_id'] = request()->uid;
-        TagsService::allCreate($params);
-        return ApiResponse::createNoContent();
-    }
-
-    public function allUpdate($id)
-    {
-        $params = $this->param(TagsValidate::class, TagsValidate::$all_scene['allUpdate'], Request::param());
-        $params['id'] = (int) $id;
-        
-        TagsService::updateTag($params);
-        
-        return ApiResponse::createNoContent();
-    }
-
-    public function allDelete($id)
-    {
-        TagsService::deleteTags([(int) $id]);
+        TagsService::deleteTags([(int) $id], request()->uid ?? 0, request()->caps ?? []);
         return ApiResponse::createNoContent();
     }
 }
